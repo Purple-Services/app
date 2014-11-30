@@ -23,6 +23,6 @@ Ext.application
   launch: ->
     # Initialize the main view
     Ext.Viewport.add [
-      Ext.create 'MDStand.view.TopToolbar'
-      Ext.create 'MDStand.view.MainContainer'
+      Ext.create 'Purple.view.TopToolbar'
+      Ext.create 'Purple.view.MainContainer'
     ]

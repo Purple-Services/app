@@ -9,16 +9,18 @@ Ext.define 'Purple.view.TopToolbar',
       {
         xtype: 'button'
         ctype: 'infoButton'
-        cls: 'light'
-        ui: 'plain'
-        iconCls: 'icomoon-jared-mdstand'
+        ui: 'top'
+        iconCls: 'list'
         iconMask: yes
         handler: -> @fireEvent 'infoButtonTap'
       }
       {
+        xtype: 'spacer'
+      }
+      {
         xtype: 'button'
         ctype: 'helpButton'
-        ui: 'plain'
+        ui: 'top'
         iconCls: 'icomoon-jared-question'
         iconMask: yes
         handler: -> @fireEvent 'helpButtonTap'

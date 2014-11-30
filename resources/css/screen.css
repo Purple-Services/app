@@ -246,6 +246,16 @@ input {
 
 
 
+/* Request Form */
+.accent-bg {
+    background: linear-gradient(-45deg,#EADFEF 57%,#E8D5E9 57%) !important;
+    background: -webkit-linear-gradient(-45deg,#EADFEF 57%,#E8D5E9 57%) !important;
+}
+
+
+
+
+
 /* Browsing Section */
 .section-dataview .x-scroll-indicator.rounded>* {
     background-color: rgba(220, 220, 240, 0.5) !important;

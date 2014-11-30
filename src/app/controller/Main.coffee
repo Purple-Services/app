@@ -1,6 +1,7 @@
 Ext.define 'Purple.controller.Main'
   extend: 'Ext.app.Controller'
   requires: [
+    'Purple.view.RequestForm'
   ]
   config:
     refs:
@@ -14,6 +15,11 @@ Ext.define 'Purple.controller.Main'
 
   launch: ->
     @callParent arguments
+
+    requestForm = Ext.create 'Purple.view.RequestForm'
+    @getMainContainer().add [
+      requestForm
+    ]
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 10000
 

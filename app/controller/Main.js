@@ -2,7 +2,7 @@
 
 Ext.define('Purple.controller.Main', {
   extend: 'Ext.app.Controller',
-  requires: [],
+  requires: ['Purple.view.RequestForm'],
   config: {
     refs: {
       mainContainer: 'maincontainer',
@@ -17,7 +17,10 @@ Ext.define('Purple.controller.Main', {
     }
   },
   launch: function() {
+    var requestForm;
     this.callParent(arguments);
+    requestForm = Ext.create('Purple.view.RequestForm');
+    this.getMainContainer().add([requestForm]);
     return this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
   },
   updateLatlng: function() {

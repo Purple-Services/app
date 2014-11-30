@@ -1,25 +1,22 @@
 // Picker
 //$include-picker-highlights: false;
 
-$base-color: #0073C4;
+$base-color: #762B90;
 $base-gradient: 'flat';
 
 @import 'sencha-touch/default';
 @import 'sencha-touch/default/all';
 
 // Toolbars
-@include sencha-toolbar-ui('top-toolbar', #0073C4, 'flat');
-@include sencha-toolbar-ui('progress-bar', #EEEEEE, 'flat');
-.x-toolbar-progress-bar.x-docked-top {
-  border-bottom: none !important;
-}
-
+@include sencha-toolbar-ui('top-toolbar', #762B90, 'flat');
 
 
 // Buttons
 
 @include sencha-button-ui('normal', #BCDBF0, 'flat');
 @include sencha-button-ui('action', #0073C4, 'flat');
+
+@include sencha-button-ui('top', #B91C8D, 'flat');
 
 @include sencha-button-ui('special', #4CABEF, 'flat');
 @include sencha-button-ui('dull', #ccc, 'flat');
