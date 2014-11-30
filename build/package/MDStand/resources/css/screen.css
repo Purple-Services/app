@@ -1,0 +1,520 @@
+/*
+  FONT - Open Sans
+*/
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('../fonts/open-sans/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/open-sans/k3k702ZOKiLJc3WVjuplzKRDOzjiPcYnFooOUGCOsRk.woff') format('woff');
+}
+
+
+/*
+  FONT - Roboto
+*/
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('../fonts/Roboto-Regular.ttf');
+}
+@font-face {
+  font-family: 'RobotoCondensed-Bold';
+  src: url('../fonts/RobotoCondensed-Bold.ttf');
+}
+
+
+
+
+body {
+    background-image: url('../images/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #0073C4;
+    font-family: 'Open Sans';
+}
+.x-layout-card-item, .x-scroll-container {
+    background: transparent !important;
+}
+.x-button {
+    border: none !important;
+}
+.x-button-label {
+    text-transform: uppercase;
+    font-weight: normal;
+    line-height: 1.4em;
+}
+.x-button-normal, .x-button-incomplete {
+    color: #0073C4 !important;
+}
+.x-button.x-button-special {
+    color: #0073C4 !important;
+}
+.x-toolbar-top-toolbar {
+    border: none !important;
+    text-transform: uppercase !important;
+    padding: 0px !important;
+}
+.x-button-back-special {
+    position: absolute;
+    top: 26px;
+    background-color: #B8D8EF !important;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.x-button-back-special .x-button-label {
+    color: #fff !important;
+}
+.x-toolbar-top-toolbar .x-button .x-button-icon {
+    top: -1px;
+}
+.x-toolbar-top-toolbar .x-button.light .x-button-icon {
+    top: -6px;
+    left: -7px;
+}
+.x-toolbar-top-toolbar .x-button .x-button-icon:before {
+    font-size: 1.1em;
+}
+.x-toolbar-top-toolbar .x-button.light .x-button-icon:before {
+    font-size: 1.7em;
+}
+.x-toolbar-top-toolbar .x-button {
+    color: #0073C4;
+}
+.x-toolbar-top-toolbar .x-button.light {
+    color: #4CABEF;
+}
+.x-toolbar-top-toolbar .x-title {
+    text-shadow: none !important;
+}
+.x-toolbar-top-toolbar .x-title .x-innerhtml {
+    color: #fff;
+}
+.x-toolbar-top-toolbar .subtitle {
+    position: relative;
+    left: -10px;
+    top: -1px;
+}
+.x-toolbar-top-toolbar .subtitle .x-innerhtml {
+    color: #4CABEF;
+    font-size: 1.13em;
+    font-weight: bold;
+}
+.x-form-fieldset-title {
+    position: relative;
+    margin: 1em 0em 0.8em;
+    font-size: 1.1em;
+    font-weight: normal;
+    color: #0073C4;
+    text-shadow: none;
+}
+.x-form-fieldset-title::before {
+    content: '';
+    position: absolute;
+    left: -40px;
+    top: 3px;
+    width: 22px;
+    height: 22px;
+    background-image: url('../images/four-dots.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.x-form-label {
+    background-color: #B8D8EF;
+}
+.x-form-label span {
+    font-weight: normal;
+}
+.x-form-label:after {
+    color: #4CAAF0;
+    margin-left: 3px;
+}
+.x-form-fieldset .x-form-fieldset-inner {
+    background: transparent;
+    border: none;
+}
+.x-form-fieldset .x-form-label {
+    color: #0073C4;
+    border: none;
+}
+.x-form-fieldset .x-field {
+    border: none;
+    margin-bottom: 3px;
+}
+.x-form-fieldset .x-field:last-child {
+    margin-bottom: 0px;
+}
+.x-field-input {
+    background-color: #E4F1F9;
+}
+input {
+    background: transparent;
+    color: #0073C4;
+}
+.x-spinner .x-input-el, .x-field-select .x-input-el {
+    -webkit-text-fill-color: #0073C4;
+}
+
+.x-toolbar-progress-bar {
+    background-color: #C8E8FD;
+}
+.x-button-complete {
+    color: #fff !important;
+}
+
+
+.x-item-disabled .x-form-label:after {
+    display: none !important;
+}
+.x-item-disabled .x-input-el {
+    -webkit-text-fill-color: #888 !important;
+    color: #888 !important;
+    opacity: 1 !important;
+}
+
+
+.invalid-field .x-form-field,
+.invalid-field.x-field-signature .x-component-outer {
+    background-color: #ffb9b0;
+}
+
+.x-input-el {
+    border-radius: 0px;
+}
+
+.modified-disabled .x-form-field {
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
+}
+.modified-disabled .x-component-outer:after {
+    display: none !important;
+}
+
+.consent-agreement-checkbox .x-form-label {
+    background: transparent;
+}
+
+/* 
+   For forms like:
+   medical-history
+   ocular-history
+   ocular-surgical-history
+   general-surgical-history
+   family-history
+*/
+.standalone-form-row.x-form-fieldset ~ .standalone-form-row.x-form-fieldset {
+    margin-top: -1.0em;
+}
+.standalone-form-row.x-form-fieldset {
+    margin-top: 0.5em;
+}
+.standalone-form-row.x-form-fieldset .x-field {
+    border-bottom: none;
+}
+
+
+/* multi select and select etc... */
+.x-panel.x-floating {
+    background-color: #fff;
+}
+.x-list {
+    background-color: #fff;
+}
+.x-list-item-first {
+    border-top: none !important;
+}
+.x-list-normal .x-list-item.x-list-item-tpl,
+.x-list-normal .x-list-item .x-dock-horizontal {
+    border-color: #eee !important;
+}
+.x-panel.x-floating .x-toolbar-dark {
+    background-color: transparent;
+}
+
+
+/* toolbar panels (like brightness controls) */
+.x-webkit .x-anchor.x-anchor-top {
+    background-color: #fff;
+}
+
+
+
+
+/* Browsing Section */
+.section-dataview .x-scroll-indicator.rounded>* {
+    background-color: rgba(220, 220, 240, 0.5) !important;
+    content: none !important;
+}
+
+.section-title {
+    box-shadow: 11px 0px 20px -10px #000;
+    border-top-left-radius: 35px;
+}
+.section-title .title-text-wrapper {
+    display: table;
+    height: 220px;
+    width: 220px;
+}
+.section-title .title-text {
+    font-family: 'RobotoCondensed-Bold';
+    padding: 8px;
+    text-transform: uppercase;
+    font-size: 27px; /* 1.3em; */
+    text-align: left;
+    display: table-cell;
+    vertical-align: middle;
+}
+.section-page-item {
+    width: 220px;
+    height: 220px;
+    border-right: 2px solid #fff;
+    background-color: #eee;
+}
+.section-page-item-image {
+    height: 185px;
+    background-color: #ddd;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+.font-size-big .section-page-item-image {
+    height: 150px;
+}
+.section-page-item-title {
+    font-family: 'Roboto-Regular';
+    font-size: 0.9em;
+    line-height: 35px;
+    text-align: center;
+    background: #ddd;
+}
+.font-size-big .section-page-item-title {
+    white-space: normal;
+    height: 70px;
+    width: 218px;
+    position: absolute;
+}
+
+
+.page h1 {
+    color: #0073C4;
+    font-weight: bold;
+}
+
+
+
+
+/* Patient Welcome Screen */
+.info-container {
+    width: 100%;
+    margin: 0px auto 20px auto;
+}
+.physician-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #4CACE9;
+    float: left;
+    margin: 0px 15px 0px 0px;
+    background-color: #ddd;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top;
+}
+.welcome-subheading {
+    position: relative;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    color: #51AAEE;
+    margin: 0px 0px 10px 0px;
+    text-transform: uppercase;
+}
+.welcome-subheading::before {
+    content: '';
+    position: absolute;
+    left: -40px;
+    top: 3px;
+    width: 22px;
+    height: 22px;
+    background-image: url('../images/four-dots.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.welcome-subheading::after {
+    content: '';
+    clear: both;
+}
+.physician-intro {
+    margin: 0px 0px 0px 0px;
+    font-size: 0.95em;
+    color: #666;
+    text-align: justify;
+}
+.to-get-started {
+    position: relative;
+    font-weight: bold;
+}
+.to-get-started::before {
+    content: '';
+    position: absolute;
+    left: -40px;
+    top: 3px;
+    width: 22px;
+    height: 22px;
+    background-image: url('../images/four-dots.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+/* SliderFill plugin  (not currently being used) */
+.x-slider-fill1 {
+    background-image:-webkit-gradient(linear, left top ,left bottom, from(#8b1a05), color-stop(.5, #e35e4f), color-stop(.95, #e18080), to(#6f2c22));
+}
+
+
+
+
+.font-size-big {
+    font-size: 23px;
+}
+.font-size-big .x-form-label {
+    width: auto !important;
+}
+
+
+
+
+#brightness-mask {
+    position: absolute;
+    z-index: 999999;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+
+    /* TODO
+       If this isn't supported on target device,
+       then we'll have to do this a different way. */
+    pointer-events: none;
+
+}
+
+
+
+
+/* WYSIWYG Styles */
+.wysiwyg-color-black {
+    color: black;
+}
+
+.wysiwyg-color-silver {
+    color: silver;
+}
+
+.wysiwyg-color-gray {
+    color: gray;
+}
+
+.wysiwyg-color-white {
+    color: white;
+}
+
+.wysiwyg-color-maroon {
+    color: maroon;
+}
+
+.wysiwyg-color-red {
+    color: red;
+}
+
+.wysiwyg-color-purple {
+    color: purple;
+}
+
+.wysiwyg-color-fuchsia {
+    color: fuchsia;
+}
+
+.wysiwyg-color-green {
+    color: green;
+}
+
+.wysiwyg-color-lime {
+    color: lime;
+}
+
+.wysiwyg-color-olive {
+    color: olive;
+}
+
+.wysiwyg-color-yellow {
+    color: yellow;
+}
+
+.wysiwyg-color-navy {
+    color: navy;
+}
+
+.wysiwyg-color-blue {
+    color: blue;
+}
+
+.wysiwyg-color-teal {
+    color: teal;
+}
+
+.wysiwyg-color-aqua {
+    color: aqua;
+}
+
+.wysiwyg-color-orange {
+    color: orange;
+}
+
+.wysiwyg-text-align-left {
+    text-align: left;
+}
+.wysiwyg-text-align-center {
+    text-align: center;
+}
+.wysiwyg-text-align-right {
+    text-align: right;
+}
+.wysiwyg-text-align-justify {
+    text-align: justify;
+}
+
+
+
+
+
+.focal-video {
+    position: relative;
+    width:60%;
+    margin: 0px auto;
+    display: block;
+}
+.focal-video video {
+    width: 100%;
+}
+.focal-video::after {
+    content: ' ';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: url(../images/play-button.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 72px 72px;
+    pointer-events: none;
+}
