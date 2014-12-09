@@ -1,51 +1,33 @@
 /*
-  FONT - Open Sans
+  FONT - Source Sans Pro
 */
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url('../fonts/open-sans/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff') format('woff');
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(../fonts/source-sans-pro/ODelI1aHBYDBqgeIAH2zlDKRFmJUU_JfdI4amS9F_UY.woff) format('woff2');
 }
 @font-face {
-  font-family: 'Open Sans';
+  font-family: 'Source Sans Pro';
   font-style: normal;
-  font-weight: 700;
-  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/open-sans/k3k702ZOKiLJc3WVjuplzKRDOzjiPcYnFooOUGCOsRk.woff') format('woff');
+  font-weight: 900;
+  src: local('Source Sans Pro Black'), local('SourceSansPro-Black'), url(../fonts/source-sans-pro/toadOcfmlt9b38dHJxOBGIcnZWaUMBnqXa8iT2n75ZM.woff) format('woff2');
 }
-
-
-/*
-  FONT - Roboto
-*/
-@font-face {
-  font-family: 'Roboto-Regular';
-  src: url('../fonts/Roboto-Regular.ttf');
-}
-@font-face {
-  font-family: 'RobotoCondensed-Bold';
-  src: url('../fonts/RobotoCondensed-Bold.ttf');
-}
-
 
 
 
 body {
-    background-image: url('../images/bg.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     color: #0073C4;
-    font-family: 'Open Sans';
+    font-family: 'Source Sans Pro';
 }
 .x-layout-card-item, .x-scroll-container {
     background: transparent !important;
 }
 .x-button {
     border: none !important;
+    border-radius: 0px !important;
 }
 .x-button-label {
-    text-transform: uppercase;
     font-weight: normal;
     line-height: 1.4em;
 }
@@ -57,8 +39,11 @@ body {
 }
 .x-toolbar-top-toolbar {
     border: none !important;
+    border-bottom: 6px solid #BA1C8B !important;
+    box-shadow: 0px 0px 0px 6px rgba(0,0,0,0.1);
     text-transform: uppercase !important;
     padding: 0px !important;
+    z-index: 999;
 }
 .x-button-back-special {
     position: absolute;
@@ -84,7 +69,7 @@ body {
     font-size: 1.7em;
 }
 .x-toolbar-top-toolbar .x-button {
-    color: #0073C4;
+    color: #BA1C8D;
 }
 .x-toolbar-top-toolbar .x-button.light {
     color: #4CABEF;
@@ -150,6 +135,9 @@ body {
 .x-form-fieldset .x-field:last-child {
     margin-bottom: 0px;
 }
+
+
+
 .x-field-input {
     background-color: #E4F1F9;
 }
@@ -157,6 +145,38 @@ input {
     background: transparent;
     color: #0073C4;
 }
+
+.special-input .x-field-input {
+    background-color: #762B90;
+}
+.special-input input {
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 7px 5px 10px 5px;
+    min-height: 0px;
+}
+
+
+
+.button-pop {
+    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
+    padding: 15px 22px;
+}
+.button-pop .x-button-label {
+    font-weight: 900;
+    line-height: 1.4em;
+    font-size: 154%;
+}
+.button-pop.x-button-pressing {
+    box-shadow: none;
+    position: relative;
+    top: 1px;
+    left: 1px;
+}
+
+
 .x-spinner .x-input-el, .x-field-select .x-input-el {
     -webkit-text-fill-color: #0073C4;
 }
@@ -246,6 +266,8 @@ input {
 
 
 
+
+
 /* Request Form */
 .accent-bg {
     background: linear-gradient(-45deg,#EADFEF 57%,#E8D5E9 57%) !important;
@@ -255,276 +277,12 @@ input {
 
 
 
-
-/* Browsing Section */
-.section-dataview .x-scroll-indicator.rounded>* {
-    background-color: rgba(220, 220, 240, 0.5) !important;
-    content: none !important;
-}
-
-.section-title {
-    box-shadow: 11px 0px 20px -10px #000;
-    border-top-left-radius: 35px;
-}
-.section-title .title-text-wrapper {
-    display: table;
-    height: 220px;
-    width: 220px;
-}
-.section-title .title-text {
-    font-family: 'RobotoCondensed-Bold';
-    padding: 8px;
-    text-transform: uppercase;
-    font-size: 27px; /* 1.3em; */
-    text-align: left;
-    display: table-cell;
-    vertical-align: middle;
-}
-.section-page-item {
-    width: 220px;
-    height: 220px;
-    border-right: 2px solid #fff;
-    background-color: #eee;
-}
-.section-page-item-image {
-    height: 185px;
-    background-color: #ddd;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
-}
-.font-size-big .section-page-item-image {
-    height: 150px;
-}
-.section-page-item-title {
-    font-family: 'Roboto-Regular';
-    font-size: 0.9em;
-    line-height: 35px;
-    text-align: center;
-    background: #ddd;
-}
-.font-size-big .section-page-item-title {
-    white-space: normal;
-    height: 70px;
-    width: 218px;
-    position: absolute;
-}
-
-
-.page h1 {
-    color: #0073C4;
-    font-weight: bold;
-}
-
-
-
-
-/* Patient Welcome Screen */
-.info-container {
-    width: 100%;
-    margin: 0px auto 20px auto;
-}
-.physician-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid #4CACE9;
-    float: left;
-    margin: 0px 15px 0px 0px;
-    background-color: #ddd;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: top;
-}
-.welcome-subheading {
-    position: relative;
-    font-size: 1.2em;
-    line-height: 1.2em;
-    color: #51AAEE;
-    margin: 0px 0px 10px 0px;
-    text-transform: uppercase;
-}
-.welcome-subheading::before {
-    content: '';
-    position: absolute;
-    left: -40px;
-    top: 3px;
-    width: 22px;
-    height: 22px;
-    background-image: url('../images/four-dots.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.welcome-subheading::after {
-    content: '';
-    clear: both;
-}
-.physician-intro {
-    margin: 0px 0px 0px 0px;
-    font-size: 0.95em;
-    color: #666;
-    text-align: justify;
-}
-.to-get-started {
-    position: relative;
-    font-weight: bold;
-}
-.to-get-started::before {
-    content: '';
-    position: absolute;
-    left: -40px;
-    top: 3px;
-    width: 22px;
-    height: 22px;
-    background-image: url('../images/four-dots.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+.offwhite-bg {
+    background: #EDEDED !important;
 }
 
 
 /* SliderFill plugin  (not currently being used) */
 .x-slider-fill1 {
     background-image:-webkit-gradient(linear, left top ,left bottom, from(#8b1a05), color-stop(.5, #e35e4f), color-stop(.95, #e18080), to(#6f2c22));
-}
-
-
-
-
-.font-size-big {
-    font-size: 23px;
-}
-.font-size-big .x-form-label {
-    width: auto !important;
-}
-
-
-
-
-#brightness-mask {
-    position: absolute;
-    z-index: 999999;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0);
-
-    /* TODO
-       If this isn't supported on target device,
-       then we'll have to do this a different way. */
-    pointer-events: none;
-
-}
-
-
-
-
-/* WYSIWYG Styles */
-.wysiwyg-color-black {
-    color: black;
-}
-
-.wysiwyg-color-silver {
-    color: silver;
-}
-
-.wysiwyg-color-gray {
-    color: gray;
-}
-
-.wysiwyg-color-white {
-    color: white;
-}
-
-.wysiwyg-color-maroon {
-    color: maroon;
-}
-
-.wysiwyg-color-red {
-    color: red;
-}
-
-.wysiwyg-color-purple {
-    color: purple;
-}
-
-.wysiwyg-color-fuchsia {
-    color: fuchsia;
-}
-
-.wysiwyg-color-green {
-    color: green;
-}
-
-.wysiwyg-color-lime {
-    color: lime;
-}
-
-.wysiwyg-color-olive {
-    color: olive;
-}
-
-.wysiwyg-color-yellow {
-    color: yellow;
-}
-
-.wysiwyg-color-navy {
-    color: navy;
-}
-
-.wysiwyg-color-blue {
-    color: blue;
-}
-
-.wysiwyg-color-teal {
-    color: teal;
-}
-
-.wysiwyg-color-aqua {
-    color: aqua;
-}
-
-.wysiwyg-color-orange {
-    color: orange;
-}
-
-.wysiwyg-text-align-left {
-    text-align: left;
-}
-.wysiwyg-text-align-center {
-    text-align: center;
-}
-.wysiwyg-text-align-right {
-    text-align: right;
-}
-.wysiwyg-text-align-justify {
-    text-align: justify;
-}
-
-
-
-
-
-.focal-video {
-    position: relative;
-    width:60%;
-    margin: 0px auto;
-    display: block;
-}
-.focal-video video {
-    width: 100%;
-}
-.focal-video::after {
-    content: ' ';
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-image: url(../images/play-button.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 72px 72px;
-    pointer-events: none;
 }

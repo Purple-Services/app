@@ -1,20 +1,20 @@
 // Picker
 //$include-picker-highlights: false;
 
-$base-color: #762B90;
+$base-color: #BA1C8D;
 $base-gradient: 'flat';
 
 @import 'sencha-touch/default';
 @import 'sencha-touch/default/all';
 
 // Toolbars
-@include sencha-toolbar-ui('top-toolbar', #762B90, 'flat');
+@include sencha-toolbar-ui('top-toolbar', #EDEDED, 'flat');
 
 
 // Buttons
 
 @include sencha-button-ui('normal', #BCDBF0, 'flat');
-@include sencha-button-ui('action', #0073C4, 'flat');
+@include sencha-button-ui('action', #BA1C8D, 'flat');
 
 @include sencha-button-ui('top', #B91C8D, 'flat');
 

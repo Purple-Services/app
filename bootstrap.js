@@ -46,9 +46,8 @@ Ext.Loader.addClassPathMappings({
   "Ext.device.sqlite.SQLResultSet": "touch/src/device/sqlite/Sencha.js",
   "Ext.device.sqlite.SQLResultSetRowList": "touch/src/device/sqlite/Sencha.js",
   "Ext.device.sqlite.SQLTransaction": "touch/src/device/sqlite/Sencha.js",
-  "MDStand": "app",
   "Override": "",
-  "Override.field": "override",
+  "Purple": "app",
   "SignatureField.Canvas": "ux/SignatureField.js",
   "Ux": ""
 });
@@ -673,28 +672,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.viewport.WindowsPhone": [
     "Ext.viewport.WP"
   ],
-  "MDStand.controller.Browse": [],
-  "MDStand.controller.DynamicForm": [],
-  "MDStand.controller.FormProgressBar": [],
-  "MDStand.controller.FormQueue": [],
-  "MDStand.controller.Main": [],
-  "MDStand.controller.Monitor": [],
-  "MDStand.controller.PatientRegistration": [],
-  "MDStand.controller.TopToolbar": [],
-  "MDStand.view.BrowseContainer": [],
-  "MDStand.view.BrowseSections": [],
-  "MDStand.view.DynamicForm": [],
-  "MDStand.view.FormProgressBar": [],
-  "MDStand.view.FormQueueContainer": [],
-  "MDStand.view.MainContainer": [],
-  "MDStand.view.Page": [],
-  "MDStand.view.PatientLookupForm": [],
-  "MDStand.view.PatientRegistrationForm": [],
-  "MDStand.view.PatientWelcome": [],
-  "MDStand.view.Section": [],
-  "MDStand.view.TopToolbar": [],
-  "Override.field.Select": [],
   "Override.form.Panel": [],
+  "Purple.controller.Main": [],
+  "Purple.controller.TopToolbar": [],
+  "Purple.view.MainContainer": [],
+  "Purple.view.MapForm": [],
+  "Purple.view.RequestForm": [],
+  "Purple.view.TopToolbar": [],
   "SignatureField.Canvas": [],
   "Ux.field.AutocompleteField": [],
   "Ux.field.MultiSelectOtherField": [],
@@ -1420,52 +1404,21 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.Ios": [],
   "Ext.viewport.Viewport": [],
   "Ext.viewport.WindowsPhone": [],
-  "MDStand.controller.Browse": [],
-  "MDStand.controller.DynamicForm": [],
-  "MDStand.controller.FormProgressBar": [],
-  "MDStand.controller.FormQueue": [],
-  "MDStand.controller.Main": [],
-  "MDStand.controller.Monitor": [],
-  "MDStand.controller.PatientRegistration": [],
-  "MDStand.controller.TopToolbar": [],
-  "MDStand.view.BrowseContainer": [
-    "widget.browsecontainer"
-  ],
-  "MDStand.view.BrowseSections": [
-    "widget.browsesections"
-  ],
-  "MDStand.view.DynamicForm": [
-    "widget.dynamicform"
-  ],
-  "MDStand.view.FormProgressBar": [
-    "widget.formprogressbar"
-  ],
-  "MDStand.view.FormQueueContainer": [
-    "widget.formqueuecontainer"
-  ],
-  "MDStand.view.MainContainer": [
+  "Override.form.Panel": [],
+  "Purple.controller.Main": [],
+  "Purple.controller.TopToolbar": [],
+  "Purple.view.MainContainer": [
     "widget.maincontainer"
   ],
-  "MDStand.view.Page": [
-    "widget.page"
+  "Purple.view.MapForm": [
+    "widget.mapform"
   ],
-  "MDStand.view.PatientLookupForm": [
-    "widget.patientlookupform"
+  "Purple.view.RequestForm": [
+    "widget.requestform"
   ],
-  "MDStand.view.PatientRegistrationForm": [
-    "widget.patientregistrationform"
-  ],
-  "MDStand.view.PatientWelcome": [
-    "widget.patientwelcome"
-  ],
-  "MDStand.view.Section": [
-    "widget.section"
-  ],
-  "MDStand.view.TopToolbar": [
+  "Purple.view.TopToolbar": [
     "widget.toptoolbar"
   ],
-  "Override.field.Select": [],
-  "Override.form.Panel": [],
   "SignatureField.Canvas": [
     "widget.signaturefieldcanvas"
   ],

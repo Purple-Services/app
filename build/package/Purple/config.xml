@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+        xmlns:gap   = "http://phonegap.com/ns/1.0"
+        id          = "6NAJA3N74X.com.purple.app"
+        versionCode = "12" 
+        version     = "1.0.0" >
+
+  <!-- versionCode is optional and Android only -->
+
+  <name>Purple</name>
+  <description>
+    Purple mobile app.
+  </description>
+
+  <content src="index.html" />
+
+  <!-- <gap:platform name="ios" /> -->
+  
+  <icon src="icon.png" />
+
+
+
+  <!-- Splash Screen Images -->
+
+  <!-- Default -->
+  <gap:splash src="splash-screens/splash.png" />
+
+  <!-- iPhone and iPod touch -->
+  <gap:splash src="splash-screens/Default.png" gap:platform="ios" width="320" height="480" />
+  <gap:splash src="splash-screens/Default@2x.png" gap:platform="ios" width="640" height="960" />
+
+  <!-- iPhone 5 / iPod Touch (5th Generation) -->
+  <gap:splash src="splash-screens/Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+
+  <!-- iPhone 6 -->
+  <gap:splash src="splash-screens/Default-667h@2x.png" gap:platform="ios" width="750" height="1334" />
+  <gap:splash src="splash-screens/Default-Portrait-736h@3x.png" gap:platform="ios" width="1242" height="2208" />
+  <gap:splash src="splash-screens/Default-Landscape-736h@3x.png" gap:platform="ios" width="2208" height="1242" />
+
+  <!-- iPad -->
+  <gap:splash src="splash-screens/Default-Portrait.png" gap:platform="ios" width="768" height="1024" />
+  <gap:splash src="splash-screens/Default-Landscape.png" gap:platform="ios" width="1024" height="768" />
+
+  <!-- Retina iPad -->
+  <gap:splash src="splash-screens/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" />
+  <gap:splash src="splash-screens/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" />
+
+  <!-- Android -->
+  <gap:splash src="splash-screens/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+  <gap:splash src="splash-screens/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+  <gap:splash src="splash-screens/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+  <gap:splash src="splash-screens/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+  <gap:splash src="splash-screens/fr-xhdpi.png" gap:platform="android" gap:qualifier="fr-xhdpi" />
+  <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" />
+  <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" />
+
+
+  <access origin="*" />
+
+  <preference name="phonegap-version" value="3.6.3" />
+  <preference name="fullscreen" value="true" />
+  <preference name="exit-on-suspend" value="false" />
+  <preference name="orientation" value="portrait" />
+  <preference name="prerendered-icon" value="true" />
+
+  <!-- <gap:plugin name="de.appplant.cordova.plugin.hidden-statusbar-overlay" version="1.2.0" /> -->
+  
+  <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
+  <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
+  <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
+
+</widget>

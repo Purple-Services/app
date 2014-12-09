@@ -4,13 +4,16 @@ Ext.define 'Purple.view.TopToolbar',
   config:
     docked: 'top'
     ui: 'top-toolbar'
-    title: 'Purple'
+    height: 60
+    title: """
+      <img src="resources/images/logo-word.png" style="height: 42px; padding-top: 11px;" />
+    """
     items: [
       {
         xtype: 'button'
         ctype: 'infoButton'
-        ui: 'top'
-        iconCls: 'list'
+        ui: 'plain'
+        iconCls: 'icomoon-spinner'
         iconMask: yes
         handler: -> @fireEvent 'infoButtonTap'
       }
@@ -20,7 +23,7 @@ Ext.define 'Purple.view.TopToolbar',
       {
         xtype: 'button'
         ctype: 'helpButton'
-        ui: 'top'
+        ui: 'plain'
         iconCls: 'icomoon-jared-question'
         iconMask: yes
         handler: -> @fireEvent 'helpButtonTap'
