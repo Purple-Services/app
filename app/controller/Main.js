@@ -7,11 +7,18 @@ Ext.define('Purple.controller.Main', {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
-      menuButton: '[ctype=menuButton]'
+      menuButton: '[ctype=menuButton]',
+      mapForm: 'mapform',
+      map: '#gmap',
+      requestAddressField: '#requestAddressField'
     },
     control: {
       menuButton: {
         menuButtonTap: 'menuButtonHandler'
+      },
+      map: {
+        centerchange: 'adjustDeliveryLocByLatLng',
+        maprender: 'initGeocoder'
       }
     }
   },
@@ -29,9 +36,14 @@ Ext.define('Purple.controller.Main', {
     if (!this.updateLatlngBusy) {
       this.updateLatlngBusy = true;
       return navigator.geolocation.getCurrentPosition((function(position) {
+        var latLngWasSet;
         _this.updateLatlngBusy = false;
+        latLngWasSet = _this.lat != null;
         _this.lat = position.coords.latitude;
-        return _this.lng = position.coords.longitude;
+        _this.lng = position.coords.longitude;
+        if (!latLngWasSet) {
+          return _this.getMap().getMap().setCenter(new google.maps.LatLng(_this.lat, _this.lng));
+        }
       }), (function() {
         return _this.updateLatlngBusy = false;
       }), {
@@ -42,5 +54,39 @@ Ext.define('Purple.controller.Main', {
   },
   menuButtonHandler: function() {
     return this.getMainContainer().toggleContainer();
+  },
+  initGeocoder: function() {
+    console.log('in here', google, google.maps);
+    return this.geocoder = new google.maps.Geocoder();
+  },
+  adjustDeliveryLocByLatLng: function() {
+    var center;
+    center = this.getMap().getMap().getCenter();
+    this.deliveryLocLat = center.lat();
+    this.deliveryLocLng = center.lng();
+    return this.updateDeliveryLocAddressByLatLng(this.deliveryLocLat, this.deliveryLocLng);
+  },
+  updateDeliveryLocAddressByLatLng: function(lat, lng) {
+    var latlng,
+      _this = this;
+    latlng = new google.maps.LatLng(lat, lng);
+    console.log(this.geocoder);
+    return this.geocoder.geocode({
+      'latLng': latlng
+    }, function(results, status) {
+      var addressComponents, streetAddress;
+      if (status === google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+          console.log(results);
+          addressComponents = results[0]['address_components'];
+          streetAddress = "" + addressComponents[0]['short_name'] + " " + addressComponents[1]['short_name'];
+          return _this.getRequestAddressField().setValue(streetAddress);
+        } else {
+          return console.log('No results found.');
+        }
+      } else {
+        return console.log('Geocoder failed due to: ' + status);
+      }
+    });
   }
 });

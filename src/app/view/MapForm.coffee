@@ -11,6 +11,18 @@ Ext.define 'Purple.view.MapForm'
     cls: 'offwhite-bg'
     scrollable: no
     submitOnAction: no
+    listeners:
+      painted: ->
+        mapDom = Ext.get 'gmap'
+        styleRule = """
+          <style>
+            #gmap:after {
+              top: #{mapDom.getHeight() / 2}px;
+            }
+          </style>
+        """
+        Ext.DomHelper.append mapDom, styleRule
+      
     items: [
       {
         xtype: 'map'
@@ -31,10 +43,12 @@ Ext.define 'Purple.view.MapForm'
       }
       {
         xtype: 'textfield'
+        id: 'requestAddressField'
         flex: 0
         name: 'request_address'
         cls: 'special-input'
         clearIcon: no
+        value: 'Updating location...'
       }
       {
         xtype: 'container'

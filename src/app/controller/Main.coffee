@@ -9,9 +9,15 @@ Ext.define 'Purple.controller.Main'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       menuButton: '[ctype=menuButton]'
+      mapForm: 'mapform'
+      map: '#gmap'
+      requestAddressField: '#requestAddressField'
     control:
       menuButton:
         menuButtonTap: 'menuButtonHandler'
+      map:
+        centerchange: 'adjustDeliveryLocByLatLng'
+        maprender: 'initGeocoder'
 
   launch: ->
     @callParent arguments
@@ -38,9 +44,13 @@ Ext.define 'Purple.controller.Main'
       navigator.geolocation.getCurrentPosition(
         ((position) =>
           @updateLatlngBusy = no
+          latLngWasSet = @lat?
           @lat = position.coords.latitude
           @lng = position.coords.longitude
-          # Ext.get('gmap')  setCenter
+          if not latLngWasSet
+            @getMap().getMap().setCenter(
+              new google.maps.LatLng @lat, @lng
+            )
         ),
         (=>
           # console.log "GPS failure callback called."
@@ -50,3 +60,29 @@ Ext.define 'Purple.controller.Main'
 
   menuButtonHandler: ->
     @getMainContainer().toggleContainer()
+
+  initGeocoder: ->
+    console.log 'in here', google, google.maps
+    @geocoder = new google.maps.Geocoder()
+
+  adjustDeliveryLocByLatLng: ->
+    center = @getMap().getMap().getCenter()
+    # might want to send actual 
+    @deliveryLocLat = center.lat()
+    @deliveryLocLng = center.lng()
+    @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
+
+  updateDeliveryLocAddressByLatLng: (lat, lng) ->
+    latlng = new google.maps.LatLng lat, lng
+    console.log @geocoder
+    @geocoder.geocode {'latLng': latlng}, (results, status) =>
+      if status is google.maps.GeocoderStatus.OK
+        if results[1]
+          console.log results
+          addressComponents = results[0]['address_components']
+          streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
+          @getRequestAddressField().setValue streetAddress
+        else
+          console.log 'No results found.'
+      else
+        console.log 'Geocoder failed due to: ' + status

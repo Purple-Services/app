@@ -296,24 +296,30 @@ input {
     background: transparent;
 }
 
-/* 
-   For forms like:
-   medical-history
-   ocular-history
-   ocular-surgical-history
-   general-surgical-history
-   family-history
-*/
-.standalone-form-row.x-form-fieldset ~ .standalone-form-row.x-form-fieldset {
-    margin-top: -1.0em;
-}
-.standalone-form-row.x-form-fieldset {
-    margin-top: 0.5em;
-}
-.standalone-form-row.x-form-fieldset .x-field {
-    border-bottom: none;
-}
 
+
+
+
+
+
+
+/* Map Form */
+#gmap:after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    /* left position is set with css; top has to be done in js */
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -50px;
+    z-index: 1000;
+    background-image: url('../images/map-pin.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: transparent;
+    pointer-events: none;
+}
 
 
 
