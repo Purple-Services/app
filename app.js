@@ -2,6 +2,7 @@
 
 Ext.Loader.setPath({
   'Ux.field': 'ux',
+  'Ext.ux': 'ux',
   'Override.form': 'override'
 });
 
@@ -11,6 +12,6 @@ Ext.application({
   controllers: ['Main', 'TopToolbar'],
   views: ['MainContainer', 'TopToolbar'],
   launch: function() {
-    return Ext.Viewport.add([Ext.create('Purple.view.TopToolbar'), Ext.create('Purple.view.MainContainer')]);
+    return Ext.Viewport.add([Ext.create('Purple.view.MainContainer')]);
   }
 });

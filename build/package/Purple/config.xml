@@ -4,7 +4,6 @@
         id          = "6NAJA3N74X.com.purple.app"
         versionCode = "12" 
         version     = "1.0.0" >
-
   <!-- versionCode is optional and Android only -->
 
   <name>Purple</name>
@@ -14,11 +13,7 @@
 
   <content src="index.html" />
 
-  <!-- <gap:platform name="ios" /> -->
-  
   <icon src="icon.png" />
-
-
 
   <!-- Splash Screen Images -->
 
@@ -58,15 +53,20 @@
   <access origin="*" />
 
   <preference name="phonegap-version" value="3.6.3" />
-  <preference name="fullscreen" value="true" />
+  <preference name="fullscreen" value="false" />
   <preference name="exit-on-suspend" value="false" />
   <preference name="orientation" value="portrait" />
   <preference name="prerendered-icon" value="true" />
 
   <!-- <gap:plugin name="de.appplant.cordova.plugin.hidden-statusbar-overlay" version="1.2.0" /> -->
-  
+
   <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
   <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
   <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
+
+  <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+  <preference name="StatusBarOverlaysWebView" value="false" />
+  <!-- <preference name="StatusBarBackgroundColor" value="#EDEDED" /> -->
+  <preference name="StatusBarBackgroundColor" value="red" />
 
 </widget>

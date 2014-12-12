@@ -46,6 +46,14 @@ Ext.Loader.addClassPathMappings({
   "Ext.device.sqlite.SQLResultSet": "touch/src/device/sqlite/Sencha.js",
   "Ext.device.sqlite.SQLResultSetRowList": "touch/src/device/sqlite/Sencha.js",
   "Ext.device.sqlite.SQLTransaction": "touch/src/device/sqlite/Sencha.js",
+  "Ext.ux": "ux",
+  "Ext.ux.ActionOverFlowMenuButton": "touch/src/ux/ActionOverFlowMenuButton.js",
+  "Ext.ux.ApplicationMenu": "touch/src/ux/ApplicationMenu.js",
+  "Ext.ux.ContextMenu": "touch/src/ux/ContextMenu.js",
+  "Ext.ux.MenuButton": "touch/src/ux/MenuButton.js",
+  "Ext.ux.TabMenuButton": "touch/src/ux/TabMenuButton.js",
+  "Ext.ux.device": "touch/src/ux/device",
+  "Ext.ux.parse": "touch/src/ux/parse",
   "Override": "",
   "Purple": "app",
   "SignatureField.Canvas": "ux/SignatureField.js",
@@ -665,6 +673,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.ux.parse.Store": [],
   "Ext.ux.parse.association.Pointer": [],
   "Ext.ux.parse.association.Relation": [],
+  "Ext.ux.slidenavigation.View": [],
   "Ext.viewport.Android": [],
   "Ext.viewport.Default": [],
   "Ext.viewport.Ios": [],
@@ -1396,6 +1405,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Ext.ux.parse.association.Relation": [
     "association.relation"
+  ],
+  "Ext.ux.slidenavigation.View": [
+    "widget.slidenavigationview"
   ],
   "Ext.viewport.Android": [],
   "Ext.viewport.Default": [

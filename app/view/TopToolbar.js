@@ -11,12 +11,12 @@ Ext.define('Purple.view.TopToolbar', {
     items: [
       {
         xtype: 'button',
-        ctype: 'infoButton',
+        ctype: 'menuButton',
         ui: 'plain',
         iconCls: 'icomoon-spinner',
         iconMask: true,
         handler: function() {
-          return this.fireEvent('infoButtonTap');
+          return this.fireEvent('menuButtonTap');
         }
       }, {
         xtype: 'spacer'

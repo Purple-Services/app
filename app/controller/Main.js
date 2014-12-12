@@ -7,21 +7,18 @@ Ext.define('Purple.controller.Main', {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
-      backButton: '[ctype=backButton]'
+      menuButton: '[ctype=menuButton]'
     },
     control: {
-      patientWelcome: {
-        patientWelcomeStart: 'patientWelcomeStart',
-        patientWelcomeAbort: 'patientWelcomeAbort'
+      menuButton: {
+        menuButtonTap: 'menuButtonHandler'
       }
     }
   },
   launch: function() {
-    var mapForm;
     this.callParent(arguments);
-    mapForm = Ext.create('Purple.view.MapForm');
-    this.getMainContainer().add([mapForm]);
-    return this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
+    this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
+    return this.updateLatlng();
   },
   updateLatlng: function() {
     var _ref,
@@ -33,7 +30,8 @@ Ext.define('Purple.controller.Main', {
       this.updateLatlngBusy = true;
       return navigator.geolocation.getCurrentPosition((function(position) {
         _this.updateLatlngBusy = false;
-        return _this.latlng = "" + position.coords.latitude + "," + position.coords.longitude;
+        _this.lat = position.coords.latitude;
+        return _this.lng = position.coords.longitude;
       }), (function() {
         return _this.updateLatlngBusy = false;
       }), {
@@ -41,5 +39,8 @@ Ext.define('Purple.controller.Main', {
         enableHighAccuracy: true
       });
     }
+  },
+  menuButtonHandler: function() {
+    return this.getMainContainer().toggleContainer();
   }
 });

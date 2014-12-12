@@ -14,8 +14,10 @@ Ext.define 'Purple.view.MapForm'
     items: [
       {
         xtype: 'map'
-        height: 350
-        useCurrentLocation: yes
+        id: 'gmap'
+        flex: 1
+        # useCurrentLocation: yes # might want to handle this myself
+        useCurrentLocation: no
         mapOptions:
           zoom: 16
           mapTypeControl: no
@@ -24,17 +26,21 @@ Ext.define 'Purple.view.MapForm'
       }
       {
         xtype: 'component'
+        flex: 0
         height: 10
       }
       {
         xtype: 'textfield'
+        flex: 0
         name: 'request_address'
         cls: 'special-input'
         clearIcon: no
       }
       {
         xtype: 'container'
-        flex: 1
+        flex: 0
+        height: 110
+        padding: '0 0 5 0'
         layout:
           type: 'vbox'
           pack: 'center'

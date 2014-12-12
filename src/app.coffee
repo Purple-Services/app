@@ -1,5 +1,6 @@
 Ext.Loader.setPath
   'Ux.field': 'ux'
+  'Ext.ux': 'ux'
   'Override.form': 'override'
 
 Ext.application
@@ -23,6 +24,5 @@ Ext.application
   launch: ->
     # Initialize the main view
     Ext.Viewport.add [
-      Ext.create 'Purple.view.TopToolbar'
       Ext.create 'Purple.view.MainContainer'
     ]

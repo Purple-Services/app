@@ -11,11 +11,11 @@ Ext.define 'Purple.view.TopToolbar',
     items: [
       {
         xtype: 'button'
-        ctype: 'infoButton'
+        ctype: 'menuButton'
         ui: 'plain'
         iconCls: 'icomoon-spinner'
         iconMask: yes
-        handler: -> @fireEvent 'infoButtonTap'
+        handler: -> @fireEvent 'menuButtonTap'
       }
       {
         xtype: 'spacer'

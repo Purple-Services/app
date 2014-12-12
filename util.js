@@ -3,14 +3,6 @@ var LOCAL;
 
 LOCAL = false;
 
-window.onerror = function(message, url, lineNumber) {
-  var _ref;
-  if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-    ga_storage._trackEvent('general', 'App Error', (_ref = util.ctl('Main').deviceId) != null ? _ref : 'device id not yet set');
-  }
-  return false;
-};
-
 window.util = {
   WEB_SERVICE_BASE_URL: LOCAL ? "http://localhost:3000/" : "https://service.purple.com/",
   RESOURCES_BASE_URL: LOCAL ? "http://localhost/purple/resources/" : "https://purple-resources.s3.amazonaws.com/mobile/resources/",

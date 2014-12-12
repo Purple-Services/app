@@ -1,8 +1,8 @@
 LOCAL = no
 
-window.onerror = (message, url, lineNumber) ->
-  ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
-  return false # let the default handler run as well (yes this is inverse to the more logical 'true')
+# window.onerror = (message, url, lineNumber) ->
+#   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
+#   return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
 window.util =
   WEB_SERVICE_BASE_URL: if LOCAL then "http://localhost:3000/" else "https://service.purple.com/"
