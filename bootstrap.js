@@ -683,7 +683,6 @@ Ext.ClassManager.addNameAlternateMappings({
   ],
   "Override.form.Panel": [],
   "Purple.controller.Main": [],
-  "Purple.controller.TopToolbar": [],
   "Purple.view.MainContainer": [],
   "Purple.view.MapForm": [],
   "Purple.view.RequestForm": [],
@@ -1418,7 +1417,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.WindowsPhone": [],
   "Override.form.Panel": [],
   "Purple.controller.Main": [],
-  "Purple.controller.TopToolbar": [],
   "Purple.view.MainContainer": [
     "widget.maincontainer"
   ],

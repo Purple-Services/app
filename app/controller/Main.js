@@ -2,15 +2,19 @@
 
 Ext.define('Purple.controller.Main', {
   extend: 'Ext.app.Controller',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm'],
+  requires: ['Purple.view.MapForm', 'Purple.view.LoginForm', 'Purple.view.RequestForm'],
   config: {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
-      menuButton: '[ctype=menuButton]',
+      menuButton: '#menuButton',
       mapForm: 'mapform',
       map: '#gmap',
-      requestAddressField: '#requestAddressField'
+      spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress',
+      requestAddressField: '#requestAddressField',
+      requestGasButtonContainer: '#requestGasButtonContainer',
+      autocompleteList: '#autocompleteList',
+      backToMapButton: '#backToMapButton'
     },
     control: {
       menuButton: {
@@ -19,13 +23,31 @@ Ext.define('Purple.controller.Main', {
       map: {
         centerchange: 'adjustDeliveryLocByLatLng',
         maprender: 'initGeocoder'
+      },
+      requestAddressField: {
+        generateSuggestions: 'generateSuggestions',
+        addressInputMode: 'addressInputMode'
+      },
+      autocompleteList: {
+        updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
+      },
+      backToMapButton: {
+        mapMode: 'mapMode',
+        recenterAtUserLoc: 'recenterAtUserLoc'
+      },
+      requestGasButtonContainer: {
+        initRequestGasForm: 'initRequestGasForm'
       }
     }
   },
+  mapInitiallyCenteredYet: false,
+  mapInited: false,
   launch: function() {
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
-    return this.updateLatlng();
+    this.updateLatlng();
+    setTimeout(Ext.bind(this.updateLatlng, this), 2000);
+    return setTimeout(Ext.bind(this.updateLatlng, this), 5000);
   },
   updateLatlng: function() {
     var _ref,
@@ -36,13 +58,12 @@ Ext.define('Purple.controller.Main', {
     if (!this.updateLatlngBusy) {
       this.updateLatlngBusy = true;
       return navigator.geolocation.getCurrentPosition((function(position) {
-        var latLngWasSet;
         _this.updateLatlngBusy = false;
-        latLngWasSet = _this.lat != null;
         _this.lat = position.coords.latitude;
         _this.lng = position.coords.longitude;
-        if (!latLngWasSet) {
-          return _this.getMap().getMap().setCenter(new google.maps.LatLng(_this.lat, _this.lng));
+        if (!_this.mapInitiallyCenteredYet && _this.mapInited) {
+          _this.mapInitiallyCenteredYet = true;
+          return _this.recenterAtUserLoc();
         }
       }), (function() {
         return _this.updateLatlngBusy = false;
@@ -56,8 +77,9 @@ Ext.define('Purple.controller.Main', {
     return this.getMainContainer().toggleContainer();
   },
   initGeocoder: function() {
-    console.log('in here', google, google.maps);
-    return this.geocoder = new google.maps.Geocoder();
+    this.geocoder = new google.maps.Geocoder();
+    this.placesService = new google.maps.places.PlacesService(this.getMap().getMap());
+    return this.mapInited = true;
   },
   adjustDeliveryLocByLatLng: function() {
     var center;
@@ -67,17 +89,15 @@ Ext.define('Purple.controller.Main', {
     return this.updateDeliveryLocAddressByLatLng(this.deliveryLocLat, this.deliveryLocLng);
   },
   updateDeliveryLocAddressByLatLng: function(lat, lng) {
-    var latlng,
+    var latlng, _ref,
       _this = this;
     latlng = new google.maps.LatLng(lat, lng);
-    console.log(this.geocoder);
-    return this.geocoder.geocode({
+    return (_ref = this.geocoder) != null ? _ref.geocode({
       'latLng': latlng
     }, function(results, status) {
       var addressComponents, streetAddress;
       if (status === google.maps.GeocoderStatus.OK) {
         if (results[1]) {
-          console.log(results);
           addressComponents = results[0]['address_components'];
           streetAddress = "" + addressComponents[0]['short_name'] + " " + addressComponents[1]['short_name'];
           return _this.getRequestAddressField().setValue(streetAddress);
@@ -87,6 +107,86 @@ Ext.define('Purple.controller.Main', {
       } else {
         return console.log('Geocoder failed due to: ' + status);
       }
+    }) : void 0;
+  },
+  mapMode: function() {
+    this.getAutocompleteList().hide();
+    this.getBackToMapButton().hide();
+    this.getMap().show();
+    this.getSpacerBetweenMapAndAddress().show();
+    this.getRequestGasButtonContainer().show();
+    return this.getRequestAddressField().disable();
+  },
+  recenterAtUserLoc: function() {
+    return this.getMap().getMap().setCenter(new google.maps.LatLng(this.lat, this.lng));
+  },
+  addressInputMode: function() {
+    this.getMap().hide();
+    this.getSpacerBetweenMapAndAddress().hide();
+    this.getRequestGasButtonContainer().hide();
+    this.getAutocompleteList().show();
+    this.getBackToMapButton().show();
+    this.getRequestAddressField().enable();
+    return this.getRequestAddressField().focus();
+  },
+  generateSuggestions: function() {
+    var query, suggestions;
+    query = this.getRequestAddressField().getValue();
+    suggestions = new Array();
+    return Ext.Ajax.request({
+      url: "https://maps.googleapis.com/maps/api/place/autocomplete/json?types=establishment|geocode&radius=100&location=" + this.lat + "," + this.lng + "&sensor=true&key=AIzaSyA0p8k_hdb6m-xvAOosuYQnkDwjsn8NjFg",
+      params: {
+        'input': query
+      },
+      timeout: 30000,
+      method: 'GET',
+      scope: this,
+      success: function(response) {
+        var isAddress, locationName, p, resp, _i, _len, _ref, _ref1;
+        resp = Ext.JSON.decode(response.responseText);
+        if (resp.status === 'OK') {
+          _ref = resp.predictions;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            p = _ref[_i];
+            isAddress = p.terms[0].value === "" + parseInt(p.terms[0].value);
+            locationName = isAddress ? p.terms[0].value + " " + ((_ref1 = p.terms[1]) != null ? _ref1.value : void 0) : p.terms[0].value;
+            suggestions.push({
+              'locationName': locationName,
+              'locationVicinity': p.description.replace(locationName + ', ', ''),
+              'locationLat': '0',
+              'locationLng': '0',
+              'placeId': p.place_id
+            });
+          }
+          return this.getAutocompleteList().getStore().setData(suggestions);
+        }
+      }
     });
+  },
+  updateDeliveryLocAddressByLocArray: function(loc) {
+    var _this = this;
+    this.getRequestAddressField().setValue(loc['locationName']);
+    this.mapMode();
+    this.deliveryLocLat = 0;
+    this.deliveryLocLng = 0;
+    return this.placesService.getDetails({
+      placeId: loc['placeId']
+    }, function(place, status) {
+      var latlng;
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        latlng = place.geometry.location;
+        _this.deliveryLocLat = latlng.lat();
+        _this.deliveryLocLng = latlng.lng();
+        _this.getMap().getMap().setCenter(latlng);
+        return _this.getMap().getMap().setZoom(17);
+      } else {
+        return console.log('placesService error' + status);
+      }
+    });
+  },
+  initRequestGasForm: function() {
+    var deliveryLocName;
+    deliveryLocName = this.getRequestAddressField().getValue();
+    return alert("Initiate Request Gas Form with this data:\nLat: " + this.deliveryLocLat + "\n\nLng: " + this.deliveryLocLng + "\n\nAddress Name: " + deliveryLocName);
   }
 });

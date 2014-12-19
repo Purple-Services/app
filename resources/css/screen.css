@@ -74,6 +74,38 @@ body {
 .x-toolbar-top-toolbar .x-button.light {
     color: #4CABEF;
 }
+
+
+
+#menuButton, #helpButton {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 52px;
+    padding: 0px;
+    margin: 0px;
+    background-repeat: no-repeat;
+    background-size: 22px;
+    background-position: center;
+    background-color: transparent;
+}
+#menuButton.x-button-pressing,
+#helpButton.x-button-pressing {
+    opacity: 0.4;
+}
+#menuButton {
+    background-image: url('../images/menu-icon.png');
+}
+#helpButton {
+    background-image: url('../images/help-icon.png');
+}
+
+
+
+
+
+
 .x-toolbar-top-toolbar .x-title {
     text-shadow: none !important;
 }
@@ -137,6 +169,42 @@ body {
 }
 
 
+.x-field {
+    min-height: 0px;
+}
+
+
+.x-item-disabled .x-form-label:after {
+    display: none !important;
+}
+.x-item-disabled .x-input-el {
+    -webkit-text-fill-color: #888 !important;
+    color: #888 !important;
+    opacity: 1 !important;
+}
+
+
+.invalid-field .x-form-field,
+.invalid-field.x-field-signature .x-component-outer {
+    background-color: #ffb9b0;
+}
+
+.x-input-el {
+    border-radius: 0px;
+}
+
+.modified-disabled .x-form-field {
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
+}
+.modified-disabled .x-component-outer:after {
+    display: none !important;
+}
+
+
+
+
+
 
 .x-field-input {
     background-color: #E4F1F9;
@@ -157,12 +225,36 @@ input {
     padding: 7px 5px 10px 5px;
     min-height: 0px;
 }
+.special-input.x-item-disabled .x-input-el {
+    -webkit-text-fill-color: #FFFFFF !important;
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+    text-overflow: ellipsis;
+}
+
+
+.login-form .x-field {
+    background: transparent;
+    width: 100%;
+}
+.login-form .x-field-input {
+    background: transparent;
+}
+.login-form input {
+    color: #FFFFFF;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 7px 0px 5px 0px;
+    min-height: 0px;
+}
 
 
 
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
     padding: 10px 20px;
+    background: #ba1c8d;
 }
 .button-pop .x-button-label {
     font-weight: 900;
@@ -175,7 +267,48 @@ input {
     position: relative;
     top: 1px;
     left: 1px;
+    background: #ba1c8d !important;
 }
+
+.login-form .button-pop {
+    background: #EADFEE;
+    color: #B91B8C;
+}
+.login-form .button-pop.x-button-pressing {
+    background: #EADFEE !important;
+}
+
+
+.login-logo {
+    width: 100%;
+}
+
+
+.icon-login-button img {
+    width: 30px;
+}
+
+
+.special-label {
+    border-top: 2px solid #EADFEE;
+    font-weight: 900;
+    color: #EADFEE;
+    font-size: 16px;
+    width: 100%
+}
+
+.login-form .links-container .x-button {
+    color: #EADFEE;
+}
+.links-container .x-button.x-button-pressing {
+    color: #762B90 !important;
+    background: none;
+}
+
+
+
+
+
 
 
 .x-spinner .x-input-el, .x-field-select .x-input-el {
@@ -195,18 +328,28 @@ input {
     background-color: #fff;
 }
 .x-list {
-    background-color: #fff;
+    background-color: #EDEDED;
 }
 .x-list-item-first {
     border-top: none !important;
 }
 .x-list-normal .x-list-item.x-list-item-tpl,
 .x-list-normal .x-list-item .x-dock-horizontal {
-    border-color: #eee !important;
+    border-color: #e2c4ed !important;
+    color: #9f1878;
 }
 .x-panel.x-floating .x-toolbar-dark {
     background-color: transparent;
 }
+
+
+#autocompleteList .x-list-item.x-list-item-tpl {
+    font-weight: 900;
+}
+#autocompleteList .x-list-item.x-list-item-tpl .locationVicinity {
+    font-weight: 400;
+}
+
 
 
 /* toolbar panels (like brightness controls) */
@@ -262,41 +405,17 @@ input {
 }
 
 
-
-
-
-.x-item-disabled .x-form-label:after {
-    display: none !important;
+/* Holds "Back to Map" button, or others */
+.links-container .x-button {
+    color: #762B90;
+    font-size: 88%;
+    padding: 0px 0px 0px 0px;
+    height: inherit;
 }
-.x-item-disabled .x-input-el {
-    -webkit-text-fill-color: #888 !important;
-    color: #888 !important;
-    opacity: 1 !important;
+.links-container .x-button.x-button-pressing {
+    color: #BA1C8D;
+    background: none;
 }
-
-
-.invalid-field .x-form-field,
-.invalid-field.x-field-signature .x-component-outer {
-    background-color: #ffb9b0;
-}
-
-.x-input-el {
-    border-radius: 0px;
-}
-
-.modified-disabled .x-form-field {
-    color: #444 !important;
-    -webkit-text-fill-color: #444 !important;
-}
-.modified-disabled .x-component-outer:after {
-    display: none !important;
-}
-
-.consent-agreement-checkbox .x-form-label {
-    background: transparent;
-}
-
-
 
 
 
@@ -332,11 +451,25 @@ input {
 }
 
 
+.main-container {
+    /* background: #762B90; */
+}
+.strong-accent-bg {
+    background: linear-gradient(-45deg,#762B90 57%,#B91B8C 57%) !important;
+    background: -webkit-linear-gradient(-45deg,#762B90 57%,#B91B8C 57%) !important;
+}
+
 
 
 .offwhite-bg {
     background: #EDEDED !important;
 }
+
+
+
+
+
+
 
 
 /* SliderFill plugin  (not currently being used) */

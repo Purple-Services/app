@@ -9,7 +9,7 @@ Ext.Loader.setPath({
 Ext.application({
   name: 'Purple',
   requires: ['Override.form.Panel', 'Ux.field.Multiselect', 'Ux.field.SelectOtherField', 'Ux.field.MultiSelectOtherField', 'Ux.field.AutocompleteField'],
-  controllers: ['Main', 'TopToolbar'],
+  controllers: ['Main'],
   views: ['MainContainer', 'TopToolbar'],
   launch: function() {
     return Ext.Viewport.add([Ext.create('Purple.view.MainContainer')]);

@@ -74,6 +74,38 @@ body {
 .x-toolbar-top-toolbar .x-button.light {
     color: #4CABEF;
 }
+
+
+
+#menuButton, #helpButton {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 52px;
+    padding: 0px;
+    margin: 0px;
+    background-repeat: no-repeat;
+    background-size: 22px;
+    background-position: center;
+    background-color: transparent;
+}
+#menuButton.x-button-pressing,
+#helpButton.x-button-pressing {
+    opacity: 0.4;
+}
+#menuButton {
+    background-image: url('../images/menu-icon.png');
+}
+#helpButton {
+    background-image: url('../images/help-icon.png');
+}
+
+
+
+
+
+
 .x-toolbar-top-toolbar .x-title {
     text-shadow: none !important;
 }
@@ -137,6 +169,42 @@ body {
 }
 
 
+.x-field {
+    min-height: 0px;
+}
+
+
+.x-item-disabled .x-form-label:after {
+    display: none !important;
+}
+.x-item-disabled .x-input-el {
+    -webkit-text-fill-color: #888 !important;
+    color: #888 !important;
+    opacity: 1 !important;
+}
+
+
+.invalid-field .x-form-field,
+.invalid-field.x-field-signature .x-component-outer {
+    background-color: #ffb9b0;
+}
+
+.x-input-el {
+    border-radius: 0px;
+}
+
+.modified-disabled .x-form-field {
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
+}
+.modified-disabled .x-component-outer:after {
+    display: none !important;
+}
+
+
+
+
+
 
 .x-field-input {
     background-color: #E4F1F9;
@@ -156,6 +224,12 @@ input {
     font-weight: 900;
     padding: 7px 5px 10px 5px;
     min-height: 0px;
+}
+.special-input.x-item-disabled .x-input-el {
+    -webkit-text-fill-color: #FFFFFF !important;
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+    text-overflow: ellipsis;
 }
 
 
@@ -195,18 +269,28 @@ input {
     background-color: #fff;
 }
 .x-list {
-    background-color: #fff;
+    background-color: #EDEDED;
 }
 .x-list-item-first {
     border-top: none !important;
 }
 .x-list-normal .x-list-item.x-list-item-tpl,
 .x-list-normal .x-list-item .x-dock-horizontal {
-    border-color: #eee !important;
+    border-color: #e2c4ed !important;
+    color: #9f1878;
 }
 .x-panel.x-floating .x-toolbar-dark {
     background-color: transparent;
 }
+
+
+#autocompleteList .x-list-item.x-list-item-tpl {
+    font-weight: 900;
+}
+#autocompleteList .x-list-item.x-list-item-tpl .locationVicinity {
+    font-weight: 400;
+}
+
 
 
 /* toolbar panels (like brightness controls) */
@@ -262,58 +346,40 @@ input {
 }
 
 
+/* Holds "Back to Map" button */
+.links-container .x-button {
+    color: #762B90;
+    font-size: 88%;
+    padding: 0px 0px 0px 0px;
+    height: inherit;
+}
+.links-container .x-button.x-button-pressing {
+    color: #BA1C8D;
+    background: none;
+}
+
 
 
 
-.x-item-disabled .x-form-label:after {
-    display: none !important;
-}
-.x-item-disabled .x-input-el {
-    -webkit-text-fill-color: #888 !important;
-    color: #888 !important;
-    opacity: 1 !important;
-}
 
 
-.invalid-field .x-form-field,
-.invalid-field.x-field-signature .x-component-outer {
-    background-color: #ffb9b0;
+/* Map Form */
+#gmap:after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    /* left position is set with css; top has to be done in js */
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -50px;
+    z-index: 1000;
+    background-image: url('../images/map-pin.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: transparent;
+    pointer-events: none;
 }
-
-.x-input-el {
-    border-radius: 0px;
-}
-
-.modified-disabled .x-form-field {
-    color: #444 !important;
-    -webkit-text-fill-color: #444 !important;
-}
-.modified-disabled .x-component-outer:after {
-    display: none !important;
-}
-
-.consent-agreement-checkbox .x-form-label {
-    background: transparent;
-}
-
-/* 
-   For forms like:
-   medical-history
-   ocular-history
-   ocular-surgical-history
-   general-surgical-history
-   family-history
-*/
-.standalone-form-row.x-form-fieldset ~ .standalone-form-row.x-form-fieldset {
-    margin-top: -1.0em;
-}
-.standalone-form-row.x-form-fieldset {
-    margin-top: 0.5em;
-}
-.standalone-form-row.x-form-fieldset .x-field {
-    border-bottom: none;
-}
-
 
 
 

@@ -14,7 +14,6 @@ Ext.application
   ]
   controllers: [
     'Main'
-    'TopToolbar'
   ]
   views: [
     'MainContainer'

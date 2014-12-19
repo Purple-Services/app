@@ -5,6 +5,7 @@ Ext.define('Purple.view.MainContainer', {
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
+    cls: 'main-container',
     /**
     Any component within the container with an 'x-toolbar' class
     will be draggable.  To disable draggin all together, set this
@@ -103,20 +104,12 @@ Ext.define('Purple.view.MainContainer', {
           }
         ]
       }, {
-        title: "Account",
-        handler: function() {
-          return Ext.Msg.alert("Clicked");
-        }
-      }, {
-        title: "Orders",
-        handler: function() {
-          return Ext.Msg.alert("Clicked");
-        }
-      }, {
-        title: "Vehicles",
-        handler: function() {
-          return Ext.Msg.alert("Clicked");
-        }
+        title: "Login",
+        items: [
+          {
+            xtype: 'loginform'
+          }
+        ]
       }
     ]
   },

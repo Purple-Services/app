@@ -3,6 +3,7 @@ Ext.define 'Purple.view.MainContainer',
   xtype: 'maincontainer'
   config:
     fullscreen: yes
+    cls: 'main-container'
 
     ###*
     Any component within the container with an 'x-toolbar' class
@@ -111,19 +112,12 @@ Ext.define 'Purple.view.MainContainer',
         ]
       }
       {
-        title: "Account"
-        handler: ->
-          Ext.Msg.alert "Clicked"
-      }
-      {
-        title: "Orders"
-        handler: ->
-          Ext.Msg.alert "Clicked"
-      }
-      {
-        title: "Vehicles"
-        handler: ->
-          Ext.Msg.alert "Clicked"
+        title: "Login"
+        items: [
+          {
+            xtype: 'loginform'
+          }
+        ]
       }
     ]
     

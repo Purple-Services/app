@@ -11,10 +11,8 @@ Ext.define 'Purple.view.TopToolbar',
     items: [
       {
         xtype: 'button'
-        ctype: 'menuButton'
+        id: 'menuButton'
         ui: 'plain'
-        iconCls: 'icomoon-spinner'
-        iconMask: yes
         handler: -> @fireEvent 'menuButtonTap'
       }
       {
@@ -22,10 +20,8 @@ Ext.define 'Purple.view.TopToolbar',
       }
       {
         xtype: 'button'
-        ctype: 'helpButton'
+        id: 'helpButton'
         ui: 'plain'
-        iconCls: 'icomoon-jared-question'
-        iconMask: yes
         handler: -> @fireEvent 'helpButtonTap'
       }
     ]
