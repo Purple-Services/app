@@ -233,10 +233,28 @@ input {
 }
 
 
+.login-form .x-field {
+    background: transparent;
+    width: 100%;
+}
+.login-form .x-field-input {
+    background: transparent;
+}
+.login-form input {
+    color: #FFFFFF;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 7px 0px 5px 0px;
+    min-height: 0px;
+}
+
+
 
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
     padding: 10px 20px;
+    background: #ba1c8d;
 }
 .button-pop .x-button-label {
     font-weight: 900;
@@ -249,7 +267,48 @@ input {
     position: relative;
     top: 1px;
     left: 1px;
+    background: #ba1c8d !important;
 }
+
+.login-form .button-pop {
+    background: #EADFEE;
+    color: #B91B8C;
+}
+.login-form .button-pop.x-button-pressing {
+    background: #EADFEE !important;
+}
+
+
+.login-logo {
+    width: 100%;
+}
+
+
+.icon-login-button img {
+    width: 30px;
+}
+
+
+.special-label {
+    border-top: 2px solid #EADFEE;
+    font-weight: 900;
+    color: #EADFEE;
+    font-size: 16px;
+    width: 100%
+}
+
+.login-form .links-container .x-button {
+    color: #EADFEE;
+}
+.links-container .x-button.x-button-pressing {
+    color: #762B90 !important;
+    background: none;
+}
+
+
+
+
+
 
 
 .x-spinner .x-input-el, .x-field-select .x-input-el {
@@ -346,7 +405,7 @@ input {
 }
 
 
-/* Holds "Back to Map" button */
+/* Holds "Back to Map" button, or others */
 .links-container .x-button {
     color: #762B90;
     font-size: 88%;
@@ -392,11 +451,25 @@ input {
 }
 
 
+.main-container {
+    /* background: #762B90; */
+}
+.strong-accent-bg {
+    background: linear-gradient(-45deg,#762B90 57%,#B91B8C 57%) !important;
+    background: -webkit-linear-gradient(-45deg,#762B90 57%,#B91B8C 57%) !important;
+}
+
 
 
 .offwhite-bg {
     background: #EDEDED !important;
 }
+
+
+
+
+
+
 
 
 /* SliderFill plugin  (not currently being used) */

@@ -28,15 +28,12 @@ Ext.define('Purple.view.LoginForm', {
         },
         items: [
           {
-            xtype: 'spacer',
-            flex: 1
-          }, {
             xtype: 'component',
             flex: 0,
             padding: '0 0 30px 0',
             html: "<img src=\"resources/images/logo-light.png\" class=\"login-logo\" />"
           }, {
-            xtype: 'textfield',
+            xtype: 'emailfield',
             id: 'emailAddressField',
             flex: 0,
             name: 'email_address',
@@ -48,7 +45,7 @@ Ext.define('Purple.view.LoginForm', {
             flex: 0,
             html: 'email'
           }, {
-            xtype: 'textfield',
+            xtype: 'passwordfield',
             id: 'passwordField',
             flex: 0,
             name: 'password',
@@ -90,7 +87,7 @@ Ext.define('Purple.view.LoginForm', {
           }, {
             xtype: 'container',
             flex: 0,
-            padding: '10 0 10 0',
+            padding: '8 0 10 0',
             layout: {
               type: 'hbox',
               pack: 'center',
@@ -127,9 +124,6 @@ Ext.define('Purple.view.LoginForm', {
               }
             ]
           }, {
-            xtype: 'spacer',
-            flex: 1
-          }, {
             xtype: 'container',
             id: 'registerButton',
             flex: 0,
@@ -138,7 +132,7 @@ Ext.define('Purple.view.LoginForm', {
               pack: 'start',
               align: 'center'
             },
-            padding: '0 0 15 0',
+            padding: '15 0 15 0',
             cls: 'links-container',
             items: [
               {
