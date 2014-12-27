@@ -10,7 +10,7 @@ Ext.define 'Purple.view.MainContainer',
     will be draggable.  To disable draggin all together, set this
     to false.
     ###
-    slideSelector: "x-toolbar-top-toolbar"
+    slideSelector: "slideable"
     
     ###*
     Container must be dragged 10 pixels horizontally before allowing
@@ -111,15 +111,33 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
-      {
-        title: "Login"
-        items: [
-          {
-            xtype: 'loginform'
-          }
-        ]
-      }
     ]
     
   initialize: ->
     @callParent arguments
+
+    if false and localStorage['purpleUserId']?
+      @addItems [
+        {
+          title: "Account"
+          items: [
+            {
+              xtype: 'container'
+              layout: 'fit'
+              html: 'logged in, userId: ' + localStorage['purpleUserId']
+            }
+          ]
+        }
+      ]
+    else
+      @addItems [
+        {
+          title: "Login"
+          cls: 'slideable'
+          items: [
+            {
+              xtype: 'loginform'
+            }
+          ]
+        }
+      ]

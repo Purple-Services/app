@@ -47,7 +47,10 @@ Ext.define('Purple.controller.Main', {
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
     this.updateLatlng();
     setTimeout(Ext.bind(this.updateLatlng, this), 2000);
-    return setTimeout(Ext.bind(this.updateLatlng, this), 5000);
+    setTimeout(Ext.bind(this.updateLatlng, this), 5000);
+    if (localStorage['purpleUserId'] != null) {
+      return console.log('user is logged in with id: ', localStorage['purpleUserId']);
+    }
   },
   updateLatlng: function() {
     var _ref,

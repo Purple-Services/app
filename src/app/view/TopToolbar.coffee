@@ -4,6 +4,7 @@ Ext.define 'Purple.view.TopToolbar',
   config:
     docked: 'top'
     ui: 'top-toolbar'
+    cls: 'slideable'
     height: 60
     title: """
       <img src="resources/images/logo-word.png" style="height: 42px; padding-top: 11px;" />

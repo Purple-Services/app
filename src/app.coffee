@@ -14,6 +14,7 @@ Ext.application
   ]
   controllers: [
     'Main'
+    'Account'
   ]
   views: [
     'MainContainer'

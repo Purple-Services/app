@@ -15,6 +15,27 @@ Ext.define('Purple.view.LoginForm', {
     submitOnAction: false,
     items: [
       {
+        xtype: 'container',
+        id: 'registerButtonContainer',
+        flex: 0,
+        layout: {
+          type: 'vbox',
+          pack: 'start',
+          align: 'center'
+        },
+        cls: 'links-container',
+        style: "position: absolute;\nbottom: 15px;\nwidth: 100%;\ntext-align: center;",
+        items: [
+          {
+            xtype: 'button',
+            ui: 'plain',
+            text: 'Register',
+            handler: function() {
+              return this.up().up().fireEvent('registerButtonTap');
+            }
+          }
+        ]
+      }, {
         xtype: 'spacer',
         flex: 1
       }, {
@@ -28,6 +49,9 @@ Ext.define('Purple.view.LoginForm', {
         },
         items: [
           {
+            xtype: 'spacer',
+            flex: 1
+          }, {
             xtype: 'component',
             flex: 0,
             padding: '0 0 30px 0',
@@ -58,7 +82,7 @@ Ext.define('Purple.view.LoginForm', {
             html: 'password'
           }, {
             xtype: 'container',
-            id: 'loginButton',
+            id: 'loginButtonContainer',
             flex: 0,
             height: 110,
             padding: '27 0 10 0',
@@ -75,7 +99,7 @@ Ext.define('Purple.view.LoginForm', {
                 text: 'Login',
                 flex: 0,
                 handler: function() {
-                  return this.up().fireEvent('submitLoginForm');
+                  return this.up().up().up().fireEvent('nativeLogin');
                 }
               }
             ]
@@ -104,7 +128,7 @@ Ext.define('Purple.view.LoginForm', {
                 html: "<img src=\"resources/images/facebook-logo.png\" />",
                 flex: 0,
                 handler: function() {
-                  return this.up().fireEvent('facebookLogin');
+                  return this.up().up().up().fireEvent('facebookLogin');
                 }
               }, {
                 xtype: 'spacer',
@@ -116,7 +140,7 @@ Ext.define('Purple.view.LoginForm', {
                 html: "<img src=\"resources/images/google-logo.png\" />",
                 flex: 0,
                 handler: function() {
-                  return this.up().fireEvent('googleLogin');
+                  return this.up().up().up().fireEvent('facebookLogin');
                 }
               }, {
                 xtype: 'spacer',
@@ -124,26 +148,8 @@ Ext.define('Purple.view.LoginForm', {
               }
             ]
           }, {
-            xtype: 'container',
-            id: 'registerButton',
-            flex: 0,
-            layout: {
-              type: 'vbox',
-              pack: 'start',
-              align: 'center'
-            },
-            padding: '15 0 15 0',
-            cls: 'links-container',
-            items: [
-              {
-                xtype: 'button',
-                ui: 'plain',
-                text: 'Register',
-                handler: function() {
-                  return this.up().fireEvent('registerButtonTap');
-                }
-              }
-            ]
+            xtype: 'spacer',
+            flex: 1
           }
         ]
       }, {

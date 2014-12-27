@@ -12,7 +12,7 @@ Ext.define('Purple.view.MainContainer', {
     to false.
     */
 
-    slideSelector: "x-toolbar-top-toolbar",
+    slideSelector: "slideable",
     /**
     Container must be dragged 10 pixels horizontally before allowing
     the underlying container to actually be dragged.
@@ -103,17 +103,36 @@ Ext.define('Purple.view.MainContainer', {
             xtype: "mapform"
           }
         ]
-      }, {
-        title: "Login",
-        items: [
-          {
-            xtype: 'loginform'
-          }
-        ]
       }
     ]
   },
   initialize: function() {
-    return this.callParent(arguments);
+    this.callParent(arguments);
+    if (false && (localStorage['purpleUserId'] != null)) {
+      return this.addItems([
+        {
+          title: "Account",
+          items: [
+            {
+              xtype: 'container',
+              layout: 'fit',
+              html: 'logged in, userId: ' + localStorage['purpleUserId']
+            }
+          ]
+        }
+      ]);
+    } else {
+      return this.addItems([
+        {
+          title: "Login",
+          cls: 'slideable',
+          items: [
+            {
+              xtype: 'loginform'
+            }
+          ]
+        }
+      ]);
+    }
   }
 });

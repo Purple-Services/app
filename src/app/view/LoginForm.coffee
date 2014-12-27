@@ -20,6 +20,31 @@ Ext.define 'Purple.view.LoginForm'
       
     items: [
       {
+        xtype: 'container'
+        id: 'registerButtonContainer'
+        flex: 0
+        layout:
+          type: 'vbox'
+          pack: 'start'
+          align: 'center'
+        cls: 'links-container'
+        style: """
+          position: absolute;
+          bottom: 15px;
+          width: 100%;
+          text-align: center;
+        """
+        items: [
+          {
+            xtype: 'button'
+            ui: 'plain'
+            text: 'Register'
+            handler: ->
+              @up().up().fireEvent 'registerButtonTap'
+          }
+        ]
+      }
+      {
         xtype: 'spacer'
         flex: 1
       }
@@ -32,6 +57,10 @@ Ext.define 'Purple.view.LoginForm'
           pack: 'center'
           align: 'center'
         items: [
+          {
+            xtype: 'spacer'
+            flex: 1
+          }
           {
             xtype: 'component'
             flex: 0
@@ -70,7 +99,7 @@ Ext.define 'Purple.view.LoginForm'
           }
           {
             xtype: 'container'
-            id: 'loginButton'
+            id: 'loginButtonContainer'
             flex: 0
             height: 110
             padding: '27 0 10 0'
@@ -86,7 +115,8 @@ Ext.define 'Purple.view.LoginForm'
                 text: 'Login'
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'submitLoginForm'
+                  # 3 up()'s to get to loginform itself
+                  @up().up().up().fireEvent 'nativeLogin'
               }
             ]
           }
@@ -118,7 +148,8 @@ Ext.define 'Purple.view.LoginForm'
                 """
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'facebookLogin'
+                  # 3 up()'s to get to loginform itself
+                  @up().up().up().fireEvent 'facebookLogin'
               }
               {
                 xtype: 'spacer'
@@ -133,7 +164,8 @@ Ext.define 'Purple.view.LoginForm'
                 """
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'googleLogin'
+                  # 3 up()'s to get to loginform itself
+                  @up().up().up().fireEvent 'facebookLogin'
               }
               {
                 xtype: 'spacer'
@@ -142,25 +174,8 @@ Ext.define 'Purple.view.LoginForm'
             ]
           }
           {
-            xtype: 'container'
-            id: 'registerButton'
-            flex: 0
-            layout:
-              type: 'vbox'
-              pack: 'start'
-              align: 'center'
-            padding: '15 0 15 0'
-            
-            cls: 'links-container'
-            items: [
-              {
-                xtype: 'button'
-                ui: 'plain'
-                text: 'Register'
-                handler: ->
-                  @up().fireEvent 'registerButtonTap'
-              }
-            ]
+            xtype: 'spacer'
+            flex: 1
           }
         ]
       }

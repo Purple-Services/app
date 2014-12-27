@@ -52,6 +52,11 @@ Ext.define 'Purple.controller.Main'
     # (the immediate call is usually before the google map loads)
     # However, on my iPhone 5s the immediate call does work.
 
+    # check if logged in (or if they hacked the localStorage and claim to be)
+    if localStorage['purpleUserId']?
+      # already logged in
+      console.log 'user is logged in with id: ', localStorage['purpleUserId']
+
     # ga_storage._enableSSL() # TODO security - doesn't seem to actually use SSL
     # ga_storage._setAccount 'UA-55536703-1'
     # ga_storage._setDomain 'none'

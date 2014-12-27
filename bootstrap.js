@@ -682,6 +682,7 @@ Ext.ClassManager.addNameAlternateMappings({
     "Ext.viewport.WP"
   ],
   "Override.form.Panel": [],
+  "Purple.controller.Account": [],
   "Purple.controller.Main": [],
   "Purple.view.LoginForm": [],
   "Purple.view.MainContainer": [],
@@ -1417,6 +1418,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.Viewport": [],
   "Ext.viewport.WindowsPhone": [],
   "Override.form.Panel": [],
+  "Purple.controller.Account": [],
   "Purple.controller.Main": [],
   "Purple.view.LoginForm": [
     "widget.loginform"

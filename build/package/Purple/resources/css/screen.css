@@ -253,7 +253,7 @@ input {
 
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
-    padding: 10px 20px;
+    padding: 8px 20px;
     background: #ba1c8d;
 }
 .button-pop .x-button-label {
@@ -455,8 +455,8 @@ input {
     /* background: #762B90; */
 }
 .strong-accent-bg {
-    background: linear-gradient(-45deg,#762B90 57%,#B91B8C 57%) !important;
-    background: -webkit-linear-gradient(-45deg,#762B90 57%,#B91B8C 57%) !important;
+    background: linear-gradient(-45deg,#762B90 59%,#B91B8C 59%) !important;
+    background: -webkit-linear-gradient(-45deg,#762B90 59%,#B91B8C 59%) !important;
 }
 
 
