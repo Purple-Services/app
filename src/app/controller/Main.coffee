@@ -3,6 +3,7 @@ Ext.define 'Purple.controller.Main'
   requires: [
     'Purple.view.MapForm'
     'Purple.view.LoginForm'
+    'Purple.view.AccountForm'
     'Purple.view.RequestForm'
   ]
   config:
@@ -10,6 +11,7 @@ Ext.define 'Purple.controller.Main'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       menuButton: '#menuButton'
+      loginForm: 'loginform'
       mapForm: 'mapform'
       map: '#gmap'
       spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress'
@@ -175,10 +177,15 @@ Ext.define 'Purple.controller.Main'
         console.log 'placesService error' + status
 
   initRequestGasForm: ->
-    deliveryLocName = @getRequestAddressField().getValue()
-    alert """
-      Initiate Request Gas Form with this data:
-      Lat: #{@deliveryLocLat}\n
-      Lng: #{@deliveryLocLng}\n
-      Address Name: #{deliveryLocName}
-    """
+    # are they logged in?
+    if not localStorage['purpleUserId']?
+      # select the Login view
+      @getMainContainer().getItems().getAt(0).select 1, no, no
+    else
+      deliveryLocName = @getRequestAddressField().getValue()
+      alert """
+        Initiate Request Gas Form with this data:
+        Lat: #{@deliveryLocLat}\n
+        Lng: #{@deliveryLocLng}\n
+        Address Name: #{deliveryLocName}
+      """

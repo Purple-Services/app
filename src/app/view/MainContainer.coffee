@@ -105,6 +105,10 @@ Ext.define 'Purple.view.MainContainer',
         items: [
           {
             xtype: "toptoolbar"
+            cls: [
+              'bordered'
+              'shadowed'
+            ]
           }
           {
             xtype: "mapform"
@@ -116,15 +120,19 @@ Ext.define 'Purple.view.MainContainer',
   initialize: ->
     @callParent arguments
 
-    if false and localStorage['purpleUserId']?
+    if localStorage['purpleUserId']?
       @addItems [
         {
           title: "Account"
           items: [
             {
-              xtype: 'container'
-              layout: 'fit'
-              html: 'logged in, userId: ' + localStorage['purpleUserId']
+              xtype: "toptoolbar"
+              cls: [
+                'bordered'
+              ]
+            }
+            {
+              xtype: 'accountform'
             }
           ]
         }

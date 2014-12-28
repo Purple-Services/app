@@ -98,7 +98,8 @@ Ext.define('Purple.view.MainContainer', {
         slideButton: false,
         items: [
           {
-            xtype: "toptoolbar"
+            xtype: "toptoolbar",
+            cls: ['bordered', 'shadowed']
           }, {
             xtype: "mapform"
           }
@@ -108,15 +109,16 @@ Ext.define('Purple.view.MainContainer', {
   },
   initialize: function() {
     this.callParent(arguments);
-    if (false && (localStorage['purpleUserId'] != null)) {
+    if (localStorage['purpleUserId'] != null) {
       return this.addItems([
         {
           title: "Account",
           items: [
             {
-              xtype: 'container',
-              layout: 'fit',
-              html: 'logged in, userId: ' + localStorage['purpleUserId']
+              xtype: "toptoolbar",
+              cls: ['bordered']
+            }, {
+              xtype: 'accountform'
             }
           ]
         }

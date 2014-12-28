@@ -2,12 +2,13 @@
 
 Ext.define('Purple.controller.Main', {
   extend: 'Ext.app.Controller',
-  requires: ['Purple.view.MapForm', 'Purple.view.LoginForm', 'Purple.view.RequestForm'],
+  requires: ['Purple.view.MapForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.RequestForm'],
   config: {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       menuButton: '#menuButton',
+      loginForm: 'loginform',
       mapForm: 'mapform',
       map: '#gmap',
       spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress',
@@ -189,7 +190,11 @@ Ext.define('Purple.controller.Main', {
   },
   initRequestGasForm: function() {
     var deliveryLocName;
-    deliveryLocName = this.getRequestAddressField().getValue();
-    return alert("Initiate Request Gas Form with this data:\nLat: " + this.deliveryLocLat + "\n\nLng: " + this.deliveryLocLng + "\n\nAddress Name: " + deliveryLocName);
+    if (!(localStorage['purpleUserId'] != null)) {
+      return this.getMainContainer().getItems().getAt(0).select(1, false, false);
+    } else {
+      deliveryLocName = this.getRequestAddressField().getValue();
+      return alert("Initiate Request Gas Form with this data:\nLat: " + this.deliveryLocLat + "\n\nLng: " + this.deliveryLocLng + "\n\nAddress Name: " + deliveryLocName);
+    }
   }
 });

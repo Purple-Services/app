@@ -16,7 +16,7 @@ Ext.define('Purple.view.LoginForm', {
     items: [
       {
         xtype: 'container',
-        id: 'registerButtonContainer',
+        id: 'showRegisterButtonContainer',
         flex: 0,
         layout: {
           type: 'vbox',
@@ -31,7 +31,29 @@ Ext.define('Purple.view.LoginForm', {
             ui: 'plain',
             text: 'Register',
             handler: function() {
-              return this.up().up().fireEvent('registerButtonTap');
+              return this.up().up().fireEvent('showRegisterButtonTap');
+            }
+          }
+        ]
+      }, {
+        xtype: 'container',
+        id: 'showLoginButtonContainer',
+        flex: 0,
+        layout: {
+          type: 'vbox',
+          pack: 'start',
+          align: 'center'
+        },
+        cls: 'links-container',
+        hidden: true,
+        style: "position: absolute;\nbottom: 15px;\nwidth: 100%;\ntext-align: center;",
+        items: [
+          {
+            xtype: 'button',
+            ui: 'plain',
+            text: 'Login',
+            handler: function() {
+              return this.up().up().fireEvent('showLoginButtonTap');
             }
           }
         ]
@@ -104,12 +126,38 @@ Ext.define('Purple.view.LoginForm', {
               }
             ]
           }, {
+            xtype: 'container',
+            id: 'registerButtonContainer',
+            flex: 0,
+            height: 110,
+            padding: '27 0 10 0',
+            hidden: true,
+            layout: {
+              type: 'vbox',
+              pack: 'center',
+              align: 'center'
+            },
+            items: [
+              {
+                xtype: 'button',
+                ui: 'action',
+                cls: 'button-pop',
+                text: 'Register',
+                flex: 0,
+                handler: function() {
+                  return this.up().up().up().fireEvent('nativeRegister');
+                }
+              }
+            ]
+          }, {
             xtype: 'component',
+            id: 'alternativeLoginOptionsText',
             flex: 0,
             html: 'or login with',
             style: 'color: #ffffff;'
           }, {
             xtype: 'container',
+            id: 'alternativeLoginOptions',
             flex: 0,
             padding: '8 0 10 0',
             layout: {
@@ -140,7 +188,7 @@ Ext.define('Purple.view.LoginForm', {
                 html: "<img src=\"resources/images/google-logo.png\" />",
                 flex: 0,
                 handler: function() {
-                  return this.up().up().up().fireEvent('facebookLogin');
+                  return this.up().up().up().fireEvent('googleLogin');
                 }
               }, {
                 xtype: 'spacer',

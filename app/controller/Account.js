@@ -7,20 +7,74 @@ Ext.define('Purple.controller.Account', {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
-      loginForm: 'loginform'
+      accountForm: 'accountform',
+      loginForm: 'loginform',
+      loginButtonContainer: '#loginButtonContainer',
+      registerButtonContainer: '#registerButtonContainer',
+      showRegisterButtonContainer: '#showRegisterButtonContainer',
+      showLoginButtonContainer: '#showLoginButtonContainer',
+      alternativeLoginOptionsText: '#alternativeLoginOptionsText',
+      alternativeLoginOptions: '#alternativeLoginOptions'
     },
     control: {
       loginForm: {
         nativeLogin: 'nativeLogin',
+        nativeRegister: 'nativeRegister',
         facebookLogin: 'facebookLogin',
         googleLogin: 'googleLogin',
-        registerButtonTap: 'showRegisterForm'
+        showRegisterButtonTap: 'showRegisterForm',
+        showLoginButtonTap: 'showLoginForm'
+      },
+      accountForm: {
+        logoutButtonTap: 'logout'
       }
     }
   },
   launch: function() {
-    this.callParent(arguments);
-    return console.log('Account controller launched');
+    return this.callParent(arguments);
+  },
+  nativeRegister: function() {
+    var vals;
+    vals = this.getLoginForm().getValues();
+    return this.registerUser(vals['email_address'], vals['password']);
+  },
+  registerUser: function(platformId, authKey) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/register",
+      params: Ext.JSON.encode({
+        platform_id: platformId,
+        auth_key: authKey
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          localStorage['purpleUserType'] = response.user_type;
+          localStorage['purpleUserId'] = response.user_id;
+          return localStorage['purpleToken'] = response.token;
+        } else {
+          return Ext.Msg.alert('Error', response.message, (function() {}));
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        console.log(response);
+        return console.log('login error');
+      }
+    });
   },
   nativeLogin: function() {
     var vals;
@@ -86,6 +140,21 @@ Ext.define('Purple.controller.Account', {
     return alert('Facebook login error: ', errorStr);
   },
   showRegisterForm: function() {
-    return console.log('dfd');
+    this.getLoginButtonContainer().hide();
+    this.getShowRegisterButtonContainer().hide();
+    this.getShowLoginButtonContainer().show();
+    return this.getRegisterButtonContainer().show();
+  },
+  showLoginForm: function() {
+    this.getShowLoginButtonContainer().hide();
+    this.getRegisterButtonContainer().hide();
+    this.getLoginButtonContainer().show();
+    return this.getShowRegisterButtonContainer().show();
+  },
+  logout: function() {
+    console.log('logout');
+    delete localStorage['purpleUserType'];
+    delete localStorage['purpleUserId'];
+    return delete localStorage['purpleToken'];
   }
 });
