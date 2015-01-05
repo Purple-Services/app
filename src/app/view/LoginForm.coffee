@@ -89,10 +89,23 @@ Ext.define 'Purple.view.LoginForm'
           }
           {
             xtype: 'component'
+            id: 'purpleLoginLogo'
             flex: 0
             padding: '0 0 30px 0'
             html: """
               <img src="resources/images/logo-light.png" class="login-logo" />
+            """
+          }
+          {
+            xtype: 'component'
+            id: 'finalStepText'
+            flex: 0
+            padding: '0 0 30px 0'
+            hidden: yes
+            html: """
+              <span style="color: white; font-weight: 900; font-size: 22px;">
+                Almost done...
+              </span>
             """
           }
           {
@@ -105,6 +118,7 @@ Ext.define 'Purple.view.LoginForm'
           }
           {
             xtype: 'component'
+            id: 'emailAddressFieldLabel'
             cls: 'special-label'
             flex: 0
             html: 'email'
@@ -119,9 +133,46 @@ Ext.define 'Purple.view.LoginForm'
           }
           {
             xtype: 'component'
+            id: 'passwordFieldLabel'
             cls: 'special-label'
             flex: 0
             html: 'password'
+          }
+          {
+            xtype: 'textfield'
+            id: 'nameField'
+            flex: 0
+            name: 'name'
+            clearIcon: no
+            value: ''
+            hidden: yes
+          }
+          {
+            xtype: 'component'
+            id: 'nameFieldLabel'
+            cls: 'special-label'
+            flex: 0
+            html: 'full name'
+            hidden: yes
+          }
+          {
+            xtype: 'textfield'
+            id: 'phoneNumberField'
+            flex: 0
+            name: 'phone_number'
+            clearIcon: no
+            component:
+              type: 'tel'
+            value: ''
+            hidden: yes
+          }
+          {
+            xtype: 'component'
+            id: 'phoneNumberFieldLabel'
+            cls: 'special-label'
+            flex: 0
+            html: 'phone number'
+            hidden: yes
           }
           {
             xtype: 'container'
@@ -167,6 +218,30 @@ Ext.define 'Purple.view.LoginForm'
                 handler: ->
                   # 3 up()'s to get to loginform itself
                   @up().up().up().fireEvent 'nativeRegister'
+              }
+            ]
+          }
+          {
+            xtype: 'container'
+            id: 'createAccountButtonContainer'
+            flex: 0
+            height: 110
+            padding: '27 0 10 0'
+            hidden: yes
+            layout:
+              type: 'vbox'
+              pack: 'center'
+              align: 'center'
+            items: [
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop'
+                text: 'Create Account'
+                flex: 0
+                handler: ->
+                  # 3 up()'s to get to loginform itself
+                  @up().up().up().fireEvent 'createAccount'
               }
             ]
           }

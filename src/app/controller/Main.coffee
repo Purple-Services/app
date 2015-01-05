@@ -12,6 +12,7 @@ Ext.define 'Purple.controller.Main'
       topToolbar: 'toptoolbar'
       menuButton: '#menuButton'
       loginForm: 'loginform'
+      requestGasTabContainer: '#requestGasTabContainer'
       mapForm: 'mapform'
       map: '#gmap'
       spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress'
@@ -183,9 +184,9 @@ Ext.define 'Purple.controller.Main'
       @getMainContainer().getItems().getAt(0).select 1, no, no
     else
       deliveryLocName = @getRequestAddressField().getValue()
-      alert """
-        Initiate Request Gas Form with this data:
-        Lat: #{@deliveryLocLat}\n
-        Lng: #{@deliveryLocLng}\n
-        Address Name: #{deliveryLocName}
-      """
+      @getRequestGasTabContainer().setActiveItem(
+        Ext.create 'Purple.view.RequestForm',
+          lat: @deliveryLocLat
+          lng: @deliveryLocLng
+          address_street: deliveryLocName
+      )

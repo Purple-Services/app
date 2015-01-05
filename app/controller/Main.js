@@ -9,6 +9,7 @@ Ext.define('Purple.controller.Main', {
       topToolbar: 'toptoolbar',
       menuButton: '#menuButton',
       loginForm: 'loginform',
+      requestGasTabContainer: '#requestGasTabContainer',
       mapForm: 'mapform',
       map: '#gmap',
       spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress',
@@ -194,7 +195,11 @@ Ext.define('Purple.controller.Main', {
       return this.getMainContainer().getItems().getAt(0).select(1, false, false);
     } else {
       deliveryLocName = this.getRequestAddressField().getValue();
-      return alert("Initiate Request Gas Form with this data:\nLat: " + this.deliveryLocLat + "\n\nLng: " + this.deliveryLocLng + "\n\nAddress Name: " + deliveryLocName);
+      return this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm', {
+        lat: this.deliveryLocLat,
+        lng: this.deliveryLocLng,
+        address_street: deliveryLocName
+      }));
     }
   }
 });

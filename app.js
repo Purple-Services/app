@@ -3,12 +3,13 @@
 Ext.Loader.setPath({
   'Ux.field': 'ux',
   'Ext.ux': 'ux',
-  'Override.form': 'override'
+  'Override.form': 'override',
+  'Override.field': 'override'
 });
 
 Ext.application({
   name: 'Purple',
-  requires: ['Override.form.Panel', 'Ux.field.Multiselect', 'Ux.field.SelectOtherField', 'Ux.field.MultiSelectOtherField', 'Ux.field.AutocompleteField'],
+  requires: ['Override.form.Panel', 'Override.field.Select', 'Ux.field.Multiselect', 'Ux.field.SelectOtherField', 'Ux.field.MultiSelectOtherField', 'Ux.field.AutocompleteField'],
   controllers: ['Main', 'Account'],
   views: ['MainContainer', 'TopToolbar'],
   launch: function() {

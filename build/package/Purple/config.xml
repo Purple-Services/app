@@ -69,10 +69,13 @@
     <param name="APP_NAME" value="Purple" />
   </gap:plugin>
 
+  <gap:plugin name="nl.x-services.plugins.googleplus" version="1.0.7" />
   
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
   <preference name="StatusBarOverlaysWebView" value="false" />
   <!-- <preference name="StatusBarBackgroundColor" value="#EDEDED" /> -->
   <preference name="StatusBarBackgroundColor" value="red" />
+
+  <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
 
 </widget>

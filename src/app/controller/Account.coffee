@@ -11,14 +11,26 @@ Ext.define 'Purple.controller.Account'
       loginForm: 'loginform'
       loginButtonContainer: '#loginButtonContainer'
       registerButtonContainer: '#registerButtonContainer'
+      createAccountButtonContainer: '#createAccountButtonContainer'
       showRegisterButtonContainer: '#showRegisterButtonContainer'
       showLoginButtonContainer: '#showLoginButtonContainer'
+      purpleLoginLogo: '#purpleLoginLogo'
+      finalStepText: '#finalStepText'
       alternativeLoginOptionsText: '#alternativeLoginOptionsText'
       alternativeLoginOptions: '#alternativeLoginOptions'
+      emailAddressField: '#emailAddressField'
+      emailAddressFieldLabel: '#emailAddressFieldLabel'
+      passwordField: '#passwordField'
+      passwordFieldLabel: '#passwordFieldLabel'
+      nameField: '#nameField'
+      nameFieldLabel: '#nameFieldLabel'
+      phoneNumberField: '#phoneNumberField'
+      phoneNumberFieldLabel: '#phoneNumberFieldLabel'
     control:
       loginForm:
         nativeLogin: 'nativeLogin'
         nativeRegister: 'nativeRegister'
+        createAccount: 'createAccount' # for adding phone and name to account
         facebookLogin: 'facebookLogin'
         googleLogin: 'googleLogin'
         showRegisterButtonTap: 'showRegisterForm'
@@ -63,6 +75,7 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserType'] = response.user_type
           localStorage['purpleUserId'] = response.user_id
           localStorage['purpleToken'] = response.token
+          @accountSetup()
         else
           Ext.Msg.alert 'Error', response.message, (->)
       failure: (response_obj) ->
@@ -100,6 +113,8 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserType'] = response.user_type
           localStorage['purpleUserId'] = response.user_id
           localStorage['purpleToken'] = response.token
+          if response.new_account? and response.new_account
+            @accountSetup()
         else
           Ext.Msg.alert 'Error', response.message, (->)
       failure: (response_obj) ->
@@ -139,6 +154,81 @@ Ext.define 'Purple.controller.Account'
     
   facebookLoginFailure: (errorStr) ->
     alert 'Facebook login error: ', errorStr
+
+  googleLogin: ->
+    window.plugins.googleplus.login(
+      {
+        'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
+        # note: there is no API key needed for Android devices
+      },
+      (Ext.bind @googleLoginSuccess, this),
+      (-> console.log 'error', arguments)
+    )
+
+  googleLoginSuccess: (result) ->
+    console.log result
+    console.log 'googleLoginSuccess'
+    @authorizeUser(
+      'google',
+      result['userId'],
+      result['oauthToken']
+    )
+
+  accountSetup: ->
+    @showAccountSetupForm()
+
+  createAccount: ->
+    # for adding phone and name to account that was just created in db
+    name = @getNameField().getValue()
+    phoneNumber = @getPhoneNumberField().getValue()
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        user:
+          name: name
+          phone_number: phoneNumber
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          console.log 'success ', response
+        else
+          Ext.Msg.alert 'Error', response.message, (->)
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+        console.log 'login error'
+    
+
+  showAccountSetupForm: ->
+    @getLoginButtonContainer().hide()
+    @getShowRegisterButtonContainer().hide()
+    @getShowLoginButtonContainer().hide()
+    @getRegisterButtonContainer().hide()
+    @getEmailAddressField().hide()
+    @getEmailAddressFieldLabel().hide()
+    @getPasswordField().hide()
+    @getPasswordFieldLabel().hide()
+    @getAlternativeLoginOptions().hide()
+    @getAlternativeLoginOptionsText().hide()
+    @getPurpleLoginLogo().hide()
+    @getFinalStepText().show()
+    @getNameField().show()
+    @getNameFieldLabel().show()
+    @getPhoneNumberField().show()
+    @getPhoneNumberFieldLabel().show()
+    @getCreateAccountButtonContainer().show()
     
   showRegisterForm: ->
     @getLoginButtonContainer().hide()

@@ -55,6 +55,7 @@ Ext.Loader.addClassPathMappings({
   "Ext.ux.device": "touch/src/ux/device",
   "Ext.ux.parse": "touch/src/ux/parse",
   "Override": "",
+  "Override.field": "override",
   "Purple": "app",
   "SignatureField.Canvas": "ux/SignatureField.js",
   "Ux": ""
@@ -681,9 +682,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.viewport.WindowsPhone": [
     "Ext.viewport.WP"
   ],
+  "Override.field.Select": [],
   "Override.form.Panel": [],
   "Purple.controller.Account": [],
   "Purple.controller.Main": [],
+  "Purple.view.AccountForm": [],
   "Purple.view.LoginForm": [],
   "Purple.view.MainContainer": [],
   "Purple.view.MapForm": [],
@@ -1417,9 +1420,13 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.Ios": [],
   "Ext.viewport.Viewport": [],
   "Ext.viewport.WindowsPhone": [],
+  "Override.field.Select": [],
   "Override.form.Panel": [],
   "Purple.controller.Account": [],
   "Purple.controller.Main": [],
+  "Purple.view.AccountForm": [
+    "widget.accountform"
+  ],
   "Purple.view.LoginForm": [
     "widget.loginform"
   ],

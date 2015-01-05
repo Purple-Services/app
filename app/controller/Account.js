@@ -11,15 +11,27 @@ Ext.define('Purple.controller.Account', {
       loginForm: 'loginform',
       loginButtonContainer: '#loginButtonContainer',
       registerButtonContainer: '#registerButtonContainer',
+      createAccountButtonContainer: '#createAccountButtonContainer',
       showRegisterButtonContainer: '#showRegisterButtonContainer',
       showLoginButtonContainer: '#showLoginButtonContainer',
+      purpleLoginLogo: '#purpleLoginLogo',
+      finalStepText: '#finalStepText',
       alternativeLoginOptionsText: '#alternativeLoginOptionsText',
-      alternativeLoginOptions: '#alternativeLoginOptions'
+      alternativeLoginOptions: '#alternativeLoginOptions',
+      emailAddressField: '#emailAddressField',
+      emailAddressFieldLabel: '#emailAddressFieldLabel',
+      passwordField: '#passwordField',
+      passwordFieldLabel: '#passwordFieldLabel',
+      nameField: '#nameField',
+      nameFieldLabel: '#nameFieldLabel',
+      phoneNumberField: '#phoneNumberField',
+      phoneNumberFieldLabel: '#phoneNumberFieldLabel'
     },
     control: {
       loginForm: {
         nativeLogin: 'nativeLogin',
         nativeRegister: 'nativeRegister',
+        createAccount: 'createAccount',
         facebookLogin: 'facebookLogin',
         googleLogin: 'googleLogin',
         showRegisterButtonTap: 'showRegisterForm',
@@ -62,7 +74,8 @@ Ext.define('Purple.controller.Account', {
         if (response.success) {
           localStorage['purpleUserType'] = response.user_type;
           localStorage['purpleUserId'] = response.user_id;
-          return localStorage['purpleToken'] = response.token;
+          localStorage['purpleToken'] = response.token;
+          return this.accountSetup();
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
         }
@@ -106,7 +119,10 @@ Ext.define('Purple.controller.Account', {
         if (response.success) {
           localStorage['purpleUserType'] = response.user_type;
           localStorage['purpleUserId'] = response.user_id;
-          return localStorage['purpleToken'] = response.token;
+          localStorage['purpleToken'] = response.token;
+          if ((response.new_account != null) && response.new_account) {
+            return this.accountSetup();
+          }
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
         }
@@ -138,6 +154,83 @@ Ext.define('Purple.controller.Account', {
   },
   facebookLoginFailure: function(errorStr) {
     return alert('Facebook login error: ', errorStr);
+  },
+  googleLogin: function() {
+    return window.plugins.googleplus.login({
+      'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
+    }, Ext.bind(this.googleLoginSuccess, this), (function() {
+      return console.log('error', arguments);
+    }));
+  },
+  googleLoginSuccess: function(result) {
+    console.log(result);
+    console.log('googleLoginSuccess');
+    return this.authorizeUser('google', result['userId'], result['oauthToken']);
+  },
+  accountSetup: function() {
+    return this.showAccountSetupForm();
+  },
+  createAccount: function() {
+    var name, phoneNumber;
+    name = this.getNameField().getValue();
+    phoneNumber = this.getPhoneNumberField().getValue();
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        user: {
+          name: name,
+          phone_number: phoneNumber
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          return console.log('success ', response);
+        } else {
+          return Ext.Msg.alert('Error', response.message, (function() {}));
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        console.log(response);
+        return console.log('login error');
+      }
+    });
+  },
+  showAccountSetupForm: function() {
+    this.getLoginButtonContainer().hide();
+    this.getShowRegisterButtonContainer().hide();
+    this.getShowLoginButtonContainer().hide();
+    this.getRegisterButtonContainer().hide();
+    this.getEmailAddressField().hide();
+    this.getEmailAddressFieldLabel().hide();
+    this.getPasswordField().hide();
+    this.getPasswordFieldLabel().hide();
+    this.getAlternativeLoginOptions().hide();
+    this.getAlternativeLoginOptionsText().hide();
+    this.getPurpleLoginLogo().hide();
+    this.getFinalStepText().show();
+    this.getNameField().show();
+    this.getNameFieldLabel().show();
+    this.getPhoneNumberField().show();
+    this.getPhoneNumberFieldLabel().show();
+    return this.getCreateAccountButtonContainer().show();
   },
   showRegisterForm: function() {
     this.getLoginButtonContainer().hide();

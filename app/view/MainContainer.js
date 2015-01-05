@@ -99,9 +99,18 @@ Ext.define('Purple.view.MainContainer', {
         items: [
           {
             xtype: "toptoolbar",
-            cls: ['bordered', 'shadowed']
+            cls: ['slideable', 'bordered', 'shadowed']
           }, {
-            xtype: "mapform"
+            xtype: 'container',
+            id: 'requestGasTabContainer',
+            layout: {
+              type: 'card'
+            },
+            items: [
+              {
+                xtype: "mapform"
+              }
+            ]
           }
         ]
       }
@@ -116,7 +125,7 @@ Ext.define('Purple.view.MainContainer', {
           items: [
             {
               xtype: "toptoolbar",
-              cls: ['bordered']
+              cls: ['slideable', 'bordered']
             }, {
               xtype: 'accountform'
             }
