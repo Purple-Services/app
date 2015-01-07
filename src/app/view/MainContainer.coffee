@@ -1,5 +1,14 @@
 Ext.define 'Purple.view.MainContainer',
   extend: 'Ext.ux.slidenavigation.View'
+  requires: [
+    'Purple.view.MapForm'
+    'Purple.view.RequestForm'
+    'Purple.view.LoginForm'
+    'Purple.view.AccountForm'
+    'Purple.view.Orders'
+    'Purple.view.Vehicles'
+    'Purple.view.Help'
+  ]
   xtype: 'maincontainer'
   config:
     fullscreen: yes
@@ -99,9 +108,6 @@ Ext.define 'Purple.view.MainContainer',
       {
         title: "Request Gas"
         
-        # Enable the slide button using the defaults defined above in
-        # `slideButtonDefaults`.
-        slideButton: false
         items: [
           {
             xtype: "toptoolbar"
@@ -124,38 +130,81 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
+      {
+        title: "Login"
+        cls: 'slideable'
+        items: [
+          {
+            xtype: 'loginform'
+          }
+        ]
+      }
+      {
+        title: "Account"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'accountform'
+          }
+        ]
+      }
+      {
+        title: "Orders"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'orders'
+          }
+        ]
+      }
+      {
+        title: "Vehicles"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'vehicles'
+          }
+        ]
+      }
+      {
+        title: "Help"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'help'
+          }
+        ]
+      }
     ]
+
+    listeners:
+      initialize: ->
+        util.ctl('Menu').adjustForAppLoginState()
+        util.ctl('Menu').hideTitles [5] # always hide Help section
     
   initialize: ->
     @callParent arguments
-
-    if localStorage['purpleUserId']?
-      @addItems [
-        {
-          title: "Account"
-          items: [
-            {
-              xtype: "toptoolbar"
-              cls: [
-                'slideable'
-                'bordered'
-              ]
-            }
-            {
-              xtype: 'accountform'
-            }
-          ]
-        }
-      ]
-    else
-      @addItems [
-        {
-          title: "Login"
-          cls: 'slideable'
-          items: [
-            {
-              xtype: 'loginform'
-            }
-          ]
-        }
-      ]

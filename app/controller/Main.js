@@ -2,12 +2,10 @@
 
 Ext.define('Purple.controller.Main', {
   extend: 'Ext.app.Controller',
-  requires: ['Purple.view.MapForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.RequestForm'],
   config: {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
-      menuButton: '#menuButton',
       loginForm: 'loginform',
       requestGasTabContainer: '#requestGasTabContainer',
       mapForm: 'mapform',
@@ -19,8 +17,8 @@ Ext.define('Purple.controller.Main', {
       backToMapButton: '#backToMapButton'
     },
     control: {
-      menuButton: {
-        menuButtonTap: 'menuButtonHandler'
+      mapForm: {
+        recenterAtUserLoc: 'recenterAtUserLoc'
       },
       map: {
         centerchange: 'adjustDeliveryLocByLatLng',
@@ -77,9 +75,6 @@ Ext.define('Purple.controller.Main', {
         enableHighAccuracy: true
       });
     }
-  },
-  menuButtonHandler: function() {
-    return this.getMainContainer().toggleContainer();
   },
   initGeocoder: function() {
     this.geocoder = new google.maps.Geocoder();

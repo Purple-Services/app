@@ -1,13 +1,12 @@
 Ext.define 'Purple.controller.Account'
   extend: 'Ext.app.Controller'
-  requires: [
-    'Purple.view.LoginForm'
-  ]
   config:
     refs:
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       accountForm: 'accountform'
+
+      # LoginForm elements
       loginForm: 'loginform'
       loginButtonContainer: '#loginButtonContainer'
       registerButtonContainer: '#registerButtonContainer'
@@ -26,6 +25,13 @@ Ext.define 'Purple.controller.Account'
       nameFieldLabel: '#nameFieldLabel'
       phoneNumberField: '#phoneNumberField'
       phoneNumberFieldLabel: '#phoneNumberFieldLabel'
+
+      # AccountForm elements
+      accountNameField: '#accountNameField'
+      accountPhoneNumberField: '#accountPhoneNumberField'
+      accountEmailField: '#accountEmailField'
+      accountPaymentMethodField: '#accountPaymentMethodField'
+      
     control:
       loginForm:
         nativeLogin: 'nativeLogin'
@@ -72,8 +78,8 @@ Ext.define 'Purple.controller.Account'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          localStorage['purpleUserType'] = response.user_type
-          localStorage['purpleUserId'] = response.user_id
+          localStorage['purpleUserType'] = response.user.type
+          localStorage['purpleUserId'] = response.user.id
           localStorage['purpleToken'] = response.token
           @accountSetup()
         else
@@ -110,11 +116,16 @@ Ext.define 'Purple.controller.Account'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          localStorage['purpleUserType'] = response.user_type
-          localStorage['purpleUserId'] = response.user_id
+          localStorage['purpleUserType'] = response.user.type
+          localStorage['purpleUserId'] = response.user.id
+          localStorage['purpleUserName'] = response.user.name
+          localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleToken'] = response.token
-          if response.new_account? and response.new_account
+          if response.account_complete? and not response.account_complete
             @accountSetup()
+          else
+            util.ctl('Menu').adjustForAppLoginState()
+            util.ctl('Menu').selectOption 0
         else
           Ext.Msg.alert 'Error', response.message, (->)
       failure: (response_obj) ->
@@ -202,6 +213,8 @@ Ext.define 'Purple.controller.Account'
         response = Ext.JSON.decode response_obj.responseText
         if response.success
           console.log 'success ', response
+          util.ctl('Menu').adjustForAppLoginState()
+          util.ctl('Menu').selectOption 1
         else
           Ext.Msg.alert 'Error', response.message, (->)
       failure: (response_obj) ->
@@ -209,7 +222,6 @@ Ext.define 'Purple.controller.Account'
         response = Ext.JSON.decode response_obj.responseText
         console.log response
         console.log 'login error'
-    
 
   showAccountSetupForm: ->
     @getLoginButtonContainer().hide()
@@ -229,6 +241,11 @@ Ext.define 'Purple.controller.Account'
     @getPhoneNumberField().show()
     @getPhoneNumberFieldLabel().show()
     @getCreateAccountButtonContainer().show()
+    # populate with any info we might have (depending on user type)
+    if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
+      @getNameField().setValue localStorage['purpleUserName']
+    if localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt ''
+      @getPhoneNumberField().setValue localStorage['purpleUserPhoneNumber']
     
   showRegisterForm: ->
     @getLoginButtonContainer().hide()
@@ -244,7 +261,20 @@ Ext.define 'Purple.controller.Account'
 
   logout: ->
     # send ajax to kill session?
-    console.log 'logout'
     delete localStorage['purpleUserType']
     delete localStorage['purpleUserId']
+    delete localStorage['purpleUserName']
+    delete localStorage['purpleUserPhoneNumber']
     delete localStorage['purpleToken']
+    util.ctl('Menu').adjustForAppLoginState()
+    util.ctl('Menu').selectOption 1
+    
+  isUserLoggedIn: ->
+    localStorage['purpleUserId']? and localStorage['purpleUserId'] isnt ''
+
+  populateAccountForm: ->
+    @getAccountNameField().setValue ''
+    @getAccountPhoneNumberField().setValue ''
+    @getAccountEmailField().setValue ''
+    # TODO 
+    #@getAccountPaymentMethodField().setValue ''

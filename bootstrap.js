@@ -686,6 +686,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Override.form.Panel": [],
   "Purple.controller.Account": [],
   "Purple.controller.Main": [],
+  "Purple.controller.Menu": [],
   "Purple.view.AccountForm": [],
   "Purple.view.LoginForm": [],
   "Purple.view.MainContainer": [],
@@ -1424,6 +1425,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Override.form.Panel": [],
   "Purple.controller.Account": [],
   "Purple.controller.Main": [],
+  "Purple.controller.Menu": [],
   "Purple.view.AccountForm": [
     "widget.accountform"
   ],

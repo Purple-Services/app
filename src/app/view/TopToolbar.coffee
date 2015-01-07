@@ -11,17 +11,17 @@ Ext.define 'Purple.view.TopToolbar',
     items: [
       {
         xtype: 'button'
-        id: 'menuButton'
+        cls: 'menuButton'
         ui: 'plain'
-        handler: -> @fireEvent 'menuButtonTap'
+        handler: -> @up().fireEvent 'menuButtonTap'
       }
       {
         xtype: 'spacer'
       }
       {
         xtype: 'button'
-        id: 'helpButton'
+        cls: 'helpButton'
         ui: 'plain'
-        handler: -> @fireEvent 'helpButtonTap'
+        handler: -> @up().fireEvent 'helpButtonTap'
       }
     ]

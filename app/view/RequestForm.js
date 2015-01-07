@@ -39,9 +39,11 @@ Ext.define('Purple.view.RequestForm', {
             xtype: 'selectfield',
             flex: 0,
             name: 'time',
+            label: 'Time',
             listPicker: {
               title: 'Select a Time'
             },
+            cls: ['click-to-edit', 'bottom-margin'],
             value: '< 3 hr',
             options: [
               {
@@ -56,9 +58,11 @@ Ext.define('Purple.view.RequestForm', {
             xtype: 'selectfield',
             flex: 0,
             name: 'vehicle',
+            label: 'Vehicle',
             listPicker: {
               title: 'Select a Time'
             },
+            cls: ['click-to-edit', 'bottom-margin'],
             value: '123abc',
             options: [
               {
@@ -76,6 +80,11 @@ Ext.define('Purple.view.RequestForm', {
             xtype: 'component',
             flex: 0,
             cls: 'horizontal-rule'
+          }, {
+            xtype: 'component',
+            flex: 0,
+            html: 'Gallons',
+            cls: 'field-label-text'
           }, {
             xtype: 'component',
             flex: 0,
@@ -103,6 +112,11 @@ Ext.define('Purple.view.RequestForm', {
             xtype: 'component',
             flex: 0,
             cls: 'horizontal-rule'
+          }, {
+            xtype: 'component',
+            flex: 0,
+            html: 'Special Instructions',
+            cls: 'field-label-text'
           }, {
             xtype: 'textareafield',
             name: 'special_instructions',

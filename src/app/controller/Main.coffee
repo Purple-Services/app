@@ -1,16 +1,9 @@
 Ext.define 'Purple.controller.Main'
   extend: 'Ext.app.Controller'
-  requires: [
-    'Purple.view.MapForm'
-    'Purple.view.LoginForm'
-    'Purple.view.AccountForm'
-    'Purple.view.RequestForm'
-  ]
   config:
     refs:
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
-      menuButton: '#menuButton'
       loginForm: 'loginform'
       requestGasTabContainer: '#requestGasTabContainer'
       mapForm: 'mapform'
@@ -21,8 +14,8 @@ Ext.define 'Purple.controller.Main'
       autocompleteList: '#autocompleteList'
       backToMapButton: '#backToMapButton'
     control:
-      menuButton:
-        menuButtonTap: 'menuButtonHandler'
+      mapForm:
+        recenterAtUserLoc: 'recenterAtUserLoc'
       map:
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
@@ -83,9 +76,6 @@ Ext.define 'Purple.controller.Main'
           @updateLatlngBusy = no),
         {maximumAge: 0, enableHighAccuracy: true}
       )
-
-  menuButtonHandler: ->
-    @getMainContainer().toggleContainer()
 
   initGeocoder: ->
     @geocoder = new google.maps.Geocoder()

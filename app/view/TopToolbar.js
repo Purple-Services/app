@@ -11,19 +11,19 @@ Ext.define('Purple.view.TopToolbar', {
     items: [
       {
         xtype: 'button',
-        id: 'menuButton',
+        cls: 'menuButton',
         ui: 'plain',
         handler: function() {
-          return this.fireEvent('menuButtonTap');
+          return this.up().fireEvent('menuButtonTap');
         }
       }, {
         xtype: 'spacer'
       }, {
         xtype: 'button',
-        id: 'helpButton',
+        cls: 'helpButton',
         ui: 'plain',
         handler: function() {
-          return this.fireEvent('helpButtonTap');
+          return this.up().fireEvent('helpButtonTap');
         }
       }
     ]

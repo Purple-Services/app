@@ -37,6 +37,13 @@ Ext.define 'Purple.view.MapForm'
           streetViewControl: no
       }
       {
+        xtype: 'button'
+        id: 'centerMapButton'
+        flex: 0
+        ui: 'plain'
+        handler: -> @up().fireEvent 'recenterAtUserLoc'
+      }
+      {
         xtype: 'component'
         id: 'spacerBetweenMapAndAddress'
         flex: 0

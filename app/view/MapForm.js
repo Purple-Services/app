@@ -30,6 +30,14 @@ Ext.define('Purple.view.MapForm', {
           streetViewControl: false
         }
       }, {
+        xtype: 'button',
+        id: 'centerMapButton',
+        flex: 0,
+        ui: 'plain',
+        handler: function() {
+          return this.up().fireEvent('recenterAtUserLoc');
+        }
+      }, {
         xtype: 'component',
         id: 'spacerBetweenMapAndAddress',
         flex: 0,

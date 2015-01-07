@@ -68,14 +68,56 @@ Ext.define 'Purple.view.AccountForm'
           }
           {
             xtype: 'textfield'
+            id: '#accountNameField'
+            name: 'name'
+            label: 'Name'
+            value: 'blah'
+            flex: 0
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+            ]
+            disabled: yes
+          }
+          {
+            xtype: 'textfield'
+            id: '#accountPhoneNumberField'
+            flex: 0
+            name: 'phone_number'
+            label: 'Phone'
+            value: 'blah'
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+            ]
+            disabled: yes
+          }
+          {
+            xtype: 'textfield'
+            id: '#accountEmailField'
             flex: 0
             name: 'email'
-            value: 'email here'
+            label: 'Email'
+            value: 'blah'
+            disabled: yes
           }
           {
             xtype: 'component'
             flex: 0
             cls: 'horizontal-rule'
+          }
+          {
+            xtype: 'textfield'
+            id: '#accountPaymentMethodField'
+            flex: 0
+            name: 'payment_method'
+            label: 'Payment'
+            labelWidth: '40%'
+            value: 'blah'
+            cls: [
+              'click-to-edit'
+            ]
+            disabled: yes
           }
         ]
       }

@@ -2,6 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
@@ -95,7 +96,6 @@ Ext.define('Purple.view.MainContainer', {
     items: [
       {
         title: "Request Gas",
-        slideButton: false,
         items: [
           {
             xtype: "toptoolbar",
@@ -113,37 +113,64 @@ Ext.define('Purple.view.MainContainer', {
             ]
           }
         ]
+      }, {
+        title: "Login",
+        cls: 'slideable',
+        items: [
+          {
+            xtype: 'loginform'
+          }
+        ]
+      }, {
+        title: "Account",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'accountform'
+          }
+        ]
+      }, {
+        title: "Orders",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'orders'
+          }
+        ]
+      }, {
+        title: "Vehicles",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'vehicles'
+          }
+        ]
+      }, {
+        title: "Help",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'help'
+          }
+        ]
       }
-    ]
+    ],
+    listeners: {
+      initialize: function() {
+        util.ctl('Menu').adjustForAppLoginState();
+        return util.ctl('Menu').hideTitles([5]);
+      }
+    }
   },
   initialize: function() {
-    this.callParent(arguments);
-    if (localStorage['purpleUserId'] != null) {
-      return this.addItems([
-        {
-          title: "Account",
-          items: [
-            {
-              xtype: "toptoolbar",
-              cls: ['slideable', 'bordered']
-            }, {
-              xtype: 'accountform'
-            }
-          ]
-        }
-      ]);
-    } else {
-      return this.addItems([
-        {
-          title: "Login",
-          cls: 'slideable',
-          items: [
-            {
-              xtype: 'loginform'
-            }
-          ]
-        }
-      ]);
-    }
+    return this.callParent(arguments);
   }
 });

@@ -2,7 +2,6 @@
 
 Ext.define('Purple.controller.Account', {
   extend: 'Ext.app.Controller',
-  requires: ['Purple.view.LoginForm'],
   config: {
     refs: {
       mainContainer: 'maincontainer',
@@ -25,7 +24,11 @@ Ext.define('Purple.controller.Account', {
       nameField: '#nameField',
       nameFieldLabel: '#nameFieldLabel',
       phoneNumberField: '#phoneNumberField',
-      phoneNumberFieldLabel: '#phoneNumberFieldLabel'
+      phoneNumberFieldLabel: '#phoneNumberFieldLabel',
+      accountNameField: '#accountNameField',
+      accountPhoneNumberField: '#accountPhoneNumberField',
+      accountEmailField: '#accountEmailField',
+      accountPaymentMethodField: '#accountPaymentMethodField'
     },
     control: {
       loginForm: {
@@ -72,8 +75,8 @@ Ext.define('Purple.controller.Account', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
-          localStorage['purpleUserType'] = response.user_type;
-          localStorage['purpleUserId'] = response.user_id;
+          localStorage['purpleUserType'] = response.user.type;
+          localStorage['purpleUserId'] = response.user.id;
           localStorage['purpleToken'] = response.token;
           return this.accountSetup();
         } else {
@@ -117,11 +120,16 @@ Ext.define('Purple.controller.Account', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
-          localStorage['purpleUserType'] = response.user_type;
-          localStorage['purpleUserId'] = response.user_id;
+          localStorage['purpleUserType'] = response.user.type;
+          localStorage['purpleUserId'] = response.user.id;
+          localStorage['purpleUserName'] = response.user.name;
+          localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleToken'] = response.token;
-          if ((response.new_account != null) && response.new_account) {
+          if ((response.account_complete != null) && !response.account_complete) {
             return this.accountSetup();
+          } else {
+            util.ctl('Menu').adjustForAppLoginState();
+            return util.ctl('Menu').selectOption(0);
           }
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
@@ -199,7 +207,9 @@ Ext.define('Purple.controller.Account', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
-          return console.log('success ', response);
+          console.log('success ', response);
+          util.ctl('Menu').adjustForAppLoginState();
+          return util.ctl('Menu').selectOption(1);
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
         }
@@ -230,7 +240,13 @@ Ext.define('Purple.controller.Account', {
     this.getNameFieldLabel().show();
     this.getPhoneNumberField().show();
     this.getPhoneNumberFieldLabel().show();
-    return this.getCreateAccountButtonContainer().show();
+    this.getCreateAccountButtonContainer().show();
+    if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
+      this.getNameField().setValue(localStorage['purpleUserName']);
+    }
+    if ((localStorage['purpleUserPhoneNumber'] != null) && localStorage['purpleUserPhoneNumber'] !== '') {
+      return this.getPhoneNumberField().setValue(localStorage['purpleUserPhoneNumber']);
+    }
   },
   showRegisterForm: function() {
     this.getLoginButtonContainer().hide();
@@ -245,9 +261,20 @@ Ext.define('Purple.controller.Account', {
     return this.getShowRegisterButtonContainer().show();
   },
   logout: function() {
-    console.log('logout');
     delete localStorage['purpleUserType'];
     delete localStorage['purpleUserId'];
-    return delete localStorage['purpleToken'];
+    delete localStorage['purpleUserName'];
+    delete localStorage['purpleUserPhoneNumber'];
+    delete localStorage['purpleToken'];
+    util.ctl('Menu').adjustForAppLoginState();
+    return util.ctl('Menu').selectOption(1);
+  },
+  isUserLoggedIn: function() {
+    return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '';
+  },
+  populateAccountForm: function() {
+    this.getAccountNameField().setValue('');
+    this.getAccountPhoneNumberField().setValue('');
+    return this.getAccountEmailField().setValue('');
   }
 });
