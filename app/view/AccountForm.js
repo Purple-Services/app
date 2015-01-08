@@ -12,6 +12,11 @@ Ext.define('Purple.view.AccountForm', {
     },
     submitOnAction: false,
     cls: ['account-form', 'accent-bg'],
+    listeners: {
+      initialize: function() {
+        return util.ctl('Account').populateAccountForm();
+      }
+    },
     items: [
       {
         xtype: 'container',
@@ -58,29 +63,26 @@ Ext.define('Purple.view.AccountForm', {
             cls: 'horizontal-rule'
           }, {
             xtype: 'textfield',
-            id: '#accountNameField',
+            id: 'accountNameField',
             name: 'name',
             label: 'Name',
-            value: 'blah',
             flex: 0,
             cls: ['click-to-edit', 'bottom-margin'],
             disabled: true
           }, {
             xtype: 'textfield',
-            id: '#accountPhoneNumberField',
+            id: 'accountPhoneNumberField',
             flex: 0,
             name: 'phone_number',
             label: 'Phone',
-            value: 'blah',
             cls: ['click-to-edit', 'bottom-margin'],
             disabled: true
           }, {
             xtype: 'textfield',
-            id: '#accountEmailField',
+            id: 'accountEmailField',
             flex: 0,
             name: 'email',
             label: 'Email',
-            value: 'blah',
             disabled: true
           }, {
             xtype: 'component',
@@ -88,12 +90,11 @@ Ext.define('Purple.view.AccountForm', {
             cls: 'horizontal-rule'
           }, {
             xtype: 'textfield',
-            id: '#accountPaymentMethodField',
+            id: 'accountPaymentMethodField',
             flex: 0,
             name: 'payment_method',
             label: 'Payment',
             labelWidth: '40%',
-            value: 'blah',
             cls: ['click-to-edit'],
             disabled: true
           }

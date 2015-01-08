@@ -112,131 +112,65 @@ body {
 
 
 
-
-.x-toolbar-top-toolbar .x-title {
-    text-shadow: none !important;
-}
-.x-toolbar-top-toolbar .x-title .x-innerhtml {
-    color: #fff;
-}
-.x-toolbar-top-toolbar .subtitle {
-    position: relative;
-    left: -10px;
-    top: -1px;
-}
-.x-toolbar-top-toolbar .subtitle .x-innerhtml {
-    color: #4CABEF;
-    font-size: 1.13em;
-    font-weight: bold;
-}
-.x-form-fieldset-title {
-    position: relative;
-    margin: 1em 0em 0.8em;
-    font-size: 1.1em;
-    font-weight: normal;
-    color: #0073C4;
-    text-shadow: none;
-}
-.x-form-fieldset-title::before {
-    content: '';
-    position: absolute;
-    left: -40px;
-    top: 3px;
-    width: 22px;
-    height: 22px;
-    background-image: url('../images/four-dots.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.x-form-label {
-    background-color: #B8D8EF;
-}
-.x-form-label span {
-    font-weight: normal;
-}
-.x-form-label:after {
-    color: #4CAAF0;
-    margin-left: 3px;
-}
-.x-form-fieldset .x-form-fieldset-inner {
-    background: transparent;
-    border: none;
-}
-.x-form-fieldset .x-form-label {
-    color: #0073C4;
-    border: none;
-}
-.x-form-fieldset .x-field {
-    border: none;
-    margin-bottom: 3px;
-}
-.x-form-fieldset .x-field:last-child {
-    margin-bottom: 0px;
-}
-
-
 .x-field {
+    width: 100%;
     min-height: 0px;
+    background: #EDEDED;
 }
 
-
-.x-item-disabled .x-form-label:after {
-    display: none !important;
-}
-.x-item-disabled .x-input-el {
-    -webkit-text-fill-color: #888 !important;
-    color: #888 !important;
-    opacity: 1 !important;
-}
-
-
-.invalid-field .x-form-field,
-.invalid-field.x-field-signature .x-component-outer {
+.invalid-field .x-form-field {
     background-color: #ffb9b0;
 }
 
-.x-input-el {
-    border-radius: 0px;
-}
-
-.modified-disabled .x-form-field {
-    color: #444 !important;
-    -webkit-text-fill-color: #444 !important;
-}
-.modified-disabled .x-component-outer:after {
-    display: none !important;
-}
-
-
-
-
-
-
-.x-field-input {
-    background-color: #E4F1F9;
-}
-input {
+.x-form-label {
+    padding: 10px 0px 0px 5px;
     background: transparent;
-    color: #0073C4;
+    border-left: 10px solid #DCD2DA;
+    border-radius: 0px !important;
 }
+.field-label-text,
+.x-form-label span {
+    color: #752B90;
+    font-size: 18px;
+    font-weight: 900;
+}
+.x-field-input {
+    background: transparent;
+}
+.x-input-el {
+    text-align: right;
+    -webkit-text-fill-color: #742C90 !important;
+    color: #742C90 !important;
+    opacity: 1 !important;
+    font-weight: 400 !important;
+    border-radius: 0px;
+    background: transparent;
+}
+.x-field.bottom-margin {
+    margin-bottom: 10px;
+}
+.x-field.click-to-edit {
+    
+}
+
 
 .special-input .x-field-input {
     background-color: #762B90;
 }
 .special-input input {
-    color: #FFFFFF;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 900;
-    padding: 7px 5px 10px 5px;
-    min-height: 0px;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    text-align: center !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    padding: 7px 5px 10px 5px !important;
+    min-height: 0px !important;
 }
 .special-input.x-item-disabled .x-input-el {
     -webkit-text-fill-color: #FFFFFF !important;
     color: #FFFFFF !important;
     opacity: 1 !important;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis !important;
 }
 
 
@@ -248,7 +182,8 @@ input {
     background: transparent;
 }
 .login-form input {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
     text-align: left;
     font-size: 18px;
     font-weight: 400;
@@ -335,6 +270,8 @@ input {
     margin: 15px 0px;
     padding: 0px;
 }
+
+
 
 
 

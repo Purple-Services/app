@@ -688,11 +688,14 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
   "Purple.view.AccountForm": [],
+  "Purple.view.Help": [],
   "Purple.view.LoginForm": [],
   "Purple.view.MainContainer": [],
   "Purple.view.MapForm": [],
+  "Purple.view.Orders": [],
   "Purple.view.RequestForm": [],
   "Purple.view.TopToolbar": [],
+  "Purple.view.Vehicles": [],
   "SignatureField.Canvas": [],
   "Ux.field.AutocompleteField": [],
   "Ux.field.MultiSelectOtherField": [],
@@ -1429,6 +1432,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Purple.view.AccountForm": [
     "widget.accountform"
   ],
+  "Purple.view.Help": [
+    "widget.help"
+  ],
   "Purple.view.LoginForm": [
     "widget.loginform"
   ],
@@ -1438,11 +1444,17 @@ Ext.ClassManager.addNameAliasMappings({
   "Purple.view.MapForm": [
     "widget.mapform"
   ],
+  "Purple.view.Orders": [
+    "widget.orders"
+  ],
   "Purple.view.RequestForm": [
     "widget.requestform"
   ],
   "Purple.view.TopToolbar": [
     "widget.toptoolbar"
+  ],
+  "Purple.view.Vehicles": [
+    "widget.vehicles"
   ],
   "SignatureField.Canvas": [
     "widget.signaturefieldcanvas"

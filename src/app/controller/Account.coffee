@@ -78,8 +78,10 @@ Ext.define 'Purple.controller.Account'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
+          @getLoginForm().reset()
           localStorage['purpleUserType'] = response.user.type
           localStorage['purpleUserId'] = response.user.id
+          localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
           @accountSetup()
         else
@@ -116,10 +118,12 @@ Ext.define 'Purple.controller.Account'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
+          @getLoginForm().reset()
           localStorage['purpleUserType'] = response.user.type
           localStorage['purpleUserId'] = response.user.id
           localStorage['purpleUserName'] = response.user.name
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
+          localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
           if response.account_complete? and not response.account_complete
             @accountSetup()
@@ -213,6 +217,7 @@ Ext.define 'Purple.controller.Account'
         response = Ext.JSON.decode response_obj.responseText
         if response.success
           console.log 'success ', response
+          @getLoginForm().reset()
           util.ctl('Menu').adjustForAppLoginState()
           util.ctl('Menu').selectOption 1
         else
@@ -265,6 +270,7 @@ Ext.define 'Purple.controller.Account'
     delete localStorage['purpleUserId']
     delete localStorage['purpleUserName']
     delete localStorage['purpleUserPhoneNumber']
+    delete localStorage['purpleUserEmail']
     delete localStorage['purpleToken']
     util.ctl('Menu').adjustForAppLoginState()
     util.ctl('Menu').selectOption 1
@@ -273,8 +279,11 @@ Ext.define 'Purple.controller.Account'
     localStorage['purpleUserId']? and localStorage['purpleUserId'] isnt ''
 
   populateAccountForm: ->
-    @getAccountNameField().setValue ''
-    @getAccountPhoneNumberField().setValue ''
-    @getAccountEmailField().setValue ''
+    if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
+      @getAccountNameField()?.setValue localStorage['purpleUserName']
+    if localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt ''
+      @getAccountPhoneNumberField()?.setValue localStorage['purpleUserPhoneNumber']
+    if localStorage['purpleUserEmail']? and localStorage['purpleUserEmail'] isnt ''
+      @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
     # TODO 
     #@getAccountPaymentMethodField().setValue ''

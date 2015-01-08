@@ -139,9 +139,10 @@ body {
 }
 .x-input-el {
     text-align: right;
-    -webkit-text-fill-color: #742C90;
-    color: #742C90;
-    font-weight: 400;
+    -webkit-text-fill-color: #742C90 !important;
+    color: #742C90 !important;
+    opacity: 1 !important;
+    font-weight: 400 !important;
     border-radius: 0px;
     background: transparent;
 }
@@ -181,7 +182,8 @@ body {
     background: transparent;
 }
 .login-form input {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
     text-align: left;
     font-size: 18px;
     font-weight: 400;

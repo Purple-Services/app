@@ -67,7 +67,7 @@ Ext.define 'Purple.view.MainContainer',
           cls: 'menu-toolbar'
           docked: 'top'
           html: """
-            <img src="resources/images/slide-menu-logo.png" class="slide-menu-logo" />
+            <img src="resources/images/logo-light.png" class="slide-menu-logo" />
           """
         }
         {

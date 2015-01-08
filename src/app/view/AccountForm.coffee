@@ -16,6 +16,9 @@ Ext.define 'Purple.view.AccountForm'
       'account-form'
       'accent-bg'
     ]
+    listeners:
+      initialize: ->
+        util.ctl('Account').populateAccountForm()
     items: [
       {
         xtype: 'container'
@@ -68,10 +71,9 @@ Ext.define 'Purple.view.AccountForm'
           }
           {
             xtype: 'textfield'
-            id: '#accountNameField'
+            id: 'accountNameField'
             name: 'name'
             label: 'Name'
-            value: 'blah'
             flex: 0
             cls: [
               'click-to-edit'
@@ -81,11 +83,10 @@ Ext.define 'Purple.view.AccountForm'
           }
           {
             xtype: 'textfield'
-            id: '#accountPhoneNumberField'
+            id: 'accountPhoneNumberField'
             flex: 0
             name: 'phone_number'
             label: 'Phone'
-            value: 'blah'
             cls: [
               'click-to-edit'
               'bottom-margin'
@@ -94,11 +95,10 @@ Ext.define 'Purple.view.AccountForm'
           }
           {
             xtype: 'textfield'
-            id: '#accountEmailField'
+            id: 'accountEmailField'
             flex: 0
             name: 'email'
             label: 'Email'
-            value: 'blah'
             disabled: yes
           }
           {
@@ -108,12 +108,11 @@ Ext.define 'Purple.view.AccountForm'
           }
           {
             xtype: 'textfield'
-            id: '#accountPaymentMethodField'
+            id: 'accountPaymentMethodField'
             flex: 0
             name: 'payment_method'
             label: 'Payment'
             labelWidth: '40%'
-            value: 'blah'
             cls: [
               'click-to-edit'
             ]

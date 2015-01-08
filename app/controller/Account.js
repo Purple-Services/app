@@ -75,8 +75,10 @@ Ext.define('Purple.controller.Account', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
+          this.getLoginForm().reset();
           localStorage['purpleUserType'] = response.user.type;
           localStorage['purpleUserId'] = response.user.id;
+          localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleToken'] = response.token;
           return this.accountSetup();
         } else {
@@ -120,10 +122,12 @@ Ext.define('Purple.controller.Account', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
+          this.getLoginForm().reset();
           localStorage['purpleUserType'] = response.user.type;
           localStorage['purpleUserId'] = response.user.id;
           localStorage['purpleUserName'] = response.user.name;
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
+          localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleToken'] = response.token;
           if ((response.account_complete != null) && !response.account_complete) {
             return this.accountSetup();
@@ -208,6 +212,7 @@ Ext.define('Purple.controller.Account', {
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
           console.log('success ', response);
+          this.getLoginForm().reset();
           util.ctl('Menu').adjustForAppLoginState();
           return util.ctl('Menu').selectOption(1);
         } else {
@@ -265,6 +270,7 @@ Ext.define('Purple.controller.Account', {
     delete localStorage['purpleUserId'];
     delete localStorage['purpleUserName'];
     delete localStorage['purpleUserPhoneNumber'];
+    delete localStorage['purpleUserEmail'];
     delete localStorage['purpleToken'];
     util.ctl('Menu').adjustForAppLoginState();
     return util.ctl('Menu').selectOption(1);
@@ -273,8 +279,19 @@ Ext.define('Purple.controller.Account', {
     return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '';
   },
   populateAccountForm: function() {
-    this.getAccountNameField().setValue('');
-    this.getAccountPhoneNumberField().setValue('');
-    return this.getAccountEmailField().setValue('');
+    var _ref, _ref1, _ref2;
+    if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
+      if ((_ref = this.getAccountNameField()) != null) {
+        _ref.setValue(localStorage['purpleUserName']);
+      }
+    }
+    if ((localStorage['purpleUserPhoneNumber'] != null) && localStorage['purpleUserPhoneNumber'] !== '') {
+      if ((_ref1 = this.getAccountPhoneNumberField()) != null) {
+        _ref1.setValue(localStorage['purpleUserPhoneNumber']);
+      }
+    }
+    if ((localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '') {
+      return (_ref2 = this.getAccountEmailField()) != null ? _ref2.setValue(localStorage['purpleUserEmail']) : void 0;
+    }
   }
 });
