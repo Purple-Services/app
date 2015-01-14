@@ -11,7 +11,11 @@ Ext.define('Purple.view.Help', {
       align: 'start'
     },
     submitOnAction: false,
-    cls: ['accent-bg'],
+    cls: ['accent-bg', 'slideable'],
+    scrollable: {
+      direction: 'vertical',
+      directionLock: true
+    },
     items: [
       {
         xtype: 'spacer',
@@ -35,6 +39,114 @@ Ext.define('Purple.view.Help', {
             xtype: 'component',
             flex: 0,
             cls: 'horizontal-rule'
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            label: 'What is Purple?',
+            labelWidth: '100%',
+            cls: ['bottom-margin'],
+            disabled: true,
+            listeners: {
+              initialize: function(field) {
+                return field.element.on('tap', function() {
+                  var text;
+                  text = Ext.ComponentQuery.query('#q1text')[0];
+                  if (text.isHidden()) {
+                    return text.show();
+                  } else {
+                    return text.hide();
+                  }
+                });
+              }
+            }
+          }, {
+            xtype: 'component',
+            id: 'q1text',
+            cls: 'accordion-text',
+            showAnimation: 'fadeIn',
+            hidden: true,
+            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            label: 'How do I request a fill up?',
+            labelWidth: '100%',
+            cls: ['bottom-margin'],
+            disabled: true,
+            listeners: {
+              initialize: function(field) {
+                return field.element.on('tap', function() {
+                  var text;
+                  text = Ext.ComponentQuery.query('#q2text')[0];
+                  if (text.isHidden()) {
+                    return text.show();
+                  } else {
+                    return text.hide();
+                  }
+                });
+              }
+            }
+          }, {
+            xtype: 'component',
+            id: 'q2text',
+            cls: 'accordion-text',
+            showAnimation: 'fadeIn',
+            hidden: true,
+            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            label: 'How do I become a courier?',
+            labelWidth: '100%',
+            cls: ['bottom-margin'],
+            disabled: true,
+            listeners: {
+              initialize: function(field) {
+                return field.element.on('tap', function() {
+                  var text;
+                  text = Ext.ComponentQuery.query('#q3text')[0];
+                  if (text.isHidden()) {
+                    return text.show();
+                  } else {
+                    return text.hide();
+                  }
+                });
+              }
+            }
+          }, {
+            xtype: 'component',
+            id: 'q3text',
+            cls: 'accordion-text',
+            showAnimation: 'fadeIn',
+            hidden: true,
+            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa. Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa. Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            label: 'How do I check up on my current or past orders?',
+            labelWidth: '100%',
+            cls: ['bottom-margin'],
+            disabled: true,
+            listeners: {
+              initialize: function(field) {
+                return field.element.on('tap', function() {
+                  var text;
+                  text = Ext.ComponentQuery.query('#q4text')[0];
+                  if (text.isHidden()) {
+                    return text.show();
+                  } else {
+                    return text.hide();
+                  }
+                });
+              }
+            }
+          }, {
+            xtype: 'component',
+            id: 'q4text',
+            cls: 'accordion-text',
+            showAnimation: 'fadeIn',
+            hidden: true,
+            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
           }
         ]
       }, {

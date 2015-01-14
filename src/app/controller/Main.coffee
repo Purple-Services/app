@@ -13,6 +13,7 @@ Ext.define 'Purple.controller.Main'
       requestGasButtonContainer: '#requestGasButtonContainer'
       autocompleteList: '#autocompleteList'
       backToMapButton: '#backToMapButton'
+      requestForm: 'requestform'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -29,6 +30,8 @@ Ext.define 'Purple.controller.Main'
         recenterAtUserLoc: 'recenterAtUserLoc'
       requestGasButtonContainer:
         initRequestGasForm: 'initRequestGasForm'
+      requestForm:
+        backToMap: 'backToMapFromRequestForm'
 
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
@@ -180,3 +183,9 @@ Ext.define 'Purple.controller.Main'
           lng: @deliveryLocLng
           address_street: deliveryLocName
       )
+
+  backToMapFromRequestForm: ->
+    @getRequestGasTabContainer().remove(
+      @getRequestGasTabContainer().getActiveItem(),
+      yes
+    )

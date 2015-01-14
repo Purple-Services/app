@@ -123,16 +123,23 @@ body {
 }
 
 .x-form-label {
-    padding: 10px 0px 0px 5px;
+    padding: 10px 0px 12px 5px;
     background: transparent;
     border-left: 10px solid #DCD2DA;
     border-radius: 0px !important;
+    white-space: normal !important;
+}
+.x-field-textarea {
+    border-left: 10px solid #DCD2DA;
 }
 .field-label-text,
 .x-form-label span {
     color: #752B90;
     font-size: 18px;
     font-weight: 900;
+}
+.field-label-text {
+    padding-bottom: 9px;
 }
 .x-field-input {
     background: transparent;
@@ -146,12 +153,38 @@ body {
     border-radius: 0px;
     background: transparent;
 }
+.x-field-textarea .x-input-el {
+    text-align: left;
+}
 .x-field.bottom-margin {
     margin-bottom: 10px;
 }
-.x-field.click-to-edit {
-    
+.x-field.click-to-edit .x-input-el {
+    padding-right: 22px;
 }
+.x-field.click-to-edit .x-component-outer:after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: auto;
+    right: 0px;
+    background-color: transparent;
+    background-image: url('../images/disclosure.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-top: -8px;
+    -webkit-mask-image: none;
+}
+
+
+/* .x-webkit .x-selectmark-base, */
+/* .x-webkit .x-field-select .x-component-outer:after, */
+/* .x-field-select .x-webkit .x-component-outer:after { */
+/*     content: none !important; */
+/* } */
+
 
 
 .special-input .x-field-input {
@@ -249,12 +282,26 @@ body {
     color: #762B90 !important;
     background: none;
 }
+#backToMapButton .x-button.x-button-pressing {
+    color: #BA1C8D !important;
+}
 
-
-
+.link {
+    color: #752C90;
+    font-size: 15px;
+    text-transform: none;
+    padding: 0px;
+    margin: 0px;
+}
+.link.x-button.x-button-pressing {
+    color: #BA1C8D !important;
+    background: none;
+}
 
 
 .heading {
+    position: relative;
+    width: 100%;
     color: #BA1C8B;
     text-transform: uppercase;
     font-size: 24px;
@@ -263,6 +310,13 @@ body {
     padding: 0px;
     margin: 20px 0px 0px 0px;
 }
+
+.right-side-aligned-with-heading {
+    position: absolute;
+    right: -7px;
+    top: -4px;
+}
+
 .horizontal-rule {
     background: #EDEDED;
     height: 2px;
@@ -299,7 +353,7 @@ body {
     position: relative;
     width: 100%;
     height: 25px;
-    top: 60px;
+    top: 0px;
 }
 .tick-label {
     position: absolute;
@@ -310,17 +364,17 @@ body {
     font-size: 20px;
     color: #762B92;
 }
-.tick-label:after {
-    content: '';
-    position: absolute;
-    top: -40px;
-    left: 0px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #D9D9D9;
-    z-index: 19;
-}
+/* .tick-label:after { */
+/*     content: ''; */
+/*     position: absolute; */
+/*     top: -40px; */
+/*     left: 0px; */
+/*     width: 40px; */
+/*     height: 40px; */
+/*     border-radius: 50%; */
+/*     background: #D9D9D9; */
+/*     z-index: 19; */
+/* } */
 
 
 
@@ -508,4 +562,15 @@ a[href^="http://maps.google.com/maps"] {
 /* SliderFill plugin  (not currently being used) */
 .x-slider-fill1 {
     background-image:-webkit-gradient(linear, left top ,left bottom, from(#8b1a05), color-stop(.5, #e35e4f), color-stop(.95, #e18080), to(#6f2c22));
+}
+
+
+
+
+.accordion-text {
+    color: #333;
+    padding: 0px 18px 15px 18px;
+    text-align: justify;
+    font-size: 17px;
+    line-height: 22px;
 }

@@ -16,8 +16,9 @@ Ext.application
   ]
   controllers: [
     'Main'
-    'Account'
     'Menu'
+    'Account'
+    'Vehicles'
   ]
   views: [
     'MainContainer'

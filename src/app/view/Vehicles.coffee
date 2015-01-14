@@ -13,8 +13,16 @@ Ext.define 'Purple.view.Vehicles'
       align: 'start'
     submitOnAction: no
     cls: [
+      'request-form'
       'accent-bg'
+      'slideable'
     ]
+    scrollable:
+      direction: 'vertical'
+      directionLock: yes
+    listeners:
+      initialize: ->
+        @fireEvent 'loadVehiclesList'
     items: [
       {
         xtype: 'spacer'
@@ -30,7 +38,7 @@ Ext.define 'Purple.view.Vehicles'
           align: 'start'
         items: [
           {
-            xtype: 'component'
+            xtype: 'container'
             flex: 0
             cls: 'heading'
             html: 'Vehicles'
@@ -40,6 +48,35 @@ Ext.define 'Purple.view.Vehicles'
             flex: 0
             cls: 'horizontal-rule'
           }
+          {
+            xtype: 'container'
+            id: 'vehiclesList'
+            flex: 0
+            layout: 'vbox'
+          }
+          {
+            xtype: 'container'
+            id: 'addVehicleButtonContainer'
+            flex: 0
+            height: 110
+            width: '100%'
+            padding: '0 0 5 0'
+            layout:
+              type: 'vbox'
+              pack: 'center'
+              align: 'center'
+            items: [
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop'
+                text: 'Add Vehicle'
+                flex: 0
+                handler: ->
+                  @up().fireEvent 'editVehicle'
+              }
+            ]
+          }
         ]
       }
       {
@@ -47,3 +84,5 @@ Ext.define 'Purple.view.Vehicles'
         flex: 1
       }
     ]
+
+ 

@@ -14,10 +14,10 @@ Ext.define 'Purple.view.LoginForm'
     cls: [
       'login-form'
       'strong-accent-bg'
+      'slideable'
     ]
     scrollable: no
     submitOnAction: no
-      
     items: [
       {
         xtype: 'container'

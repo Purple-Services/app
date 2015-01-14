@@ -14,7 +14,8 @@ Ext.define('Purple.controller.Main', {
       requestAddressField: '#requestAddressField',
       requestGasButtonContainer: '#requestGasButtonContainer',
       autocompleteList: '#autocompleteList',
-      backToMapButton: '#backToMapButton'
+      backToMapButton: '#backToMapButton',
+      requestForm: 'requestform'
     },
     control: {
       mapForm: {
@@ -37,6 +38,9 @@ Ext.define('Purple.controller.Main', {
       },
       requestGasButtonContainer: {
         initRequestGasForm: 'initRequestGasForm'
+      },
+      requestForm: {
+        backToMap: 'backToMapFromRequestForm'
       }
     }
   },
@@ -196,5 +200,8 @@ Ext.define('Purple.controller.Main', {
         address_street: deliveryLocName
       }));
     }
+  },
+  backToMapFromRequestForm: function() {
+    return this.getRequestGasTabContainer().remove(this.getRequestGasTabContainer().getActiveItem(), true);
   }
 });

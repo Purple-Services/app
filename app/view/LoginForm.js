@@ -10,7 +10,7 @@ Ext.define('Purple.view.LoginForm', {
       pack: 'center',
       align: 'center'
     },
-    cls: ['login-form', 'strong-accent-bg'],
+    cls: ['login-form', 'strong-accent-bg', 'slideable'],
     scrollable: false,
     submitOnAction: false,
     items: [

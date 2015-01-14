@@ -1,6 +1,6 @@
-Ext.define 'Purple.view.RequestForm'
+Ext.define 'Purple.view.EditVehicleForm'
   extend: 'Ext.form.Panel'
-  xtype: 'requestform'
+  xtype: 'editvehicleform'
   requires: [
     'Ext.form.*'
     'Ext.field.*'
@@ -20,6 +20,15 @@ Ext.define 'Purple.view.RequestForm'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+    listeners:
+      initialize: ->
+        heading = Ext.ComponentQuery.query('#editVehicleFormHeading')[0]
+        heading.setHtml(
+          if @config.vehicleId is 'new'
+            'Add Vehicle'
+          else
+            'Edit Vehicle'
+        )
     items: [
       {
         xtype: 'spacer'
@@ -37,19 +46,20 @@ Ext.define 'Purple.view.RequestForm'
           {
             xtype: 'container'
             flex: 0
+            id: 'editVehicleFormHeading'
             cls: 'heading'
-            html: 'Request Gas'
+            html: ''
             items: [
               {
                 xtype: 'button'
                 ui: 'plain'
-                text: 'Back to Map'
+                text: 'Back to Vehicles'
                 cls: [
                   'right-side-aligned-with-heading'
                   'link'
                 ] 
                 handler: ->
-                  @up().up().up().fireEvent 'backToMap'
+                  @up().up().up().fireEvent 'backToVehicles'
               }
             ]
           }
@@ -61,136 +71,129 @@ Ext.define 'Purple.view.RequestForm'
           {
             xtype: 'selectfield'
             flex: 0
-            name: 'time'
-            label: 'Time'
+            name: 'year'
+            label: 'Year'
             listPicker:
-              title: 'Select a Time'
+              title: 'Select Vehicle Year'
             cls: [
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '< 3 hr'
+            value: '2014'
             options: [
               {
-                text: 'within 1 hour'
-                value: '< 1 hr'
+                text: '2015'
+                value: '2015'
               }
               {
-                text: 'within 3 hours'
-                value: '< 3 hr'
+                text: '2014'
+                value: '2014'
+              }
+              {
+                text: '2013'
+                value: '2013'
               }
             ]
           }
           {
             xtype: 'selectfield'
             flex: 0
-            name: 'vehicle'
-            label: 'Vehicle'
+            name: 'make'
+            label: 'Make'
             listPicker:
-              title: 'Select a Time'
+              title: 'Select Vehicle Make'
             cls: [
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '123abc'
+            value: 'Lexus'
             options: [
               {
-                text: 'Pontiac Trans Am'
-                value: '123abc'
+                text: 'Lexus'
+                value: 'Lexus'
               }
               {
-                text: 'Audi A4'
-                value: 'hdj883'
+                text: 'Audi'
+                value: 'Audi'
               }
               {
-                text: 'New Vehicle'
-                value: 'add'
+                text: 'Honda'
+                value: 'Honda'
               }
             ]
           }
           {
             xtype: 'selectfield'
             flex: 0
-            name: 'gallons'
-            label: 'Gallons'
+            name: 'model'
+            label: 'Model'
             listPicker:
-              title: 'Number of Gallons'
+              title: 'Select Vehicle Model'
             cls: [
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '15'
+            value: 'ES 350'
             options: [
               {
-                text: '10'
-                value: '10'
+                text: 'ES 350'
+                value: 'ES 350'
               }
               {
-                text: '15'
-                value: '15'
+                text: 'Pilot'
+                value: 'Pilot'
+              }
+              {
+                text: 'Civic'
+                value: 'Civic'
               }
             ]
           }
-          # {
-          #   xtype: 'component'
-          #   flex: 0
-          #   cls: 'horizontal-rule'
-          # }
-          # {
-          #   xtype: 'component'
-          #   flex: 0
-          #   html: 'Gallons'
-          #   cls: 'field-label-text'
-          # }
-          # {
-          #   xtype: 'sliderfield'
-          #   id: 'gallons'
-          #   flex: 0
-          #   width: '100%'
-          #   padding: 0
-          #   margin: 0
-          #   minValue: 5
-          #   maxValue: 15
-          #   increment: 5
-          #   listeners:
-          #     drag: (field, ignore, ignore2, newValue) ->
-          #       #@adjustBrightness newValue
-          #       true
-          #     change: (field, ignore, ignore2, newValue) ->
-          #       #@adjustBrightness newValue
-          #       true
-          # }
-          # {
-          #   xtype: 'component'
-          #   flex: 0
-          #   width: '100%'
-          #   html: """
-          #     <div class="tick-label-container">
-          #       <div class="tick-label" style="margin-left: 0px;">5</div>
-          #       <div class="tick-label" style="left: 50%;">10</div>
-          #       <div class="tick-label" style="right: 0px;">15</div>
-          #     </div>
-          #   """
-          # }
           {
             xtype: 'component'
             flex: 0
             cls: 'horizontal-rule'
           }
           {
-            xtype: 'component'
+            xtype: 'selectfield'
             flex: 0
-            html: 'Special Instructions'
-            cls: 'field-label-text'
+            name: 'gas'
+            label: 'Gas'
+            listPicker:
+              title: 'Select Vehicle Gas'
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+            ]
+            value: '89'
+            options: [
+              {
+                text: 'Unleaded 89 Octane'
+                value: '89'
+              }
+              {
+                text: 'Unleaded 91 Octane'
+                value: '91'
+              }
+            ]
           }
           {
-            xtype: 'textareafield'
-            name: 'special_instructions'
-            maxRows: 4
+            xtype: 'textfield'
+            name: 'license_plate'
+            label: 'License Plate'
+            flex: 0
+            cls: [
+              'bottom-margin'
+            ]
+            clearIcon: no
+          }
+          {
+            xtype: 'button'
+            ui: 'plain'
+            text: 'take photo'
           }
           {
             xtype: 'container'
-            id: 'sendRequestButtonContainer'
             flex: 0
             height: 110
             width: '100%'
@@ -204,10 +207,10 @@ Ext.define 'Purple.view.RequestForm'
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Send Request'
+                text: 'Save Changes'
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'sendRequest'
+                  @up().up().up().fireEvent 'saveChanges'
               }
             ]
           }

@@ -12,9 +12,11 @@ Ext.define 'Purple.view.AccountForm'
       pack: 'start'
       align: 'start'
     submitOnAction: no
+    scrollable: no
     cls: [
       'account-form'
       'accent-bg'
+      'slideable'
     ]
     listeners:
       initialize: ->

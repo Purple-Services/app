@@ -11,7 +11,11 @@ Ext.define('Purple.view.Orders', {
       align: 'start'
     },
     submitOnAction: false,
-    cls: ['accent-bg'],
+    cls: ['accent-bg', 'slideable'],
+    scrollable: {
+      direction: 'vertical',
+      directionLock: true
+    },
     items: [
       {
         xtype: 'spacer',

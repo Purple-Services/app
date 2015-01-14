@@ -99,7 +99,7 @@ Ext.define('Purple.view.MainContainer', {
         items: [
           {
             xtype: "toptoolbar",
-            cls: ['slideable', 'bordered', 'shadowed']
+            cls: ['slideable', 'bordered']
           }, {
             xtype: 'container',
             id: 'requestGasTabContainer',
@@ -148,7 +148,16 @@ Ext.define('Purple.view.MainContainer', {
             xtype: "toptoolbar",
             cls: ['slideable', 'bordered']
           }, {
-            xtype: 'vehicles'
+            xtype: 'container',
+            id: 'vehiclesTabContainer',
+            layout: {
+              type: 'card'
+            },
+            items: [
+              {
+                xtype: 'vehicles'
+              }
+            ]
           }
         ]
       }, {

@@ -114,7 +114,7 @@ Ext.define 'Purple.view.MainContainer',
             cls: [
               'slideable'
               'bordered'
-              'shadowed'
+              # 'shadowed'
             ]
           }
           {
@@ -180,7 +180,15 @@ Ext.define 'Purple.view.MainContainer',
             ]
           }
           {
-            xtype: 'vehicles'
+            xtype: 'container'
+            id: 'vehiclesTabContainer'
+            layout:
+              type: 'card'
+            items: [
+              {
+                xtype: 'vehicles'
+              }
+            ]
           }
         ]
       }

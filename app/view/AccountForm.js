@@ -11,7 +11,8 @@ Ext.define('Purple.view.AccountForm', {
       align: 'start'
     },
     submitOnAction: false,
-    cls: ['account-form', 'accent-bg'],
+    scrollable: false,
+    cls: ['account-form', 'accent-bg', 'slideable'],
     listeners: {
       initialize: function() {
         return util.ctl('Account').populateAccountForm();

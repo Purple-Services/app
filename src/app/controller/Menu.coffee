@@ -47,3 +47,8 @@ Ext.define 'Purple.controller.Menu'
     else
       @hideTitles [2, 3, 4]
       @showTitles [1]
+
+  # getCurrentTopToolbar: ->
+  #   allTopToolbars = @getMainContainer().query('[xtype=toptoolbar]')
+  #   for t in allTopToolbars
+  #     console.log t.removeCls 'shadowed'

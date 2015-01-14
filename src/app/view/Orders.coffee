@@ -14,7 +14,11 @@ Ext.define 'Purple.view.Orders'
     submitOnAction: no
     cls: [
       'accent-bg'
+      'slideable'
     ]
+    scrollable:
+      direction: 'vertical'
+      directionLock: yes
     items: [
       {
         xtype: 'spacer'
