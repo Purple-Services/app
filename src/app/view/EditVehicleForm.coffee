@@ -181,17 +181,19 @@ Ext.define 'Purple.view.EditVehicleForm'
             xtype: 'textfield'
             name: 'license_plate'
             label: 'License Plate'
+            labelWidth: 125
             flex: 0
             cls: [
               'bottom-margin'
+              'uppercase-input'
             ]
             clearIcon: no
           }
-          {
-            xtype: 'button'
-            ui: 'plain'
-            text: 'take photo'
-          }
+          # {
+          #   xtype: 'button'
+          #   ui: 'plain'
+          #   text: 'take photo'
+          # }
           {
             xtype: 'container'
             flex: 0

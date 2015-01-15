@@ -166,7 +166,7 @@ body {
     content: '';
     position: absolute;
     width: 16px;
-    height: 16px;
+    height: 14px;
     top: 50%;
     left: auto;
     right: 0px;
@@ -174,7 +174,7 @@ body {
     background-image: url('../images/disclosure.png');
     background-size: contain;
     background-repeat: no-repeat;
-    margin-top: -8px;
+    margin-top: -7px;
     -webkit-mask-image: none;
 }
 
@@ -327,6 +327,9 @@ body {
 
 
 
+.uppercase-input input {
+    text-transform: uppercase;
+}
 
 
 

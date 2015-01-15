@@ -9,7 +9,7 @@ Ext.Loader.setPath({
 
 Ext.application({
   name: 'Purple',
-  requires: ['Override.form.Panel', 'Override.field.Select', 'Ux.field.Multiselect', 'Ux.field.SelectOtherField', 'Ux.field.MultiSelectOtherField', 'Ux.field.AutocompleteField'],
+  requires: ['Override.form.Panel', 'Override.field.Select', 'Ux.field.SelectOtherField', 'Ux.field.MoneyField'],
   controllers: ['Main', 'Menu', 'Account', 'Vehicles'],
   views: ['MainContainer', 'TopToolbar'],
   launch: function() {

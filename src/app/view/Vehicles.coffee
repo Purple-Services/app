@@ -73,7 +73,7 @@ Ext.define 'Purple.view.Vehicles'
                 text: 'Add Vehicle'
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'editVehicle'
+                  @up().up().up().fireEvent 'editVehicle', 'new'
               }
             ]
           }

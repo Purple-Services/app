@@ -3,6 +3,7 @@ Ext.define 'Purple.view.MainContainer',
   requires: [
     'Purple.view.MapForm'
     'Purple.view.RequestForm'
+    'Purple.view.RequestConfirmationForm'
     'Purple.view.LoginForm'
     'Purple.view.AccountForm'
     'Purple.view.Orders'

@@ -15,7 +15,8 @@ Ext.define('Purple.controller.Main', {
       requestGasButtonContainer: '#requestGasButtonContainer',
       autocompleteList: '#autocompleteList',
       backToMapButton: '#backToMapButton',
-      requestForm: 'requestform'
+      requestForm: 'requestform',
+      requestConfirmationForm: 'requestconfirmationform'
     },
     control: {
       mapForm: {
@@ -40,7 +41,12 @@ Ext.define('Purple.controller.Main', {
         initRequestGasForm: 'initRequestGasForm'
       },
       requestForm: {
-        backToMap: 'backToMapFromRequestForm'
+        backToMap: 'backToMapFromRequestForm',
+        sendRequest: 'sendRequest'
+      },
+      requestConfirmationForm: {
+        backToRequestForm: 'backToRequestForm',
+        confirmOrder: 'confirmOrder'
       }
     }
   },
@@ -53,8 +59,9 @@ Ext.define('Purple.controller.Main', {
     setTimeout(Ext.bind(this.updateLatlng, this), 2000);
     setTimeout(Ext.bind(this.updateLatlng, this), 5000);
     if (localStorage['purpleUserId'] != null) {
-      return console.log('user is logged in with id: ', localStorage['purpleUserId']);
+      console.log('user is logged in with id: ', localStorage['purpleUserId']);
     }
+    return navigator.splashscreen.hide();
   },
   updateLatlng: function() {
     var _ref,
@@ -194,14 +201,35 @@ Ext.define('Purple.controller.Main', {
       return this.getMainContainer().getItems().getAt(0).select(1, false, false);
     } else {
       deliveryLocName = this.getRequestAddressField().getValue();
-      return this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm', {
+      this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm'));
+      return this.getRequestForm().setValues({
         lat: this.deliveryLocLat,
         lng: this.deliveryLocLng,
         address_street: deliveryLocName
-      }));
+      });
     }
   },
   backToMapFromRequestForm: function() {
     return this.getRequestGasTabContainer().remove(this.getRequestGasTabContainer().getActiveItem(), true);
+  },
+  backToRequestForm: function() {
+    this.getRequestGasTabContainer().setActiveItem(this.getRequestForm());
+    return this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
+  },
+  sendRequest: function() {
+    var vals;
+    this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestConfirmationForm'));
+    vals = this.getRequestForm().getValues();
+    vals['gas_price'] = '2.35';
+    vals['service_fee'] = '5';
+    vals['total_price'] = '45';
+    this.getRequestConfirmationForm().setValues(vals);
+    if (vals['special_instructions'] === '') {
+      Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide();
+      return Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide();
+    }
+  },
+  confirmOrder: function() {
+    return console.log('Confirm Order');
   }
 });

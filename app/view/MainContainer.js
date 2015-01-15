@@ -2,7 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help'],
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,

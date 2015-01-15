@@ -15,7 +15,9 @@ Ext.define('Purple.controller.Vehicles', {
     control: {
       vehicles: {
         editVehicle: 'showEditVehicleForm',
-        loadVehiclesList: 'loadVehiclesList',
+        loadVehiclesList: 'loadVehiclesList'
+      },
+      editVehicleForm: {
         backToVehicles: 'backToVehicles'
       }
     }

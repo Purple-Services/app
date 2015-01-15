@@ -69,7 +69,7 @@ Ext.define('Purple.view.Vehicles', {
                 text: 'Add Vehicle',
                 flex: 0,
                 handler: function() {
-                  return this.up().fireEvent('editVehicle');
+                  return this.up().up().up().fireEvent('editVehicle', 'new');
                 }
               }
             ]

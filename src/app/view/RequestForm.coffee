@@ -87,7 +87,7 @@ Ext.define 'Purple.view.RequestForm'
             name: 'vehicle'
             label: 'Vehicle'
             listPicker:
-              title: 'Select a Time'
+              title: 'Select a Vehicle'
             cls: [
               'click-to-edit'
               'bottom-margin'
@@ -188,6 +188,21 @@ Ext.define 'Purple.view.RequestForm'
             name: 'special_instructions'
             maxRows: 4
           }
+          
+          # hidden fields for flowing data
+          {
+            xtype: 'hiddenfield'
+            name: 'lat'
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'lng'
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'address_street'
+          }
+          
           {
             xtype: 'container'
             id: 'sendRequestButtonContainer'
@@ -207,7 +222,7 @@ Ext.define 'Purple.view.RequestForm'
                 text: 'Send Request'
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'sendRequest'
+                  @up().up().up().fireEvent 'sendRequest'
               }
             ]
           }

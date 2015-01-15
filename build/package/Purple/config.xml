@@ -58,11 +58,13 @@
   <preference name="orientation" value="portrait" />
   <preference name="prerendered-icon" value="true" />
 
-  <!-- <gap:plugin name="de.appplant.cordova.plugin.hidden-statusbar-overlay" version="1.2.0" /> -->
-
   <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
   <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
+  <gap:plugin name="org.apache.cordova.camera" version="0.3.2" />
   <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
+  <gap:plugin name="org.apache.cordova.splashscreen" version="0.3.4" />
+  
+  <preference name="AutoHideSplashScreen" value="false" />
 
   <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
     <param name="APP_ID" value="1588773851335820" />
@@ -72,9 +74,12 @@
   <gap:plugin name="nl.x-services.plugins.googleplus" version="1.0.7" />
   
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+  
+  <!-- <gap:plugin name="org.apache.cordova.statusbar" version="0.1.4" /> -->
+
   <preference name="StatusBarOverlaysWebView" value="false" />
-  <!-- <preference name="StatusBarBackgroundColor" value="#EDEDED" /> -->
-  <preference name="StatusBarBackgroundColor" value="red" />
+  <preference name="StatusBarBackgroundColor" value="#EDEDED" />
+  <preference name="StatusBarStyle" value="blacktranslucent" />
 
   <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
 

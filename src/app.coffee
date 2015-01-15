@@ -9,10 +9,8 @@ Ext.application
   requires: [
     'Override.form.Panel'
     'Override.field.Select'
-    'Ux.field.Multiselect'
     'Ux.field.SelectOtherField'
-    'Ux.field.MultiSelectOtherField'
-    'Ux.field.AutocompleteField'
+    'Ux.field.MoneyField'
   ]
   controllers: [
     'Main'

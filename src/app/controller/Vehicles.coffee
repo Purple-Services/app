@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Vehicles'
       vehicles:
         editVehicle: 'showEditVehicleForm'
         loadVehiclesList: 'loadVehiclesList'
+      editVehicleForm:
         backToVehicles: 'backToVehicles'
 
   # whether or not the inital map centering has occurred yet

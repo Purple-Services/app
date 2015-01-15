@@ -14,6 +14,7 @@ Ext.define 'Purple.controller.Main'
       autocompleteList: '#autocompleteList'
       backToMapButton: '#backToMapButton'
       requestForm: 'requestform'
+      requestConfirmationForm: 'requestconfirmationform'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -32,6 +33,10 @@ Ext.define 'Purple.controller.Main'
         initRequestGasForm: 'initRequestGasForm'
       requestForm:
         backToMap: 'backToMapFromRequestForm'
+        sendRequest: 'sendRequest'
+      requestConfirmationForm:
+        backToRequestForm: 'backToRequestForm'
+        confirmOrder: 'confirmOrder'
 
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
@@ -60,6 +65,8 @@ Ext.define 'Purple.controller.Main'
     # ga_storage._setAccount 'UA-55536703-1'
     # ga_storage._setDomain 'none'
     # ga_storage._trackEvent 'main', 'App Launch' # , 'label', 'value'
+
+    navigator.splashscreen.hide()
 
   updateLatlng: ->
     @updateLatlngBusy ?= no
@@ -178,10 +185,12 @@ Ext.define 'Purple.controller.Main'
     else
       deliveryLocName = @getRequestAddressField().getValue()
       @getRequestGasTabContainer().setActiveItem(
-        Ext.create 'Purple.view.RequestForm',
-          lat: @deliveryLocLat
-          lng: @deliveryLocLng
-          address_street: deliveryLocName
+        Ext.create 'Purple.view.RequestForm'
+      )
+      @getRequestForm().setValues(
+        lat: @deliveryLocLat
+        lng: @deliveryLocLng
+        address_street: deliveryLocName
       )
 
   backToMapFromRequestForm: ->
@@ -189,3 +198,26 @@ Ext.define 'Purple.controller.Main'
       @getRequestGasTabContainer().getActiveItem(),
       yes
     )
+
+  backToRequestForm: ->
+    @getRequestGasTabContainer().setActiveItem @getRequestForm()
+    @getRequestGasTabContainer().remove(
+      @getRequestConfirmationForm(),
+      yes
+    )
+
+  sendRequest: -> # takes you to the confirmation page
+    @getRequestGasTabContainer().setActiveItem(
+      Ext.create 'Purple.view.RequestConfirmationForm'
+    )
+    vals = @getRequestForm().getValues()
+    vals['gas_price'] = '2.35'
+    vals['service_fee'] = '5'
+    vals['total_price'] = '45'
+    @getRequestConfirmationForm().setValues vals
+    if vals['special_instructions'] is ''
+      Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
+      Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
+
+  confirmOrder: ->
+    console.log 'Confirm Order'
