@@ -275,7 +275,8 @@ body {
 .login-form .links-container .x-button {
     color: #EADFEE;
 }
-.account-form .links-container .x-button {
+.account-form .links-container .x-button,
+.vehicle-form .links-container .x-button {
     color: #DF3734;
 }
 .links-container .x-button.x-button-pressing {
@@ -385,6 +386,13 @@ body {
 .x-spinner .x-input-el, .x-field-select .x-input-el {
     -webkit-text-fill-color: #0073C4;
 }
+
+
+.visibly-disabled.x-item-disabled .x-form-label span {
+    color: #999;
+}
+
+
 
 .x-toolbar-progress-bar {
     background-color: #C8E8FD;

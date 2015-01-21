@@ -71,7 +71,7 @@ Ext.define 'Purple.view.RequestForm'
             ]
             value: '< 3 hr'
             options: [
-              {
+              {  # when changing, also change line 219 of Main controller
                 text: 'within 1 hour'
                 value: '< 1 hr'
               }
@@ -83,6 +83,7 @@ Ext.define 'Purple.view.RequestForm'
           }
           {
             xtype: 'selectfield'
+            ctype: 'requestFormVehicleSelect'
             flex: 0
             name: 'vehicle'
             label: 'Vehicle'
@@ -92,20 +93,7 @@ Ext.define 'Purple.view.RequestForm'
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '123abc'
             options: [
-              {
-                text: 'Pontiac Trans Am'
-                value: '123abc'
-              }
-              {
-                text: 'Audi A4'
-                value: 'hdj883'
-              }
-              {
-                text: 'New Vehicle'
-                value: 'add'
-              }
             ]
           }
           {

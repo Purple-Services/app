@@ -210,19 +210,36 @@ Ext.define('Purple.controller.Main', {
     }
   },
   backToMapFromRequestForm: function() {
-    return this.getRequestGasTabContainer().remove(this.getRequestGasTabContainer().getActiveItem(), true);
+    return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
   },
   backToRequestForm: function() {
     this.getRequestGasTabContainer().setActiveItem(this.getRequestForm());
     return this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
   },
   sendRequest: function() {
-    var vals;
+    var v, vals, _i, _len, _ref;
     this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestConfirmationForm'));
     vals = this.getRequestForm().getValues();
     vals['gas_price'] = '2.35';
     vals['service_fee'] = '5';
     vals['total_price'] = '45';
+    vals['display_time'] = (function() {
+      switch (vals['time']) {
+        case '< 1 hr':
+          return 'within 1 hour';
+        case '< 3 hr':
+          return 'within 3 hours';
+      }
+    })();
+    vals['vehicle_id'] = vals['vehicle'];
+    _ref = util.ctl('Vehicles').vehicles;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      v = _ref[_i];
+      if (v['id'] === vals['vehicle_id']) {
+        vals['vehicle'] = "" + v.year + " " + v.make + " " + v.model;
+        break;
+      }
+    }
     this.getRequestConfirmationForm().setValues(vals);
     if (vals['special_instructions'] === '') {
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide();
@@ -230,6 +247,48 @@ Ext.define('Purple.controller.Main', {
     }
   },
   confirmOrder: function() {
-    return console.log('Confirm Order');
+    var vals;
+    console.log('Confirm Order', this.getRequestConfirmationForm().getValues());
+    vals = this.getRequestConfirmationForm().getValues();
+    vals['gas_price'] = parseFloat(vals['gas_price'].replace('$', ''));
+    vals['service_fee'] = parseFloat(vals['service_fee'].replace('$', ''));
+    vals['total_price'] = parseFloat(vals['total_price'].replace('$', ''));
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "orders/add",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        order: vals
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          util.ctl('Menu').selectOption(3);
+          this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
+          this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
+          return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
+        } else {
+          return Ext.Msg.alert('Error', response.message, (function() {}));
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
   }
 });

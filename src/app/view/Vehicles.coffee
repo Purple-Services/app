@@ -50,13 +50,12 @@ Ext.define 'Purple.view.Vehicles'
           }
           {
             xtype: 'container'
-            id: 'vehiclesList'
+            ctype: 'vehiclesList'
             flex: 0
             layout: 'vbox'
           }
           {
             xtype: 'container'
-            id: 'addVehicleButtonContainer'
             flex: 0
             height: 110
             width: '100%'

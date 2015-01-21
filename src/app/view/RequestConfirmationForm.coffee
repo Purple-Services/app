@@ -59,11 +59,19 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             cls: 'horizontal-rule'
           }
           {
+            xtype: 'hiddenfield'
+            name: 'time'
+          }
+          {
             xtype: 'textfield'
             flex: 0
-            name: 'time'
+            name: 'display_time'
             label: 'Time'
             disabled: yes
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'vehicle_id'
           }
           {
             xtype: 'textfield'

@@ -7,7 +7,7 @@ window.util = {
   WEB_SERVICE_BASE_URL: (function() {
     switch (VERSION) {
       case "LOCAL":
-        return "http://192.168.1.124:3000/";
+        return "http://192.168.0.16:3000/";
       case "PROD":
         return "https://service.purpleapp.com/";
       case "DEV":

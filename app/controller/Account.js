@@ -80,6 +80,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserId'] = response.user.id;
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleToken'] = response.token;
+          util.ctl('Vehicles').vehicles = [];
           return this.accountSetup();
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
@@ -129,6 +130,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleToken'] = response.token;
+          util.ctl('Vehicles').vehicles = response.vehicles;
           if ((response.account_complete != null) && !response.account_complete) {
             return this.accountSetup();
           } else {

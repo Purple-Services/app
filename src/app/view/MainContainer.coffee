@@ -123,6 +123,7 @@ Ext.define 'Purple.view.MainContainer',
             id: 'requestGasTabContainer'
             layout:
               type: 'card'
+              # animation: 'pop'
             items: [
               {
                 xtype: "mapform"

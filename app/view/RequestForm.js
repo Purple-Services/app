@@ -71,6 +71,7 @@ Ext.define('Purple.view.RequestForm', {
             ]
           }, {
             xtype: 'selectfield',
+            ctype: 'requestFormVehicleSelect',
             flex: 0,
             name: 'vehicle',
             label: 'Vehicle',
@@ -78,19 +79,7 @@ Ext.define('Purple.view.RequestForm', {
               title: 'Select a Vehicle'
             },
             cls: ['click-to-edit', 'bottom-margin'],
-            value: '123abc',
-            options: [
-              {
-                text: 'Pontiac Trans Am',
-                value: '123abc'
-              }, {
-                text: 'Audi A4',
-                value: 'hdj883'
-              }, {
-                text: 'New Vehicle',
-                value: 'add'
-              }
-            ]
+            options: []
           }, {
             xtype: 'selectfield',
             flex: 0,

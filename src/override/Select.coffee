@@ -2,13 +2,6 @@ Ext.define 'Override.field.Select'
   override: 'Ext.field.Select'
   showPicker: ->
     if (Ext.os.is.iOS or Ext.os.is.Android) and not window.bypassListPicker
-      console.log 'config', {
-        title: @config.listPicker.title
-        items: @getOptions()
-        selectedValue: @getValue()
-        doneButtonLabel: 'Done'
-        cancelButtonLabel: 'Cancel'
-      }
       window.plugins.listpicker.showPicker(
         {
           title: @config.listPicker.title

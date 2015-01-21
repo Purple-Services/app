@@ -699,13 +699,16 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.view.MainContainer": [],
   "Purple.view.MapForm": [],
   "Purple.view.Orders": [],
+  "Purple.view.RequestConfirmationForm": [],
   "Purple.view.RequestForm": [],
   "Purple.view.TopToolbar": [],
   "Purple.view.Vehicles": [],
   "SignatureField.Canvas": [],
   "Ux.field.AutocompleteField": [],
+  "Ux.field.MoneyField": [],
   "Ux.field.MultiSelectOtherField": [],
   "Ux.field.Multiselect": [],
+  "Ux.field.PhoneField": [],
   "Ux.field.SelectOtherField": [],
   "Ux.field.SignatureField": []
 });
@@ -1463,6 +1466,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Purple.view.Orders": [
     "widget.orders"
   ],
+  "Purple.view.RequestConfirmationForm": [
+    "widget.requestconfirmationform"
+  ],
   "Purple.view.RequestForm": [
     "widget.requestform"
   ],
@@ -1478,11 +1484,17 @@ Ext.ClassManager.addNameAliasMappings({
   "Ux.field.AutocompleteField": [
     "widget.autocompletefield"
   ],
+  "Ux.field.MoneyField": [
+    "widget.moneyfield"
+  ],
   "Ux.field.MultiSelectOtherField": [
     "widget.multiselectotherfield"
   ],
   "Ux.field.Multiselect": [
     "widget.multiselectfield"
+  ],
+  "Ux.field.PhoneField": [
+    "widget.phonefield"
   ],
   "Ux.field.SelectOtherField": [
     "widget.selectotherfield"

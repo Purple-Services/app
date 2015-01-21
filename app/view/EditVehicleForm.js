@@ -11,16 +11,48 @@ Ext.define('Purple.view.EditVehicleForm', {
       align: 'start'
     },
     submitOnAction: false,
-    cls: ['request-form', 'accent-bg', 'slideable'],
+    cls: ['request-form', 'vehicle-form', 'accent-bg', 'slideable'],
     scrollable: {
       direction: 'vertical',
       directionLock: true
     },
     listeners: {
       initialize: function() {
-        var heading;
-        heading = Ext.ComponentQuery.query('#editVehicleFormHeading')[0];
-        return heading.setHtml(this.config.vehicleId === 'new' ? 'Add Vehicle' : 'Edit Vehicle');
+        var _this = this;
+        if (this.config.vehicleId !== 'new') {
+          return this.getAt(1).add([
+            {
+              xtype: 'spacer',
+              flex: 0,
+              height: 100,
+              listeners: {
+                initialize: function() {
+                  return console.log('heyhey');
+                }
+              }
+            }, {
+              xtype: 'container',
+              flex: 0,
+              layout: {
+                type: 'vbox',
+                pack: 'start',
+                align: 'center'
+              },
+              cls: 'links-container',
+              style: "width: 100%;\ntext-align: center;\npadding-bottom: 20px;",
+              items: [
+                {
+                  xtype: 'button',
+                  ui: 'plain',
+                  text: 'Delete Vehicle',
+                  handler: function() {
+                    return _this.fireEvent('deleteVehicle', _this.config.vehicleId);
+                  }
+                }
+              ]
+            }
+          ]);
+        }
       }
     },
     items: [
@@ -40,12 +72,13 @@ Ext.define('Purple.view.EditVehicleForm', {
           {
             xtype: 'container',
             flex: 0,
-            id: 'editVehicleFormHeading',
+            ctype: 'editVehicleFormHeading',
             cls: 'heading',
             html: '',
             items: [
               {
                 xtype: 'button',
+                ctype: 'backToVehiclesButton',
                 ui: 'plain',
                 text: 'Back to Vehicles',
                 cls: ['right-side-aligned-with-heading', 'link'],
@@ -60,84 +93,66 @@ Ext.define('Purple.view.EditVehicleForm', {
             cls: 'horizontal-rule'
           }, {
             xtype: 'selectfield',
+            ctype: 'editVehicleFormYear',
             flex: 0,
             name: 'year',
             label: 'Year',
             listPicker: {
               title: 'Select Vehicle Year'
             },
-            cls: ['click-to-edit', 'bottom-margin'],
-            value: '2014',
-            options: [
-              {
-                text: '2015',
-                value: '2015'
-              }, {
-                text: '2014',
-                value: '2014'
-              }, {
-                text: '2013',
-                value: '2013'
-              }
-            ]
+            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
+            disabled: true,
+            options: ['Loading...']
           }, {
             xtype: 'selectfield',
+            ctype: 'editVehicleFormMake',
             flex: 0,
             name: 'make',
             label: 'Make',
             listPicker: {
               title: 'Select Vehicle Make'
             },
-            cls: ['click-to-edit', 'bottom-margin'],
-            value: 'Lexus',
-            options: [
-              {
-                text: 'Lexus',
-                value: 'Lexus'
-              }, {
-                text: 'Audi',
-                value: 'Audi'
-              }, {
-                text: 'Honda',
-                value: 'Honda'
-              }
-            ]
+            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
+            disabled: true,
+            options: ['Please select year...']
           }, {
             xtype: 'selectfield',
+            ctype: 'editVehicleFormModel',
             flex: 0,
             name: 'model',
             label: 'Model',
             listPicker: {
               title: 'Select Vehicle Model'
             },
-            cls: ['click-to-edit', 'bottom-margin'],
-            value: 'ES 350',
-            options: [
-              {
-                text: 'ES 350',
-                value: 'ES 350'
-              }, {
-                text: 'Pilot',
-                value: 'Pilot'
-              }, {
-                text: 'Civic',
-                value: 'Civic'
-              }
-            ]
+            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
+            disabled: true,
+            options: ['Please select make...']
+          }, {
+            xtype: 'selectfield',
+            ctype: 'editVehicleFormColor',
+            flex: 0,
+            name: 'color',
+            label: 'Color',
+            listPicker: {
+              title: 'Select Vehicle Color'
+            },
+            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
+            disabled: true,
+            options: ['Loading...']
           }, {
             xtype: 'component',
             flex: 0,
             cls: 'horizontal-rule'
           }, {
             xtype: 'selectfield',
+            ctype: 'editVehicleFormGasType',
             flex: 0,
-            name: 'gas',
+            name: 'gas_type',
             label: 'Gas',
             listPicker: {
               title: 'Select Vehicle Gas'
             },
             cls: ['click-to-edit', 'bottom-margin'],
-            value: '89',
             options: [
               {
                 text: 'Unleaded 89 Octane',
@@ -149,6 +164,7 @@ Ext.define('Purple.view.EditVehicleForm', {
             ]
           }, {
             xtype: 'textfield',
+            ctype: 'editVehicleFormLicensePlate',
             name: 'license_plate',
             label: 'License Plate',
             labelWidth: 125,
@@ -174,7 +190,7 @@ Ext.define('Purple.view.EditVehicleForm', {
                 text: 'Save Changes',
                 flex: 0,
                 handler: function() {
-                  return this.up().up().up().fireEvent('saveChanges');
+                  return this.up().up().up().fireEvent('saveChanges', this.up().up().up().config.saveChangesCallback);
                 }
               }
             ]

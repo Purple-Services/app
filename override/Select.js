@@ -5,13 +5,6 @@ Ext.define('Override.field.Select', {
   showPicker: function() {
     var _this = this;
     if ((Ext.os.is.iOS || Ext.os.is.Android) && !window.bypassListPicker) {
-      console.log('config', {
-        title: this.config.listPicker.title,
-        items: this.getOptions(),
-        selectedValue: this.getValue(),
-        doneButtonLabel: 'Done',
-        cancelButtonLabel: 'Cancel'
-      });
       return window.plugins.listpicker.showPicker({
         title: this.config.listPicker.title,
         items: this.getOptions(),

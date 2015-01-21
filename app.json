@@ -46,6 +46,9 @@
             "path": "GALocalStorage.js"
         },
         {
+            "path": "resources/json/vehicleList.js"
+        },
+        {
             "path": "touch/sencha-touch.js",
             "x-bootstrap": true
         },

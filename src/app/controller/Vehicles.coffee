@@ -9,69 +9,197 @@ Ext.define 'Purple.controller.Vehicles'
       topToolbar: 'toptoolbar'
       vehiclesTabContainer: '#vehiclesTabContainer'
       vehicles: 'vehicles' # the Vehicles *page*
-      vehiclesList: '#vehiclesList'
+      vehiclesList: '[ctype=vehiclesList]'
       editVehicleForm: 'editvehicleform'
+      editVehicleFormHeading: '[ctype=editVehicleFormHeading]'
+      backToVehiclesButton: '[ctype=backToVehiclesButton]'
+      editVehicleFormYear: '[ctype=editVehicleFormYear]'
+      editVehicleFormMake: '[ctype=editVehicleFormMake]'
+      editVehicleFormModel: '[ctype=editVehicleFormModel]'
+      editVehicleFormColor: '[ctype=editVehicleFormColor]'
+      editVehicleFormGasType: '[ctype=editVehicleFormGasType]'
+      editVehicleFormLicensePlate: '[ctype=editVehicleFormLicensePlate]'
+      requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
     control:
       vehicles:
         editVehicle: 'showEditVehicleForm'
         loadVehiclesList: 'loadVehiclesList'
       editVehicleForm:
         backToVehicles: 'backToVehicles'
+        saveChanges: 'saveChanges'
+        deleteVehicle: 'deleteVehicle'
+      editVehicleFormYear:
+        change: 'yearChanged'
+      editVehicleFormMake:
+        change: 'makeChanged'
+      requestFormVehicleSelect:
+        initialize: 'initRequestFormVehicleSelect'
+        change: 'requestFormVehicleSelectChange'
 
-  # whether or not the inital map centering has occurred yet
-  mapInitiallyCenteredYet: no
-  mapInited: no
+  # will be null until they log in
+  vehicles: null
+
+  # all possible vehicle options
+  vehicleList: window.vehicleList
+  colorList: [
+    'White'
+    'Black'
+    'Silver'
+    'Gray'
+    'Red'
+    'Blue'
+    'Brown'
+    'Biege'
+    'Cream'
+    'Yellow'
+    'Gold'
+    'Green'
+    'Pink'
+    'Purple'
+    'Copper'
+    'Camo'
+  ]
 
   launch: ->
     @callParent arguments
 
+  getYearList: ->
+    (v for v, vehicle of @vehicleList).sort (a, b) ->
+      parseInt(b) - parseInt(a)
+
+  getMakeList: (year) ->
+    if @vehicleList[year]?
+      v for v, vehicle of @vehicleList[year]
+    else
+      []
+
+  getModelList: (year, make) ->
+    if @vehicleList[year]?[make]?
+      v for v in @vehicleList[year][make]
+    else
+      []
+      
+  getColorList: ->
+    @colorList
+
+  yearChanged: (field, value) ->
+    @getEditVehicleFormMake().setOptions(
+      @getMakeList(value).map (x) ->
+        {
+          text: x
+          value: x
+        }
+    )
+    @getEditVehicleFormMake().setDisabled no
+
+  makeChanged: (field, value) ->
+    year = @getEditVehicleFormYear().getValue()
+    @getEditVehicleFormModel().setOptions(
+      @getModelList(year, value).map (x) ->
+        {
+          text: x
+          value: x
+        }
+    )
+    @getEditVehicleFormModel().setDisabled no
+
   showEditVehicleForm: (vehicleId = 'new') ->
-    console.log 'edit: ', vehicleId
     @getVehiclesTabContainer().setActiveItem(
       Ext.create 'Purple.view.EditVehicleForm',
         vehicleId: vehicleId
     )
 
+    @getEditVehicleFormHeading().setHtml(
+      if vehicleId is 'new'
+        'Add Vehicle'
+      else
+        'Edit Vehicle'
+    )
+    
+    @getEditVehicleFormYear().setOptions(
+      @getYearList().map (x) ->
+        {
+          text: x
+          value: x
+        }
+    )
+    @getEditVehicleFormYear().setDisabled no
+    
+    @getEditVehicleFormColor().setOptions(
+      @getColorList().map (x) ->
+        {
+          text: x
+          value: x
+        }
+    )
+    @getEditVehicleFormColor().setDisabled no
+    
+    if vehicleId isnt 'new'
+      for v in @vehicles
+        if v['id'] is vehicleId
+          vehicle = v
+          break
+      @getEditVehicleFormYear().setValue vehicle['year']
+      # you would think setValue should fire the change event
+      # but it doesn't, so here is a manual call to prepare for
+      # setting the make field
+      @yearChanged null, vehicle['year']
+      @getEditVehicleFormMake().setValue vehicle['make']
+      @makeChanged null, vehicle['make']
+      @getEditVehicleFormModel().setValue vehicle['model']
+      @getEditVehicleFormColor().setValue vehicle['color']
+      @getEditVehicleFormGasType().setValue vehicle['gas_type']
+      @getEditVehicleFormLicensePlate().setValue vehicle['license_plate']
+    else
+      console.log 'new'
+      # @getEditVehicleFormYear().setValue '2015'
+      # @yearChanged null, '2015'
+      # @getEditVehicleFormMake().setValue ''
+      # @getEditVehicleFormMake().setOptions []
+      # @getEditVehicleFormModel().setValue ''
+      # @getEditVehicleFormModel().setOptions []
+      
+      
+
   backToVehicles: ->
     @getVehiclesTabContainer().remove(
-      @getVehiclesTabContainer().getActiveItem(),
+      @getEditVehicleForm(),
       yes
     )
 
   loadVehiclesList: ->
-    vehicles = [
-      {
-        id: '123abc'
-        model: 'ES 350'
-        make: 'Lexus'
-        color: 'silver'
-        year: '2012'
-        gas_type: '91'
-        license_plate: '8U7-631R'
-      }
-      {
-        id: 'fdd'
-        model: 'Pilot'
-        make: 'Honda'
-        color: 'blue'
-        year: '2013'
-        gas_type: '89'
-        license_plate: '123-HGHH'
-      }
-      {
-        id: '99ddh'
-        model: 'Civic'
-        make: 'Honda'
-        color: 'white'
-        year: '1995'
-        gas_type: '89'
-        license_plate: '888-JJKN'
-      }
-    ]
-    @renderVehiclesList vehicles
+    if @vehicles?
+      @renderVehiclesList @vehicles
+    else
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}user/details"
+        params: Ext.JSON.encode
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            @vehicles = response.vehicles
+            @renderVehiclesList @vehicles
+          else
+            Ext.Msg.alert 'Error', response.message, (->)
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          console.log response
   
   renderVehiclesList: (vehicles) ->
     list =  @getVehiclesList()
+    list.removeAll yes, yes
     for v in vehicles
       list.add
         xtype: 'textfield'
@@ -88,3 +216,130 @@ Ext.define 'Purple.controller.Vehicles'
             field.element.on 'tap', =>
               vid = field.getId().split('_')[1]
               @showEditVehicleForm vid
+
+  saveChanges: (callback) ->
+    values = @getEditVehicleForm().getValues()
+    vehicleId = @getEditVehicleForm().config.vehicleId
+    values['id'] = vehicleId
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        vehicle: values
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @vehicles = response.vehicles
+          @backToVehicles()
+          @renderVehiclesList @vehicles
+          if typeof callback is 'function'
+            # this is branching back to where we wanted to create a new vehicle
+            # so, we're going to need the id of the new vehicle
+            # most recent creation should be sufficient for our needs
+            temp_arr = @vehicles.slice 0
+            temp_arr.sort (a, b) ->
+              (new Date(b.timestamp_created)) - (new Date(a.timestamp_created))
+            callback temp_arr[0].id
+        else
+          Ext.Msg.alert 'Error', response.message, (->)
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+
+  deleteVehicle: (vehicleId) ->
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        vehicle:
+          id: vehicleId
+          active: 0
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @vehicles = response.vehicles
+          @backToVehicles()
+          @renderVehiclesList @vehicles
+        else
+          Ext.Msg.alert 'Error', response.message, (->)
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+
+  initRequestFormVehicleSelect: ->
+    if @vehicles?
+      opts = @vehicles.map (v) ->
+        {
+          text: "#{v.year} #{v.make} #{v.model}"
+          value: v.id
+        }
+      opts.push
+        text: "New Vehicle"
+        value: 'new'
+      @getRequestFormVehicleSelect().setOptions opts
+    else
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}user/details"
+        params: Ext.JSON.encode
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            @vehicles = response.vehicles
+            opts = @vehicles.map (v) ->
+              {
+                text: "#{v.year} #{v.make} #{v.model}"
+                value: v.id
+              }
+            opts.push
+              text: "New Vehicle"
+              value: 'new'
+            @getRequestFormVehicleSelect().setOptions opts
+          else
+            Ext.Msg.alert 'Error', response.message, (->)
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          console.log response
+
+  requestFormVehicleSelectChange: (field, value) ->
+    if value is 'new'
+      util.ctl('Menu').selectOption 4
+      @showEditVehicleForm()
+      @getEditVehicleForm().config.saveChangesCallback = (vehicleId) =>
+        util.ctl('Menu').selectOption 0
+        @initRequestFormVehicleSelect()
+        @getRequestFormVehicleSelect().setValue vehicleId
+      @getBackToVehiclesButton().setHidden yes

@@ -83,6 +83,8 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserId'] = response.user.id
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
+          # they don't have any vehicles yet.
+          util.ctl('Vehicles').vehicles = []
           @accountSetup()
         else
           Ext.Msg.alert 'Error', response.message, (->)
@@ -125,6 +127,7 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
+          util.ctl('Vehicles').vehicles = response.vehicles
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else

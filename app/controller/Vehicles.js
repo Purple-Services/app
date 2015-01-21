@@ -9,8 +9,17 @@ Ext.define('Purple.controller.Vehicles', {
       topToolbar: 'toptoolbar',
       vehiclesTabContainer: '#vehiclesTabContainer',
       vehicles: 'vehicles',
-      vehiclesList: '#vehiclesList',
-      editVehicleForm: 'editvehicleform'
+      vehiclesList: '[ctype=vehiclesList]',
+      editVehicleForm: 'editvehicleform',
+      editVehicleFormHeading: '[ctype=editVehicleFormHeading]',
+      backToVehiclesButton: '[ctype=backToVehiclesButton]',
+      editVehicleFormYear: '[ctype=editVehicleFormYear]',
+      editVehicleFormMake: '[ctype=editVehicleFormMake]',
+      editVehicleFormModel: '[ctype=editVehicleFormModel]',
+      editVehicleFormColor: '[ctype=editVehicleFormColor]',
+      editVehicleFormGasType: '[ctype=editVehicleFormGasType]',
+      editVehicleFormLicensePlate: '[ctype=editVehicleFormLicensePlate]',
+      requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
     },
     control: {
       vehicles: {
@@ -18,62 +27,186 @@ Ext.define('Purple.controller.Vehicles', {
         loadVehiclesList: 'loadVehiclesList'
       },
       editVehicleForm: {
-        backToVehicles: 'backToVehicles'
+        backToVehicles: 'backToVehicles',
+        saveChanges: 'saveChanges',
+        deleteVehicle: 'deleteVehicle'
+      },
+      editVehicleFormYear: {
+        change: 'yearChanged'
+      },
+      editVehicleFormMake: {
+        change: 'makeChanged'
+      },
+      requestFormVehicleSelect: {
+        initialize: 'initRequestFormVehicleSelect',
+        change: 'requestFormVehicleSelectChange'
       }
     }
   },
-  mapInitiallyCenteredYet: false,
-  mapInited: false,
+  vehicles: null,
+  vehicleList: window.vehicleList,
+  colorList: ['White', 'Black', 'Silver', 'Gray', 'Red', 'Blue', 'Brown', 'Biege', 'Cream', 'Yellow', 'Gold', 'Green', 'Pink', 'Purple', 'Copper', 'Camo'],
   launch: function() {
     return this.callParent(arguments);
   },
+  getYearList: function() {
+    var v, vehicle;
+    return ((function() {
+      var _ref, _results;
+      _ref = this.vehicleList;
+      _results = [];
+      for (v in _ref) {
+        vehicle = _ref[v];
+        _results.push(v);
+      }
+      return _results;
+    }).call(this)).sort(function(a, b) {
+      return parseInt(b) - parseInt(a);
+    });
+  },
+  getMakeList: function(year) {
+    var v, vehicle, _ref, _results;
+    if (this.vehicleList[year] != null) {
+      _ref = this.vehicleList[year];
+      _results = [];
+      for (v in _ref) {
+        vehicle = _ref[v];
+        _results.push(v);
+      }
+      return _results;
+    } else {
+      return [];
+    }
+  },
+  getModelList: function(year, make) {
+    var v, _i, _len, _ref, _ref1, _results;
+    if (((_ref = this.vehicleList[year]) != null ? _ref[make] : void 0) != null) {
+      _ref1 = this.vehicleList[year][make];
+      _results = [];
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        v = _ref1[_i];
+        _results.push(v);
+      }
+      return _results;
+    } else {
+      return [];
+    }
+  },
+  getColorList: function() {
+    return this.colorList;
+  },
+  yearChanged: function(field, value) {
+    this.getEditVehicleFormMake().setOptions(this.getMakeList(value).map(function(x) {
+      return {
+        text: x,
+        value: x
+      };
+    }));
+    return this.getEditVehicleFormMake().setDisabled(false);
+  },
+  makeChanged: function(field, value) {
+    var year;
+    year = this.getEditVehicleFormYear().getValue();
+    this.getEditVehicleFormModel().setOptions(this.getModelList(year, value).map(function(x) {
+      return {
+        text: x,
+        value: x
+      };
+    }));
+    return this.getEditVehicleFormModel().setDisabled(false);
+  },
   showEditVehicleForm: function(vehicleId) {
+    var v, vehicle, _i, _len, _ref;
     if (vehicleId == null) {
       vehicleId = 'new';
     }
-    console.log('edit: ', vehicleId);
-    return this.getVehiclesTabContainer().setActiveItem(Ext.create('Purple.view.EditVehicleForm', {
+    this.getVehiclesTabContainer().setActiveItem(Ext.create('Purple.view.EditVehicleForm', {
       vehicleId: vehicleId
     }));
+    this.getEditVehicleFormHeading().setHtml(vehicleId === 'new' ? 'Add Vehicle' : 'Edit Vehicle');
+    this.getEditVehicleFormYear().setOptions(this.getYearList().map(function(x) {
+      return {
+        text: x,
+        value: x
+      };
+    }));
+    this.getEditVehicleFormYear().setDisabled(false);
+    this.getEditVehicleFormColor().setOptions(this.getColorList().map(function(x) {
+      return {
+        text: x,
+        value: x
+      };
+    }));
+    this.getEditVehicleFormColor().setDisabled(false);
+    if (vehicleId !== 'new') {
+      _ref = this.vehicles;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        v = _ref[_i];
+        if (v['id'] === vehicleId) {
+          vehicle = v;
+          break;
+        }
+      }
+      this.getEditVehicleFormYear().setValue(vehicle['year']);
+      this.yearChanged(null, vehicle['year']);
+      this.getEditVehicleFormMake().setValue(vehicle['make']);
+      this.makeChanged(null, vehicle['make']);
+      this.getEditVehicleFormModel().setValue(vehicle['model']);
+      this.getEditVehicleFormColor().setValue(vehicle['color']);
+      this.getEditVehicleFormGasType().setValue(vehicle['gas_type']);
+      return this.getEditVehicleFormLicensePlate().setValue(vehicle['license_plate']);
+    } else {
+      return console.log('new');
+    }
   },
   backToVehicles: function() {
-    return this.getVehiclesTabContainer().remove(this.getVehiclesTabContainer().getActiveItem(), true);
+    return this.getVehiclesTabContainer().remove(this.getEditVehicleForm(), true);
   },
   loadVehiclesList: function() {
-    var vehicles;
-    vehicles = [
-      {
-        id: '123abc',
-        model: 'ES 350',
-        make: 'Lexus',
-        color: 'silver',
-        year: '2012',
-        gas_type: '91',
-        license_plate: '8U7-631R'
-      }, {
-        id: 'fdd',
-        model: 'Pilot',
-        make: 'Honda',
-        color: 'blue',
-        year: '2013',
-        gas_type: '89',
-        license_plate: '123-HGHH'
-      }, {
-        id: '99ddh',
-        model: 'Civic',
-        make: 'Honda',
-        color: 'white',
-        year: '1995',
-        gas_type: '89',
-        license_plate: '888-JJKN'
-      }
-    ];
-    return this.renderVehiclesList(vehicles);
+    if (this.vehicles != null) {
+      return this.renderVehiclesList(this.vehicles);
+    } else {
+      Ext.Viewport.setMasked({
+        xtype: 'loadmask',
+        message: ''
+      });
+      return Ext.Ajax.request({
+        url: "" + util.WEB_SERVICE_BASE_URL + "user/details",
+        params: Ext.JSON.encode({
+          user_id: localStorage['purpleUserId'],
+          token: localStorage['purpleToken']
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+        method: 'POST',
+        scope: this,
+        success: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          if (response.success) {
+            this.vehicles = response.vehicles;
+            return this.renderVehiclesList(this.vehicles);
+          } else {
+            return Ext.Msg.alert('Error', response.message, (function() {}));
+          }
+        },
+        failure: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          return console.log(response);
+        }
+      });
+    }
   },
   renderVehiclesList: function(vehicles) {
     var list, v, _i, _len, _results,
       _this = this;
     list = this.getVehiclesList();
+    list.removeAll(true, true);
     _results = [];
     for (_i = 0, _len = vehicles.length; _i < _len; _i++) {
       v = vehicles[_i];
@@ -97,5 +230,169 @@ Ext.define('Purple.controller.Vehicles', {
       }));
     }
     return _results;
+  },
+  saveChanges: function(callback) {
+    var values, vehicleId;
+    values = this.getEditVehicleForm().getValues();
+    vehicleId = this.getEditVehicleForm().config.vehicleId;
+    values['id'] = vehicleId;
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        vehicle: values
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response, temp_arr;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.vehicles = response.vehicles;
+          this.backToVehicles();
+          this.renderVehiclesList(this.vehicles);
+          if (typeof callback === 'function') {
+            temp_arr = this.vehicles.slice(0);
+            temp_arr.sort(function(a, b) {
+              return (new Date(b.timestamp_created)) - (new Date(a.timestamp_created));
+            });
+            return callback(temp_arr[0].id);
+          }
+        } else {
+          return Ext.Msg.alert('Error', response.message, (function() {}));
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
+  },
+  deleteVehicle: function(vehicleId) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        vehicle: {
+          id: vehicleId,
+          active: 0
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.vehicles = response.vehicles;
+          this.backToVehicles();
+          return this.renderVehiclesList(this.vehicles);
+        } else {
+          return Ext.Msg.alert('Error', response.message, (function() {}));
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
+  },
+  initRequestFormVehicleSelect: function() {
+    var opts;
+    if (this.vehicles != null) {
+      opts = this.vehicles.map(function(v) {
+        return {
+          text: "" + v.year + " " + v.make + " " + v.model,
+          value: v.id
+        };
+      });
+      opts.push({
+        text: "New Vehicle",
+        value: 'new'
+      });
+      return this.getRequestFormVehicleSelect().setOptions(opts);
+    } else {
+      Ext.Viewport.setMasked({
+        xtype: 'loadmask',
+        message: ''
+      });
+      return Ext.Ajax.request({
+        url: "" + util.WEB_SERVICE_BASE_URL + "user/details",
+        params: Ext.JSON.encode({
+          user_id: localStorage['purpleUserId'],
+          token: localStorage['purpleToken']
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+        method: 'POST',
+        scope: this,
+        success: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          if (response.success) {
+            this.vehicles = response.vehicles;
+            opts = this.vehicles.map(function(v) {
+              return {
+                text: "" + v.year + " " + v.make + " " + v.model,
+                value: v.id
+              };
+            });
+            opts.push({
+              text: "New Vehicle",
+              value: 'new'
+            });
+            return this.getRequestFormVehicleSelect().setOptions(opts);
+          } else {
+            return Ext.Msg.alert('Error', response.message, (function() {}));
+          }
+        },
+        failure: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          return console.log(response);
+        }
+      });
+    }
+  },
+  requestFormVehicleSelectChange: function(field, value) {
+    var _this = this;
+    if (value === 'new') {
+      util.ctl('Menu').selectOption(4);
+      this.showEditVehicleForm();
+      this.getEditVehicleForm().config.saveChangesCallback = function(vehicleId) {
+        util.ctl('Menu').selectOption(0);
+        _this.initRequestFormVehicleSelect();
+        return _this.getRequestFormVehicleSelect().setValue(vehicleId);
+      };
+      return this.getBackToVehiclesButton().setHidden(true);
+    }
   }
 });

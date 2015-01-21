@@ -14,6 +14,7 @@ Ext.define 'Purple.view.EditVehicleForm'
     submitOnAction: no
     cls: [
       'request-form'
+      'vehicle-form'
       'accent-bg'
       'slideable'
     ]
@@ -22,13 +23,40 @@ Ext.define 'Purple.view.EditVehicleForm'
       directionLock: yes
     listeners:
       initialize: ->
-        heading = Ext.ComponentQuery.query('#editVehicleFormHeading')[0]
-        heading.setHtml(
-          if @config.vehicleId is 'new'
-            'Add Vehicle'
-          else
-            'Edit Vehicle'
-        )
+        if @config.vehicleId isnt 'new'
+          @getAt(1).add [
+            {
+              xtype: 'spacer'
+              flex: 0
+              height: 100
+              listeners:
+                initialize: ->
+                  console.log 'heyhey'
+            }
+            {
+              xtype: 'container'
+              flex: 0
+              layout:
+                type: 'vbox'
+                pack: 'start'
+                align: 'center'
+              cls: 'links-container'
+              style: """
+                width: 100%;
+                text-align: center;
+                padding-bottom: 20px;
+              """
+              items: [
+                {
+                  xtype: 'button'
+                  ui: 'plain'
+                  text: 'Delete Vehicle'
+                  handler: =>
+                    @fireEvent 'deleteVehicle', @config.vehicleId
+                }
+              ]
+            }
+          ]
     items: [
       {
         xtype: 'spacer'
@@ -46,12 +74,13 @@ Ext.define 'Purple.view.EditVehicleForm'
           {
             xtype: 'container'
             flex: 0
-            id: 'editVehicleFormHeading'
+            ctype: 'editVehicleFormHeading'
             cls: 'heading'
             html: ''
             items: [
               {
                 xtype: 'button'
+                ctype: 'backToVehiclesButton'
                 ui: 'plain'
                 text: 'Back to Vehicles'
                 cls: [
@@ -70,6 +99,7 @@ Ext.define 'Purple.view.EditVehicleForm'
           }
           {
             xtype: 'selectfield'
+            ctype: 'editVehicleFormYear'
             flex: 0
             name: 'year'
             label: 'Year'
@@ -78,25 +108,16 @@ Ext.define 'Purple.view.EditVehicleForm'
             cls: [
               'click-to-edit'
               'bottom-margin'
+              'visibly-disabled'
             ]
-            value: '2014'
+            disabled: yes
             options: [
-              {
-                text: '2015'
-                value: '2015'
-              }
-              {
-                text: '2014'
-                value: '2014'
-              }
-              {
-                text: '2013'
-                value: '2013'
-              }
+              'Loading...'
             ]
           }
           {
             xtype: 'selectfield'
+            ctype: 'editVehicleFormMake'
             flex: 0
             name: 'make'
             label: 'Make'
@@ -105,25 +126,16 @@ Ext.define 'Purple.view.EditVehicleForm'
             cls: [
               'click-to-edit'
               'bottom-margin'
+              'visibly-disabled'
             ]
-            value: 'Lexus'
+            disabled: yes
             options: [
-              {
-                text: 'Lexus'
-                value: 'Lexus'
-              }
-              {
-                text: 'Audi'
-                value: 'Audi'
-              }
-              {
-                text: 'Honda'
-                value: 'Honda'
-              }
+              'Please select year...'
             ]
           }
           {
             xtype: 'selectfield'
+            ctype: 'editVehicleFormModel'
             flex: 0
             name: 'model'
             label: 'Model'
@@ -132,21 +144,29 @@ Ext.define 'Purple.view.EditVehicleForm'
             cls: [
               'click-to-edit'
               'bottom-margin'
+              'visibly-disabled'
             ]
-            value: 'ES 350'
+            disabled: yes
             options: [
-              {
-                text: 'ES 350'
-                value: 'ES 350'
-              }
-              {
-                text: 'Pilot'
-                value: 'Pilot'
-              }
-              {
-                text: 'Civic'
-                value: 'Civic'
-              }
+              'Please select make...'
+            ]
+          }
+          {
+            xtype: 'selectfield'
+            ctype: 'editVehicleFormColor'
+            flex: 0
+            name: 'color'
+            label: 'Color'
+            listPicker:
+              title: 'Select Vehicle Color'
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+              'visibly-disabled'
+            ]
+            disabled: yes
+            options: [
+              'Loading...'
             ]
           }
           {
@@ -156,8 +176,9 @@ Ext.define 'Purple.view.EditVehicleForm'
           }
           {
             xtype: 'selectfield'
+            ctype: 'editVehicleFormGasType'
             flex: 0
-            name: 'gas'
+            name: 'gas_type'
             label: 'Gas'
             listPicker:
               title: 'Select Vehicle Gas'
@@ -165,7 +186,6 @@ Ext.define 'Purple.view.EditVehicleForm'
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '89'
             options: [
               {
                 text: 'Unleaded 89 Octane'
@@ -179,6 +199,7 @@ Ext.define 'Purple.view.EditVehicleForm'
           }
           {
             xtype: 'textfield'
+            ctype: 'editVehicleFormLicensePlate'
             name: 'license_plate'
             label: 'License Plate'
             labelWidth: 125
@@ -212,7 +233,7 @@ Ext.define 'Purple.view.EditVehicleForm'
                 text: 'Save Changes'
                 flex: 0
                 handler: ->
-                  @up().up().up().fireEvent 'saveChanges'
+                  @up().up().up().fireEvent 'saveChanges', @up().up().up().config.saveChangesCallback
               }
             ]
           }

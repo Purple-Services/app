@@ -195,7 +195,7 @@ Ext.define 'Purple.controller.Main'
 
   backToMapFromRequestForm: ->
     @getRequestGasTabContainer().remove(
-      @getRequestGasTabContainer().getActiveItem(),
+      @getRequestForm(),
       yes
     )
 
@@ -214,10 +214,59 @@ Ext.define 'Purple.controller.Main'
     vals['gas_price'] = '2.35'
     vals['service_fee'] = '5'
     vals['total_price'] = '45'
+    vals['display_time'] = switch vals['time']
+      when '< 1 hr' then 'within 1 hour'
+      when '< 3 hr' then 'within 3 hours'
+    vals['vehicle_id'] = vals['vehicle']
+    for v in util.ctl('Vehicles').vehicles
+      if v['id'] is vals['vehicle_id']
+        vals['vehicle'] = "#{v.year} #{v.make} #{v.model}"
+        break
+        
     @getRequestConfirmationForm().setValues vals
     if vals['special_instructions'] is ''
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
 
   confirmOrder: ->
-    console.log 'Confirm Order'
+    console.log 'Confirm Order', @getRequestConfirmationForm().getValues()
+
+    vals = @getRequestConfirmationForm().getValues()
+    vals['gas_price'] = parseFloat(vals['gas_price'].replace('$',''))
+    vals['service_fee'] = parseFloat(vals['service_fee'].replace('$',''))
+    vals['total_price'] = parseFloat(vals['total_price'].replace('$',''))
+    
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}orders/add"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        order: vals
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          util.ctl('Menu').selectOption 3 # Orders tab
+          @getRequestGasTabContainer().setActiveItem @getMapForm()
+          @getRequestGasTabContainer().remove(
+            @getRequestConfirmationForm(),
+            yes
+          )
+          @getRequestGasTabContainer().remove(
+            @getRequestForm(),
+            yes
+          )
+        else
+          Ext.Msg.alert 'Error', response.message, (->)
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
