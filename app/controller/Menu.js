@@ -6,6 +6,7 @@ Ext.define('Purple.controller.Menu', {
     refs: {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
+      feedbackButton: '[ctype=feedbackButton]',
       requestGasTabContainer: '#requestGasTabContainer',
       accountTab: '#accountTab',
       accountTabContainer: '#accountTabContainer',
@@ -14,6 +15,9 @@ Ext.define('Purple.controller.Menu', {
       map: '#gmap'
     },
     control: {
+      feedbackButton: {
+        feedbackButtonTap: 'feedbackButtonTap'
+      },
       topToolbar: {
         menuButtonTap: 'menuButtonTap',
         helpButtonTap: 'helpButtonTap'
@@ -28,6 +32,9 @@ Ext.define('Purple.controller.Menu', {
   },
   helpButtonTap: function() {
     return this.selectOption(5);
+  },
+  feedbackButtonTap: function() {
+    return this.selectOption(6);
   },
   selectOption: function(index) {
     return this.getMainContainer().getItems().getAt(0).select(index, false, false);

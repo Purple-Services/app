@@ -4,6 +4,7 @@ Ext.define 'Purple.controller.Menu'
     refs:
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
+      feedbackButton: '[ctype=feedbackButton]'
       requestGasTabContainer: '#requestGasTabContainer'
       accountTab: '#accountTab'
       accountTabContainer: '#accountTabContainer'
@@ -11,6 +12,8 @@ Ext.define 'Purple.controller.Menu'
       mapForm: 'mapform'
       map: '#gmap'
     control:
+      feedbackButton:
+        feedbackButtonTap: 'feedbackButtonTap'
       topToolbar:
         menuButtonTap: 'menuButtonTap'
         helpButtonTap: 'helpButtonTap'
@@ -23,6 +26,9 @@ Ext.define 'Purple.controller.Menu'
 
   helpButtonTap: ->
     @selectOption 5
+
+  feedbackButtonTap: ->
+    @selectOption 6
 
   selectOption: (index) ->
     @getMainContainer().getItems().getAt(0).select index, no, no

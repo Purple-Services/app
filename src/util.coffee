@@ -14,7 +14,3 @@ window.util =
   # returns the controller (just a convenience function)
   ctl: (controllerName) ->
     Purple.app.getController controllerName
-
-  strToTitleCase: (str) ->
-    str.replace /\w\S*/g, (word) ->
-      word.charAt(0).toUpperCase() + word.substr(1).toLowerCase()

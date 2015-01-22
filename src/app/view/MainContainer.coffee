@@ -9,6 +9,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Orders'
     'Purple.view.Vehicles'
     'Purple.view.Help'
+    'Purple.view.Feedback'
   ]
   xtype: 'maincontainer'
   config:
@@ -93,8 +94,10 @@ Ext.define 'Purple.view.MainContainer',
             }
             {
               xtype: 'button'
+              ctype: 'feedbackButton'
               ui: 'plain'
               text: 'Feedback?'
+              handler: -> @fireEvent 'feedbackButtonTap'
             }
           ]
         }
@@ -209,12 +212,30 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
+      {
+        title: "Feedback"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'feedback'
+          }
+        ]
+      }
     ]
 
     listeners:
       initialize: ->
         util.ctl('Menu').adjustForAppLoginState()
-        util.ctl('Menu').hideTitles [5] # always hide Help section
+        util.ctl('Menu').hideTitles [
+          5 # always hide Help
+          6 # Feedback
+        ] 
     
   initialize: ->
     @callParent arguments

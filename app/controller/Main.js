@@ -16,7 +16,10 @@ Ext.define('Purple.controller.Main', {
       autocompleteList: '#autocompleteList',
       backToMapButton: '#backToMapButton',
       requestForm: 'requestform',
-      requestConfirmationForm: 'requestconfirmationform'
+      requestConfirmationForm: 'requestconfirmationform',
+      feedback: 'feedback',
+      feedbackTextField: '[ctype=feedbackTextField]',
+      feedbackThankYouMessage: '[ctype=feedbackThankYouMessage]'
     },
     control: {
       mapForm: {
@@ -47,6 +50,9 @@ Ext.define('Purple.controller.Main', {
       requestConfirmationForm: {
         backToRequestForm: 'backToRequestForm',
         confirmOrder: 'confirmOrder'
+      },
+      feedback: {
+        sendFeedback: 'sendFeedback'
       }
     }
   },
@@ -279,6 +285,51 @@ Ext.define('Purple.controller.Main', {
           this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
           this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
           return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
+        } else {
+          return Ext.Msg.alert('Error', response.message, (function() {}));
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
+  },
+  sendFeedback: function() {
+    var params;
+    params = {
+      text: this.getFeedbackTextField().getValue()
+    };
+    if (util.ctl('Account').isUserLoggedIn()) {
+      params['user_id'] = localStorage['purpleUserId'];
+      params['token'] = localStorage['purpleToken'];
+    }
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "feedback/send",
+      params: Ext.JSON.encode(params),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response,
+          _this = this;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.getFeedbackTextField().setValue('');
+          this.getFeedbackThankYouMessage().show();
+          return setTimeout((function() {
+            return _this.getFeedbackThankYouMessage().hide();
+          }), 5000);
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
         }

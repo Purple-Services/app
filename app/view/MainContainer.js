@@ -2,7 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help'],
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help', 'Purple.view.Feedback'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
@@ -81,8 +81,12 @@ Ext.define('Purple.view.MainContainer', {
               height: 10
             }, {
               xtype: 'button',
+              ctype: 'feedbackButton',
               ui: 'plain',
-              text: 'Feedback?'
+              text: 'Feedback?',
+              handler: function() {
+                return this.fireEvent('feedbackButtonTap');
+              }
             }
           ]
         }
@@ -170,12 +174,22 @@ Ext.define('Purple.view.MainContainer', {
             xtype: 'help'
           }
         ]
+      }, {
+        title: "Feedback",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'feedback'
+          }
+        ]
       }
     ],
     listeners: {
       initialize: function() {
         util.ctl('Menu').adjustForAppLoginState();
-        return util.ctl('Menu').hideTitles([5]);
+        return util.ctl('Menu').hideTitles([5, 6]);
       }
     }
   },

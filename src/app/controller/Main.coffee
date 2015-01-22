@@ -15,6 +15,9 @@ Ext.define 'Purple.controller.Main'
       backToMapButton: '#backToMapButton'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
+      feedback: 'feedback'
+      feedbackTextField: '[ctype=feedbackTextField]'
+      feedbackThankYouMessage: '[ctype=feedbackThankYouMessage]'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -37,6 +40,8 @@ Ext.define 'Purple.controller.Main'
       requestConfirmationForm:
         backToRequestForm: 'backToRequestForm'
         confirmOrder: 'confirmOrder'
+      feedback:
+        sendFeedback: 'sendFeedback'
 
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
@@ -264,6 +269,37 @@ Ext.define 'Purple.controller.Main'
             @getRequestForm(),
             yes
           )
+        else
+          Ext.Msg.alert 'Error', response.message, (->)
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+
+  sendFeedback: ->
+    params =
+      text: @getFeedbackTextField().getValue()
+    if util.ctl('Account').isUserLoggedIn()
+      params['user_id'] = localStorage['purpleUserId']
+      params['token'] = localStorage['purpleToken']
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}feedback/send"
+      params: Ext.JSON.encode params
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @getFeedbackTextField().setValue ''
+          @getFeedbackThankYouMessage().show()
+          setTimeout (=> @getFeedbackThankYouMessage().hide()), 5000
         else
           Ext.Msg.alert 'Error', response.message, (->)
       failure: (response_obj) ->

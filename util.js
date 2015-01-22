@@ -16,10 +16,5 @@ window.util = {
   })(),
   ctl: function(controllerName) {
     return Purple.app.getController(controllerName);
-  },
-  strToTitleCase: function(str) {
-    return str.replace(/\w\S*/g, function(word) {
-      return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
-    });
   }
 };
