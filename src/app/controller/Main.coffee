@@ -260,6 +260,7 @@ Ext.define 'Purple.controller.Main'
         response = Ext.JSON.decode response_obj.responseText
         if response.success
           util.ctl('Menu').selectOption 3 # Orders tab
+          util.ctl('Orders').loadOrdersList yes
           @getRequestGasTabContainer().setActiveItem @getMapForm()
           @getRequestGasTabContainer().remove(
             @getRequestConfirmationForm(),
@@ -298,8 +299,7 @@ Ext.define 'Purple.controller.Main'
         response = Ext.JSON.decode response_obj.responseText
         if response.success
           @getFeedbackTextField().setValue ''
-          @getFeedbackThankYouMessage().show()
-          setTimeout (=> @getFeedbackThankYouMessage().hide()), 5000
+          util.flashComponent @getFeedbackThankYouMessage()
         else
           Ext.Msg.alert 'Error', response.message, (->)
       failure: (response_obj) ->

@@ -170,7 +170,15 @@ Ext.define 'Purple.view.MainContainer',
             ]
           }
           {
-            xtype: 'orders'
+            xtype: 'container'
+            id: 'ordersTabContainer'
+            layout:
+              type: 'card'
+            items: [
+              {
+                xtype: 'orders'
+              }
+            ]
           }
         ]
       }

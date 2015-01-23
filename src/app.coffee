@@ -11,12 +11,14 @@ Ext.application
     'Override.field.Select'
     'Ux.field.SelectOtherField'
     'Ux.field.MoneyField'
+    'Purple.plugin.NonListPullRefresh'
   ]
   controllers: [
     'Main'
     'Menu'
     'Account'
     'Vehicles'
+    'Orders'
   ]
   views: [
     'MainContainer'

@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.Vehicles'
+ Ext.define 'Purple.controller.Vehicles'
   extend: 'Ext.app.Controller'
   requires: [
     'Purple.view.EditVehicleForm'
@@ -62,6 +62,13 @@ Ext.define 'Purple.controller.Vehicles'
 
   launch: ->
     @callParent arguments
+
+  getVehicleById: (id) ->
+    for v in @vehicles
+      if v['id'] is id
+        vehicle = v
+        break
+    return vehicle
 
   getYearList: ->
     (v for v, vehicle of @vehicleList).sort (a, b) ->
@@ -135,10 +142,7 @@ Ext.define 'Purple.controller.Vehicles'
     @getEditVehicleFormColor().setDisabled no
     
     if vehicleId isnt 'new'
-      for v in @vehicles
-        if v['id'] is vehicleId
-          vehicle = v
-          break
+      vehicle = @getVehicleById vehicleId
       @getEditVehicleFormYear().setValue vehicle['year']
       # you would think setValue should fire the change event
       # but it doesn't, so here is a manual call to prepare for
@@ -157,9 +161,7 @@ Ext.define 'Purple.controller.Vehicles'
       # @getEditVehicleFormMake().setValue ''
       # @getEditVehicleFormMake().setOptions []
       # @getEditVehicleFormModel().setValue ''
-      # @getEditVehicleFormModel().setOptions []
-      
-      
+      # @getEditVehicleFormModel().setOptions []      
 
   backToVehicles: ->
     @getVehiclesTabContainer().remove(
@@ -189,6 +191,7 @@ Ext.define 'Purple.controller.Vehicles'
           response = Ext.JSON.decode response_obj.responseText
           if response.success
             @vehicles = response.vehicles
+            util.ctl('Orders').orders = response.orders
             @renderVehiclesList @vehicles
           else
             Ext.Msg.alert 'Error', response.message, (->)
@@ -240,6 +243,7 @@ Ext.define 'Purple.controller.Vehicles'
         response = Ext.JSON.decode response_obj.responseText
         if response.success
           @vehicles = response.vehicles
+          util.ctl('Orders').orders = response.orders
           @backToVehicles()
           @renderVehiclesList @vehicles
           if typeof callback is 'function'
@@ -279,6 +283,7 @@ Ext.define 'Purple.controller.Vehicles'
         response = Ext.JSON.decode response_obj.responseText
         if response.success
           @vehicles = response.vehicles
+          util.ctl('Orders').orders = response.orders
           @backToVehicles()
           @renderVehiclesList @vehicles
         else
@@ -318,6 +323,7 @@ Ext.define 'Purple.controller.Vehicles'
           response = Ext.JSON.decode response_obj.responseText
           if response.success
             @vehicles = response.vehicles
+            util.ctl('Orders').orders = response.orders
             opts = @vehicles.map (v) ->
               {
                 text: "#{v.year} #{v.make} #{v.model}"

@@ -282,6 +282,7 @@ Ext.define('Purple.controller.Main', {
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
           util.ctl('Menu').selectOption(3);
+          util.ctl('Orders').loadOrdersList(true);
           this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
           this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
           return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
@@ -320,16 +321,12 @@ Ext.define('Purple.controller.Main', {
       method: 'POST',
       scope: this,
       success: function(response_obj) {
-        var response,
-          _this = this;
+        var response;
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
           this.getFeedbackTextField().setValue('');
-          this.getFeedbackThankYouMessage().show();
-          return setTimeout((function() {
-            return _this.getFeedbackThankYouMessage().hide();
-          }), 5000);
+          return util.flashComponent(this.getFeedbackThankYouMessage());
         } else {
           return Ext.Msg.alert('Error', response.message, (function() {}));
         }

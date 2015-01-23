@@ -49,6 +49,18 @@ Ext.define('Purple.controller.Vehicles', {
   launch: function() {
     return this.callParent(arguments);
   },
+  getVehicleById: function(id) {
+    var v, vehicle, _i, _len, _ref;
+    _ref = this.vehicles;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      v = _ref[_i];
+      if (v['id'] === id) {
+        vehicle = v;
+        break;
+      }
+    }
+    return vehicle;
+  },
   getYearList: function() {
     var v, vehicle;
     return ((function() {
@@ -116,7 +128,7 @@ Ext.define('Purple.controller.Vehicles', {
     return this.getEditVehicleFormModel().setDisabled(false);
   },
   showEditVehicleForm: function(vehicleId) {
-    var v, vehicle, _i, _len, _ref;
+    var vehicle;
     if (vehicleId == null) {
       vehicleId = 'new';
     }
@@ -139,14 +151,7 @@ Ext.define('Purple.controller.Vehicles', {
     }));
     this.getEditVehicleFormColor().setDisabled(false);
     if (vehicleId !== 'new') {
-      _ref = this.vehicles;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        v = _ref[_i];
-        if (v['id'] === vehicleId) {
-          vehicle = v;
-          break;
-        }
-      }
+      vehicle = this.getVehicleById(vehicleId);
       this.getEditVehicleFormYear().setValue(vehicle['year']);
       this.yearChanged(null, vehicle['year']);
       this.getEditVehicleFormMake().setValue(vehicle['make']);
@@ -188,6 +193,7 @@ Ext.define('Purple.controller.Vehicles', {
           response = Ext.JSON.decode(response_obj.responseText);
           if (response.success) {
             this.vehicles = response.vehicles;
+            util.ctl('Orders').orders = response.orders;
             return this.renderVehiclesList(this.vehicles);
           } else {
             return Ext.Msg.alert('Error', response.message, (function() {}));
@@ -259,6 +265,7 @@ Ext.define('Purple.controller.Vehicles', {
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
           this.vehicles = response.vehicles;
+          util.ctl('Orders').orders = response.orders;
           this.backToVehicles();
           this.renderVehiclesList(this.vehicles);
           if (typeof callback === 'function') {
@@ -307,6 +314,7 @@ Ext.define('Purple.controller.Vehicles', {
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
           this.vehicles = response.vehicles;
+          util.ctl('Orders').orders = response.orders;
           this.backToVehicles();
           return this.renderVehiclesList(this.vehicles);
         } else {
@@ -358,6 +366,7 @@ Ext.define('Purple.controller.Vehicles', {
           response = Ext.JSON.decode(response_obj.responseText);
           if (response.success) {
             this.vehicles = response.vehicles;
+            util.ctl('Orders').orders = response.orders;
             opts = this.vehicles.map(function(v) {
               return {
                 text: "" + v.year + " " + v.make + " " + v.model,

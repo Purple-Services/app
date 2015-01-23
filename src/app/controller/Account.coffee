@@ -128,6 +128,7 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
           util.ctl('Vehicles').vehicles = response.vehicles
+          util.ctl('Orders').orders = response.orders
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else
