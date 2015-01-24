@@ -691,7 +691,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.controller.Account": [],
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
+  "Purple.controller.Orders": [],
   "Purple.controller.Vehicles": [],
+  "Purple.plugin.NonListPullRefresh": [],
   "Purple.view.AccountForm": [],
   "Purple.view.EditVehicleForm": [],
   "Purple.view.Feedback": [],
@@ -699,6 +701,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.view.LoginForm": [],
   "Purple.view.MainContainer": [],
   "Purple.view.MapForm": [],
+  "Purple.view.Order": [],
   "Purple.view.Orders": [],
   "Purple.view.RequestConfirmationForm": [],
   "Purple.view.RequestForm": [],
@@ -1445,7 +1448,11 @@ Ext.ClassManager.addNameAliasMappings({
   "Purple.controller.Account": [],
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
+  "Purple.controller.Orders": [],
   "Purple.controller.Vehicles": [],
+  "Purple.plugin.NonListPullRefresh": [
+    "plugin.nonlistpullrefresh"
+  ],
   "Purple.view.AccountForm": [
     "widget.accountform"
   ],
@@ -1466,6 +1473,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Purple.view.MapForm": [
     "widget.mapform"
+  ],
+  "Purple.view.Order": [
+    "widget.order"
   ],
   "Purple.view.Orders": [
     "widget.orders"

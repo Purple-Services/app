@@ -17,9 +17,14 @@ window.util = {
   ctl: function(controllerName) {
     return Purple.app.getController(controllerName);
   },
-  strToTitleCase: function(str) {
-    return str.replace(/\w\S*/g, function(word) {
-      return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
-    });
+  flashComponent: function(c, t) {
+    var _this = this;
+    if (t == null) {
+      t = 5000;
+    }
+    c.show();
+    return setTimeout((function() {
+      return c.hide();
+    }), t);
   }
 };

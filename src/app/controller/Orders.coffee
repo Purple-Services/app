@@ -87,6 +87,16 @@
     list.removeAll yes, yes
     for o in orders
       v = util.ctl('Vehicles').getVehicleById(o.vehicle_id)
+      v ?=
+        id: o.vehicle_id
+        user_id: localStorage['purpleUserId']
+        year: "Vehicle Deleted"
+        timestamp_created: "1970-01-01T00:00:00Z"
+        color: ""
+        gas_type: ""
+        license_plate: ""
+        make: ""
+        model: ""
       list.add
         xtype: 'textfield'
         id: "oid_#{o.id}"

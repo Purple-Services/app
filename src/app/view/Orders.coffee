@@ -5,7 +5,7 @@ Ext.define 'Purple.view.Orders'
     'Ext.form.*'
     'Ext.field.*'
     'Ext.Button'
-    'Ext.Template'
+    'Ext.XTemplate'
   ]
   config:
     layout:
@@ -27,9 +27,9 @@ Ext.define 'Purple.view.Orders'
         pullRefreshText: 'pull down to refresh'
         releaseRefreshText: 'release to refresh'
         loadingText: 'loading orders...'
-        pullTpl: new Ext.Template("""
+        pullTpl: new Ext.XTemplate("""
           <div class="x-list-pullrefresh">
-            <div class="x-list-pullrefresh-wrap" style="width: #{Ext.get('ext-viewport').getWidth()}px;">
+            <div class="x-list-pullrefresh-wrap" style="width: {[Ext.Viewport.element.getWidth()]}px;">
               <img src="resources/images/center-map-icon.png" width="35" height="35" />
               <h3 class="x-list-pullrefresh-message" style="display:none">
                 {message}

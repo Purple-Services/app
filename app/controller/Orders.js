@@ -113,6 +113,19 @@ Ext.define('Purple.controller.Orders', {
     for (_i = 0, _len = orders.length; _i < _len; _i++) {
       o = orders[_i];
       v = util.ctl('Vehicles').getVehicleById(o.vehicle_id);
+      if (v == null) {
+        v = {
+          id: o.vehicle_id,
+          user_id: localStorage['purpleUserId'],
+          year: "Vehicle Deleted",
+          timestamp_created: "1970-01-01T00:00:00Z",
+          color: "",
+          gas_type: "",
+          license_plate: "",
+          make: "",
+          model: ""
+        };
+      }
       _results.push(list.add({
         xtype: 'textfield',
         id: "oid_" + o.id,
