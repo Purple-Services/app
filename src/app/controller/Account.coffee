@@ -5,11 +5,14 @@ Ext.define 'Purple.controller.Account'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       accountForm: 'accountform'
+      vehicles: 'vehicles'
+      orders: 'orders'
 
       # LoginForm elements
       loginForm: 'loginform'
       loginButtonContainer: '#loginButtonContainer'
       registerButtonContainer: '#registerButtonContainer'
+      forgotPasswordButtonContainer: '#forgotPasswordButtonContainer'
       createAccountButtonContainer: '#createAccountButtonContainer'
       showRegisterButtonContainer: '#showRegisterButtonContainer'
       showLoginButtonContainer: '#showLoginButtonContainer'
@@ -37,10 +40,12 @@ Ext.define 'Purple.controller.Account'
         nativeLogin: 'nativeLogin'
         nativeRegister: 'nativeRegister'
         createAccount: 'createAccount' # for adding phone and name to account
+        resetPassword: 'resetPassword'
         facebookLogin: 'facebookLogin'
         googleLogin: 'googleLogin'
         showRegisterButtonTap: 'showRegisterForm'
         showLoginButtonTap: 'showLoginForm'
+        showForgotPasswordButtonTap: 'showForgotPasswordForm'
       accountForm:
         logoutButtonTap: 'logout'
 
@@ -83,11 +88,14 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserId'] = response.user.id
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
-          # they don't have any vehicles yet.
+          # they don't have any vehicles or orders yet.
           util.ctl('Vehicles').vehicles = []
+          util.ctl('Vehicles').loadVehiclesList()
+          util.ctl('Orders').orders = []
+          util.ctl('Orders').loadOrdersList()
           @accountSetup()
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -129,13 +137,16 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleToken'] = response.token
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Orders').orders = response.orders
+          util.ctl('Vehicles').loadVehiclesList()
+          util.ctl('Orders').loadOrdersList()
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else
             util.ctl('Menu').adjustForAppLoginState()
             util.ctl('Menu').selectOption 0
+            @showLoginForm() # to prepare for next logout, if it comes
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -222,10 +233,13 @@ Ext.define 'Purple.controller.Account'
         if response.success
           console.log 'success ', response
           @getLoginForm().reset()
+          localStorage['purpleUserPhoneNumber'] = response.user.phone_number
+          localStorage['purpleUserName'] = response.user.name
           util.ctl('Menu').adjustForAppLoginState()
-          util.ctl('Menu').selectOption 1
+          util.ctl('Menu').selectOption 0
+          @showLoginForm() # to prepare for next logout, if it comes
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -263,10 +277,32 @@ Ext.define 'Purple.controller.Account'
     @getRegisterButtonContainer().show()
 
   showLoginForm: ->
+    @getFinalStepText().hide()
+    @getNameField().hide()
+    @getNameFieldLabel().hide()
+    @getPhoneNumberField().hide()
+    @getPhoneNumberFieldLabel().hide()
+    @getCreateAccountButtonContainer().hide()
     @getShowLoginButtonContainer().hide()
     @getRegisterButtonContainer().hide()
+    @getForgotPasswordButtonContainer().hide()
+    @getEmailAddressField().show()
+    @getEmailAddressFieldLabel().show()
+    @getAlternativeLoginOptions().show()
+    @getAlternativeLoginOptionsText().show()
+    @getPurpleLoginLogo().show()
+    @getPasswordField().show()
+    @getPasswordFieldLabel().show()
     @getLoginButtonContainer().show()
     @getShowRegisterButtonContainer().show()
+
+  showForgotPasswordForm: ->
+    @getPasswordField().hide()
+    @getPasswordFieldLabel().hide()
+    @getLoginButtonContainer().hide()
+    @getShowRegisterButtonContainer().hide()
+    @getShowLoginButtonContainer().show()
+    @getForgotPasswordButtonContainer().show()
 
   logout: ->
     # send ajax to kill session?
@@ -276,6 +312,13 @@ Ext.define 'Purple.controller.Account'
     delete localStorage['purpleUserPhoneNumber']
     delete localStorage['purpleUserEmail']
     delete localStorage['purpleToken']
+
+    # clear out some lists from any old logins
+    util.ctl('Vehicles').vehicles = []
+    util.ctl('Vehicles').loadVehiclesList()
+    util.ctl('Orders').orders = []
+    util.ctl('Orders').loadOrdersList()
+    
     util.ctl('Menu').adjustForAppLoginState()
     util.ctl('Menu').selectOption 1
     
@@ -291,3 +334,35 @@ Ext.define 'Purple.controller.Account'
       @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
     # TODO 
     #@getAccountPaymentMethodField().setValue ''
+
+  # only for users of type = 'native'
+  resetPassword: ->
+    vals = @getLoginForm().getValues()
+    emailAddress = vals['email_address']
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/forgot-password"
+      params: Ext.JSON.encode
+        platform_id: emailAddress
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @getLoginForm().reset()
+          @showLoginForm()
+          console.log 'passwrod reset...'
+          navigator.notification.alert response.message, (->), "Success!"
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+        console.log 'forgot password ajax error'

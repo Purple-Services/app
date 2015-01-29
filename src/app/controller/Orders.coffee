@@ -73,10 +73,11 @@
           if response.success
             @orders = response.orders
             util.ctl('Vehicles').vehicles = response.vehicles
+            util.ctl('Vehicles').loadVehiclesList()
             @renderOrdersList @orders
             callback?()
           else
-            Ext.Msg.alert 'Error', response.message, (->)
+            navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -84,6 +85,8 @@
   
   renderOrdersList: (orders) ->
     list =  @getOrdersList()
+    if not list?
+      return
     list.removeAll yes, yes
     for o in orders
       v = util.ctl('Vehicles').getVehicleById(o.vehicle_id)

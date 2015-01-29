@@ -7,9 +7,12 @@ Ext.define('Purple.controller.Account', {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       accountForm: 'accountform',
+      vehicles: 'vehicles',
+      orders: 'orders',
       loginForm: 'loginform',
       loginButtonContainer: '#loginButtonContainer',
       registerButtonContainer: '#registerButtonContainer',
+      forgotPasswordButtonContainer: '#forgotPasswordButtonContainer',
       createAccountButtonContainer: '#createAccountButtonContainer',
       showRegisterButtonContainer: '#showRegisterButtonContainer',
       showLoginButtonContainer: '#showLoginButtonContainer',
@@ -35,10 +38,12 @@ Ext.define('Purple.controller.Account', {
         nativeLogin: 'nativeLogin',
         nativeRegister: 'nativeRegister',
         createAccount: 'createAccount',
+        resetPassword: 'resetPassword',
         facebookLogin: 'facebookLogin',
         googleLogin: 'googleLogin',
         showRegisterButtonTap: 'showRegisterForm',
-        showLoginButtonTap: 'showLoginForm'
+        showLoginButtonTap: 'showLoginForm',
+        showForgotPasswordButtonTap: 'showForgotPasswordForm'
       },
       accountForm: {
         logoutButtonTap: 'logout'
@@ -81,9 +86,12 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleToken'] = response.token;
           util.ctl('Vehicles').vehicles = [];
+          util.ctl('Vehicles').loadVehiclesList();
+          util.ctl('Orders').orders = [];
+          util.ctl('Orders').loadOrdersList();
           return this.accountSetup();
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
@@ -132,14 +140,17 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleToken'] = response.token;
           util.ctl('Vehicles').vehicles = response.vehicles;
           util.ctl('Orders').orders = response.orders;
+          util.ctl('Vehicles').loadVehiclesList();
+          util.ctl('Orders').loadOrdersList();
           if ((response.account_complete != null) && !response.account_complete) {
             return this.accountSetup();
           } else {
             util.ctl('Menu').adjustForAppLoginState();
-            return util.ctl('Menu').selectOption(0);
+            util.ctl('Menu').selectOption(0);
+            return this.showLoginForm();
           }
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
@@ -216,10 +227,13 @@ Ext.define('Purple.controller.Account', {
         if (response.success) {
           console.log('success ', response);
           this.getLoginForm().reset();
+          localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
+          localStorage['purpleUserName'] = response.user.name;
           util.ctl('Menu').adjustForAppLoginState();
-          return util.ctl('Menu').selectOption(1);
+          util.ctl('Menu').selectOption(0);
+          return this.showLoginForm();
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
@@ -263,10 +277,32 @@ Ext.define('Purple.controller.Account', {
     return this.getRegisterButtonContainer().show();
   },
   showLoginForm: function() {
+    this.getFinalStepText().hide();
+    this.getNameField().hide();
+    this.getNameFieldLabel().hide();
+    this.getPhoneNumberField().hide();
+    this.getPhoneNumberFieldLabel().hide();
+    this.getCreateAccountButtonContainer().hide();
     this.getShowLoginButtonContainer().hide();
     this.getRegisterButtonContainer().hide();
+    this.getForgotPasswordButtonContainer().hide();
+    this.getEmailAddressField().show();
+    this.getEmailAddressFieldLabel().show();
+    this.getAlternativeLoginOptions().show();
+    this.getAlternativeLoginOptionsText().show();
+    this.getPurpleLoginLogo().show();
+    this.getPasswordField().show();
+    this.getPasswordFieldLabel().show();
     this.getLoginButtonContainer().show();
     return this.getShowRegisterButtonContainer().show();
+  },
+  showForgotPasswordForm: function() {
+    this.getPasswordField().hide();
+    this.getPasswordFieldLabel().hide();
+    this.getLoginButtonContainer().hide();
+    this.getShowRegisterButtonContainer().hide();
+    this.getShowLoginButtonContainer().show();
+    return this.getForgotPasswordButtonContainer().show();
   },
   logout: function() {
     delete localStorage['purpleUserType'];
@@ -275,6 +311,10 @@ Ext.define('Purple.controller.Account', {
     delete localStorage['purpleUserPhoneNumber'];
     delete localStorage['purpleUserEmail'];
     delete localStorage['purpleToken'];
+    util.ctl('Vehicles').vehicles = [];
+    util.ctl('Vehicles').loadVehiclesList();
+    util.ctl('Orders').orders = [];
+    util.ctl('Orders').loadOrdersList();
     util.ctl('Menu').adjustForAppLoginState();
     return util.ctl('Menu').selectOption(1);
   },
@@ -296,5 +336,46 @@ Ext.define('Purple.controller.Account', {
     if ((localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '') {
       return (_ref2 = this.getAccountEmailField()) != null ? _ref2.setValue(localStorage['purpleUserEmail']) : void 0;
     }
+  },
+  resetPassword: function() {
+    var emailAddress, vals;
+    vals = this.getLoginForm().getValues();
+    emailAddress = vals['email_address'];
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/forgot-password",
+      params: Ext.JSON.encode({
+        platform_id: emailAddress
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.getLoginForm().reset();
+          this.showLoginForm();
+          console.log('passwrod reset...');
+          return navigator.notification.alert(response.message, (function() {}), "Success!");
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        console.log(response);
+        return console.log('forgot password ajax error');
+      }
+    });
   }
 });

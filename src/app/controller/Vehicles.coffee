@@ -192,9 +192,10 @@
           if response.success
             @vehicles = response.vehicles
             util.ctl('Orders').orders = response.orders
+            util.ctl('Orders').loadOrdersList()
             @renderVehiclesList @vehicles
           else
-            Ext.Msg.alert 'Error', response.message, (->)
+            navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -202,6 +203,8 @@
   
   renderVehiclesList: (vehicles) ->
     list =  @getVehiclesList()
+    if not list?
+      return
     list.removeAll yes, yes
     for v in vehicles
       list.add
@@ -255,7 +258,7 @@
               (new Date(b.timestamp_created)) - (new Date(a.timestamp_created))
             callback temp_arr[0].id
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -287,7 +290,7 @@
           @backToVehicles()
           @renderVehiclesList @vehicles
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -334,7 +337,7 @@
               value: 'new'
             @getRequestFormVehicleSelect().setOptions opts
           else
-            Ext.Msg.alert 'Error', response.message, (->)
+            navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText

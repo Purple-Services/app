@@ -10,6 +10,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Vehicles'
     'Purple.view.Help'
     'Purple.view.Feedback'
+    'Purple.view.Invite'
   ]
   xtype: 'maincontainer'
   config:
@@ -84,8 +85,10 @@ Ext.define 'Purple.view.MainContainer',
           items: [
             {
               xtype: 'button'
+              ctype: 'inviteButton'
               ui: 'plain'
               text: 'Invite a Friend'
+              handler: -> @fireEvent 'inviteButtonTap'
             }
             {
               xtype: 'component'
@@ -235,6 +238,21 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
+      {
+        title: "Invite"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'invite'
+          }
+        ]
+      }
     ]
 
     listeners:
@@ -243,6 +261,7 @@ Ext.define 'Purple.view.MainContainer',
         util.ctl('Menu').hideTitles [
           5 # always hide Help
           6 # Feedback
+          7 # Invite
         ] 
     
   initialize: ->

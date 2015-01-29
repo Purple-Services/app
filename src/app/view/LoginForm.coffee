@@ -24,8 +24,8 @@ Ext.define 'Purple.view.LoginForm'
         id: 'showRegisterButtonContainer'
         flex: 0
         layout:
-          type: 'vbox'
-          pack: 'start'
+          type: 'hbox'
+          pack: 'center'
           align: 'center'
         cls: 'links-container'
         style: """
@@ -36,11 +36,30 @@ Ext.define 'Purple.view.LoginForm'
         """
         items: [
           {
+            xtype: 'spacer'
+            flex: 1
+          }
+          {
             xtype: 'button'
             ui: 'plain'
-            text: 'Register'
+            text: 'Create Account'
             handler: ->
               @up().up().fireEvent 'showRegisterButtonTap'
+          }
+          {
+            xtype: 'spacer'
+            flex: 1
+          }
+          {
+            xtype: 'button'
+            ui: 'plain'
+            text: 'Forgot Password?'
+            handler: ->
+              @up().up().fireEvent 'showForgotPasswordButtonTap'
+          }
+          {
+            xtype: 'spacer'
+            flex: 1
           }
         ]
       }
@@ -64,7 +83,7 @@ Ext.define 'Purple.view.LoginForm'
           {
             xtype: 'button'
             ui: 'plain'
-            text: 'Login'
+            text: 'Log in with existing account'
             handler: ->
               @up().up().fireEvent 'showLoginButtonTap'
           }
@@ -189,7 +208,7 @@ Ext.define 'Purple.view.LoginForm'
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Login'
+                text: 'Log in'
                 flex: 0
                 handler: ->
                   # 3 up()'s to get to loginform itself
@@ -223,6 +242,30 @@ Ext.define 'Purple.view.LoginForm'
           }
           {
             xtype: 'container'
+            id: 'forgotPasswordButtonContainer'
+            flex: 0
+            height: 110
+            padding: '27 0 10 0'
+            hidden: yes
+            layout:
+              type: 'vbox'
+              pack: 'center'
+              align: 'center'
+            items: [
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop'
+                text: 'Reset Password'
+                flex: 0
+                handler: ->
+                  # 3 up()'s to get to loginform itself
+                  @up().up().up().fireEvent 'resetPassword'
+              }
+            ]
+          }
+          {
+            xtype: 'container'
             id: 'createAccountButtonContainer'
             flex: 0
             height: 110
@@ -249,7 +292,7 @@ Ext.define 'Purple.view.LoginForm'
             xtype: 'component'
             id: 'alternativeLoginOptionsText'
             flex: 0
-            html: 'or login with'
+            html: 'or log in with'
             style: 'color: #ffffff;'
           }
           {

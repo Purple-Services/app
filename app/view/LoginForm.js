@@ -19,20 +19,36 @@ Ext.define('Purple.view.LoginForm', {
         id: 'showRegisterButtonContainer',
         flex: 0,
         layout: {
-          type: 'vbox',
-          pack: 'start',
+          type: 'hbox',
+          pack: 'center',
           align: 'center'
         },
         cls: 'links-container',
         style: "position: absolute;\nbottom: 15px;\nwidth: 100%;\ntext-align: center;",
         items: [
           {
+            xtype: 'spacer',
+            flex: 1
+          }, {
             xtype: 'button',
             ui: 'plain',
-            text: 'Register',
+            text: 'Create Account',
             handler: function() {
               return this.up().up().fireEvent('showRegisterButtonTap');
             }
+          }, {
+            xtype: 'spacer',
+            flex: 1
+          }, {
+            xtype: 'button',
+            ui: 'plain',
+            text: 'Forgot Password?',
+            handler: function() {
+              return this.up().up().fireEvent('showForgotPasswordButtonTap');
+            }
+          }, {
+            xtype: 'spacer',
+            flex: 1
           }
         ]
       }, {
@@ -51,7 +67,7 @@ Ext.define('Purple.view.LoginForm', {
           {
             xtype: 'button',
             ui: 'plain',
-            text: 'Login',
+            text: 'Log in with existing account',
             handler: function() {
               return this.up().up().fireEvent('showLoginButtonTap');
             }
@@ -161,7 +177,7 @@ Ext.define('Purple.view.LoginForm', {
                 xtype: 'button',
                 ui: 'action',
                 cls: 'button-pop',
-                text: 'Login',
+                text: 'Log in',
                 flex: 0,
                 handler: function() {
                   return this.up().up().up().fireEvent('nativeLogin');
@@ -194,6 +210,30 @@ Ext.define('Purple.view.LoginForm', {
             ]
           }, {
             xtype: 'container',
+            id: 'forgotPasswordButtonContainer',
+            flex: 0,
+            height: 110,
+            padding: '27 0 10 0',
+            hidden: true,
+            layout: {
+              type: 'vbox',
+              pack: 'center',
+              align: 'center'
+            },
+            items: [
+              {
+                xtype: 'button',
+                ui: 'action',
+                cls: 'button-pop',
+                text: 'Reset Password',
+                flex: 0,
+                handler: function() {
+                  return this.up().up().up().fireEvent('resetPassword');
+                }
+              }
+            ]
+          }, {
+            xtype: 'container',
             id: 'createAccountButtonContainer',
             flex: 0,
             height: 110,
@@ -220,7 +260,7 @@ Ext.define('Purple.view.LoginForm', {
             xtype: 'component',
             id: 'alternativeLoginOptionsText',
             flex: 0,
-            html: 'or login with',
+            html: 'or log in with',
             style: 'color: #ffffff;'
           }, {
             xtype: 'container',

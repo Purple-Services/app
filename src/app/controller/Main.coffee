@@ -18,6 +18,9 @@ Ext.define 'Purple.controller.Main'
       feedback: 'feedback'
       feedbackTextField: '[ctype=feedbackTextField]'
       feedbackThankYouMessage: '[ctype=feedbackThankYouMessage]'
+      invite: 'invite'
+      inviteTextField: '[ctype=inviteTextField]'
+      inviteThankYouMessage: '[ctype=inviteThankYouMessage]'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -42,6 +45,8 @@ Ext.define 'Purple.controller.Main'
         confirmOrder: 'confirmOrder'
       feedback:
         sendFeedback: 'sendFeedback'
+      invite:
+        sendInvites: 'sendInvites'
 
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
@@ -271,7 +276,7 @@ Ext.define 'Purple.controller.Main'
             yes
           )
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -301,7 +306,37 @@ Ext.define 'Purple.controller.Main'
           @getFeedbackTextField().setValue ''
           util.flashComponent @getFeedbackThankYouMessage()
         else
-          Ext.Msg.alert 'Error', response.message, (->)
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+
+  sendInvites: ->
+    params =
+      email: @getInviteTextField().getValue()
+    if util.ctl('Account').isUserLoggedIn()
+      params['user_id'] = localStorage['purpleUserId']
+      params['token'] = localStorage['purpleToken']
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}invite/send"
+      params: Ext.JSON.encode params
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @getInviteTextField().setValue ''
+          util.flashComponent @getInviteThankYouMessage()
+        else
+          navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText

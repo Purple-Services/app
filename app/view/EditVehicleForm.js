@@ -24,12 +24,7 @@ Ext.define('Purple.view.EditVehicleForm', {
             {
               xtype: 'spacer',
               flex: 0,
-              height: 100,
-              listeners: {
-                initialize: function() {
-                  return console.log('heyhey');
-                }
-              }
+              height: 100
             }, {
               xtype: 'container',
               flex: 0,

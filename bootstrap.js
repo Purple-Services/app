@@ -698,6 +698,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.view.EditVehicleForm": [],
   "Purple.view.Feedback": [],
   "Purple.view.Help": [],
+  "Purple.view.Invite": [],
   "Purple.view.LoginForm": [],
   "Purple.view.MainContainer": [],
   "Purple.view.MapForm": [],
@@ -1464,6 +1465,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Purple.view.Help": [
     "widget.help"
+  ],
+  "Purple.view.Invite": [
+    "widget.invite"
   ],
   "Purple.view.LoginForm": [
     "widget.loginform"

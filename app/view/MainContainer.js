@@ -2,7 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help', 'Purple.view.Feedback'],
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
@@ -73,8 +73,12 @@ Ext.define('Purple.view.MainContainer', {
           items: [
             {
               xtype: 'button',
+              ctype: 'inviteButton',
               ui: 'plain',
-              text: 'Invite a Friend'
+              text: 'Invite a Friend',
+              handler: function() {
+                return this.fireEvent('inviteButtonTap');
+              }
             }, {
               xtype: 'component',
               flex: 0,
@@ -193,12 +197,22 @@ Ext.define('Purple.view.MainContainer', {
             xtype: 'feedback'
           }
         ]
+      }, {
+        title: "Invite",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'invite'
+          }
+        ]
       }
     ],
     listeners: {
       initialize: function() {
         util.ctl('Menu').adjustForAppLoginState();
-        return util.ctl('Menu').hideTitles([5, 6]);
+        return util.ctl('Menu').hideTitles([5, 6, 7]);
       }
     }
   },

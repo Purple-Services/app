@@ -7,6 +7,7 @@ Ext.define('Purple.controller.Menu', {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       feedbackButton: '[ctype=feedbackButton]',
+      inviteButton: '[ctype=inviteButton]',
       requestGasTabContainer: '#requestGasTabContainer',
       accountTab: '#accountTab',
       accountTabContainer: '#accountTabContainer',
@@ -17,6 +18,9 @@ Ext.define('Purple.controller.Menu', {
     control: {
       feedbackButton: {
         feedbackButtonTap: 'feedbackButtonTap'
+      },
+      inviteButton: {
+        inviteButtonTap: 'inviteButtonTap'
       },
       topToolbar: {
         menuButtonTap: 'menuButtonTap',
@@ -35,6 +39,9 @@ Ext.define('Purple.controller.Menu', {
   },
   feedbackButtonTap: function() {
     return this.selectOption(6);
+  },
+  inviteButtonTap: function() {
+    return this.selectOption(7);
   },
   selectOption: function(index) {
     return this.getMainContainer().getItems().getAt(0).select(index, false, false);

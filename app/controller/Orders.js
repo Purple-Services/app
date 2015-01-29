@@ -89,10 +89,11 @@ Ext.define('Purple.controller.Orders', {
           if (response.success) {
             this.orders = response.orders;
             util.ctl('Vehicles').vehicles = response.vehicles;
+            util.ctl('Vehicles').loadVehiclesList();
             this.renderOrdersList(this.orders);
             return typeof callback === "function" ? callback() : void 0;
           } else {
-            return Ext.Msg.alert('Error', response.message, (function() {}));
+            return navigator.notification.alert(response.message, (function() {}), "Error");
           }
         },
         failure: function(response_obj) {
@@ -108,6 +109,9 @@ Ext.define('Purple.controller.Orders', {
     var list, o, v, _i, _len, _results,
       _this = this;
     list = this.getOrdersList();
+    if (!(list != null)) {
+      return;
+    }
     list.removeAll(true, true);
     _results = [];
     for (_i = 0, _len = orders.length; _i < _len; _i++) {

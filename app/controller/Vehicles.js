@@ -194,9 +194,10 @@ Ext.define('Purple.controller.Vehicles', {
           if (response.success) {
             this.vehicles = response.vehicles;
             util.ctl('Orders').orders = response.orders;
+            util.ctl('Orders').loadOrdersList();
             return this.renderVehiclesList(this.vehicles);
           } else {
-            return Ext.Msg.alert('Error', response.message, (function() {}));
+            return navigator.notification.alert(response.message, (function() {}), "Error");
           }
         },
         failure: function(response_obj) {
@@ -212,6 +213,9 @@ Ext.define('Purple.controller.Vehicles', {
     var list, v, _i, _len, _results,
       _this = this;
     list = this.getVehiclesList();
+    if (!(list != null)) {
+      return;
+    }
     list.removeAll(true, true);
     _results = [];
     for (_i = 0, _len = vehicles.length; _i < _len; _i++) {
@@ -276,7 +280,7 @@ Ext.define('Purple.controller.Vehicles', {
             return callback(temp_arr[0].id);
           }
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
@@ -318,7 +322,7 @@ Ext.define('Purple.controller.Vehicles', {
           this.backToVehicles();
           return this.renderVehiclesList(this.vehicles);
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
@@ -379,7 +383,7 @@ Ext.define('Purple.controller.Vehicles', {
             });
             return this.getRequestFormVehicleSelect().setOptions(opts);
           } else {
-            return Ext.Msg.alert('Error', response.message, (function() {}));
+            return navigator.notification.alert(response.message, (function() {}), "Error");
           }
         },
         failure: function(response_obj) {

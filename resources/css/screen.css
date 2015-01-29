@@ -156,6 +156,11 @@ body {
 .x-field-textarea .x-input-el {
     text-align: left;
 }
+
+.invite-form input {
+    text-align: left;
+}
+
 .x-field.bottom-margin {
     margin-bottom: 10px;
 }
@@ -246,11 +251,11 @@ body {
 }
 
 .login-form .button-pop {
-    background: #EADFEE;
+    background: #FFF;
     color: #B91B8C;
 }
 .login-form .button-pop.x-button-pressing {
-    background: #EADFEE !important;
+    background: #FFF !important;
 }
 
 
@@ -265,15 +270,15 @@ body {
 
 
 .special-label {
-    border-top: 2px solid #EADFEE;
+    border-top: 2px solid #FFF;
     font-weight: 900;
-    color: #EADFEE;
+    color: #FFF;
     font-size: 16px;
     width: 100%
 }
 
 .login-form .links-container .x-button {
-    color: #EADFEE;
+    color: #FFF;
 }
 .account-form .links-container .x-button,
 .vehicle-form .links-container .x-button {
@@ -622,3 +627,47 @@ a[href^="http://maps.google.com/maps"] {
     75% { -webkit-transform: scale(1.3);}
     100% { -webkit-transform: scale(1); }
 }
+
+
+
+.x-loading-mask .x-mask-inner {
+    height: 100%;
+    width: 100%;
+}
+.x-loading-mask .x-mask-inner .x-loading-spinner-outer {
+    height: 100%;
+    width: 100%;
+}
+.x-loading-mask .x-mask-inner .x-loading-spinner-outer .x-loading-spinner {
+    -webkit-transform-origin: center;
+    transform-origin: center;
+}
+.x-loading-mask .x-mask-inner .x-loading-spinner-outer .x-loading-spinner .x-loading-top {
+    display: none;
+}
+.x-loading-mask .x-mask-inner .x-loading-spinner-outer .x-loading-spinner .x-loading-left {
+    display: none;
+}
+.x-loading-mask .x-mask-inner .x-loading-spinner-outer .x-loading-spinner .x-loading-bottom {
+    display: none;
+}
+.x-loading-mask .x-mask-inner .x-loading-spinner-outer .x-loading-spinner .x-loading-right {
+    display: none;
+}
+
+
+
+.x-loading-spinner {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  -webkit-box-sizing: border-box;
+  border: solid 10px rgba(255, 255, 255, 0.2);
+  border-top-color: #FFF;
+  -webkit-animation: spin 1s infinite linear;
+}
+@-webkit-keyframes spin { 
+  100% { 
+    -webkit-transform: rotate(360deg); 
+  } 
+} 

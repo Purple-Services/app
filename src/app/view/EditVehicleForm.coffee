@@ -29,9 +29,6 @@ Ext.define 'Purple.view.EditVehicleForm'
               xtype: 'spacer'
               flex: 0
               height: 100
-              listeners:
-                initialize: ->
-                  console.log 'heyhey'
             }
             {
               xtype: 'container'

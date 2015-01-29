@@ -5,6 +5,7 @@ Ext.define 'Purple.controller.Menu'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       feedbackButton: '[ctype=feedbackButton]'
+      inviteButton: '[ctype=inviteButton]'
       requestGasTabContainer: '#requestGasTabContainer'
       accountTab: '#accountTab'
       accountTabContainer: '#accountTabContainer'
@@ -14,6 +15,8 @@ Ext.define 'Purple.controller.Menu'
     control:
       feedbackButton:
         feedbackButtonTap: 'feedbackButtonTap'
+      inviteButton:
+        inviteButtonTap: 'inviteButtonTap'
       topToolbar:
         menuButtonTap: 'menuButtonTap'
         helpButtonTap: 'helpButtonTap'
@@ -29,6 +32,9 @@ Ext.define 'Purple.controller.Menu'
 
   feedbackButtonTap: ->
     @selectOption 6
+
+  inviteButtonTap: ->
+    @selectOption 7
 
   selectOption: (index) ->
     @getMainContainer().getItems().getAt(0).select index, no, no

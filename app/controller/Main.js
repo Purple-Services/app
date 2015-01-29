@@ -19,7 +19,10 @@ Ext.define('Purple.controller.Main', {
       requestConfirmationForm: 'requestconfirmationform',
       feedback: 'feedback',
       feedbackTextField: '[ctype=feedbackTextField]',
-      feedbackThankYouMessage: '[ctype=feedbackThankYouMessage]'
+      feedbackThankYouMessage: '[ctype=feedbackThankYouMessage]',
+      invite: 'invite',
+      inviteTextField: '[ctype=inviteTextField]',
+      inviteThankYouMessage: '[ctype=inviteThankYouMessage]'
     },
     control: {
       mapForm: {
@@ -53,6 +56,9 @@ Ext.define('Purple.controller.Main', {
       },
       feedback: {
         sendFeedback: 'sendFeedback'
+      },
+      invite: {
+        sendInvites: 'sendInvites'
       }
     }
   },
@@ -287,7 +293,7 @@ Ext.define('Purple.controller.Main', {
           this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
           return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
@@ -328,7 +334,48 @@ Ext.define('Purple.controller.Main', {
           this.getFeedbackTextField().setValue('');
           return util.flashComponent(this.getFeedbackThankYouMessage());
         } else {
-          return Ext.Msg.alert('Error', response.message, (function() {}));
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
+  },
+  sendInvites: function() {
+    var params;
+    params = {
+      email: this.getInviteTextField().getValue()
+    };
+    if (util.ctl('Account').isUserLoggedIn()) {
+      params['user_id'] = localStorage['purpleUserId'];
+      params['token'] = localStorage['purpleToken'];
+    }
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "invite/send",
+      params: Ext.JSON.encode(params),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.getInviteTextField().setValue('');
+          return util.flashComponent(this.getInviteThankYouMessage());
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
         }
       },
       failure: function(response_obj) {
