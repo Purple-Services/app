@@ -63,6 +63,7 @@
   <gap:plugin name="org.apache.cordova.camera" version="0.3.2" />
   <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
   <gap:plugin name="org.apache.cordova.splashscreen" version="0.3.4" />
+  <gap:plugin name="com.phonegap.plugins.childbrowser" version="5.0.0" />
   
   <preference name="AutoHideSplashScreen" value="false" />
 

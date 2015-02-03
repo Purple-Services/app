@@ -209,7 +209,7 @@ Ext.define('Purple.controller.Main', {
   },
   initRequestGasForm: function() {
     var deliveryLocName;
-    if (!(localStorage['purpleUserId'] != null)) {
+    if (!(util.ctl('Account').isUserLoggedIn() && util.ctl('Account').isCompleteAccount())) {
       return this.getMainContainer().getItems().getAt(0).select(1, false, false);
     } else {
       deliveryLocName = this.getRequestAddressField().getValue();

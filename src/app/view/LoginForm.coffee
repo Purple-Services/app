@@ -90,6 +90,23 @@ Ext.define 'Purple.view.LoginForm'
         ]
       }
       {
+        xtype: 'component'
+        id: 'termsMessage'
+        cls: 'terms-message'
+        flex: 0
+        hidden: yes
+        style: """
+          position: absolute;
+          bottom: 15px;
+          width: 100%;
+          text-align: center;
+        """
+        html: """
+          By creating an account,
+          <br />you agree to the <a href="javascript:window.plugins.ChildBrowser.showWebPage('#{util.WEB_SERVICE_BASE_URL}/terms', { showLocationBar: true, showAddress: false, showNavigationBar: true })">Terms of Service</a>.
+        """
+      }
+      {
         xtype: 'spacer'
         flex: 1
       }
@@ -288,6 +305,13 @@ Ext.define 'Purple.view.LoginForm'
               }
             ]
           }
+          # {
+          #   xtype: 'button'
+          #   ui: 'plain'
+          #   text: 'Terms of Service'
+          #   handler: ->
+          #     @up().up().fireEvent 'termsOfServiceLink'
+          # }
           {
             xtype: 'component'
             id: 'alternativeLoginOptionsText'

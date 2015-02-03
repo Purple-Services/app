@@ -332,7 +332,6 @@ body {
 }
 
 
-
 .uppercase-input input {
     text-transform: uppercase;
 }
@@ -589,6 +588,19 @@ a[href^="http://maps.google.com/maps"] {
     text-align: justify;
     font-size: 17px;
     line-height: 22px;
+}
+
+
+
+
+
+.terms-message {
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+.terms-message a {
+    color: #00DBFF;
 }
 
 

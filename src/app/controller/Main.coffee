@@ -188,8 +188,7 @@ Ext.define 'Purple.controller.Main'
         console.log 'placesService error' + status
 
   initRequestGasForm: ->
-    # are they logged in?
-    if not localStorage['purpleUserId']?
+    if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @getMainContainer().getItems().getAt(0).select 1, no, no
     else

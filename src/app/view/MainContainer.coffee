@@ -8,6 +8,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.AccountForm'
     'Purple.view.Orders'
     'Purple.view.Vehicles'
+    'Purple.view.PaymentMethods'
     'Purple.view.Help'
     'Purple.view.Feedback'
     'Purple.view.Invite'
@@ -158,7 +159,15 @@ Ext.define 'Purple.view.MainContainer',
             ]
           }
           {
-            xtype: 'accountform'
+            xtype: 'container'
+            id: 'accountTabContainer'
+            layout:
+              type: 'card'
+            items: [
+              {
+                xtype: 'accountform'
+              }
+            ]
           }
         ]
       }

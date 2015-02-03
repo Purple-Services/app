@@ -2,7 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite'],
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.PaymentMethods', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
@@ -136,7 +136,16 @@ Ext.define('Purple.view.MainContainer', {
             xtype: "toptoolbar",
             cls: ['slideable', 'bordered']
           }, {
-            xtype: 'accountform'
+            xtype: 'container',
+            id: 'accountTabContainer',
+            layout: {
+              type: 'card'
+            },
+            items: [
+              {
+                xtype: 'accountform'
+              }
+            ]
           }
         ]
       }, {

@@ -10,7 +10,7 @@ Ext.Loader.setPath({
 Ext.application({
   name: 'Purple',
   requires: ['Override.form.Panel', 'Override.field.Select', 'Ux.field.SelectOtherField', 'Ux.field.MoneyField', 'Purple.plugin.NonListPullRefresh'],
-  controllers: ['Main', 'Menu', 'Account', 'Vehicles', 'Orders'],
+  controllers: ['Main', 'Menu', 'Account', 'Vehicles', 'Orders', 'PaymentMethods'],
   views: ['MainContainer', 'TopToolbar'],
   launch: function() {
     return Ext.Viewport.add([Ext.create('Purple.view.MainContainer')]);

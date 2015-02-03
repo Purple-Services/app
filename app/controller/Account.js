@@ -14,6 +14,7 @@ Ext.define('Purple.controller.Account', {
       registerButtonContainer: '#registerButtonContainer',
       forgotPasswordButtonContainer: '#forgotPasswordButtonContainer',
       createAccountButtonContainer: '#createAccountButtonContainer',
+      termsMessage: '#termsMessage',
       showRegisterButtonContainer: '#showRegisterButtonContainer',
       showLoginButtonContainer: '#showLoginButtonContainer',
       purpleLoginLogo: '#purpleLoginLogo',
@@ -263,6 +264,7 @@ Ext.define('Purple.controller.Account', {
     this.getPhoneNumberField().show();
     this.getPhoneNumberFieldLabel().show();
     this.getCreateAccountButtonContainer().show();
+    this.getTermsMessage().show();
     if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
       this.getNameField().setValue(localStorage['purpleUserName']);
     }
@@ -283,6 +285,7 @@ Ext.define('Purple.controller.Account', {
     this.getPhoneNumberField().hide();
     this.getPhoneNumberFieldLabel().hide();
     this.getCreateAccountButtonContainer().hide();
+    this.getTermsMessage().hide();
     this.getShowLoginButtonContainer().hide();
     this.getRegisterButtonContainer().hide();
     this.getForgotPasswordButtonContainer().hide();
@@ -310,6 +313,7 @@ Ext.define('Purple.controller.Account', {
     delete localStorage['purpleUserName'];
     delete localStorage['purpleUserPhoneNumber'];
     delete localStorage['purpleUserEmail'];
+    delete localStorage['purpleDefaultPaymentMethodId'];
     delete localStorage['purpleToken'];
     util.ctl('Vehicles').vehicles = [];
     util.ctl('Vehicles').loadVehiclesList();
@@ -319,7 +323,10 @@ Ext.define('Purple.controller.Account', {
     return util.ctl('Menu').selectOption(1);
   },
   isUserLoggedIn: function() {
-    return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '';
+    return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '' && (localStorage['purpleToken'] != null) && localStorage['purpleToken'] !== '';
+  },
+  isCompleteAccount: function() {
+    return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '' && (localStorage['purpleToken'] != null) && localStorage['purpleToken'] !== '' && (localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '' && (localStorage['purpleUserPhoneNumber'] != null) && localStorage['purpleUserPhoneNumber'] !== '' && (localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '';
   },
   populateAccountForm: function() {
     var _ref, _ref1, _ref2;

@@ -7,9 +7,11 @@ VERSION = "LOCAL"
 
 window.util =
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://192.168.0.16:3000/"
+    when "LOCAL" then "http://192.168.0.3:3000/"
     when "PROD" then "https://service.purpleapp.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
+
+  STRIPE_PUBLISHABLE_KEY: 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
 
   # returns the controller (just a convenience function)
   ctl: (controllerName) ->

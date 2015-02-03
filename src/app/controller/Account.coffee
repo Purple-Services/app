@@ -14,6 +14,7 @@ Ext.define 'Purple.controller.Account'
       registerButtonContainer: '#registerButtonContainer'
       forgotPasswordButtonContainer: '#forgotPasswordButtonContainer'
       createAccountButtonContainer: '#createAccountButtonContainer'
+      termsMessage: '#termsMessage'
       showRegisterButtonContainer: '#showRegisterButtonContainer'
       showLoginButtonContainer: '#showLoginButtonContainer'
       purpleLoginLogo: '#purpleLoginLogo'
@@ -264,6 +265,7 @@ Ext.define 'Purple.controller.Account'
     @getPhoneNumberField().show()
     @getPhoneNumberFieldLabel().show()
     @getCreateAccountButtonContainer().show()
+    @getTermsMessage().show()
     # populate with any info we might have (depending on user type)
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
       @getNameField().setValue localStorage['purpleUserName']
@@ -283,6 +285,7 @@ Ext.define 'Purple.controller.Account'
     @getPhoneNumberField().hide()
     @getPhoneNumberFieldLabel().hide()
     @getCreateAccountButtonContainer().hide()
+    @getTermsMessage().hide()
     @getShowLoginButtonContainer().hide()
     @getRegisterButtonContainer().hide()
     @getForgotPasswordButtonContainer().hide()
@@ -311,6 +314,7 @@ Ext.define 'Purple.controller.Account'
     delete localStorage['purpleUserName']
     delete localStorage['purpleUserPhoneNumber']
     delete localStorage['purpleUserEmail']
+    delete localStorage['purpleDefaultPaymentMethodId']
     delete localStorage['purpleToken']
 
     # clear out some lists from any old logins
@@ -323,7 +327,16 @@ Ext.define 'Purple.controller.Account'
     util.ctl('Menu').selectOption 1
     
   isUserLoggedIn: ->
-    localStorage['purpleUserId']? and localStorage['purpleUserId'] isnt ''
+    localStorage['purpleUserId']? and localStorage['purpleUserId'] isnt '' and
+    localStorage['purpleToken']? and localStorage['purpleToken'] isnt ''
+
+  # of course, this is spoofable by changing localStorage manually
+  isCompleteAccount: ->
+    localStorage['purpleUserId']? and localStorage['purpleUserId'] isnt '' and
+    localStorage['purpleToken']? and localStorage['purpleToken'] isnt '' and
+    localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt '' and
+    localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt '' and
+    localStorage['purpleUserEmail']? and localStorage['purpleUserEmail'] isnt ''
 
   populateAccountForm: ->
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''

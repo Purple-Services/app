@@ -19,6 +19,7 @@ Ext.application
     'Account'
     'Vehicles'
     'Orders'
+    'PaymentMethods'
   ]
   views: [
     'MainContainer'

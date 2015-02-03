@@ -74,6 +74,14 @@ Ext.define('Purple.view.LoginForm', {
           }
         ]
       }, {
+        xtype: 'component',
+        id: 'termsMessage',
+        cls: 'terms-message',
+        flex: 0,
+        hidden: true,
+        style: "position: absolute;\nbottom: 15px;\nwidth: 100%;\ntext-align: center;",
+        html: "By creating an account,\n<br />you agree to the <a href=\"javascript:window.plugins.ChildBrowser.showWebPage('" + util.WEB_SERVICE_BASE_URL + "/terms', { showLocationBar: true, showAddress: false, showNavigationBar: true })\">Terms of Service</a>."
+      }, {
         xtype: 'spacer',
         flex: 1
       }, {

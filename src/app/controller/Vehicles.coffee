@@ -1,4 +1,4 @@
- Ext.define 'Purple.controller.Vehicles'
+Ext.define 'Purple.controller.Vehicles'
   extend: 'Ext.app.Controller'
   requires: [
     'Purple.view.EditVehicleForm'
