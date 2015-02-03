@@ -90,6 +90,8 @@ Ext.define('Purple.controller.Account', {
           util.ctl('Vehicles').loadVehiclesList();
           util.ctl('Orders').orders = [];
           util.ctl('Orders').loadOrdersList();
+          util.ctl('PaymentMethods').paymentMethods = [];
+          util.ctl('PaymentMethods').loadPaymentMethodsList();
           return this.accountSetup();
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
@@ -128,7 +130,7 @@ Ext.define('Purple.controller.Account', {
       method: 'POST',
       scope: this,
       success: function(response_obj) {
-        var response;
+        var c, card, response, _ref;
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
@@ -139,10 +141,22 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleToken'] = response.token;
+          delete localStorage['purpleDefaultPaymentMethodId'];
+          _ref = response.cards;
+          for (c in _ref) {
+            card = _ref[c];
+            if (card["default"]) {
+              localStorage['purpleDefaultPaymentMethodId'] = card.id;
+              localStorage['purpleDefaultPaymentMethodDisplayText'] = "" + card.brand + " *" + card.last4;
+            }
+          }
+          util.ctl('PaymentMethods').refreshAccountPaymentMethodField();
           util.ctl('Vehicles').vehicles = response.vehicles;
           util.ctl('Orders').orders = response.orders;
+          util.ctl('PaymentMethods').paymentMethods = response.cards;
           util.ctl('Vehicles').loadVehiclesList();
           util.ctl('Orders').loadOrdersList();
+          util.ctl('PaymentMethods').loadPaymentMethodsList();
           if ((response.account_complete != null) && !response.account_complete) {
             return this.accountSetup();
           } else {

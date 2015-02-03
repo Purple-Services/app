@@ -96,61 +96,51 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
             cls: ['bottom-margin', 'uppercase-input'],
             clearIcon: false
           }, {
-            xtype: 'textfield',
-            ctype: 'editPaymentMethodFormCVC',
-            name: 'card_cvc',
-            label: 'CVC',
-            labelWidth: 125,
-            flex: 0,
-            cls: ['bottom-margin', 'uppercase-input'],
-            clearIcon: false
-          }, {
             xtype: 'selectfield',
             flex: 0,
             name: 'card_exp_month',
-            label: 'Expiration Month',
-            labelWidth: 185,
+            label: 'Exp. Month',
+            labelWidth: 110,
             listPicker: {
               title: 'Expiration Month'
             },
             cls: ['click-to-edit', 'bottom-margin'],
-            value: '1',
             options: [
               {
-                text: '1',
+                text: '1 (January)',
                 value: '1'
               }, {
-                text: '2',
+                text: '2 (February)',
                 value: '2'
               }, {
-                text: '3',
+                text: '3 (March)',
                 value: '3'
               }, {
-                text: '4',
+                text: '4 (April)',
                 value: '4'
               }, {
-                text: '5',
+                text: '5 (May)',
                 value: '5'
               }, {
-                text: '6',
+                text: '6 (June)',
                 value: '6'
               }, {
-                text: '7',
+                text: '7 (July)',
                 value: '7'
               }, {
-                text: '8',
+                text: '8 (August)',
                 value: '8'
               }, {
-                text: '9',
+                text: '9 (September)',
                 value: '9'
               }, {
-                text: '10',
+                text: '10 (October)',
                 value: '10'
               }, {
-                text: '11',
+                text: '11 (November)',
                 value: '11'
               }, {
-                text: '12',
+                text: '12 (December)',
                 value: '12'
               }
             ]
@@ -158,8 +148,8 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
             xtype: 'selectfield',
             flex: 0,
             name: 'card_exp_year',
-            label: 'Expiration Year',
-            labelWidth: 185,
+            label: 'Exp. Year',
+            labelWidth: 110,
             listPicker: {
               title: 'Expiration Year'
             },
@@ -225,6 +215,15 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
                 value: '2033'
               }
             ]
+          }, {
+            xtype: 'textfield',
+            ctype: 'editPaymentMethodFormCVC',
+            name: 'card_cvc',
+            label: 'CVC',
+            labelWidth: 125,
+            flex: 0,
+            cls: ['bottom-margin', 'uppercase-input'],
+            clearIcon: false
           }, {
             xtype: 'container',
             flex: 0,

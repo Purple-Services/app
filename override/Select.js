@@ -2,6 +2,20 @@
 
 Ext.define('Override.field.Select', {
   override: 'Ext.field.Select',
+  onFocus: function(e) {
+    var component;
+    if (this.getDisabled()) {
+      return false;
+    }
+    component = this.getComponent();
+    this.fireEvent('focus', this, e);
+    if (Ext.os.is.Android4) {
+      component.input.dom.focus();
+    }
+    component.input.dom.blur();
+    this.isFocused = true;
+    return this.showPicker();
+  },
   showPicker: function() {
     var _this = this;
     if ((Ext.os.is.iOS || Ext.os.is.Android) && !window.bypassListPicker) {

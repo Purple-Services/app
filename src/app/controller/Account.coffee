@@ -94,6 +94,8 @@ Ext.define 'Purple.controller.Account'
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = []
           util.ctl('Orders').loadOrdersList()
+          util.ctl('PaymentMethods').paymentMethods = []
+          util.ctl('PaymentMethods').loadPaymentMethodsList()
           @accountSetup()
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -136,10 +138,20 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleToken'] = response.token
+          delete localStorage['purpleDefaultPaymentMethodId']
+          for c, card of response.cards
+            if card.default
+              localStorage['purpleDefaultPaymentMethodId'] = card.id
+              localStorage['purpleDefaultPaymentMethodDisplayText'] = """
+                #{card.brand} *#{card.last4}
+              """
+          util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Orders').orders = response.orders
+          util.ctl('PaymentMethods').paymentMethods = response.cards
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').loadOrdersList()
+          util.ctl('PaymentMethods').loadPaymentMethodsList()
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else

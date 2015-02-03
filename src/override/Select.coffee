@@ -1,5 +1,21 @@
 Ext.define 'Override.field.Select'
   override: 'Ext.field.Select'
+  
+  onFocus: (e) ->
+    if this.getDisabled()
+      return false
+
+    component = this.getComponent()
+    this.fireEvent 'focus', this, e
+
+    if Ext.os.is.Android4
+      component.input.dom.focus()
+    component.input.dom.blur()
+
+    this.isFocused = true
+    this.showPicker()
+    #e.preventDefault() # I added this but doesn't help the issue
+    
   showPicker: ->
     if (Ext.os.is.iOS or Ext.os.is.Android) and not window.bypassListPicker
       window.plugins.listpicker.showPicker(

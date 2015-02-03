@@ -42,6 +42,19 @@ Ext.define 'Purple.view.PaymentMethods'
             flex: 0
             cls: 'heading'
             html: 'Payment Methods'
+            items: [
+              {
+                xtype: 'button'
+                ui: 'plain'
+                text: 'Back'
+                cls: [
+                  'right-side-aligned-with-heading'
+                  'link'
+                ] 
+                handler: ->
+                  @up().up().up().fireEvent 'backToAccount'
+              }
+            ]
           }
           {
             xtype: 'component'

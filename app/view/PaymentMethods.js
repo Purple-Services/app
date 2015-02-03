@@ -39,7 +39,18 @@ Ext.define('Purple.view.PaymentMethods', {
             xtype: 'container',
             flex: 0,
             cls: 'heading',
-            html: 'Payment Methods'
+            html: 'Payment Methods',
+            items: [
+              {
+                xtype: 'button',
+                ui: 'plain',
+                text: 'Back',
+                cls: ['right-side-aligned-with-heading', 'link'],
+                handler: function() {
+                  return this.up().up().up().fireEvent('backToAccount');
+                }
+              }
+            ]
           }, {
             xtype: 'component',
             flex: 0,

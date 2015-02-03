@@ -8,18 +8,19 @@ Ext.define('Purple.controller.PaymentMethods', {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       accountTabContainer: '#accountTabContainer',
+      accountForm: 'accountform',
       paymentMethods: 'paymentmethods',
       paymentMethodsList: '[ctype=paymentMethodsList]',
       editPaymentMethodForm: 'editpaymentmethodform',
       editPaymentMethodFormHeading: '[ctype=editPaymentMethodFormHeading]',
       backToPaymentMethodsButton: '[ctype=backToPaymentMethodsButton]',
-      accountPaymentMethodField: '#accountPaymentMethodField',
-      accountPaymentMethodIdField: '#accountPaymentMethodIdField'
+      accountPaymentMethodField: '#accountPaymentMethodField'
     },
     control: {
       paymentMethods: {
         editPaymentMethod: 'showEditPaymentMethodForm',
-        loadPaymentMethodsList: 'loadPaymentMethodsList'
+        loadPaymentMethodsList: 'loadPaymentMethodsList',
+        backToAccount: 'backToAccount'
       },
       editPaymentMethodForm: {
         backToPaymentMethods: 'backToPaymentMethods',
@@ -66,8 +67,63 @@ Ext.define('Purple.controller.PaymentMethods', {
     this.getAccountTabContainer().setActiveItem(this.getPaymentMethods());
     return this.getAccountTabContainer().remove(this.getEditPaymentMethodForm(), true);
   },
+  backToAccount: function() {
+    this.getAccountTabContainer().setActiveItem(this.getAccountForm());
+    return this.getAccountTabContainer().remove(this.getPaymentMethods(), true);
+  },
   loadPaymentMethodsList: function() {
-    return this.renderPaymentMethodsList(this.paymentMethods);
+    if (this.paymentMethods != null) {
+      return this.renderPaymentMethodsList(this.paymentMethods);
+    } else {
+      Ext.Viewport.setMasked({
+        xtype: 'loadmask',
+        message: ''
+      });
+      return Ext.Ajax.request({
+        url: "" + util.WEB_SERVICE_BASE_URL + "user/details",
+        params: Ext.JSON.encode({
+          user_id: localStorage['purpleUserId'],
+          token: localStorage['purpleToken']
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+        method: 'POST',
+        scope: this,
+        success: function(response_obj) {
+          var c, card, response, _ref;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          if (response.success) {
+            this.paymentMethods = response.cards;
+            delete localStorage['purpleDefaultPaymentMethodId'];
+            _ref = response.cards;
+            for (c in _ref) {
+              card = _ref[c];
+              if (card["default"]) {
+                localStorage['purpleDefaultPaymentMethodId'] = card.id;
+                localStorage['purpleDefaultPaymentMethodDisplayText'] = "" + card.brand + " *" + card.last4;
+              }
+            }
+            this.refreshAccountPaymentMethodField();
+            util.ctl('Orders').orders = response.orders;
+            util.ctl('Orders').loadOrdersList();
+            util.ctl('Vehicles').vehicles = response.vehicles;
+            util.ctl('Vehicles').loadVehiclesList();
+            return this.renderPaymentMethodsList(this.paymentMethods);
+          } else {
+            return navigator.notification.alert(response.message, (function() {}), "Error");
+          }
+        },
+        failure: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          return console.log(response);
+        }
+      });
+    }
   },
   renderPaymentMethodsList: function(paymentMethods) {
     var list, p, _i, _len, _results,
@@ -84,22 +140,131 @@ Ext.define('Purple.controller.PaymentMethods', {
         xtype: 'textfield',
         id: "pmid_" + p.id,
         flex: 0,
-        label: "**** **** **** " + v.last4,
+        label: "" + p.brand + " *" + p.last4,
         labelWidth: '100%',
-        cls: ['bottom-margin'],
+        cls: ['bottom-margin', 'click-to-edit'],
         disabled: true,
         listeners: {
           initialize: function(field) {
             return field.element.on('tap', function() {
               var pmid;
-              pmid = field.getId().split('_')[1];
-              return _this.showEditPaymentMethodForm(pmid);
+              pmid = field.getId().substring(5);
+              return navigator.notification.confirm("", (function(index) {
+                switch (index) {
+                  case 1:
+                    return _this.askToDeleteCard(pmid);
+                  case 2:
+                    return _this.makeDefault(pmid);
+                }
+              }), "" + p.brand + " *" + p.last4, ["Delete Card", "Make Default", "Cancel"]);
             });
           }
         }
       }));
     }
     return _results;
+  },
+  askToDeleteCard: function(id) {
+    var _this = this;
+    return navigator.notification.confirm("", (function(index) {
+      switch (index) {
+        case 1:
+          return _this.deleteCard(id);
+      }
+    }), "Are you sure you want to delete this card?", ["Delete Card", "Cancel"]);
+  },
+  deleteCard: function(id) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        card: {
+          id: id,
+          action: 'delete'
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var c, card, response, _ref;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.paymentMethods = response.cards;
+          delete localStorage['purpleDefaultPaymentMethodId'];
+          _ref = response.cards;
+          for (c in _ref) {
+            card = _ref[c];
+            if (card["default"]) {
+              localStorage['purpleDefaultPaymentMethodId'] = card.id;
+              localStorage['purpleDefaultPaymentMethodDisplayText'] = "" + card.brand + " *" + card.last4;
+            }
+          }
+          this.refreshAccountPaymentMethodField();
+          util.ctl('Vehicles').vehicles = response.vehicles;
+          util.ctl('Orders').orders = response.orders;
+          return this.renderPaymentMethodsList(this.paymentMethods);
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
+  },
+  makeDefault: function(id) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        card: {
+          id: id,
+          action: 'makeDefault'
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.backToAccount();
+          this.paymentMethods = response.cards;
+          return this.renderPaymentMethodsList(this.paymentMethods);
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
   },
   saveChanges: function() {
     var card, paymentMethodId, values,
@@ -141,9 +306,21 @@ Ext.define('Purple.controller.PaymentMethods', {
           method: 'POST',
           scope: _this,
           success: function(response_obj) {
+            var c, _ref;
             Ext.Viewport.setMasked(false);
             response = Ext.JSON.decode(response_obj.responseText);
             if (response.success) {
+              this.paymentMethods = response.cards;
+              delete localStorage['purpleDefaultPaymentMethodId'];
+              _ref = response.cards;
+              for (c in _ref) {
+                card = _ref[c];
+                if (card["default"]) {
+                  localStorage['purpleDefaultPaymentMethodId'] = card.id;
+                  localStorage['purpleDefaultPaymentMethodDisplayText'] = "" + card.brand + " *" + card.last4;
+                }
+              }
+              this.refreshAccountPaymentMethodField();
               util.ctl('Vehicles').vehicles = response.vehicles;
               util.ctl('Orders').orders = response.orders;
               this.backToPaymentMethods();
@@ -161,57 +338,39 @@ Ext.define('Purple.controller.PaymentMethods', {
       }
     });
   },
-  deletePaymentMethod: function(paymentMethodId) {
-    Ext.Viewport.setMasked({
-      xtype: 'loadmask',
-      message: ''
-    });
-    return Ext.Ajax.request({
-      url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
-      params: Ext.JSON.encode({
-        user_id: localStorage['purpleUserId'],
-        token: localStorage['purpleToken'],
-        paymentMethod: {
-          id: paymentMethodId,
-          active: 0
+  refreshAccountPaymentMethodField: function() {
+    var c, card, _ref, _ref1, _ref2, _ref3, _results;
+    if ((_ref = this.getAccountPaymentMethodField()) != null) {
+      _ref.setValue("Add/Edit Cards");
+    }
+    if ((localStorage['purpleDefaultPaymentMethodId'] != null) && localStorage['purpleDefaultPaymentMethodId'] !== '') {
+      if (this.paymentMethods != null) {
+        _ref1 = this.paymentMethods;
+        _results = [];
+        for (c in _ref1) {
+          card = _ref1[c];
+          if (card["default"]) {
+            if (card.id !== localStorage['purpleDefaultPaymentMethodId']) {
+              alert("Error #289");
+            }
+            localStorage['purpleDefaultPaymentMethodDisplayText'] = "" + card.brand + " *" + card.last4;
+            if ((_ref2 = this.getAccountPaymentMethodField()) != null) {
+              _ref2.setValue(localStorage['purpleDefaultPaymentMethodDisplayText']);
+            }
+            break;
+          } else {
+            _results.push(void 0);
+          }
         }
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 30000,
-      method: 'POST',
-      scope: this,
-      success: function(response_obj) {
-        var response;
-        Ext.Viewport.setMasked(false);
-        response = Ext.JSON.decode(response_obj.responseText);
-        if (response.success) {
-          this.paymentMethods = response.paymentMethods;
-          util.ctl('Orders').orders = response.orders;
-          this.backToPaymentMethods();
-          return this.renderPaymentMethodsList(this.paymentMethods);
-        } else {
-          return navigator.notification.alert(response.message, (function() {}), "Error");
-        }
-      },
-      failure: function(response_obj) {
-        var response;
-        Ext.Viewport.setMasked(false);
-        response = Ext.JSON.decode(response_obj.responseText);
-        return console.log(response);
+        return _results;
+      } else if ((localStorage['purpleDefaultPaymentMethodDisplayText'] != null) && localStorage['purpleDefaultPaymentMethodDisplayText'] !== '') {
+        return (_ref3 = this.getAccountPaymentMethodField()) != null ? _ref3.setValue(localStorage['purpleDefaultPaymentMethodDisplayText']) : void 0;
       }
-    });
+    }
   },
   initAccountPaymentMethodField: function(field) {
     var _this = this;
-    if ((localStorage['purpleDefaultPaymentMethodId'] != null) && localStorage['purpleDefaultPaymentMethodId'] !== '') {
-      this.getAccountPaymentMethodIdField().setValue(localStorage['purpleDefaultPaymentMethodId']);
-      this.getAccountPaymentMethodField().setValue("asterisked num " + localStorage['purpleDefaultPaymentMethodId']);
-    } else {
-      this.getAccountPaymentMethodIdField().setValue('');
-      this.getAccountPaymentMethodField().setValue("Add/Edit Cards");
-    }
+    this.refreshAccountPaymentMethodField();
     return field.element.on('tap', function() {
       return _this.accountPaymentMethodFieldTap();
     });

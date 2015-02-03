@@ -27,7 +27,7 @@ Ext.define 'Purple.controller.Vehicles'
       editVehicleForm:
         backToVehicles: 'backToVehicles'
         saveChanges: 'saveChanges'
-        deleteVehicle: 'deleteVehicle'
+        deleteVehicle: 'askToDeleteVehicle'
       editVehicleFormYear:
         change: 'yearChanged'
       editVehicleFormMake:
@@ -263,6 +263,17 @@ Ext.define 'Purple.controller.Vehicles'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
+
+  askToDeleteVehicle: (id) ->
+    navigator.notification.confirm(
+      "",
+      ((index) => switch index
+        when 1 then @deleteVehicle id
+        else return
+      ),
+      "Are you sure you want to delete this vehicle?",
+      ["Delete Vehicle", "Cancel"]
+    )
 
   deleteVehicle: (vehicleId) ->
     Ext.Viewport.setMasked

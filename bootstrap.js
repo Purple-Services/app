@@ -692,9 +692,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
   "Purple.controller.Orders": [],
+  "Purple.controller.PaymentMethods": [],
   "Purple.controller.Vehicles": [],
   "Purple.plugin.NonListPullRefresh": [],
   "Purple.view.AccountForm": [],
+  "Purple.view.EditPaymentMethodForm": [],
   "Purple.view.EditVehicleForm": [],
   "Purple.view.Feedback": [],
   "Purple.view.Help": [],
@@ -704,6 +706,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.view.MapForm": [],
   "Purple.view.Order": [],
   "Purple.view.Orders": [],
+  "Purple.view.PaymentMethods": [],
   "Purple.view.RequestConfirmationForm": [],
   "Purple.view.RequestForm": [],
   "Purple.view.TopToolbar": [],
@@ -1450,12 +1453,16 @@ Ext.ClassManager.addNameAliasMappings({
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
   "Purple.controller.Orders": [],
+  "Purple.controller.PaymentMethods": [],
   "Purple.controller.Vehicles": [],
   "Purple.plugin.NonListPullRefresh": [
     "plugin.nonlistpullrefresh"
   ],
   "Purple.view.AccountForm": [
     "widget.accountform"
+  ],
+  "Purple.view.EditPaymentMethodForm": [
+    "widget.editpaymentmethodform"
   ],
   "Purple.view.EditVehicleForm": [
     "widget.editvehicleform"
@@ -1483,6 +1490,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Purple.view.Orders": [
     "widget.orders"
+  ],
+  "Purple.view.PaymentMethods": [
+    "widget.paymentmethods"
   ],
   "Purple.view.RequestConfirmationForm": [
     "widget.requestconfirmationform"

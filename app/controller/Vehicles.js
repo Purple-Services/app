@@ -29,7 +29,7 @@ Ext.define('Purple.controller.Vehicles', {
       editVehicleForm: {
         backToVehicles: 'backToVehicles',
         saveChanges: 'saveChanges',
-        deleteVehicle: 'deleteVehicle'
+        deleteVehicle: 'askToDeleteVehicle'
       },
       editVehicleFormYear: {
         change: 'yearChanged'
@@ -290,6 +290,15 @@ Ext.define('Purple.controller.Vehicles', {
         return console.log(response);
       }
     });
+  },
+  askToDeleteVehicle: function(id) {
+    var _this = this;
+    return navigator.notification.confirm("", (function(index) {
+      switch (index) {
+        case 1:
+          return _this.deleteVehicle(id);
+      }
+    }), "Are you sure you want to delete this vehicle?", ["Delete Vehicle", "Cancel"]);
   },
   deleteVehicle: function(vehicleId) {
     Ext.Viewport.setMasked({
