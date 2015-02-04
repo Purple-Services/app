@@ -84,7 +84,10 @@ Ext.define 'Purple.view.EditVehicleForm'
                   'right-side-aligned-with-heading'
                   'link'
                 ] 
-                handler: ->
+                handler: (button) ->
+                  if button.config.beforeHandler?
+                    button.config.beforeHandler()
+                    button.config.beforeHandler = null
                   @up().up().up().fireEvent 'backToVehicles'
               }
             ]
@@ -207,11 +210,22 @@ Ext.define 'Purple.view.EditVehicleForm'
             ]
             clearIcon: no
           }
-          # {
-          #   xtype: 'button'
-          #   ui: 'plain'
-          #   text: 'take photo'
-          # }
+          {
+            xtype: 'hiddenfield'
+            ctype: 'editVehicleFormPhoto'
+            name: 'photo'
+          }
+          {
+            xtype: 'button'
+            ctype: 'editVehicleFormTakePhotoButton'
+            ui: 'plain'
+            cls: [
+              'take-photo'
+            ]
+            text: 'Take Photo'
+            handler: ->
+              @fireEvent 'takePhoto'
+          }
           {
             xtype: 'container'
             flex: 0

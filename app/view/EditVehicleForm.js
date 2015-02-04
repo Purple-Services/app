@@ -77,7 +77,11 @@ Ext.define('Purple.view.EditVehicleForm', {
                 ui: 'plain',
                 text: 'Back to Vehicles',
                 cls: ['right-side-aligned-with-heading', 'link'],
-                handler: function() {
+                handler: function(button) {
+                  if (button.config.beforeHandler != null) {
+                    button.config.beforeHandler();
+                    button.config.beforeHandler = null;
+                  }
                   return this.up().up().up().fireEvent('backToVehicles');
                 }
               }
@@ -166,6 +170,19 @@ Ext.define('Purple.view.EditVehicleForm', {
             flex: 0,
             cls: ['bottom-margin', 'uppercase-input'],
             clearIcon: false
+          }, {
+            xtype: 'hiddenfield',
+            ctype: 'editVehicleFormPhoto',
+            name: 'photo'
+          }, {
+            xtype: 'button',
+            ctype: 'editVehicleFormTakePhotoButton',
+            ui: 'plain',
+            cls: ['take-photo'],
+            text: 'Take Photo',
+            handler: function() {
+              return this.fireEvent('takePhoto');
+            }
           }, {
             xtype: 'container',
             flex: 0,

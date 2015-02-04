@@ -571,6 +571,72 @@ a[href^="http://maps.google.com/maps"] {
 
 
 
+.vehicle-list-item .x-form-label {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+.vehicle-list-item .x-form-label > span {
+    position: relative;
+    width:  100%;
+    display: block;
+    padding: 8px 0px;
+    height:  60px;
+    font-size: 20px;
+    line-height: 21px;
+    font-weight: 900;
+}
+.vehicle-list-item .x-form-label span .subtext {
+    font-size: 18px;
+    line-height: 21px;
+    font-weight: 400;
+}
+.vehicle-list-item .x-form-label span .subtext .license-plate {
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.vehicle-list-item .x-form-label span .vehicle-photo {
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 60px;
+    height: 60px;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+
+
+
+.take-photo  {
+    height: 154px !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    background-color: #EDEDED !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    padding: 7px !important;
+}
+.take-photo .x-button-label {
+    height: 140px;
+    line-height: 140px;
+    font-weight: 900 !important;
+    background: transparent !important;
+    font-size: 20px !important;
+    text-transform: uppercase !important;
+    font-family: 'Source Sans Pro' !important;
+    color: #bbb !important;
+    border: 2px dashed #bbb !important;
+}
+.take-photo.x-button-pressing {
+    box-shadow: none !important;
+    background: #fafafa !important;
+}
+
+
+
 
 
 

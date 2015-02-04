@@ -19,6 +19,8 @@ Ext.define('Purple.controller.Vehicles', {
       editVehicleFormColor: '[ctype=editVehicleFormColor]',
       editVehicleFormGasType: '[ctype=editVehicleFormGasType]',
       editVehicleFormLicensePlate: '[ctype=editVehicleFormLicensePlate]',
+      editVehicleFormPhoto: '[ctype=editVehicleFormPhoto]',
+      editVehicleFormTakePhotoButton: '[ctype=editVehicleFormTakePhotoButton]',
       requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
     },
     control: {
@@ -36,6 +38,9 @@ Ext.define('Purple.controller.Vehicles', {
       },
       editVehicleFormMake: {
         change: 'makeChanged'
+      },
+      editVehicleFormTakePhotoButton: {
+        takePhoto: 'addImage'
       },
       requestFormVehicleSelect: {
         initialize: 'initRequestFormVehicleSelect',
@@ -159,7 +164,10 @@ Ext.define('Purple.controller.Vehicles', {
       this.getEditVehicleFormModel().setValue(vehicle['model']);
       this.getEditVehicleFormColor().setValue(vehicle['color']);
       this.getEditVehicleFormGasType().setValue(vehicle['gas_type']);
-      return this.getEditVehicleFormLicensePlate().setValue(vehicle['license_plate']);
+      this.getEditVehicleFormLicensePlate().setValue(vehicle['license_plate']);
+      if ((vehicle['photo'] != null) && vehicle['photo'] !== '') {
+        return this.setVehiclePhoto(vehicle['photo']);
+      }
     } else {
       return console.log('new');
     }
@@ -224,9 +232,9 @@ Ext.define('Purple.controller.Vehicles', {
         xtype: 'textfield',
         id: "vid_" + v.id,
         flex: 0,
-        label: "" + v.year + " " + v.make + " " + v.model,
+        label: "" + v.year + " " + v.make + " " + v.model + "\n<br /><span class=\"subtext\">" + v.color + " / <span class=\"license-plate\">" + v.license_plate + "</span></span>\n<span class=\"vehicle-photo\" style=\"background-image: url('" + v.photo + "') !important;\"></span>",
         labelWidth: '100%',
-        cls: ['bottom-margin'],
+        cls: ['bottom-margin', 'vehicle-list-item'],
         disabled: true,
         listeners: {
           initialize: function(field) {
@@ -414,7 +422,34 @@ Ext.define('Purple.controller.Vehicles', {
         _this.initRequestFormVehicleSelect();
         return _this.getRequestFormVehicleSelect().setValue(vehicleId);
       };
-      return this.getBackToVehiclesButton().setHidden(true);
+      return this.getBackToVehiclesButton().config.beforeHandler = function() {
+        return util.ctl('Main').backToMapFromRequestForm();
+      };
     }
+  },
+  addImage: function() {
+    var addImageStep2;
+    addImageStep2 = Ext.bind(this.addImageStep2, this);
+    return addImageStep2(Camera.PictureSourceType.CAMERA);
+  },
+  addImageStep2: function(sourceType) {
+    var addImageSuccess;
+    addImageSuccess = Ext.bind(this.addImageSuccess, this);
+    return navigator.camera.getPicture(addImageSuccess, (function() {}), {
+      destinationType: Camera.DestinationType.DATA_URL,
+      quality: 40,
+      targetWidth: 700,
+      targetHeight: 700,
+      correctOrientation: true
+    });
+  },
+  addImageSuccess: function(dataUrl) {
+    console.log('success');
+    dataUrl = "data:image/jpeg;base64," + dataUrl;
+    return this.setVehiclePhoto(dataUrl);
+  },
+  setVehiclePhoto: function(dataUrl) {
+    this.getEditVehicleFormTakePhotoButton().element.dom.style.cssText = "background-image: url('" + dataUrl + "') !important;";
+    return this.getEditVehicleFormPhoto().setValue(dataUrl);
   }
 });

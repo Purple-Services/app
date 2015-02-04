@@ -19,6 +19,8 @@ Ext.define 'Purple.controller.Vehicles'
       editVehicleFormColor: '[ctype=editVehicleFormColor]'
       editVehicleFormGasType: '[ctype=editVehicleFormGasType]'
       editVehicleFormLicensePlate: '[ctype=editVehicleFormLicensePlate]'
+      editVehicleFormPhoto: '[ctype=editVehicleFormPhoto]'
+      editVehicleFormTakePhotoButton: '[ctype=editVehicleFormTakePhotoButton]'
       requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
     control:
       vehicles:
@@ -32,6 +34,8 @@ Ext.define 'Purple.controller.Vehicles'
         change: 'yearChanged'
       editVehicleFormMake:
         change: 'makeChanged'
+      editVehicleFormTakePhotoButton:
+        takePhoto: 'addImage'
       requestFormVehicleSelect:
         initialize: 'initRequestFormVehicleSelect'
         change: 'requestFormVehicleSelectChange'
@@ -154,6 +158,8 @@ Ext.define 'Purple.controller.Vehicles'
       @getEditVehicleFormColor().setValue vehicle['color']
       @getEditVehicleFormGasType().setValue vehicle['gas_type']
       @getEditVehicleFormLicensePlate().setValue vehicle['license_plate']
+      if vehicle['photo']? and vehicle['photo'] isnt ''
+        @setVehiclePhoto vehicle['photo']
     else
       console.log 'new'
       # @getEditVehicleFormYear().setValue '2015'
@@ -211,10 +217,15 @@ Ext.define 'Purple.controller.Vehicles'
         xtype: 'textfield'
         id: "vid_#{v.id}"
         flex: 0
-        label: "#{v.year} #{v.make} #{v.model}"
+        label: """
+          #{v.year} #{v.make} #{v.model}
+          <br /><span class="subtext">#{v.color} / <span class="license-plate">#{v.license_plate}</span></span>
+          <span class="vehicle-photo" style="background-image: url('#{v.photo}') !important;"></span>
+        """
         labelWidth: '100%'
         cls: [
           'bottom-margin'
+          'vehicle-list-item'
         ]
         disabled: yes
         listeners:
@@ -362,4 +373,45 @@ Ext.define 'Purple.controller.Vehicles'
         util.ctl('Menu').selectOption 0
         @initRequestFormVehicleSelect()
         @getRequestFormVehicleSelect().setValue vehicleId
-      @getBackToVehiclesButton().setHidden yes
+      @getBackToVehiclesButton().config.beforeHandler = ->
+        util.ctl('Main').backToMapFromRequestForm()
+
+
+  addImage: ->
+    addImageStep2 = Ext.bind @addImageStep2, this
+
+
+    addImageStep2 Camera.PictureSourceType.CAMERA
+    
+
+    # not using this intermediary step right now
+    # navigator.notification.confirm(
+    #   "",
+    #   ((index) => switch index
+    #     when 1 then addImageStep2 Camera.PictureSourceType.CAMERA
+    #     when 2 then addImageStep2 Camera.PictureSourceType.PHOTOLIBRARY
+    #     else return
+    #   ),
+    #   "Add Vehicle Photo",
+    #   ["Take New Photo", "Choose from Photo Library", "Cancel"]
+    # )
+
+  addImageStep2: (sourceType) ->
+    addImageSuccess = Ext.bind @addImageSuccess, this
+    navigator.camera.getPicture addImageSuccess, (->),
+      destinationType: Camera.DestinationType.DATA_URL
+      quality: 40
+      targetWidth: 700
+      targetHeight: 700
+      correctOrientation: yes      
+
+  addImageSuccess: (dataUrl) ->
+    console.log 'success'
+    dataUrl = "data:image/jpeg;base64,#{dataUrl}"
+    @setVehiclePhoto dataUrl
+
+  setVehiclePhoto: (dataUrl) ->
+    @getEditVehicleFormTakePhotoButton().element.dom.style.cssText = """
+      background-image: url('#{dataUrl}') !important;
+    """
+    @getEditVehicleFormPhoto().setValue dataUrl
