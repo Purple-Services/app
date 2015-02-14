@@ -11,7 +11,7 @@ Ext.define('Purple.view.Order', {
       align: 'start'
     },
     submitOnAction: false,
-    cls: ['request-form', 'vehicle-form', 'accent-bg', 'slideable'],
+    cls: ['request-form', 'vehicle-form', 'view-order', 'accent-bg', 'slideable'],
     scrollable: {
       direction: 'vertical',
       directionLock: true
@@ -19,17 +19,12 @@ Ext.define('Purple.view.Order', {
     listeners: {
       initialize: function() {
         var _this = this;
-        if (this.config.orderId !== 'new') {
+        if (-1 !== util.CANCELLABLE_STATUSES.indexOf(this.config.status)) {
           return this.getAt(1).add([
             {
               xtype: 'spacer',
               flex: 0,
-              height: 100,
-              listeners: {
-                initialize: function() {
-                  return console.log('heyhey');
-                }
-              }
+              height: 100
             }, {
               xtype: 'container',
               flex: 0,
@@ -44,9 +39,9 @@ Ext.define('Purple.view.Order', {
                 {
                   xtype: 'button',
                   ui: 'plain',
-                  text: 'Delete Order',
+                  text: 'Cancel Order',
                   handler: function() {
-                    return _this.fireEvent('deleteOrder', _this.config.orderId);
+                    return _this.fireEvent('cancelOrder', _this.config.orderId);
                   }
                 }
               ]
@@ -74,7 +69,7 @@ Ext.define('Purple.view.Order', {
             flex: 0,
             ctype: 'editOrderFormHeading',
             cls: 'heading',
-            html: '',
+            html: 'View Order',
             items: [
               {
                 xtype: 'button',
@@ -92,87 +87,31 @@ Ext.define('Purple.view.Order', {
             flex: 0,
             cls: 'horizontal-rule'
           }, {
-            xtype: 'selectfield',
-            ctype: 'editOrderFormYear',
-            flex: 0,
-            name: 'year',
-            label: 'Year',
-            listPicker: {
-              title: 'Select Order Year'
-            },
-            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
-            disabled: true,
-            options: ['Loading...']
-          }, {
-            xtype: 'selectfield',
-            ctype: 'editOrderFormMake',
-            flex: 0,
-            name: 'make',
-            label: 'Make',
-            listPicker: {
-              title: 'Select Order Make'
-            },
-            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
-            disabled: true,
-            options: ['Please select year...']
-          }, {
-            xtype: 'selectfield',
-            ctype: 'editOrderFormModel',
-            flex: 0,
-            name: 'model',
-            label: 'Model',
-            listPicker: {
-              title: 'Select Order Model'
-            },
-            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
-            disabled: true,
-            options: ['Please select make...']
-          }, {
-            xtype: 'selectfield',
-            ctype: 'editOrderFormColor',
-            flex: 0,
-            name: 'color',
-            label: 'Color',
-            listPicker: {
-              title: 'Select Order Color'
-            },
-            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
-            disabled: true,
-            options: ['Loading...']
-          }, {
-            xtype: 'component',
-            flex: 0,
-            cls: 'horizontal-rule'
-          }, {
-            xtype: 'selectfield',
-            ctype: 'editOrderFormGasType',
-            flex: 0,
-            name: 'gas_type',
-            label: 'Gas',
-            listPicker: {
-              title: 'Select Order Gas'
-            },
-            cls: ['click-to-edit', 'bottom-margin'],
-            options: [
-              {
-                text: 'Unleaded 89 Octane',
-                value: '89'
-              }, {
-                text: 'Unleaded 91 Octane',
-                value: '91'
-              }
-            ]
-          }, {
             xtype: 'textfield',
-            ctype: 'editOrderFormLicensePlate',
-            name: 'license_plate',
-            label: 'License Plate',
-            labelWidth: 125,
             flex: 0,
-            cls: ['bottom-margin', 'uppercase-input'],
-            clearIcon: false
+            name: 'status',
+            label: 'Status',
+            disabled: true,
+            cls: ['big-and-bold']
+          }, {
+            xtype: 'ratingfield',
+            ctype: 'orderRating',
+            flex: 0,
+            name: 'number_rating',
+            hidden: true,
+            label: 'Rating',
+            labelWidth: 75,
+            cls: ['big-and-bold', 'no-background']
+          }, {
+            xtype: 'textareafield',
+            ctype: 'textRating',
+            name: 'text_rating',
+            maxRows: 4,
+            hidden: true,
+            placeHolder: 'Optional comments...'
           }, {
             xtype: 'container',
+            ctype: 'sendRatingButtonContainer',
             flex: 0,
             height: 110,
             width: '100%',
@@ -182,18 +121,101 @@ Ext.define('Purple.view.Order', {
               pack: 'center',
               align: 'center'
             },
+            hidden: true,
             items: [
               {
                 xtype: 'button',
                 ui: 'action',
                 cls: 'button-pop',
-                text: 'Save Changes',
+                text: 'Send Rating',
                 flex: 0,
                 handler: function() {
-                  return this.up().up().up().fireEvent('saveChanges', this.up().up().up().config.saveChangesCallback);
+                  return this.up().up().up().fireEvent('sendRating');
                 }
               }
             ]
+          }, {
+            xtype: 'component',
+            flex: 0,
+            cls: ['horizontal-rule', 'no-top-margin']
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            name: 'time_order_placed',
+            label: 'Placed',
+            disabled: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            name: 'display_time',
+            label: 'Time',
+            disabled: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            name: 'vehicle',
+            label: 'Vehicle',
+            disabled: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderAddressStreet',
+            flex: 0,
+            name: 'address_street',
+            label: 'Location',
+            labelWidth: 89,
+            disabled: true,
+            cls: ['visibly-disabled', 'bottom-margin']
+          }, {
+            xtype: 'component',
+            ctype: 'orderSpecialInstructionsLabel',
+            flex: 0,
+            html: 'Special Instructions',
+            cls: ['visibly-disabled', 'field-label-text']
+          }, {
+            xtype: 'textareafield',
+            ctype: 'orderSpecialInstructions',
+            name: 'special_instructions',
+            maxRows: 4,
+            disabled: true,
+            cls: ['visibly-disabled', 'field-label-text']
+          }, {
+            xtype: 'component',
+            flex: 0,
+            cls: 'horizontal-rule'
+          }, {
+            xtype: 'moneyfield',
+            flex: 0,
+            name: 'gas_price',
+            label: 'Gas Price',
+            labelWidth: 115,
+            disabled: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            flex: 0,
+            name: 'gallons',
+            label: 'Gallons',
+            disabled: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'moneyfield',
+            flex: 0,
+            name: 'service_fee',
+            label: 'Service Fee',
+            labelWidth: 115,
+            disabled: true,
+            cls: ['visibly-disabled', 'bottom-margin']
+          }, {
+            xtype: 'moneyfield',
+            flex: 0,
+            name: 'total_price',
+            label: 'Total',
+            disabled: true,
+            style: 'margin-bottom: 25px;',
+            cls: ['highlighted']
           }
         ]
       }, {

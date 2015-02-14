@@ -90,6 +90,7 @@ Ext.define 'Purple.view.Orders'
           {
             xtype: 'container'
             ctype: 'ordersList'
+            width: '100%'
             flex: 0
             layout: 'vbox'
           }

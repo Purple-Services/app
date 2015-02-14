@@ -1,6 +1,11 @@
 # "LOCAL", "PROD", "DEV"
 VERSION = "LOCAL"
 
+# VERSION = (
+#   if localStorage['purpleUserId'] is 'fb10203286525511954' or
+#   localStorage['purpleUserId'] is 'PqDXJ6ghTAVMlcvQpaTG' then 'LOCAL' else 'DEV'
+# )
+
 # window.onerror = (message, url, lineNumber) ->
 #   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
 #   return false # let the default handler run as well (yes this is inverse to the more logical 'true')
@@ -12,6 +17,18 @@ window.util =
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 
   STRIPE_PUBLISHABLE_KEY: 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
+
+  MINIMUM_GALLONS: 10
+  GALLONS_INCREMENT: 5
+  GALLONS_PER_TANK: 5
+
+  # you can cancel your order if its status is below
+  # (this is just frontend logic, there is a hard constraint in backend)
+  CANCELLABLE_STATUSES: [
+    "unassigned"
+    "accepted"
+    "enroute"
+  ]
 
   # returns the controller (just a convenience function)
   ctl: (controllerName) ->

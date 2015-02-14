@@ -2,7 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.PaymentMethods', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite'],
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.PaymentMethods', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite', 'Purple.view.GasTanks'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
@@ -216,12 +216,25 @@ Ext.define('Purple.view.MainContainer', {
             xtype: 'invite'
           }
         ]
+      }, {
+        title: "Gas Tanks",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'gastanks'
+          }
+        ]
       }
     ],
     listeners: {
       initialize: function() {
         util.ctl('Menu').adjustForAppLoginState();
-        return util.ctl('Menu').hideTitles([5, 6, 7]);
+        util.ctl('Menu').hideTitles([5, 6, 7]);
+        if (localStorage['purpleUserIsCourier']) {
+          return util.ctl('Menu').selectOption(3);
+        }
       }
     }
   },

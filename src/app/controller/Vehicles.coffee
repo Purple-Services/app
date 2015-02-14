@@ -21,7 +21,11 @@ Ext.define 'Purple.controller.Vehicles'
       editVehicleFormLicensePlate: '[ctype=editVehicleFormLicensePlate]'
       editVehicleFormPhoto: '[ctype=editVehicleFormPhoto]'
       editVehicleFormTakePhotoButton: '[ctype=editVehicleFormTakePhotoButton]'
+      requestForm: 'requestform'
       requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
+      requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]'
+      requestFormTimeSelect: '[ctype=requestFormTimeSelect]'
+      sendRequestButton: '[ctype=sendRequestButton]'
     control:
       vehicles:
         editVehicle: 'showEditVehicleForm'
@@ -218,7 +222,7 @@ Ext.define 'Purple.controller.Vehicles'
         id: "vid_#{v.id}"
         flex: 0
         label: """
-          #{v.year} #{v.make} #{v.model}
+          <span class="maintext">#{v.year} #{v.make} #{v.model}</span>
           <br /><span class="subtext">#{v.color} / <span class="license-plate">#{v.license_plate}</span></span>
           <span class="vehicle-photo" style="background-image: url('#{v.photo}') !important;"></span>
         """
@@ -262,6 +266,7 @@ Ext.define 'Purple.controller.Vehicles'
           @renderVehiclesList @vehicles
           if typeof callback is 'function'
             # this is branching back to where we wanted to create a new vehicle
+            # (usually from the Request Form)
             # so, we're going to need the id of the new vehicle
             # most recent creation should be sufficient for our needs
             temp_arr = @vehicles.slice 0
@@ -375,7 +380,38 @@ Ext.define 'Purple.controller.Vehicles'
         @getRequestFormVehicleSelect().setValue vehicleId
       @getBackToVehiclesButton().config.beforeHandler = ->
         util.ctl('Main').backToMapFromRequestForm()
-
+    else
+      ready = @getRequestFormGallonsSelect()? and @getRequestFormTimeSelect()?
+      # hacky, but need to make sure DOM is ready (todo: make nicer)
+      setTimeout (=>
+        availability = @getRequestForm().config.availability
+        gasType = @getVehicleById(value).gas_type
+        for a in availability
+          if a['octane'] is gasType
+            appropriateAvailability = a
+            break
+        gallonsOpts = []
+        if appropriateAvailability.gallons < util.MINIMUM_GALLONS
+          navigator.notification.alert "Sorry, we are unable to deliver #{appropriateAvailability.octane} Octane to your location at this time.", (->), "Unavailable"
+          @getRequestFormGallonsSelect().setDisabled yes
+          @getRequestFormTimeSelect().setDisabled yes
+          @getSendRequestButton().setDisabled yes
+          return
+        for g in [util.MINIMUM_GALLONS..appropriateAvailability.gallons] by util.GALLONS_INCREMENT
+          gallonsOpts.push
+            text: "#{g}"
+            value: "#{g}"
+        @getRequestFormGallonsSelect().setOptions gallonsOpts
+        @getRequestFormGallonsSelect().setDisabled no
+        timeOpts = []
+        for t in appropriateAvailability.time
+          timeOpts.push
+            text: "within #{t} hour#{if t is 1 then '' else 's'}"
+            value: "< #{t} hr"
+        @getRequestFormTimeSelect().setOptions timeOpts
+        @getRequestFormTimeSelect().setDisabled no
+        @getSendRequestButton().setDisabled no
+      ), (if ready then 5 else 500)
 
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this

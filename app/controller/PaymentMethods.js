@@ -266,7 +266,7 @@ Ext.define('Purple.controller.PaymentMethods', {
       }
     });
   },
-  saveChanges: function() {
+  saveChanges: function(callback) {
     var card, paymentMethodId, values,
       _this = this;
     Stripe.setPublishableKey(util.STRIPE_PUBLISHABLE_KEY);
@@ -324,7 +324,10 @@ Ext.define('Purple.controller.PaymentMethods', {
               util.ctl('Vehicles').vehicles = response.vehicles;
               util.ctl('Orders').orders = response.orders;
               this.backToPaymentMethods();
-              return this.renderPaymentMethodsList(this.paymentMethods);
+              this.renderPaymentMethodsList(this.paymentMethods);
+              if (typeof callback === 'function') {
+                return callback();
+              }
             } else {
               return navigator.notification.alert(response.message, (function() {}), "Error");
             }
@@ -341,7 +344,7 @@ Ext.define('Purple.controller.PaymentMethods', {
   refreshAccountPaymentMethodField: function() {
     var c, card, _ref, _ref1, _ref2, _ref3, _results;
     if ((_ref = this.getAccountPaymentMethodField()) != null) {
-      _ref.setValue("Add/Edit Cards");
+      _ref.setValue("Add a Card");
     }
     if ((localStorage['purpleDefaultPaymentMethodId'] != null) && localStorage['purpleDefaultPaymentMethodId'] !== '') {
       if (this.paymentMethods != null) {

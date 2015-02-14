@@ -188,8 +188,8 @@ Ext.define 'Purple.view.EditVehicleForm'
             ]
             options: [
               {
-                text: 'Unleaded 89 Octane'
-                value: '89'
+                text: 'Unleaded 87 Octane'
+                value: '87'
               }
               {
                 text: 'Unleaded 91 Octane'

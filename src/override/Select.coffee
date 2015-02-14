@@ -21,6 +21,8 @@ Ext.define 'Override.field.Select'
       window.plugins.listpicker.showPicker(
         {
           title: @config.listPicker.title
+          # for some reason both "text" and "value" keys need to have only
+          # Strings as values. I tried to use integers and the plugin fails.
           items: @getOptions()
           selectedValue: @getValue()
           doneButtonLabel: 'Done'

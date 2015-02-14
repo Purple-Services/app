@@ -58,6 +58,7 @@ Ext.define('Purple.view.PaymentMethods', {
           }, {
             xtype: 'container',
             ctype: 'paymentMethodsList',
+            width: '100%',
             flex: 0,
             layout: 'vbox'
           }, {

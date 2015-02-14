@@ -124,6 +124,9 @@ Ext.define 'Purple.view.MapForm'
       {
         xtype: 'container'
         id: 'requestGasButtonContainer'
+        cls: [
+          'slideable'
+        ]
         flex: 0
         height: 110
         padding: '0 0 5 0'

@@ -58,7 +58,8 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             flex: 0,
             name: 'display_time',
             label: 'Time',
-            disabled: true
+            disabled: true,
+            cls: ['visibly-disabled']
           }, {
             xtype: 'hiddenfield',
             name: 'vehicle_id'
@@ -67,27 +68,30 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             flex: 0,
             name: 'vehicle',
             label: 'Vehicle',
-            disabled: true
+            disabled: true,
+            cls: ['visibly-disabled']
           }, {
             xtype: 'textfield',
+            id: 'addressStreetConfirmation',
             flex: 0,
             name: 'address_street',
             label: 'Location',
             labelWidth: 89,
             disabled: true,
-            cls: 'bottom-margin'
+            cls: ['visibly-disabled', 'bottom-margin']
           }, {
             xtype: 'component',
             id: 'specialInstructionsConfirmationLabel',
             flex: 0,
             html: 'Special Instructions',
-            cls: 'field-label-text'
+            cls: ['visibly-disabled', 'field-label-text']
           }, {
             xtype: 'textareafield',
             id: 'specialInstructionsConfirmation',
             name: 'special_instructions',
             maxRows: 4,
-            disabled: true
+            disabled: true,
+            cls: ['visibly-disabled', 'field-label-text']
           }, {
             xtype: 'component',
             flex: 0,
@@ -99,14 +103,14 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             label: 'Gas Price',
             labelWidth: 115,
             disabled: true,
-            cls: ['bottom-margin']
+            cls: ['visibly-disabled']
           }, {
             xtype: 'textfield',
             flex: 0,
             name: 'gallons',
             label: 'Gallons',
             disabled: true,
-            cls: ['bottom-margin']
+            cls: ['visibly-disabled']
           }, {
             xtype: 'moneyfield',
             flex: 0,
@@ -114,13 +118,14 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             label: 'Service Fee',
             labelWidth: 115,
             disabled: true,
-            cls: ['bottom-margin']
+            cls: ['visibly-disabled', 'bottom-margin']
           }, {
             xtype: 'moneyfield',
             flex: 0,
             name: 'total_price',
             label: 'Total',
-            disabled: true
+            disabled: true,
+            cls: ['highlighted']
           }, {
             xtype: 'hiddenfield',
             name: 'lat'

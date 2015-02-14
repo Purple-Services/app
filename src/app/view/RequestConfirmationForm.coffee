@@ -68,6 +68,9 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             name: 'display_time'
             label: 'Time'
             disabled: yes
+            cls: [
+              'visibly-disabled'
+            ]
           }
           {
             xtype: 'hiddenfield'
@@ -79,22 +82,32 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             name: 'vehicle'
             label: 'Vehicle'
             disabled: yes
+            cls: [
+              'visibly-disabled'
+            ]
           }
           {
             xtype: 'textfield'
+            id: 'addressStreetConfirmation'
             flex: 0
             name: 'address_street'
             label: 'Location'
             labelWidth: 89
             disabled: yes
-            cls: 'bottom-margin'
+            cls: [
+              'visibly-disabled'
+              'bottom-margin'
+            ]
           }
           {
             xtype: 'component'
             id: 'specialInstructionsConfirmationLabel'
             flex: 0
             html: 'Special Instructions'
-            cls: 'field-label-text'
+            cls: [
+              'visibly-disabled'
+              'field-label-text'
+            ]
           }
           {
             xtype: 'textareafield'
@@ -102,6 +115,10 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             name: 'special_instructions'
             maxRows: 4
             disabled: yes
+            cls: [
+              'visibly-disabled'
+              'field-label-text'
+            ]
           }
           {
             xtype: 'component'
@@ -116,7 +133,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             labelWidth: 115
             disabled: yes
             cls: [
-              'bottom-margin'
+              'visibly-disabled'
             ]
           }
           {
@@ -126,7 +143,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             label: 'Gallons'
             disabled: yes
             cls: [
-              'bottom-margin'
+              'visibly-disabled'
             ]
           }
           {
@@ -137,6 +154,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             labelWidth: 115
             disabled: yes
             cls: [
+              'visibly-disabled'
               'bottom-margin'
             ]
           }
@@ -146,6 +164,9 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             name: 'total_price'
             label: 'Total'
             disabled: yes
+            cls: [
+              'highlighted'
+            ]
           }
           # hidden fields for flowing data
           {

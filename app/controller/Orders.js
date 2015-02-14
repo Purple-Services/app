@@ -10,7 +10,13 @@ Ext.define('Purple.controller.Orders', {
       ordersTabContainer: '#ordersTabContainer',
       orders: 'orders',
       ordersList: '[ctype=ordersList]',
-      order: 'order'
+      order: 'order',
+      orderSpecialInstructionsLabel: '[ctype=orderSpecialInstructionsLabel]',
+      orderSpecialInstructions: '[ctype=orderSpecialInstructions]',
+      orderAddressStreet: '[ctype=orderAddressStreet]',
+      orderRating: '[ctype=orderRating]',
+      textRating: '[ctype=textRating]',
+      sendRatingButtonContainer: '[ctype=sendRatingButtonContainer]'
     },
     control: {
       orders: {
@@ -18,7 +24,12 @@ Ext.define('Purple.controller.Orders', {
         loadOrdersList: 'loadOrdersList'
       },
       order: {
-        backToOrders: 'backToOrders'
+        backToOrders: 'backToOrders',
+        cancelOrder: 'askToCancelOrder',
+        sendRating: 'sendRating'
+      },
+      orderRating: {
+        change: 'orderRatingChange'
       }
     }
   },
@@ -39,10 +50,7 @@ Ext.define('Purple.controller.Orders', {
     return order;
   },
   viewOrder: function(orderId) {
-    var o, order, _i, _len, _ref;
-    this.getOrdersTabContainer().setActiveItem(Ext.create('Purple.view.Order', {
-      orderId: orderId
-    }));
+    var diff, o, order, v, _i, _j, _len, _len1, _ref, _ref1;
     _ref = this.orders;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       o = _ref[_i];
@@ -51,7 +59,48 @@ Ext.define('Purple.controller.Orders', {
         break;
       }
     }
-    return console.log(order);
+    this.getOrdersTabContainer().setActiveItem(Ext.create('Purple.view.Order', {
+      orderId: orderId,
+      status: order['status']
+    }));
+    this.getOrder().addCls("status-" + order['status']);
+    if (order['status'] === 'complete') {
+      this.getOrderRating().show();
+    }
+    order['status'] = (function() {
+      switch (order['status']) {
+        case 'unassigned':
+          return 'Choosing a Courier';
+        default:
+          return order['status'];
+      }
+    })();
+    order['time_order_placed'] = Ext.util.Format.date(new Date(order['target_time_start'] * 1000), "g:i a");
+    diff = Math.floor((order['target_time_end'] - order['target_time_start']) / (60 * 60));
+    order['display_time'] = (function() {
+      switch (diff) {
+        case 1:
+          return 'within 1 hour';
+        case 3:
+          return 'within 3 hours';
+        default:
+          return 'error calculating';
+      }
+    })();
+    _ref1 = util.ctl('Vehicles').vehicles;
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      v = _ref1[_j];
+      if (v['id'] === order['vehicle_id']) {
+        order['vehicle'] = "" + v.year + " " + v.make + " " + v.model;
+        break;
+      }
+    }
+    this.getOrder().setValues(order);
+    if (order['special_instructions'] === '') {
+      this.getOrderSpecialInstructionsLabel().hide();
+      this.getOrderSpecialInstructions().hide();
+      return this.getOrderAddressStreet().removeCls('bottom-margin');
+    }
   },
   backToOrders: function() {
     return this.getOrdersTabContainer().remove(this.getOrder(), true);
@@ -106,7 +155,7 @@ Ext.define('Purple.controller.Orders', {
     }
   },
   renderOrdersList: function(orders) {
-    var list, o, v, _i, _len, _results,
+    var cls, list, o, v, _i, _len, _results,
       _this = this;
     list = this.getOrdersList();
     if (!(list != null)) {
@@ -130,15 +179,24 @@ Ext.define('Purple.controller.Orders', {
           model: ""
         };
       }
+      cls = ['bottom-margin', 'order-list-item'];
+      if (o.status === 'unassigned' || o.status === 'accepted' || o.status === 'enroute' || o.status === 'servicing') {
+        cls.push('highlighted');
+      }
       _results.push(list.add({
         xtype: 'textfield',
         id: "oid_" + o.id,
         flex: 0,
-        label: "" + (Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS")) + "<br />\n" + v.year + " " + v.make + " " + v.model,
+        label: "" + (Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS")) + "\n<br /><span class=\"subtext\">" + v.year + " " + v.make + " " + v.model + "</span>\n<span class=\"status-square\"></span>",
         labelWidth: '100%',
-        cls: ['bottom-margin'],
+        cls: cls,
         disabled: true,
         listeners: {
+          painted: (function(o) {
+            return function(field) {
+              return field.addCls("status-" + o.status);
+            };
+          })(o),
           initialize: function(field) {
             return field.element.on('tap', function() {
               var oid;
@@ -150,5 +208,99 @@ Ext.define('Purple.controller.Orders', {
       }));
     }
     return _results;
+  },
+  askToCancelOrder: function(id) {
+    var _this = this;
+    return navigator.notification.confirm("", (function(index) {
+      switch (index) {
+        case 1:
+          return _this.cancelOrder(id);
+      }
+    }), "Are you sure you want to cancel this order?", ["Yes", "No"]);
+  },
+  cancelOrder: function(id) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "orders/cancel",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        order_id: id
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.orders = response.orders;
+          this.backToOrders();
+          return this.renderOrdersList(this.orders);
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        Ext.Viewport.setMasked(false);
+        console.log(response_obj);
+        return navigator.notification.alert("Connection error. Please try again.", (function() {}), "Error");
+      }
+    });
+  },
+  orderRatingChange: function(field, value) {
+    this.getTextRating().show();
+    return this.getSendRatingButtonContainer().show();
+  },
+  sendRating: function() {
+    var id, values;
+    values = this.getOrder().getValues();
+    id = this.getOrder().config.orderId;
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "orders/rate",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        order_id: id,
+        rating: {
+          number_rating: values['number_rating'],
+          text_rating: values['text_rating']
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.orders = response.orders;
+          this.backToOrders();
+          return this.renderOrdersList(this.orders);
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        Ext.Viewport.setMasked(false);
+        console.log(response_obj);
+        return navigator.notification.alert("Connection error. Please try again.", (function() {}), "Error");
+      }
+    });
   }
 });

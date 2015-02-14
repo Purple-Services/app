@@ -52,25 +52,6 @@ Ext.define('Purple.view.RequestForm', {
             cls: 'horizontal-rule'
           }, {
             xtype: 'selectfield',
-            flex: 0,
-            name: 'time',
-            label: 'Time',
-            listPicker: {
-              title: 'Select a Time'
-            },
-            cls: ['click-to-edit', 'bottom-margin'],
-            value: '< 3 hr',
-            options: [
-              {
-                text: 'within 1 hour',
-                value: '< 1 hr'
-              }, {
-                text: 'within 3 hours',
-                value: '< 3 hr'
-              }
-            ]
-          }, {
-            xtype: 'selectfield',
             ctype: 'requestFormVehicleSelect',
             flex: 0,
             name: 'vehicle',
@@ -82,23 +63,28 @@ Ext.define('Purple.view.RequestForm', {
             options: []
           }, {
             xtype: 'selectfield',
+            ctype: 'requestFormGallonsSelect',
             flex: 0,
             name: 'gallons',
             label: 'Gallons',
             listPicker: {
               title: 'Number of Gallons'
             },
-            cls: ['click-to-edit', 'bottom-margin'],
-            value: '15',
-            options: [
-              {
-                text: '10',
-                value: '10'
-              }, {
-                text: '15',
-                value: '15'
-              }
-            ]
+            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
+            disabled: true,
+            options: []
+          }, {
+            xtype: 'selectfield',
+            ctype: 'requestFormTimeSelect',
+            flex: 0,
+            name: 'time',
+            label: 'Time',
+            listPicker: {
+              title: 'Select a Time'
+            },
+            cls: ['click-to-edit', 'bottom-margin', 'visibly-disabled'],
+            disabled: true,
+            options: []
           }, {
             xtype: 'component',
             flex: 0,
@@ -136,9 +122,11 @@ Ext.define('Purple.view.RequestForm', {
             items: [
               {
                 xtype: 'button',
+                ctype: 'sendRequestButton',
                 ui: 'action',
                 cls: 'button-pop',
                 text: 'Send Request',
+                disabled: true,
                 flex: 0,
                 handler: function() {
                   return this.up().up().up().fireEvent('sendRequest');

@@ -60,29 +60,6 @@ Ext.define 'Purple.view.RequestForm'
           }
           {
             xtype: 'selectfield'
-            flex: 0
-            name: 'time'
-            label: 'Time'
-            listPicker:
-              title: 'Select a Time'
-            cls: [
-              'click-to-edit'
-              'bottom-margin'
-            ]
-            value: '< 3 hr'
-            options: [
-              {  # when changing, also change line 219 of Main controller
-                text: 'within 1 hour'
-                value: '< 1 hr'
-              }
-              {
-                text: 'within 3 hours'
-                value: '< 3 hr'
-              }
-            ]
-          }
-          {
-            xtype: 'selectfield'
             ctype: 'requestFormVehicleSelect'
             flex: 0
             name: 'vehicle'
@@ -98,6 +75,7 @@ Ext.define 'Purple.view.RequestForm'
           }
           {
             xtype: 'selectfield'
+            ctype: 'requestFormGallonsSelect'
             flex: 0
             name: 'gallons'
             label: 'Gallons'
@@ -106,17 +84,27 @@ Ext.define 'Purple.view.RequestForm'
             cls: [
               'click-to-edit'
               'bottom-margin'
+              'visibly-disabled'
             ]
-            value: '15'
+            disabled: yes
             options: [
-              {
-                text: '10'
-                value: '10'
-              }
-              {
-                text: '15'
-                value: '15'
-              }
+            ]
+          }
+          {
+            xtype: 'selectfield'
+            ctype: 'requestFormTimeSelect'
+            flex: 0
+            name: 'time'
+            label: 'Time'
+            listPicker:
+              title: 'Select a Time'
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+              'visibly-disabled'
+            ]
+            disabled: yes
+            options: [
             ]
           }
           # {
@@ -205,9 +193,11 @@ Ext.define 'Purple.view.RequestForm'
             items: [
               {
                 xtype: 'button'
+                ctype: 'sendRequestButton'
                 ui: 'action'
                 cls: 'button-pop'
                 text: 'Send Request'
+                disabled: yes
                 flex: 0
                 handler: ->
                   @up().up().up().fireEvent 'sendRequest'

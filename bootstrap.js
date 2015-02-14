@@ -717,6 +717,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ux.field.MultiSelectOtherField": [],
   "Ux.field.Multiselect": [],
   "Ux.field.PhoneField": [],
+  "Ux.field.RatingField": [],
   "Ux.field.SelectOtherField": [],
   "Ux.field.SignatureField": []
 });
@@ -1523,6 +1524,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Ux.field.PhoneField": [
     "widget.phonefield"
+  ],
+  "Ux.field.RatingField": [
+    "widget.ratingfield"
   ],
   "Ux.field.SelectOtherField": [
     "widget.selectotherfield"

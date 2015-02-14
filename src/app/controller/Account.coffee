@@ -88,6 +88,7 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserType'] = response.user.type
           localStorage['purpleUserId'] = response.user.id
           localStorage['purpleUserEmail'] = response.user.email
+          localStorage['purpleUserIsCourier'] = response.user.is_courier
           localStorage['purpleToken'] = response.token
           # they don't have any vehicles or orders yet.
           util.ctl('Vehicles').vehicles = []
@@ -137,6 +138,7 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserName'] = response.user.name
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleUserEmail'] = response.user.email
+          localStorage['purpleUserIsCourier'] = response.user.is_courier
           localStorage['purpleToken'] = response.token
           delete localStorage['purpleDefaultPaymentMethodId']
           for c, card of response.cards
@@ -145,18 +147,23 @@ Ext.define 'Purple.controller.Account'
               localStorage['purpleDefaultPaymentMethodDisplayText'] = """
                 #{card.brand} *#{card.last4}
               """
+          util.ctl('PaymentMethods').paymentMethods = response.cards
+          util.ctl('PaymentMethods').loadPaymentMethodsList()
           util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
           util.ctl('Vehicles').vehicles = response.vehicles
-          util.ctl('Orders').orders = response.orders
-          util.ctl('PaymentMethods').paymentMethods = response.cards
           util.ctl('Vehicles').loadVehiclesList()
+          util.ctl('Orders').orders = response.orders
           util.ctl('Orders').loadOrdersList()
-          util.ctl('PaymentMethods').loadPaymentMethodsList()
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else
             util.ctl('Menu').adjustForAppLoginState()
-            util.ctl('Menu').selectOption 0
+            if localStorage['purpleUserIsCourier']
+              # a courier account, go to Gas Tanks page
+              util.ctl('Menu').selectOption 8
+            else
+              # a normal user, go to Request Gas page
+              util.ctl('Menu').selectOption 0
             @showLoginForm() # to prepare for next logout, if it comes
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -327,13 +334,21 @@ Ext.define 'Purple.controller.Account'
     delete localStorage['purpleUserPhoneNumber']
     delete localStorage['purpleUserEmail']
     delete localStorage['purpleDefaultPaymentMethodId']
+    delete localStorage['purpleDefaultPaymentMethodDisplayText']
     delete localStorage['purpleToken']
+    delete localStorage['purpleUserIsCourier']
+    delete localStorage['purpleCourierGallons87']
+    delete localStorage['purpleCourierGallons91']
 
     # clear out some lists from any old logins
     util.ctl('Vehicles').vehicles = []
     util.ctl('Vehicles').loadVehiclesList()
     util.ctl('Orders').orders = []
     util.ctl('Orders').loadOrdersList()
+    util.ctl('PaymentMethods').paymentMethods = []
+    util.ctl('PaymentMethods').loadPaymentMethodsList()
+
+    util.ctl('Main').killCourierPing()
     
     util.ctl('Menu').adjustForAppLoginState()
     util.ctl('Menu').selectOption 1
@@ -349,6 +364,9 @@ Ext.define 'Purple.controller.Account'
     localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt '' and
     localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt '' and
     localStorage['purpleUserEmail']? and localStorage['purpleUserEmail'] isnt ''
+
+  hasDefaultPaymentMethod: ->
+    localStorage['purpleDefaultPaymentMethodId']? and localStorage['purpleDefaultPaymentMethodId'] isnt ''
 
   populateAccountForm: ->
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''

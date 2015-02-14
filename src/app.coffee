@@ -11,6 +11,7 @@ Ext.application
     'Override.field.Select'
     'Ux.field.SelectOtherField'
     'Ux.field.MoneyField'
+    'Ux.field.RatingField'
     'Purple.plugin.NonListPullRefresh'
   ]
   controllers: [
@@ -20,6 +21,7 @@ Ext.application
     'Vehicles'
     'Orders'
     'PaymentMethods'
+    'GasTanks'
   ]
   views: [
     'MainContainer'

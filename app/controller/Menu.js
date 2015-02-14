@@ -70,12 +70,28 @@ Ext.define('Purple.controller.Menu', {
     return _results;
   },
   adjustForAppLoginState: function() {
+    var _ref, _ref1;
     if (util.ctl('Account').isUserLoggedIn()) {
       this.hideTitles([1]);
-      this.showTitles([2, 3, 4]);
+      if (localStorage['purpleUserIsCourier']) {
+        this.hideTitles([0, 4]);
+        this.showTitles([2, 3, 8]);
+        if ((_ref = localStorage['purpleCourierGallons87']) == null) {
+          localStorage['purpleCourierGallons87'] = 0;
+        }
+        if ((_ref1 = localStorage['purpleCourierGallons91']) == null) {
+          localStorage['purpleCourierGallons91'] = 0;
+        }
+        if (!(util.ctl('Main').courierPingIntervalRef != null)) {
+          util.ctl('Main').initCourierPing();
+        }
+      } else {
+        this.hideTitles([8]);
+        this.showTitles([2, 3, 4]);
+      }
       return util.ctl('Account').populateAccountForm();
     } else {
-      this.hideTitles([2, 3, 4]);
+      this.hideTitles([2, 3, 4, 8]);
       return this.showTitles([1]);
     }
   }

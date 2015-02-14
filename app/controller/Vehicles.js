@@ -21,7 +21,11 @@ Ext.define('Purple.controller.Vehicles', {
       editVehicleFormLicensePlate: '[ctype=editVehicleFormLicensePlate]',
       editVehicleFormPhoto: '[ctype=editVehicleFormPhoto]',
       editVehicleFormTakePhotoButton: '[ctype=editVehicleFormTakePhotoButton]',
-      requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
+      requestForm: 'requestform',
+      requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]',
+      requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]',
+      requestFormTimeSelect: '[ctype=requestFormTimeSelect]',
+      sendRequestButton: '[ctype=sendRequestButton]'
     },
     control: {
       vehicles: {
@@ -232,7 +236,7 @@ Ext.define('Purple.controller.Vehicles', {
         xtype: 'textfield',
         id: "vid_" + v.id,
         flex: 0,
-        label: "" + v.year + " " + v.make + " " + v.model + "\n<br /><span class=\"subtext\">" + v.color + " / <span class=\"license-plate\">" + v.license_plate + "</span></span>\n<span class=\"vehicle-photo\" style=\"background-image: url('" + v.photo + "') !important;\"></span>",
+        label: "<span class=\"maintext\">" + v.year + " " + v.make + " " + v.model + "</span>\n<br /><span class=\"subtext\">" + v.color + " / <span class=\"license-plate\">" + v.license_plate + "</span></span>\n<span class=\"vehicle-photo\" style=\"background-image: url('" + v.photo + "') !important;\"></span>",
         labelWidth: '100%',
         cls: ['bottom-margin', 'vehicle-list-item'],
         disabled: true,
@@ -413,7 +417,8 @@ Ext.define('Purple.controller.Vehicles', {
     }
   },
   requestFormVehicleSelectChange: function(field, value) {
-    var _this = this;
+    var ready,
+      _this = this;
     if (value === 'new') {
       util.ctl('Menu').selectOption(4);
       this.showEditVehicleForm();
@@ -425,6 +430,48 @@ Ext.define('Purple.controller.Vehicles', {
       return this.getBackToVehiclesButton().config.beforeHandler = function() {
         return util.ctl('Main').backToMapFromRequestForm();
       };
+    } else {
+      ready = (this.getRequestFormGallonsSelect() != null) && (this.getRequestFormTimeSelect() != null);
+      return setTimeout((function() {
+        var a, appropriateAvailability, availability, g, gallonsOpts, gasType, t, timeOpts, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2, _ref3;
+        availability = _this.getRequestForm().config.availability;
+        gasType = _this.getVehicleById(value).gas_type;
+        for (_i = 0, _len = availability.length; _i < _len; _i++) {
+          a = availability[_i];
+          if (a['octane'] === gasType) {
+            appropriateAvailability = a;
+            break;
+          }
+        }
+        gallonsOpts = [];
+        if (appropriateAvailability.gallons < util.MINIMUM_GALLONS) {
+          navigator.notification.alert("Sorry, we are unable to deliver " + appropriateAvailability.octane + " Octane to your location at this time.", (function() {}), "Unavailable");
+          _this.getRequestFormGallonsSelect().setDisabled(true);
+          _this.getRequestFormTimeSelect().setDisabled(true);
+          _this.getSendRequestButton().setDisabled(true);
+          return;
+        }
+        for (g = _j = _ref = util.MINIMUM_GALLONS, _ref1 = appropriateAvailability.gallons, _ref2 = util.GALLONS_INCREMENT; _ref <= _ref1 ? _j <= _ref1 : _j >= _ref1; g = _j += _ref2) {
+          gallonsOpts.push({
+            text: "" + g,
+            value: "" + g
+          });
+        }
+        _this.getRequestFormGallonsSelect().setOptions(gallonsOpts);
+        _this.getRequestFormGallonsSelect().setDisabled(false);
+        timeOpts = [];
+        _ref3 = appropriateAvailability.time;
+        for (_k = 0, _len1 = _ref3.length; _k < _len1; _k++) {
+          t = _ref3[_k];
+          timeOpts.push({
+            text: "within " + t + " hour" + (t === 1 ? '' : 's'),
+            value: "< " + t + " hr"
+          });
+        }
+        _this.getRequestFormTimeSelect().setOptions(timeOpts);
+        _this.getRequestFormTimeSelect().setDisabled(false);
+        return _this.getSendRequestButton().setDisabled(false);
+      }), (ready ? 5 : 500));
     }
   },
   addImage: function() {

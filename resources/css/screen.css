@@ -19,6 +19,7 @@
 body {
     color: #0073C4;
     font-family: 'Source Sans Pro';
+    text-shadow: none !important;
 }
 .x-layout-card-item, .x-scroll-container {
     background: transparent !important;
@@ -127,6 +128,7 @@ body {
     background: transparent;
     border-left: 10px solid #DCD2DA;
     border-radius: 0px !important;
+    text-shadow: none !important;
     white-space: normal !important;
 }
 .x-field-textarea {
@@ -140,6 +142,9 @@ body {
 }
 .field-label-text {
     padding-bottom: 9px;
+}
+.field-label-text.visibly-disabled {
+    color: #999;
 }
 .x-field-input {
     background: transparent;
@@ -330,7 +335,9 @@ body {
     margin: 15px 0px;
     padding: 0px;
 }
-
+.no-top-margin.horizontal-rule {
+    margin-top: 0px !important;
+}
 
 .uppercase-input input {
     text-transform: uppercase;
@@ -392,8 +399,55 @@ body {
 }
 
 
-.visibly-disabled.x-item-disabled .x-form-label span {
-    color: #999;
+.visibly-disabled.x-item-disabled .x-form-label span,
+.visibly-disabled.x-item-disabled .x-input-el {
+    color: #999 !important;
+    -webkit-text-fill-color: #999 !important;
+}
+
+.view-order .visibly-disabled.x-item-disabled .x-form-label span,
+.view-order .visibly-disabled.x-item-disabled .x-input-el {
+    color: #555 !important;
+    -webkit-text-fill-color: #555 !important;
+}
+
+.big-and-bold {
+    background: #762B90 !important;
+}
+.big-and-bold .x-form-label span,
+.big-and-bold .x-input-el {
+    background: #762B90 !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+}
+.status-complete .big-and-bold,
+.status-complete .big-and-bold .x-form-label span,
+.status-complete .big-and-bold .x-input-el {
+    background: #93E785 !important;
+}
+.no-background.big-and-bold,
+.no-background.big-and-bold .x-form-label span,
+.no-background.big-and-bold .x-input-el {
+    background: transparent !important;
+    color: #762B90 !important;
+    -webkit-text-fill-color: #762B90 !important;
+}
+.big-and-bold .x-form-label span {
+    font-size: 19px;
+    padding-left: 5px;
+}
+.big-and-bold .x-input-el {
+    font-size: 18px;
+    text-transform: capitalize;
+}
+.big-and-bold .x-form-label {
+    border: none !important;
+}
+
+
+
+.highlighted .x-form-label {
+    border-color: #752B90 !important;
 }
 
 
@@ -579,14 +633,19 @@ a[href^="http://maps.google.com/maps"] {
     position: relative;
     width:  100%;
     display: block;
-    padding: 8px 0px;
+    padding: 9px 0px;
     height:  60px;
-    font-size: 20px;
+}
+.vehicle-list-item .x-form-label span .maintext {
+    font-size: 18px;
     line-height: 21px;
     font-weight: 900;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .vehicle-list-item .x-form-label span .subtext {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 21px;
     font-weight: 400;
 }
@@ -608,6 +667,66 @@ a[href^="http://maps.google.com/maps"] {
 
 
 
+.order-list-item .x-form-label {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+.order-list-item .x-form-label > span {
+    position: relative;
+    width:  100%;
+    display: block;
+    padding: 8px 0px;
+    height:  60px;
+    font-size: 20px;
+    line-height: 21px;
+    font-weight: 900;
+}
+.order-list-item .x-form-label span .subtext {
+    font-size: 18px;
+    line-height: 21px;
+    font-weight: 400;
+}
+
+.order-list-item .x-form-label span .status-square {
+    display: block;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width: 60px;
+    height: 0px;
+    transition: height 1s ease 0s;
+    background: #762B90;
+}
+.status-unassigned.order-list-item .x-form-label span .status-square {
+    /* background: #e2c4ed; */
+    
+}
+.status-accepted.order-list-item .x-form-label span .status-square {
+    /* background: linear-gradient(#e2c4ed, #e2c4ed 75%, #762B90 75%); */
+    height: 20px;
+}
+.status-enroute.order-list-item .x-form-label span .status-square {
+    /* background: linear-gradient(#e2c4ed, #e2c4ed 50%, #762B90 50%); */
+    height: 38px;
+}
+.status-servicing.order-list-item .x-form-label span .status-square {
+    /* background: linear-gradient(#e2c4ed, #e2c4ed 25%, #762B90 25%); */
+    height: 48px;
+}
+.status-complete.order-list-item .x-form-label span .status-square {
+    background: #93E785;
+    height: 60px;
+}
+.status-cancelled.order-list-item .x-form-label span {
+    color: #999;
+}
+.status-cancelled.order-list-item .x-form-label span .status-square {
+    background: #bbb;
+}
+
+
+
+
 
 .take-photo  {
     height: 154px !important;
@@ -618,6 +737,14 @@ a[href^="http://maps.google.com/maps"] {
     background-repeat: no-repeat !important;
     background-position: center !important;
     padding: 7px !important;
+}
+.take-photo.x-button-pressing {
+    box-shadow: none !important;
+    background-color: #EDEDED !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 0.7 !important;
 }
 .take-photo .x-button-label {
     height: 140px;
@@ -630,10 +757,7 @@ a[href^="http://maps.google.com/maps"] {
     color: #bbb !important;
     border: 2px dashed #bbb !important;
 }
-.take-photo.x-button-pressing {
-    box-shadow: none !important;
-    background: #fafafa !important;
-}
+
 
 
 
@@ -748,4 +872,47 @@ a[href^="http://maps.google.com/maps"] {
   100% { 
     -webkit-transform: rotate(360deg); 
   } 
-} 
+}
+
+
+
+
+/* star rating field component */
+.x-rating{min-height:25px;}
+.x-rating .x-component-outer{position: relative; padding:0.6em;min-height: 40px;}
+.x-rating .starContainer, .x-rating .starFakeContainer {
+    position:absolute;
+    top:0px;
+    left:15px;
+    width:100%;
+    height:100%;
+}
+.x-rating .starFakeContainer{z-index:10;}
+.x-rating .starContainer{display:-webkit-box; -webkit-box-align:center;-webkit-box-pack:center;}
+.x-rating .starContainer .center, .x-rating .starContainer .left, .x-rating .starContainer .right{-webkit-box-flex:1}
+.x-rating .star{
+    border:0px !important;
+    padding:0px !important;
+    margin:0px 0px 0px -12.5px !important;
+    position:absolute;
+    left:16.66%;
+    top:5px;
+    -webkit-mask:url('../images/star.png') left center no-repeat;
+    -webkit-mask-size:25px 25px;
+    background-color:#FFBD5D;
+    width:25px;
+    height:25px;
+    opacity:.2;
+    -webkit-transform: scale(1,1);
+}
+.x-rating .star2{left:33.33%;}
+.x-rating .star3{left:49.99%;}
+.x-rating .star4{left:66.66%;}
+.x-rating .star5{left:83.33%;}
+.x-rating .star.active{-webkit-transform: scale(1,1); opacity:1;}
+
+.gas-tanks .x-rating .star{
+    -webkit-mask:url('../images/gas-tank.png') left center no-repeat;
+    -webkit-mask-size:25px 25px;
+    background-color:#FF0000;
+}

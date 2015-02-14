@@ -52,6 +52,9 @@ Ext.define 'Purple.controller.Main'
   mapInitiallyCenteredYet: no
   mapInited: no
 
+  # only used if logged in as courier
+  courierPingIntervalRef: null
+
   launch: ->
     @callParent arguments
 
@@ -65,11 +68,6 @@ Ext.define 'Purple.controller.Main'
     # crucial because otherwise you would have to wait 10 seconds
     # (the immediate call is usually before the google map loads)
     # However, on my iPhone 5s the immediate call does work.
-
-    # check if logged in (or if they hacked the localStorage and claim to be)
-    if localStorage['purpleUserId']?
-      # already logged in
-      console.log 'user is logged in with id: ', localStorage['purpleUserId']
 
     # ga_storage._enableSSL() # TODO security - doesn't seem to actually use SSL
     # ga_storage._setAccount 'UA-55536703-1'
@@ -188,21 +186,58 @@ Ext.define 'Purple.controller.Main'
         console.log 'placesService error' + status
 
   initRequestGasForm: ->
+    deliveryLocName = @getRequestAddressField().getValue()
+    if deliveryLocName is @getRequestAddressField().getInitialConfig().value
+      return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @getMainContainer().getItems().getAt(0).select 1, no, no
     else
-      deliveryLocName = @getRequestAddressField().getValue()
-      @getRequestGasTabContainer().setActiveItem(
-        Ext.create 'Purple.view.RequestForm'
-      )
-      @getRequestForm().setValues(
-        lat: @deliveryLocLat
-        lng: @deliveryLocLng
-        address_street: deliveryLocName
-      )
+      # send to request gas form, but first get availbility from disptach system
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
+        params: Ext.JSON.encode
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+          lat: @deliveryLocLat
+          lng: @deliveryLocLng
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            # first, see if there are any gallons available at all
+            totalGallons = response.availability.reduce (a, b) ->
+              a.gallons + b.gallons
+            totalNumOfTimeOptions = response.availability.reduce (a, b) ->
+              a.time.count + b.time.count
+            if totalGallons < util.MINIMUM_GALLONS or totalNumOfTimeOptions is 0
+              navigator.notification.alert "Sorry, we are unable to deliver gas to your location at this time.", (->), "Unavailable"
+            else
+              @getRequestGasTabContainer().setActiveItem(
+                Ext.create 'Purple.view.RequestForm',
+                  availability: response.availability
+              ) 
+              @getRequestForm().setValues(
+                lat: @deliveryLocLat
+                lng: @deliveryLocLng
+                address_street: deliveryLocName
+              )
+          else
+            navigator.notification.alert response.message, (->), "Error"
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          console.log response_obj
 
   backToMapFromRequestForm: ->
+    console.log 'caleld ', @getRequestForm()
     @getRequestGasTabContainer().remove(
       @getRequestForm(),
       yes
@@ -231,55 +266,76 @@ Ext.define 'Purple.controller.Main'
       if v['id'] is vals['vehicle_id']
         vals['vehicle'] = "#{v.year} #{v.make} #{v.model}"
         break
-        
+
     @getRequestConfirmationForm().setValues vals
     if vals['special_instructions'] is ''
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
+      Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
 
   confirmOrder: ->
-    console.log 'Confirm Order', @getRequestConfirmationForm().getValues()
-
-    vals = @getRequestConfirmationForm().getValues()
-    vals['gas_price'] = parseFloat(vals['gas_price'].replace('$',''))
-    vals['service_fee'] = parseFloat(vals['service_fee'].replace('$',''))
-    vals['total_price'] = parseFloat(vals['total_price'].replace('$',''))
-    
-    Ext.Viewport.setMasked
-      xtype: 'loadmask'
-      message: ''
-    Ext.Ajax.request
-      url: "#{util.WEB_SERVICE_BASE_URL}orders/add"
-      params: Ext.JSON.encode
-        user_id: localStorage['purpleUserId']
-        token: localStorage['purpleToken']
-        order: vals
-      headers:
-        'Content-Type': 'application/json'
-      timeout: 30000
-      method: 'POST'
-      scope: this
-      success: (response_obj) ->
-        Ext.Viewport.setMasked false
-        response = Ext.JSON.decode response_obj.responseText
-        if response.success
-          util.ctl('Menu').selectOption 3 # Orders tab
-          util.ctl('Orders').loadOrdersList yes
-          @getRequestGasTabContainer().setActiveItem @getMapForm()
-          @getRequestGasTabContainer().remove(
-            @getRequestConfirmationForm(),
-            yes
-          )
-          @getRequestGasTabContainer().remove(
-            @getRequestForm(),
-            yes
-          )
-        else
-          navigator.notification.alert response.message, (->), "Error"
-      failure: (response_obj) ->
-        Ext.Viewport.setMasked false
-        response = Ext.JSON.decode response_obj.responseText
-        console.log response
+    if not util.ctl('Account').hasDefaultPaymentMethod()
+      # select the Account view
+      @getMainContainer().getItems().getAt(0).select 2, no, no
+      pmCtl = util.ctl('PaymentMethods')
+      if not pmCtl.getPaymentMethods()?
+        pmCtl.accountPaymentMethodFieldTap()
+      if pmCtl.getEditPaymentMethodForm()?
+        # there already exists a payment method edit form, just go to that
+        pmCtl.getAccountTabContainer().setActiveItem pmCtl.getEditPaymentMethodForm()
+      else
+        pmCtl.showEditPaymentMethodForm()
+      pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
+        pmCtl.backToAccount()
+        util.ctl('Menu').selectOption 0
+    else
+      vals = @getRequestConfirmationForm().getValues()
+      # prices are finally given in cents
+      vals['gas_price'] = parseInt(
+        vals['gas_price'].replace('$','').replace('.','')
+      )
+      vals['service_fee'] = parseInt(
+        vals['service_fee'].replace('$','').replace('.','')
+      )
+      vals['total_price'] = parseInt(
+        vals['total_price'].replace('$','').replace('.','')
+      )
+      
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}orders/add"
+        params: Ext.JSON.encode
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+          order: vals
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            util.ctl('Menu').selectOption 3 # Orders tab
+            util.ctl('Orders').loadOrdersList yes
+            @getRequestGasTabContainer().setActiveItem @getMapForm()
+            @getRequestGasTabContainer().remove(
+              @getRequestConfirmationForm(),
+              yes
+            )
+            @getRequestGasTabContainer().remove(
+              @getRequestForm(),
+              yes
+            )
+          else
+            navigator.notification.alert response.message, (->), "Error"
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          console.log response
 
   sendFeedback: ->
     params =
@@ -340,3 +396,41 @@ Ext.define 'Purple.controller.Main'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
+
+  initCourierPing: ->
+    @courierPingIntervalRef = setInterval (Ext.bind @courierPing, this), 10000
+
+  killCourierPing: ->
+    if @courierPingIntervalRef?
+      clearInterval @courierPingIntervalRef
+
+  courierPing: ->
+    @errorCount ?= 0
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @lat
+        lng: @lng
+        gallons:
+          87: localStorage['purpleCourierGallons87']
+          91: localStorage['purpleCourierGallons91']
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          console.log 'successful ping'
+        else
+          @errorCount++
+          if @errorCount > 10
+            navigator.notification.alert "Unable to ping dispatch center.", (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        @errorCount++
+        if @errorCount > 10
+          navigator.notification.alert "Unable to ping dispatch center. Error #2.", (->), "Error"

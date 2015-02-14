@@ -54,10 +54,19 @@ Ext.define 'Purple.controller.Menu'
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
-      @showTitles [2, 3, 4]
+      if localStorage['purpleUserIsCourier']
+        @hideTitles [0, 4]
+        @showTitles [2, 3, 8]
+        localStorage['purpleCourierGallons87'] ?= 0
+        localStorage['purpleCourierGallons91'] ?= 0
+        if not util.ctl('Main').courierPingIntervalRef?
+          util.ctl('Main').initCourierPing()
+      else
+        @hideTitles [8]
+        @showTitles [2, 3, 4]
       util.ctl('Account').populateAccountForm()
     else
-      @hideTitles [2, 3, 4]
+      @hideTitles [2, 3, 4, 8]
       @showTitles [1]
 
   # getCurrentTopToolbar: ->

@@ -64,15 +64,13 @@ Ext.define('Purple.controller.Main', {
   },
   mapInitiallyCenteredYet: false,
   mapInited: false,
+  courierPingIntervalRef: null,
   launch: function() {
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
     this.updateLatlng();
     setTimeout(Ext.bind(this.updateLatlng, this), 2000);
     setTimeout(Ext.bind(this.updateLatlng, this), 5000);
-    if (localStorage['purpleUserId'] != null) {
-      console.log('user is logged in with id: ', localStorage['purpleUserId']);
-    }
     return navigator.splashscreen.hide();
   },
   updateLatlng: function() {
@@ -209,19 +207,67 @@ Ext.define('Purple.controller.Main', {
   },
   initRequestGasForm: function() {
     var deliveryLocName;
+    deliveryLocName = this.getRequestAddressField().getValue();
+    if (deliveryLocName === this.getRequestAddressField().getInitialConfig().value) {
+      return;
+    }
     if (!(util.ctl('Account').isUserLoggedIn() && util.ctl('Account').isCompleteAccount())) {
       return this.getMainContainer().getItems().getAt(0).select(1, false, false);
     } else {
-      deliveryLocName = this.getRequestAddressField().getValue();
-      this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm'));
-      return this.getRequestForm().setValues({
-        lat: this.deliveryLocLat,
-        lng: this.deliveryLocLng,
-        address_street: deliveryLocName
+      Ext.Viewport.setMasked({
+        xtype: 'loadmask',
+        message: ''
+      });
+      return Ext.Ajax.request({
+        url: "" + util.WEB_SERVICE_BASE_URL + "dispatch/availability",
+        params: Ext.JSON.encode({
+          user_id: localStorage['purpleUserId'],
+          token: localStorage['purpleToken'],
+          lat: this.deliveryLocLat,
+          lng: this.deliveryLocLng
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+        method: 'POST',
+        scope: this,
+        success: function(response_obj) {
+          var response, totalGallons, totalNumOfTimeOptions;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          if (response.success) {
+            totalGallons = response.availability.reduce(function(a, b) {
+              return a.gallons + b.gallons;
+            });
+            totalNumOfTimeOptions = response.availability.reduce(function(a, b) {
+              return a.time.count + b.time.count;
+            });
+            if (totalGallons < util.MINIMUM_GALLONS || totalNumOfTimeOptions === 0) {
+              return navigator.notification.alert("Sorry, we are unable to deliver gas to your location at this time.", (function() {}), "Unavailable");
+            } else {
+              this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm', {
+                availability: response.availability
+              }));
+              return this.getRequestForm().setValues({
+                lat: this.deliveryLocLat,
+                lng: this.deliveryLocLng,
+                address_street: deliveryLocName
+              });
+            }
+          } else {
+            return navigator.notification.alert(response.message, (function() {}), "Error");
+          }
+        },
+        failure: function(response_obj) {
+          Ext.Viewport.setMasked(false);
+          return console.log(response_obj);
+        }
       });
     }
   },
   backToMapFromRequestForm: function() {
+    console.log('caleld ', this.getRequestForm());
     return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
   },
   backToRequestForm: function() {
@@ -255,54 +301,71 @@ Ext.define('Purple.controller.Main', {
     this.getRequestConfirmationForm().setValues(vals);
     if (vals['special_instructions'] === '') {
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide();
-      return Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide();
+      Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide();
+      return Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls('bottom-margin');
     }
   },
   confirmOrder: function() {
-    var vals;
-    console.log('Confirm Order', this.getRequestConfirmationForm().getValues());
-    vals = this.getRequestConfirmationForm().getValues();
-    vals['gas_price'] = parseFloat(vals['gas_price'].replace('$', ''));
-    vals['service_fee'] = parseFloat(vals['service_fee'].replace('$', ''));
-    vals['total_price'] = parseFloat(vals['total_price'].replace('$', ''));
-    Ext.Viewport.setMasked({
-      xtype: 'loadmask',
-      message: ''
-    });
-    return Ext.Ajax.request({
-      url: "" + util.WEB_SERVICE_BASE_URL + "orders/add",
-      params: Ext.JSON.encode({
-        user_id: localStorage['purpleUserId'],
-        token: localStorage['purpleToken'],
-        order: vals
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 30000,
-      method: 'POST',
-      scope: this,
-      success: function(response_obj) {
-        var response;
-        Ext.Viewport.setMasked(false);
-        response = Ext.JSON.decode(response_obj.responseText);
-        if (response.success) {
-          util.ctl('Menu').selectOption(3);
-          util.ctl('Orders').loadOrdersList(true);
-          this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
-          this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
-          return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
-        } else {
-          return navigator.notification.alert(response.message, (function() {}), "Error");
-        }
-      },
-      failure: function(response_obj) {
-        var response;
-        Ext.Viewport.setMasked(false);
-        response = Ext.JSON.decode(response_obj.responseText);
-        return console.log(response);
+    var pmCtl, vals;
+    if (!util.ctl('Account').hasDefaultPaymentMethod()) {
+      this.getMainContainer().getItems().getAt(0).select(2, false, false);
+      pmCtl = util.ctl('PaymentMethods');
+      if (!(pmCtl.getPaymentMethods() != null)) {
+        pmCtl.accountPaymentMethodFieldTap();
       }
-    });
+      if (pmCtl.getEditPaymentMethodForm() != null) {
+        pmCtl.getAccountTabContainer().setActiveItem(pmCtl.getEditPaymentMethodForm());
+      } else {
+        pmCtl.showEditPaymentMethodForm();
+      }
+      return pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = function() {
+        pmCtl.backToAccount();
+        return util.ctl('Menu').selectOption(0);
+      };
+    } else {
+      vals = this.getRequestConfirmationForm().getValues();
+      vals['gas_price'] = parseInt(vals['gas_price'].replace('$', '').replace('.', ''));
+      vals['service_fee'] = parseInt(vals['service_fee'].replace('$', '').replace('.', ''));
+      vals['total_price'] = parseInt(vals['total_price'].replace('$', '').replace('.', ''));
+      Ext.Viewport.setMasked({
+        xtype: 'loadmask',
+        message: ''
+      });
+      return Ext.Ajax.request({
+        url: "" + util.WEB_SERVICE_BASE_URL + "orders/add",
+        params: Ext.JSON.encode({
+          user_id: localStorage['purpleUserId'],
+          token: localStorage['purpleToken'],
+          order: vals
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+        method: 'POST',
+        scope: this,
+        success: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          if (response.success) {
+            util.ctl('Menu').selectOption(3);
+            util.ctl('Orders').loadOrdersList(true);
+            this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
+            this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
+            return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
+          } else {
+            return navigator.notification.alert(response.message, (function() {}), "Error");
+          }
+        },
+        failure: function(response_obj) {
+          var response;
+          Ext.Viewport.setMasked(false);
+          response = Ext.JSON.decode(response_obj.responseText);
+          return console.log(response);
+        }
+      });
+    }
   },
   sendFeedback: function() {
     var params;
@@ -383,6 +446,58 @@ Ext.define('Purple.controller.Main', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         return console.log(response);
+      }
+    });
+  },
+  initCourierPing: function() {
+    return this.courierPingIntervalRef = setInterval(Ext.bind(this.courierPing, this), 10000);
+  },
+  killCourierPing: function() {
+    if (this.courierPingIntervalRef != null) {
+      return clearInterval(this.courierPingIntervalRef);
+    }
+  },
+  courierPing: function() {
+    var _ref;
+    if ((_ref = this.errorCount) == null) {
+      this.errorCount = 0;
+    }
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "courier/ping",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        lat: this.lat,
+        lng: this.lng,
+        gallons: {
+          87: localStorage['purpleCourierGallons87'],
+          91: localStorage['purpleCourierGallons91']
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          return console.log('successful ping');
+        } else {
+          this.errorCount++;
+          if (this.errorCount > 10) {
+            return navigator.notification.alert("Unable to ping dispatch center.", (function() {}), "Error");
+          }
+        }
+      },
+      failure: function(response_obj) {
+        Ext.Viewport.setMasked(false);
+        this.errorCount++;
+        if (this.errorCount > 10) {
+          return navigator.notification.alert("Unable to ping dispatch center. Error #2.", (function() {}), "Error");
+        }
       }
     });
   }

@@ -15,6 +15,10 @@ window.util = {
     }
   })(),
   STRIPE_PUBLISHABLE_KEY: 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ',
+  MINIMUM_GALLONS: 10,
+  GALLONS_INCREMENT: 5,
+  GALLONS_PER_TANK: 5,
+  CANCELLABLE_STATUSES: ["unassigned", "accepted", "enroute"],
   ctl: function(controllerName) {
     return Purple.app.getController(controllerName);
   },

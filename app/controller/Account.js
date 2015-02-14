@@ -85,6 +85,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserType'] = response.user.type;
           localStorage['purpleUserId'] = response.user.id;
           localStorage['purpleUserEmail'] = response.user.email;
+          localStorage['purpleUserIsCourier'] = response.user.is_courier;
           localStorage['purpleToken'] = response.token;
           util.ctl('Vehicles').vehicles = [];
           util.ctl('Vehicles').loadVehiclesList();
@@ -140,6 +141,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserName'] = response.user.name;
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleUserEmail'] = response.user.email;
+          localStorage['purpleUserIsCourier'] = response.user.is_courier;
           localStorage['purpleToken'] = response.token;
           delete localStorage['purpleDefaultPaymentMethodId'];
           _ref = response.cards;
@@ -150,18 +152,22 @@ Ext.define('Purple.controller.Account', {
               localStorage['purpleDefaultPaymentMethodDisplayText'] = "" + card.brand + " *" + card.last4;
             }
           }
+          util.ctl('PaymentMethods').paymentMethods = response.cards;
+          util.ctl('PaymentMethods').loadPaymentMethodsList();
           util.ctl('PaymentMethods').refreshAccountPaymentMethodField();
           util.ctl('Vehicles').vehicles = response.vehicles;
-          util.ctl('Orders').orders = response.orders;
-          util.ctl('PaymentMethods').paymentMethods = response.cards;
           util.ctl('Vehicles').loadVehiclesList();
+          util.ctl('Orders').orders = response.orders;
           util.ctl('Orders').loadOrdersList();
-          util.ctl('PaymentMethods').loadPaymentMethodsList();
           if ((response.account_complete != null) && !response.account_complete) {
             return this.accountSetup();
           } else {
             util.ctl('Menu').adjustForAppLoginState();
-            util.ctl('Menu').selectOption(0);
+            if (localStorage['purpleUserIsCourier']) {
+              util.ctl('Menu').selectOption(8);
+            } else {
+              util.ctl('Menu').selectOption(0);
+            }
             return this.showLoginForm();
           }
         } else {
@@ -328,11 +334,18 @@ Ext.define('Purple.controller.Account', {
     delete localStorage['purpleUserPhoneNumber'];
     delete localStorage['purpleUserEmail'];
     delete localStorage['purpleDefaultPaymentMethodId'];
+    delete localStorage['purpleDefaultPaymentMethodDisplayText'];
     delete localStorage['purpleToken'];
+    delete localStorage['purpleUserIsCourier'];
+    delete localStorage['purpleCourierGallons87'];
+    delete localStorage['purpleCourierGallons91'];
     util.ctl('Vehicles').vehicles = [];
     util.ctl('Vehicles').loadVehiclesList();
     util.ctl('Orders').orders = [];
     util.ctl('Orders').loadOrdersList();
+    util.ctl('PaymentMethods').paymentMethods = [];
+    util.ctl('PaymentMethods').loadPaymentMethodsList();
+    util.ctl('Main').killCourierPing();
     util.ctl('Menu').adjustForAppLoginState();
     return util.ctl('Menu').selectOption(1);
   },
@@ -341,6 +354,9 @@ Ext.define('Purple.controller.Account', {
   },
   isCompleteAccount: function() {
     return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '' && (localStorage['purpleToken'] != null) && localStorage['purpleToken'] !== '' && (localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '' && (localStorage['purpleUserPhoneNumber'] != null) && localStorage['purpleUserPhoneNumber'] !== '' && (localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '';
+  },
+  hasDefaultPaymentMethod: function() {
+    return (localStorage['purpleDefaultPaymentMethodId'] != null) && localStorage['purpleDefaultPaymentMethodId'] !== '';
   },
   populateAccountForm: function() {
     var _ref, _ref1, _ref2;

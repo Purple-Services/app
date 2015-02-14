@@ -12,6 +12,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Help'
     'Purple.view.Feedback'
     'Purple.view.Invite'
+    'Purple.view.GasTanks'
   ]
   xtype: 'maincontainer'
   config:
@@ -262,6 +263,21 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
+      {
+        title: "Gas Tanks"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'gastanks'
+          }
+        ]
+      }
     ]
 
     listeners:
@@ -271,7 +287,9 @@ Ext.define 'Purple.view.MainContainer',
           5 # always hide Help
           6 # Feedback
           7 # Invite
-        ] 
+        ]
+        if localStorage['purpleUserIsCourier']
+          util.ctl('Menu').selectOption 3
     
   initialize: ->
     @callParent arguments

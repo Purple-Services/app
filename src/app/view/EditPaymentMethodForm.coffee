@@ -306,7 +306,7 @@ Ext.define 'Purple.view.EditPaymentMethodForm'
                 text: 'Save Changes'
                 flex: 0
                 handler: ->
-                  @up().up().up().fireEvent 'saveChanges'
+                  @up().up().up().fireEvent 'saveChanges', @up().up().up().config.saveChangesCallback
               }
             ]
           }

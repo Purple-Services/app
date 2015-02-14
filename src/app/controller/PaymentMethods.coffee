@@ -228,7 +228,7 @@ Ext.define 'Purple.controller.PaymentMethods'
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
-  saveChanges: ->
+  saveChanges: (callback) ->
     Stripe.setPublishableKey util.STRIPE_PUBLISHABLE_KEY
     
     values = @getEditPaymentMethodForm().getValues()
@@ -280,6 +280,8 @@ Ext.define 'Purple.controller.PaymentMethods'
               # TODO if was new card then make default and send to account page
               @backToPaymentMethods()
               @renderPaymentMethodsList @paymentMethods
+              if typeof callback is 'function'
+                callback()
             else
               navigator.notification.alert response.message, (->), "Error"
           failure: (response_obj) ->
@@ -288,7 +290,7 @@ Ext.define 'Purple.controller.PaymentMethods'
             console.log response
 
   refreshAccountPaymentMethodField: ->
-    @getAccountPaymentMethodField()?.setValue "Add/Edit Cards"
+    @getAccountPaymentMethodField()?.setValue "Add a Card"
     
     if localStorage['purpleDefaultPaymentMethodId']? and
     localStorage['purpleDefaultPaymentMethodId'] isnt ''

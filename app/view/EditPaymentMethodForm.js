@@ -243,7 +243,7 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
                 text: 'Save Changes',
                 flex: 0,
                 handler: function() {
-                  return this.up().up().up().fireEvent('saveChanges');
+                  return this.up().up().up().fireEvent('saveChanges', this.up().up().up().config.saveChangesCallback);
                 }
               }
             ]
