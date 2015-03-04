@@ -69,7 +69,7 @@ Ext.define 'Purple.view.Help'
             cls: 'accordion-text'
             showAnimation: 'fadeIn'
             hidden: yes
-            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+            html: 'Purple is a gas delivery service.'
           }
           {
             xtype: 'textfield'
@@ -96,7 +96,7 @@ Ext.define 'Purple.view.Help'
             cls: 'accordion-text'
             showAnimation: 'fadeIn'
             hidden: yes
-            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+            html: 'Use the "Request Gas" tab to request a gas delivery. Choose your location by moving the pin on the map or by typing you address into the box.'
           }
           {
             xtype: 'textfield'
@@ -123,12 +123,12 @@ Ext.define 'Purple.view.Help'
             cls: 'accordion-text'
             showAnimation: 'fadeIn'
             hidden: yes
-            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa. Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa. Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+            html: 'If you are interested in becoming a courier for Purple Services and live in the Los Angeles area, please send an email to us at <a href="mailto:purpleservicesinc@gmail.com" target="_blank">purpleservicesinc@gmail.com</a>.'
           }
           {
             xtype: 'textfield'
             flex: 0
-            label: 'How do I check up on my current or past orders?'
+            label: 'How do I check the status of my current order?'
             labelWidth: '100%'
             cls: [
               #'click-to-edit'
@@ -150,7 +150,7 @@ Ext.define 'Purple.view.Help'
             cls: 'accordion-text'
             showAnimation: 'fadeIn'
             hidden: yes
-            html: 'Lorem ipsum dolor sit amet, consectetur adipsing elit. Vestibu lum hend rerit dolor a massa suscipt, sed accums an velit laoreet. Sociie natoqwu dagsafa.'
+            html: 'To check on the status of a current or past order, please use the "Orders" tab.'
           }
         ]
       }

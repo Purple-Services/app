@@ -73,7 +73,7 @@ Ext.define('Purple.controller.Menu', {
     var _ref, _ref1;
     if (util.ctl('Account').isUserLoggedIn()) {
       this.hideTitles([1]);
-      if (localStorage['purpleUserIsCourier']) {
+      if (util.ctl('Account').isCourier()) {
         this.hideTitles([0, 4]);
         this.showTitles([2, 3, 8]);
         if ((_ref = localStorage['purpleCourierGallons87']) == null) {

@@ -105,15 +105,10 @@ Ext.define 'Purple.view.AccountForm'
           }
           {
             xtype: 'component'
+            ctype: 'accountHorizontalRuleAbovePaymentMethod'
             flex: 0
             cls: 'horizontal-rule'
           }
-          # {
-          #   xtype: 'hiddenfield'
-          #   id: 'accountPaymentMethodIdField'
-          #   name: 'payment_method_id'
-          #   value: ''
-          # }
           {
             xtype: 'textfield'
             id: 'accountPaymentMethodField'

@@ -890,9 +890,29 @@ a[href^="http://maps.google.com/maps"] {
 .x-rating .starFakeContainer{z-index:10;}
 .x-rating .starContainer{display:-webkit-box; -webkit-box-align:center;-webkit-box-pack:center;}
 .x-rating .starContainer .center, .x-rating .starContainer .left, .x-rating .starContainer .right{-webkit-box-flex:1}
-.x-rating .star{border:0px !important;padding:0px !important;margin:0px 0px 0px -12.5px !important;position:absolute; left:16.66%; top:5px; -webkit-mask:url('../images/star.png') left center no-repeat; -webkit-mask-size:25px 25px; background-color:#FFBD5D; width:25px; height:25px; opacity:.2; -webkit-transform: scale(1,1);}
+.x-rating .star{
+    border:0px !important;
+    padding:0px !important;
+    margin:0px 0px 0px -12.5px !important;
+    position:absolute;
+    left:16.66%;
+    top:5px;
+    -webkit-mask:url('../images/star.png') left center no-repeat;
+    -webkit-mask-size:25px 25px;
+    background-color:#FFBD5D;
+    width:25px;
+    height:25px;
+    opacity:.2;
+    -webkit-transform: scale(1,1);
+}
 .x-rating .star2{left:33.33%;}
 .x-rating .star3{left:49.99%;}
 .x-rating .star4{left:66.66%;}
 .x-rating .star5{left:83.33%;}
 .x-rating .star.active{-webkit-transform: scale(1,1); opacity:1;}
+
+.gas-tanks .x-rating .star{
+    -webkit-mask:url('../images/gas-tank.png') left center no-repeat;
+    -webkit-mask-size:25px 25px;
+    background-color:#FF0000;
+}

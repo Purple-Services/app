@@ -288,7 +288,7 @@ Ext.define 'Purple.view.MainContainer',
           6 # Feedback
           7 # Invite
         ]
-        if localStorage['purpleUserIsCourier']
+        if util.ctl('Account').isCourier()
           util.ctl('Menu').selectOption 3
     
   initialize: ->

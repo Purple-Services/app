@@ -19,7 +19,7 @@ Ext.define('Purple.view.Order', {
     listeners: {
       initialize: function() {
         var _this = this;
-        if (-1 !== util.CANCELLABLE_STATUSES.indexOf(this.config.status)) {
+        if (util.CANCELLABLE_STATUSES.indexOf(this.config.status) !== -1 && !util.ctl('Account').isCourier()) {
           return this.getAt(1).add([
             {
               xtype: 'spacer',
@@ -94,6 +94,31 @@ Ext.define('Purple.view.Order', {
             disabled: true,
             cls: ['big-and-bold']
           }, {
+            xtype: 'container',
+            ctype: 'nextStatusButtonContainer',
+            flex: 0,
+            height: 110,
+            width: '100%',
+            padding: '0 0 5 0',
+            layout: {
+              type: 'vbox',
+              pack: 'center',
+              align: 'center'
+            },
+            hidden: true,
+            items: [
+              {
+                xtype: 'button',
+                ui: 'action',
+                cls: 'button-pop',
+                text: 'Begin Servicing',
+                flex: 0,
+                handler: function() {
+                  return this.up().up().up().fireEvent('nextStatus');
+                }
+              }
+            ]
+          }, {
             xtype: 'ratingfield',
             ctype: 'orderRating',
             flex: 0,
@@ -140,6 +165,7 @@ Ext.define('Purple.view.Order', {
             cls: ['horizontal-rule', 'no-top-margin']
           }, {
             xtype: 'textfield',
+            ctype: 'orderTimePlaced',
             flex: 0,
             name: 'time_order_placed',
             label: 'Placed',
@@ -147,6 +173,17 @@ Ext.define('Purple.view.Order', {
             cls: ['visibly-disabled']
           }, {
             xtype: 'textfield',
+            ctype: 'orderTimeDeadline',
+            flex: 0,
+            name: 'time_deadline',
+            label: 'Deadline',
+            labelWidth: 95,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderDisplayTime',
             flex: 0,
             name: 'display_time',
             label: 'Time',
@@ -154,6 +191,7 @@ Ext.define('Purple.view.Order', {
             cls: ['visibly-disabled']
           }, {
             xtype: 'textfield',
+            ctype: 'orderVehicle',
             flex: 0,
             name: 'vehicle',
             label: 'Vehicle',
@@ -187,6 +225,7 @@ Ext.define('Purple.view.Order', {
             cls: 'horizontal-rule'
           }, {
             xtype: 'moneyfield',
+            ctype: 'orderGasPrice',
             flex: 0,
             name: 'gas_price',
             label: 'Gas Price',
@@ -195,13 +234,25 @@ Ext.define('Purple.view.Order', {
             cls: ['visibly-disabled']
           }, {
             xtype: 'textfield',
+            ctype: 'orderGallons',
             flex: 0,
             name: 'gallons',
             label: 'Gallons',
             disabled: true,
             cls: ['visibly-disabled']
           }, {
+            xtype: 'textfield',
+            ctype: 'orderGasType',
+            flex: 0,
+            name: 'gas_type',
+            label: 'Gas Type',
+            labelWidth: 95,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
             xtype: 'moneyfield',
+            ctype: 'orderServiceFee',
             flex: 0,
             name: 'service_fee',
             label: 'Service Fee',
@@ -210,12 +261,101 @@ Ext.define('Purple.view.Order', {
             cls: ['visibly-disabled', 'bottom-margin']
           }, {
             xtype: 'moneyfield',
+            ctype: 'orderTotalPrice',
             flex: 0,
             name: 'total_price',
             label: 'Total',
             disabled: true,
             style: 'margin-bottom: 25px;',
             cls: ['highlighted']
+          }, {
+            xtype: 'component',
+            ctype: 'orderHorizontalRuleAboveVehicle',
+            flex: 0,
+            cls: 'horizontal-rule',
+            hidden: true
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderVehicleMake',
+            flex: 0,
+            name: 'vehicle_make',
+            label: 'Vehicle Make',
+            labelWidth: 124,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderVehicleModel',
+            flex: 0,
+            name: 'vehicle_model',
+            label: 'Model',
+            labelWidth: 75,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderVehicleYear',
+            flex: 0,
+            name: 'vehicle_year',
+            label: 'Year',
+            labelWidth: 75,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderVehicleColor',
+            flex: 0,
+            name: 'vehicle_color',
+            label: 'Color',
+            labelWidth: 75,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderVehicleLicensePlate',
+            flex: 0,
+            name: 'vehicle_license_plate',
+            label: 'License Plate',
+            labelWidth: 124,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'component',
+            ctype: 'orderVehiclePhoto',
+            flex: 0,
+            hidden: true
+          }, {
+            xtype: 'component',
+            ctype: 'orderHorizontalRuleAboveCustomerInfo',
+            flex: 0,
+            cls: 'horizontal-rule',
+            hidden: true
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderCustomerName',
+            flex: 0,
+            name: 'customer_name',
+            label: 'Name',
+            labelWidth: 75,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
+          }, {
+            xtype: 'textfield',
+            ctype: 'orderCustomerPhone',
+            margin: '0 0 30 0',
+            flex: 0,
+            name: 'customer_phone',
+            label: 'Phone',
+            labelWidth: 75,
+            disabled: true,
+            hidden: true,
+            cls: ['visibly-disabled']
           }
         ]
       }, {

@@ -232,7 +232,7 @@ Ext.define('Purple.view.MainContainer', {
       initialize: function() {
         util.ctl('Menu').adjustForAppLoginState();
         util.ctl('Menu').hideTitles([5, 6, 7]);
-        if (localStorage['purpleUserIsCourier']) {
+        if (util.ctl('Account').isCourier()) {
           return util.ctl('Menu').selectOption(3);
         }
       }

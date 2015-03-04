@@ -32,7 +32,8 @@ Ext.define('Purple.controller.Account', {
       accountNameField: '#accountNameField',
       accountPhoneNumberField: '#accountPhoneNumberField',
       accountEmailField: '#accountEmailField',
-      accountPaymentMethodField: '#accountPaymentMethodField'
+      accountPaymentMethodField: '#accountPaymentMethodField',
+      accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]'
     },
     control: {
       loginForm: {
@@ -163,7 +164,7 @@ Ext.define('Purple.controller.Account', {
             return this.accountSetup();
           } else {
             util.ctl('Menu').adjustForAppLoginState();
-            if (localStorage['purpleUserIsCourier']) {
+            if (this.isCourier()) {
               util.ctl('Menu').selectOption(8);
             } else {
               util.ctl('Menu').selectOption(0);
@@ -358,8 +359,11 @@ Ext.define('Purple.controller.Account', {
   hasDefaultPaymentMethod: function() {
     return (localStorage['purpleDefaultPaymentMethodId'] != null) && localStorage['purpleDefaultPaymentMethodId'] !== '';
   },
+  isCourier: function() {
+    return (localStorage['purpleUserIsCourier'] != null) && localStorage['purpleUserIsCourier'] === 'true';
+  },
   populateAccountForm: function() {
-    var _ref, _ref1, _ref2;
+    var _ref, _ref1, _ref2, _ref3, _ref4;
     if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
       if ((_ref = this.getAccountNameField()) != null) {
         _ref.setValue(localStorage['purpleUserName']);
@@ -371,7 +375,15 @@ Ext.define('Purple.controller.Account', {
       }
     }
     if ((localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '') {
-      return (_ref2 = this.getAccountEmailField()) != null ? _ref2.setValue(localStorage['purpleUserEmail']) : void 0;
+      if ((_ref2 = this.getAccountEmailField()) != null) {
+        _ref2.setValue(localStorage['purpleUserEmail']);
+      }
+    }
+    if (this.isCourier()) {
+      if ((_ref3 = this.getAccountPaymentMethodField()) != null) {
+        _ref3.hide();
+      }
+      return (_ref4 = this.getAccountHorizontalRuleAbovePaymentMethod()) != null ? _ref4.hide() : void 0;
     }
   },
   resetPassword: function() {

@@ -162,7 +162,7 @@ Ext.define 'Purple.view.RequestForm'
           {
             xtype: 'textareafield'
             name: 'special_instructions'
-            maxRows: 4
+            maxRows: 3
           }
           
           # hidden fields for flowing data

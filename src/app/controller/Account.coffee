@@ -35,6 +35,7 @@ Ext.define 'Purple.controller.Account'
       accountPhoneNumberField: '#accountPhoneNumberField'
       accountEmailField: '#accountEmailField'
       accountPaymentMethodField: '#accountPaymentMethodField'
+      accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]'
       
     control:
       loginForm:
@@ -158,7 +159,7 @@ Ext.define 'Purple.controller.Account'
             @accountSetup()
           else
             util.ctl('Menu').adjustForAppLoginState()
-            if localStorage['purpleUserIsCourier']
+            if @isCourier()
               # a courier account, go to Gas Tanks page
               util.ctl('Menu').selectOption 8
             else
@@ -368,6 +369,10 @@ Ext.define 'Purple.controller.Account'
   hasDefaultPaymentMethod: ->
     localStorage['purpleDefaultPaymentMethodId']? and localStorage['purpleDefaultPaymentMethodId'] isnt ''
 
+  isCourier: ->
+    # note that 'true' is in quotes intentionally
+    localStorage['purpleUserIsCourier']? and localStorage['purpleUserIsCourier'] is 'true'
+
   populateAccountForm: ->
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
       @getAccountNameField()?.setValue localStorage['purpleUserName']
@@ -375,7 +380,10 @@ Ext.define 'Purple.controller.Account'
       @getAccountPhoneNumberField()?.setValue localStorage['purpleUserPhoneNumber']
     if localStorage['purpleUserEmail']? and localStorage['purpleUserEmail'] isnt ''
       @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
-    # TODO 
+    if @isCourier()
+      @getAccountPaymentMethodField()?.hide()
+      @getAccountHorizontalRuleAbovePaymentMethod()?.hide()
+    # TODO  (is this todo still relevant?)
     #@getAccountPaymentMethodField().setValue ''
 
   # only for users of type = 'native'

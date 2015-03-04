@@ -689,6 +689,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Override.field.Select": [],
   "Override.form.Panel": [],
   "Purple.controller.Account": [],
+  "Purple.controller.GasTanks": [],
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
   "Purple.controller.Orders": [],
@@ -699,6 +700,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.view.EditPaymentMethodForm": [],
   "Purple.view.EditVehicleForm": [],
   "Purple.view.Feedback": [],
+  "Purple.view.GasTanks": [],
   "Purple.view.Help": [],
   "Purple.view.Invite": [],
   "Purple.view.LoginForm": [],
@@ -1451,6 +1453,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Override.field.Select": [],
   "Override.form.Panel": [],
   "Purple.controller.Account": [],
+  "Purple.controller.GasTanks": [],
   "Purple.controller.Main": [],
   "Purple.controller.Menu": [],
   "Purple.controller.Orders": [],
@@ -1470,6 +1473,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Purple.view.Feedback": [
     "widget.feedback"
+  ],
+  "Purple.view.GasTanks": [
+    "widget.gastanks"
   ],
   "Purple.view.Help": [
     "widget.help"

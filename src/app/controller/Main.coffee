@@ -255,9 +255,25 @@ Ext.define 'Purple.controller.Main'
       Ext.create 'Purple.view.RequestConfirmationForm'
     )
     vals = @getRequestForm().getValues()
-    vals['gas_price'] = '2.35'
-    vals['service_fee'] = '5'
-    vals['total_price'] = '45'
+    availability = @getRequestForm().config.availability
+    gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type
+    for a in availability
+      if a['octane'] is gasType
+        appropriateAvailability = a
+        break
+
+    gasPrice = appropriateAvailability.price_per_gallon
+    serviceFee = 875
+    vals['gas_price'] = "" + util.centsToDollars(
+      gasPrice
+    )
+    vals['service_fee'] = "" + util.centsToDollars(
+      serviceFee
+    )
+    vals['total_price'] = "" + util.centsToDollars(
+      parseFloat(gasPrice) * parseFloat(vals['gallons']) +
+      parseFloat(serviceFee)
+    )
     vals['display_time'] = switch vals['time']
       when '< 1 hr' then 'within 1 hour'
       when '< 3 hr' then 'within 3 hours'
@@ -398,6 +414,7 @@ Ext.define 'Purple.controller.Main'
         console.log response
 
   initCourierPing: ->
+    window.plugin?.backgroundMode.enable()
     @courierPingIntervalRef = setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->

@@ -14,9 +14,29 @@ Ext.define('Purple.controller.Orders', {
       orderSpecialInstructionsLabel: '[ctype=orderSpecialInstructionsLabel]',
       orderSpecialInstructions: '[ctype=orderSpecialInstructions]',
       orderAddressStreet: '[ctype=orderAddressStreet]',
+      orderTimePlaced: '[ctype=orderTimePlaced]',
+      orderTimeDeadline: '[ctype=orderTimeDeadline]',
+      orderDisplayTime: '[ctype=orderDisplayTime]',
+      orderVehicle: '[ctype=orderVehicle]',
+      orderGasPrice: '[ctype=orderGasPrice]',
+      orderGallons: '[ctype=orderGallons]',
+      orderGasType: '[ctype=orderGasType]',
+      orderHorizontalRuleAboveVehicle: '[ctype=orderHorizontalRuleAboveVehicle]',
+      orderVehicleMake: '[ctype=orderVehicleMake]',
+      orderVehicleModel: '[ctype=orderVehicleModel]',
+      orderVehicleYear: '[ctype=orderVehicleYear]',
+      orderVehicleColor: '[ctype=orderVehicleColor]',
+      orderVehicleLicensePlate: '[ctype=orderVehicleLicensePlate]',
+      orderVehiclePhoto: '[ctype=orderVehiclePhoto]',
+      orderCustomerName: '[ctype=orderCustomerName]',
+      orderCustomerPhone: '[ctype=orderCustomerPhone]',
+      orderServiceFee: '[ctype=orderServiceFee]',
+      orderTotalPrice: '[ctype=orderTotalPrice]',
+      orderHorizontalRuleAboveCustomerInfo: '[ctype=orderHorizontalRuleAboveCustomerInfo]',
       orderRating: '[ctype=orderRating]',
       textRating: '[ctype=textRating]',
-      sendRatingButtonContainer: '[ctype=sendRatingButtonContainer]'
+      sendRatingButtonContainer: '[ctype=sendRatingButtonContainer]',
+      nextStatusButtonContainer: '[ctype=nextStatusButtonContainer]'
     },
     control: {
       orders: {
@@ -26,7 +46,8 @@ Ext.define('Purple.controller.Orders', {
       order: {
         backToOrders: 'backToOrders',
         cancelOrder: 'askToCancelOrder',
-        sendRating: 'sendRating'
+        sendRating: 'sendRating',
+        nextStatus: 'askToNextStatus'
       },
       orderRating: {
         change: 'orderRatingChange'
@@ -50,7 +71,8 @@ Ext.define('Purple.controller.Orders', {
     return order;
   },
   viewOrder: function(orderId) {
-    var diff, o, order, v, _i, _j, _len, _len1, _ref, _ref1;
+    var c, diff, o, order, v, _i, _j, _len, _len1, _ref, _ref1,
+      _this = this;
     _ref = this.orders;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       o = _ref[_i];
@@ -76,6 +98,7 @@ Ext.define('Purple.controller.Orders', {
       }
     })();
     order['time_order_placed'] = Ext.util.Format.date(new Date(order['target_time_start'] * 1000), "g:i a");
+    order['time_deadline'] = Ext.util.Format.date(new Date(order['target_time_end'] * 1000), "g:i a");
     diff = Math.floor((order['target_time_end'] - order['target_time_start']) / (60 * 60));
     order['display_time'] = (function() {
       switch (diff) {
@@ -95,11 +118,73 @@ Ext.define('Purple.controller.Orders', {
         break;
       }
     }
+    if (util.ctl('Account').isCourier()) {
+      v = order['vehicle'];
+      order['vehicle_make'] = v['make'];
+      order['vehicle_model'] = v['model'];
+      order['vehicle_year'] = v['year'];
+      order['vehicle_color'] = v['color'];
+      order['vehicle_license_plate'] = v['license_plate'];
+      order['vehicle_photo'] = v['photo'];
+      c = order['customer'];
+      order['customer_name'] = c['name'];
+      order['customer_phone'] = c['phone_number'];
+    }
+    order['gas_price'] = util.centsToDollars(order['gas_price']);
+    order['service_fee'] = util.centsToDollars(order['service_fee']);
+    order['total_price'] = util.centsToDollars(order['total_price']);
     this.getOrder().setValues(order);
     if (order['special_instructions'] === '') {
       this.getOrderSpecialInstructionsLabel().hide();
       this.getOrderSpecialInstructions().hide();
-      return this.getOrderAddressStreet().removeCls('bottom-margin');
+      this.getOrderAddressStreet().removeCls('bottom-margin');
+    }
+    if (util.ctl('Account').isCourier()) {
+      this.getOrderTimePlaced().hide();
+      this.getOrderDisplayTime().hide();
+      this.getOrderVehicle().hide();
+      this.getOrderGasPrice().hide();
+      this.getOrderServiceFee().hide();
+      this.getOrderTotalPrice().hide();
+      this.getOrderRating().hide();
+      this.getOrderTimeDeadline().show();
+      this.getOrderHorizontalRuleAboveVehicle().show();
+      this.getOrderVehicleMake().show();
+      this.getOrderVehicleModel().show();
+      this.getOrderVehicleYear().show();
+      this.getOrderVehicleColor().show();
+      this.getOrderVehicleLicensePlate().show();
+      this.getOrderVehiclePhoto().show();
+      this.getOrderHorizontalRuleAboveCustomerInfo().show();
+      this.getOrderCustomerName().show();
+      this.getOrderCustomerPhone().show();
+      this.getOrderGasType().show();
+      switch (order['status']) {
+        case "unassigned":
+          this.getNextStatusButtonContainer().getAt(0).setText("Accept");
+          this.getNextStatusButtonContainer().show();
+          break;
+        case "accepted":
+          this.getNextStatusButtonContainer().getAt(0).setText("Start Route");
+          this.getNextStatusButtonContainer().show();
+          break;
+        case "enroute":
+          this.getNextStatusButtonContainer().getAt(0).setText("Begin Servicing");
+          this.getNextStatusButtonContainer().show();
+          break;
+        case "servicing":
+          this.getNextStatusButtonContainer().getAt(0).setText("Complete Order");
+          this.getNextStatusButtonContainer().show();
+      }
+      this.getOrderAddressStreet().addCls('click-to-edit');
+      this.getOrderAddressStreet().element.on('tap', function() {
+        return window.location.href = "comgooglemaps://?daddr=" + order.lat + "," + order.lng + "&directionsmode=driving";
+      });
+      this.getOrderCustomerPhone().addCls('click-to-edit');
+      this.getOrderCustomerPhone().element.on('tap', function() {
+        return window.location.href = "tel://" + order['customer_phone'];
+      });
+      return this.getOrderVehiclePhoto().element.dom.style.cssText = "background-color: transparent;\nbackground-size: cover;\nbackground-repeat: no-repeat;\nbackground-position: center;\nheight: 300px;\nwidth: 100%;\nbackground-image: url('" + order["vehicle_photo"] + "') !important;";
     }
   },
   backToOrders: function() {
@@ -165,7 +250,11 @@ Ext.define('Purple.controller.Orders', {
     _results = [];
     for (_i = 0, _len = orders.length; _i < _len; _i++) {
       o = orders[_i];
-      v = util.ctl('Vehicles').getVehicleById(o.vehicle_id);
+      if (util.ctl('Account').isCourier()) {
+        v = o['vehicle'];
+      } else {
+        v = util.ctl('Vehicles').getVehicleById(o.vehicle_id);
+      }
       if (v == null) {
         v = {
           id: o.vehicle_id,
@@ -277,6 +366,63 @@ Ext.define('Purple.controller.Orders', {
           number_rating: values['number_rating'],
           text_rating: values['text_rating']
         }
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.orders = response.orders;
+          this.backToOrders();
+          return this.renderOrdersList(this.orders);
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        Ext.Viewport.setMasked(false);
+        console.log(response_obj);
+        return navigator.notification.alert("Connection error. Please try again.", (function() {}), "Error");
+      }
+    });
+  },
+  askToNextStatus: function() {
+    var currentStatus, nextStatus, values,
+      _this = this;
+    values = this.getOrder().getValues();
+    currentStatus = values['status'];
+    nextStatus = util.NEXT_STATUS_MAP[currentStatus];
+    return navigator.notification.confirm("", (function(index) {
+      switch (index) {
+        case 1:
+          return _this.nextStatus();
+      }
+    }), "Are you sure you want to mark this order as " + nextStatus + "? (can not be undone)", ["Yes", "No"]);
+  },
+  nextStatus: function() {
+    var currentStatus, id, values;
+    values = this.getOrder().getValues();
+    currentStatus = values['status'];
+    console.log('current status: ', currentStatus);
+    console.log('next status: ', util.NEXT_STATUS_MAP[currentStatus]);
+    id = this.getOrder().config.orderId;
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "orders/update-status-by-courier",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        order_id: id,
+        status: util.NEXT_STATUS_MAP[currentStatus]
       }),
       headers: {
         'Content-Type': 'application/json'

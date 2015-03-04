@@ -87,6 +87,7 @@ Ext.define('Purple.view.AccountForm', {
             disabled: true
           }, {
             xtype: 'component',
+            ctype: 'accountHorizontalRuleAbovePaymentMethod',
             flex: 0,
             cls: 'horizontal-rule'
           }, {

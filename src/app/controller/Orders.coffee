@@ -14,9 +14,29 @@ Ext.define 'Purple.controller.Orders'
       orderSpecialInstructionsLabel: '[ctype=orderSpecialInstructionsLabel]'
       orderSpecialInstructions: '[ctype=orderSpecialInstructions]'
       orderAddressStreet: '[ctype=orderAddressStreet]'
+      orderTimePlaced: '[ctype=orderTimePlaced]'
+      orderTimeDeadline: '[ctype=orderTimeDeadline]'
+      orderDisplayTime: '[ctype=orderDisplayTime]'
+      orderVehicle: '[ctype=orderVehicle]'
+      orderGasPrice: '[ctype=orderGasPrice]'
+      orderGallons: '[ctype=orderGallons]'
+      orderGasType: '[ctype=orderGasType]'
+      orderHorizontalRuleAboveVehicle: '[ctype=orderHorizontalRuleAboveVehicle]'
+      orderVehicleMake: '[ctype=orderVehicleMake]'
+      orderVehicleModel: '[ctype=orderVehicleModel]'
+      orderVehicleYear: '[ctype=orderVehicleYear]'
+      orderVehicleColor: '[ctype=orderVehicleColor]'
+      orderVehicleLicensePlate: '[ctype=orderVehicleLicensePlate]'
+      orderVehiclePhoto: '[ctype=orderVehiclePhoto]'
+      orderCustomerName: '[ctype=orderCustomerName]'
+      orderCustomerPhone: '[ctype=orderCustomerPhone]'
+      orderServiceFee: '[ctype=orderServiceFee]'
+      orderTotalPrice: '[ctype=orderTotalPrice]'
+      orderHorizontalRuleAboveCustomerInfo: '[ctype=orderHorizontalRuleAboveCustomerInfo]'
       orderRating: '[ctype=orderRating]'
       textRating: '[ctype=textRating]'
       sendRatingButtonContainer: '[ctype=sendRatingButtonContainer]'
+      nextStatusButtonContainer: '[ctype=nextStatusButtonContainer]'
     control:
       orders:
         viewOrder: 'viewOrder'
@@ -25,6 +45,7 @@ Ext.define 'Purple.controller.Orders'
         backToOrders: 'backToOrders'
         cancelOrder: 'askToCancelOrder'
         sendRating: 'sendRating'
+        nextStatus: 'askToNextStatus'
       orderRating:
         change: 'orderRatingChange'
 
@@ -67,6 +88,11 @@ Ext.define 'Purple.controller.Orders'
       "g:i a"
     )
 
+    order['time_deadline'] = Ext.util.Format.date(
+      new Date(order['target_time_end'] * 1000),
+      "g:i a"
+    )
+
     diff = Math.floor(
       (order['target_time_end'] - order['target_time_start']) / (60 * 60)
     )
@@ -74,17 +100,91 @@ Ext.define 'Purple.controller.Orders'
       when 1 then 'within 1 hour'
       when 3 then 'within 3 hours'
       else 'error calculating'
-
+        
     for v in util.ctl('Vehicles').vehicles
       if v['id'] is order['vehicle_id']
         order['vehicle'] = "#{v.year} #{v.make} #{v.model}"
         break
+
+    if util.ctl('Account').isCourier()
+      v = order['vehicle']
+      order['vehicle_make'] = v['make']
+      order['vehicle_model'] = v['model']
+      order['vehicle_year'] = v['year']
+      order['vehicle_color'] = v['color']
+      order['vehicle_license_plate'] = v['license_plate']
+      order['vehicle_photo'] = v['photo']
+
+      c = order['customer']
+      order['customer_name'] = c['name']
+      order['customer_phone'] = c['phone_number']
+
+    order['gas_price'] = util.centsToDollars order['gas_price']
+    order['service_fee'] = util.centsToDollars order['service_fee']
+    order['total_price'] = util.centsToDollars order['total_price']
 
     @getOrder().setValues order
     if order['special_instructions'] is ''
       @getOrderSpecialInstructionsLabel().hide()
       @getOrderSpecialInstructions().hide()
       @getOrderAddressStreet().removeCls 'bottom-margin'
+
+    if util.ctl('Account').isCourier()
+      @getOrderTimePlaced().hide()
+      @getOrderDisplayTime().hide()
+      @getOrderVehicle().hide()
+      @getOrderGasPrice().hide()
+      @getOrderServiceFee().hide()
+      @getOrderTotalPrice().hide()
+      @getOrderRating().hide()
+      
+      @getOrderTimeDeadline().show()
+      @getOrderHorizontalRuleAboveVehicle().show()
+      @getOrderVehicleMake().show()
+      @getOrderVehicleModel().show()
+      @getOrderVehicleYear().show()
+      @getOrderVehicleColor().show()
+      @getOrderVehicleLicensePlate().show()
+      @getOrderVehiclePhoto().show()
+      @getOrderHorizontalRuleAboveCustomerInfo().show()
+      @getOrderCustomerName().show()
+      @getOrderCustomerPhone().show()
+      @getOrderGasType().show()
+
+      switch order['status']
+        when "unassigned"
+          @getNextStatusButtonContainer().getAt(0).setText "Accept"
+          @getNextStatusButtonContainer().show()
+        when "accepted"
+          @getNextStatusButtonContainer().getAt(0).setText "Start Route"
+          @getNextStatusButtonContainer().show()
+        when "enroute"
+          @getNextStatusButtonContainer().getAt(0).setText "Begin Servicing"
+          @getNextStatusButtonContainer().show()
+        when "servicing"
+          @getNextStatusButtonContainer().getAt(0).setText "Complete Order"
+          @getNextStatusButtonContainer().show()
+      
+      @getOrderAddressStreet().addCls 'click-to-edit'
+      @getOrderAddressStreet().element.on 'tap', =>
+        # google maps
+        window.location.href = "comgooglemaps://?daddr=#{order.lat},#{order.lng}&directionsmode=driving"
+        # standard maps
+        #window.location.href = "maps://?q=#{order.lat},#{order.lng}"
+
+      @getOrderCustomerPhone().addCls 'click-to-edit'
+      @getOrderCustomerPhone().element.on 'tap', =>
+        window.location.href = "tel://#{order['customer_phone']}"
+
+      @getOrderVehiclePhoto().element.dom.style.cssText = """
+        background-color: transparent;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 300px;
+        width: 100%;
+        background-image: url('#{order["vehicle_photo"]}') !important;
+      """
     
 
   backToOrders: ->
@@ -132,7 +232,10 @@ Ext.define 'Purple.controller.Orders'
       return
     list.removeAll yes, yes
     for o in orders
-      v = util.ctl('Vehicles').getVehicleById(o.vehicle_id)
+      if util.ctl('Account').isCourier()
+        v = o['vehicle']
+      else
+        v = util.ctl('Vehicles').getVehicleById(o.vehicle_id)
       v ?= # if we don't have it in local memory then it must have been deleted
         id: o.vehicle_id
         user_id: localStorage['purpleUserId']
@@ -235,6 +338,55 @@ Ext.define 'Purple.controller.Orders'
         rating:
           number_rating: values['number_rating']
           text_rating: values['text_rating']
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @orders = response.orders
+          @backToOrders()
+          @renderOrdersList @orders
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        console.log response_obj
+        navigator.notification.alert "Connection error. Please try again.", (->), "Error"
+
+  askToNextStatus: ->
+    values = @getOrder().getValues()
+    currentStatus = values['status']
+    nextStatus = util.NEXT_STATUS_MAP[currentStatus]
+    navigator.notification.confirm(
+      "",
+      ((index) => switch index
+        when 1 then @nextStatus()
+        else return
+      ),
+      "Are you sure you want to mark this order as #{nextStatus}? (can not be undone)",
+      ["Yes", "No"]
+    )
+
+  nextStatus: ->
+    values = @getOrder().getValues()
+    currentStatus = values['status']
+    console.log 'current status: ', currentStatus
+    console.log 'next status: ', util.NEXT_STATUS_MAP[currentStatus]
+    id = @getOrder().config.orderId
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}orders/update-status-by-courier"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        order_id: id
+        status: util.NEXT_STATUS_MAP[currentStatus]
       headers:
         'Content-Type': 'application/json'
       timeout: 30000

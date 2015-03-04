@@ -15,6 +15,18 @@
 
   <icon src="icon.png" />
 
+
+  <icon src="icon.png" gap:platform="ios" /> 
+  <icon src="icon-57.png" width="57" height="57" gap:platform="ios" />
+  <icon src="icon-57@2x.png" width="114" height="114" gap:platform="ios" />
+  <icon src="icon-72.png" width="72" height="72" gap:platform="ios" />
+  <icon src="icon-72@2x.png" width="152" height="152" gap:platform="ios" />
+  <icon src="icon-76.png" width="76" height="76" gap:platform="ios" />
+  <icon src="icon-76@2x.png" width="152" height="152" gap:platform="ios" />
+  <icon src="icon-120.png" width="120" height="120" gap:platform="ios" />
+  <icon src="icon-152.png" width="152" height="152" gap:platform="ios" />
+  
+
   <!-- Splash Screen Images -->
 
   <!-- Default -->
@@ -50,7 +62,10 @@
   <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" />
 
 
+  <!-- TODO limit to what's necessary -->
   <access origin="*" />
+  <access origin="tel:*" launch-external="yes" />
+  <access origin="geo:*" launch-external="yes" />
 
   <preference name="phonegap-version" value="3.6.3" />
   <preference name="fullscreen" value="false" />
@@ -83,5 +98,7 @@
   <preference name="StatusBarStyle" value="blacktranslucent" />
 
   <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
+
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.5.0" />
 
 </widget>

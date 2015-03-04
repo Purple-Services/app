@@ -54,7 +54,7 @@ Ext.define 'Purple.controller.Menu'
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
-      if localStorage['purpleUserIsCourier']
+      if util.ctl('Account').isCourier()
         @hideTitles [0, 4]
         @showTitles [2, 3, 8]
         localStorage['purpleCourierGallons87'] ?= 0
@@ -68,8 +68,3 @@ Ext.define 'Purple.controller.Menu'
     else
       @hideTitles [2, 3, 4, 8]
       @showTitles [1]
-
-  # getCurrentTopToolbar: ->
-  #   allTopToolbars = @getMainContainer().query('[xtype=toptoolbar]')
-  #   for t in allTopToolbars
-  #     console.log t.removeCls 'shadowed'

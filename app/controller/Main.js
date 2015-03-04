@@ -275,12 +275,23 @@ Ext.define('Purple.controller.Main', {
     return this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
   },
   sendRequest: function() {
-    var v, vals, _i, _len, _ref;
+    var a, appropriateAvailability, availability, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref;
     this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestConfirmationForm'));
     vals = this.getRequestForm().getValues();
-    vals['gas_price'] = '2.35';
-    vals['service_fee'] = '5';
-    vals['total_price'] = '45';
+    availability = this.getRequestForm().config.availability;
+    gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type;
+    for (_i = 0, _len = availability.length; _i < _len; _i++) {
+      a = availability[_i];
+      if (a['octane'] === gasType) {
+        appropriateAvailability = a;
+        break;
+      }
+    }
+    gasPrice = appropriateAvailability.price_per_gallon;
+    serviceFee = 875;
+    vals['gas_price'] = "" + util.centsToDollars(gasPrice);
+    vals['service_fee'] = "" + util.centsToDollars(serviceFee);
+    vals['total_price'] = "" + util.centsToDollars(parseFloat(gasPrice) * parseFloat(vals['gallons']) + parseFloat(serviceFee));
     vals['display_time'] = (function() {
       switch (vals['time']) {
         case '< 1 hr':
@@ -291,8 +302,8 @@ Ext.define('Purple.controller.Main', {
     })();
     vals['vehicle_id'] = vals['vehicle'];
     _ref = util.ctl('Vehicles').vehicles;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      v = _ref[_i];
+    for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+      v = _ref[_j];
       if (v['id'] === vals['vehicle_id']) {
         vals['vehicle'] = "" + v.year + " " + v.make + " " + v.model;
         break;
@@ -450,6 +461,10 @@ Ext.define('Purple.controller.Main', {
     });
   },
   initCourierPing: function() {
+    var _ref;
+    if ((_ref = window.plugin) != null) {
+      _ref.backgroundMode.enable();
+    }
     return this.courierPingIntervalRef = setInterval(Ext.bind(this.courierPing, this), 10000);
   },
   killCourierPing: function() {
