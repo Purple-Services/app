@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "LOCAL"
+VERSION = "DEV"
 
 # VERSION = (
 #   if localStorage['purpleUserId'] is 'fb10203286525511954' or
@@ -30,7 +30,7 @@ window.util =
 
   STATUSES: [
     "unassigned"
-    "accepted"
+    "assigned"
     "enroute"
     "servicing"
     "complete"
@@ -38,7 +38,8 @@ window.util =
   ]
 
   NEXT_STATUS_MAP:
-    "unassigned": "accepted"
+    "unassigned": "assigned"
+    "assigned": "accepted"
     "accepted": "enroute"
     "enroute": "servicing"
     "servicing": "complete"
@@ -49,6 +50,7 @@ window.util =
   # (this is just frontend logic, there is a hard constraint in backend)
   CANCELLABLE_STATUSES: [
     "unassigned"
+    "assigned"
     "accepted"
     "enroute"
   ]

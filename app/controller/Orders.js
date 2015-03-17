@@ -154,16 +154,11 @@ Ext.define('Purple.controller.Orders', {
       this.getOrderVehicleYear().show();
       this.getOrderVehicleColor().show();
       this.getOrderVehicleLicensePlate().show();
-      this.getOrderVehiclePhoto().show();
       this.getOrderHorizontalRuleAboveCustomerInfo().show();
       this.getOrderCustomerName().show();
       this.getOrderCustomerPhone().show();
       this.getOrderGasType().show();
       switch (order['status']) {
-        case "unassigned":
-          this.getNextStatusButtonContainer().getAt(0).setText("Accept");
-          this.getNextStatusButtonContainer().show();
-          break;
         case "accepted":
           this.getNextStatusButtonContainer().getAt(0).setText("Start Route");
           this.getNextStatusButtonContainer().show();
@@ -184,7 +179,10 @@ Ext.define('Purple.controller.Orders', {
       this.getOrderCustomerPhone().element.on('tap', function() {
         return window.location.href = "tel://" + order['customer_phone'];
       });
-      return this.getOrderVehiclePhoto().element.dom.style.cssText = "background-color: transparent;\nbackground-size: cover;\nbackground-repeat: no-repeat;\nbackground-position: center;\nheight: 300px;\nwidth: 100%;\nbackground-image: url('" + order["vehicle_photo"] + "') !important;";
+      if ((order["vehicle_photo"] != null) && order["vehicle_photo"] !== '') {
+        this.getOrderVehiclePhoto().show();
+        return this.getOrderVehiclePhoto().element.dom.style.cssText = "background-color: transparent;\nbackground-size: cover;\nbackground-repeat: no-repeat;\nbackground-position: center;\nheight: 300px;\nwidth: 100%;\nbackground-image: url('" + order["vehicle_photo"] + "') !important;";
+      }
     }
   },
   backToOrders: function() {
@@ -269,7 +267,7 @@ Ext.define('Purple.controller.Orders', {
         };
       }
       cls = ['bottom-margin', 'order-list-item'];
-      if (o.status === 'unassigned' || o.status === 'accepted' || o.status === 'enroute' || o.status === 'servicing') {
+      if (o.status === 'unassigned' || o.status === 'assigned' || o.status === 'accepted' || o.status === 'enroute' || o.status === 'servicing') {
         cls.push('highlighted');
       }
       _results.push(list.add({
@@ -403,7 +401,7 @@ Ext.define('Purple.controller.Orders', {
         case 1:
           return _this.nextStatus();
       }
-    }), "Are you sure you want to mark this order as " + nextStatus + "? (can not be undone)", ["Yes", "No"]);
+    }), "Are you sure you want to mark this order as " + nextStatus + "? (cannot be undone)", ["Yes", "No"]);
   },
   nextStatus: function() {
     var currentStatus, id, values;

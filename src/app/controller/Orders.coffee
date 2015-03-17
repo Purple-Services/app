@@ -145,16 +145,12 @@ Ext.define 'Purple.controller.Orders'
       @getOrderVehicleYear().show()
       @getOrderVehicleColor().show()
       @getOrderVehicleLicensePlate().show()
-      @getOrderVehiclePhoto().show()
       @getOrderHorizontalRuleAboveCustomerInfo().show()
       @getOrderCustomerName().show()
       @getOrderCustomerPhone().show()
       @getOrderGasType().show()
 
       switch order['status']
-        when "unassigned"
-          @getNextStatusButtonContainer().getAt(0).setText "Accept"
-          @getNextStatusButtonContainer().show()
         when "accepted"
           @getNextStatusButtonContainer().getAt(0).setText "Start Route"
           @getNextStatusButtonContainer().show()
@@ -176,15 +172,17 @@ Ext.define 'Purple.controller.Orders'
       @getOrderCustomerPhone().element.on 'tap', =>
         window.location.href = "tel://#{order['customer_phone']}"
 
-      @getOrderVehiclePhoto().element.dom.style.cssText = """
-        background-color: transparent;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        height: 300px;
-        width: 100%;
-        background-image: url('#{order["vehicle_photo"]}') !important;
-      """
+      if order["vehicle_photo"]? and order["vehicle_photo"] isnt ''
+        @getOrderVehiclePhoto().show()
+        @getOrderVehiclePhoto().element.dom.style.cssText = """
+          background-color: transparent;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+          height: 300px;
+          width: 100%;
+          background-image: url('#{order["vehicle_photo"]}') !important;
+        """
     
 
   backToOrders: ->
@@ -251,6 +249,7 @@ Ext.define 'Purple.controller.Orders'
         'order-list-item'
       ]
       if o.status is 'unassigned' or
+      o.status is 'assigned' or
       o.status is 'accepted' or
       o.status is 'enroute' or
       o.status is 'servicing'
@@ -367,7 +366,7 @@ Ext.define 'Purple.controller.Orders'
         when 1 then @nextStatus()
         else return
       ),
-      "Are you sure you want to mark this order as #{nextStatus}? (can not be undone)",
+      "Are you sure you want to mark this order as #{nextStatus}? (cannot be undone)",
       ["Yes", "No"]
     )
 
