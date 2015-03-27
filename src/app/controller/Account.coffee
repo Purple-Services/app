@@ -140,6 +140,7 @@ Ext.define 'Purple.controller.Account'
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleUserIsCourier'] = response.user.is_courier
+          localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up
           localStorage['purpleToken'] = response.token
           delete localStorage['purpleDefaultPaymentMethodId']
           for c, card of response.cards
@@ -340,6 +341,7 @@ Ext.define 'Purple.controller.Account'
     delete localStorage['purpleUserIsCourier']
     delete localStorage['purpleCourierGallons87']
     delete localStorage['purpleCourierGallons91']
+    delete localStorage['purpleUserHasPushNotificationsSetUp']
 
     # clear out some lists from any old logins
     util.ctl('Vehicles').vehicles = []
@@ -372,6 +374,9 @@ Ext.define 'Purple.controller.Account'
   isCourier: ->
     # note that 'true' is in quotes intentionally
     localStorage['purpleUserIsCourier']? and localStorage['purpleUserIsCourier'] is 'true'
+
+  hasPushNotificationsSetup: ->
+    localStorage['purpleUserHasPushNotificationsSetUp']? and localStorage['purpleUserHasPushNotificationsSetUp'] is 'true'
 
   populateAccountForm: ->
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''

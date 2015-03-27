@@ -916,3 +916,19 @@ a[href^="http://maps.google.com/maps"] {
     -webkit-mask-size:25px 25px;
     background-color:#FF0000;
 }
+
+
+
+
+/* Just iPhone 4 and below */
+@media screen and (max-device-width:320px) and (max-device-height:480px) {
+    
+    #purpleLoginLogo {
+        margin-bottom: -35px !important;
+    }
+
+    #loginButtonContainer {
+        max-height: 90px !important;
+    }
+
+}

@@ -7,7 +7,7 @@ window.util = {
   WEB_SERVICE_BASE_URL: (function() {
     switch (VERSION) {
       case "LOCAL":
-        return "http://192.168.0.8:3000/";
+        return "http://192.168.0.3:3000/";
       case "PROD":
         return "http://purple.elasticbeanstalk.com/";
       case "DEV":

@@ -69,7 +69,7 @@ Ext.define 'Purple.view.Help'
             cls: 'accordion-text'
             showAnimation: 'fadeIn'
             hidden: yes
-            html: 'Purple is a gas delivery service.'
+            html: 'Purple is a gas delivery service. Simply request gas and we will come to your vehicle and fill it up.'
           }
           {
             xtype: 'textfield'

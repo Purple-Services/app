@@ -1,21 +1,13 @@
 # "LOCAL", "PROD", "DEV"
 VERSION = "DEV"
 
-# VERSION = (
-#   if localStorage['purpleUserId'] is 'fb10203286525511954' or
-#   localStorage['purpleUserId'] is '2UAPcnsqYqlIaKDWOiUN' or
-#   localStorage['purpleUserId'] is 'lGYvXf9qcRdJHzhAAIbH' or
-#   localStorage['purpleUserId'] is 'aQ9sHTpPW6saayrTfRqE' or
-#   localStorage['purpleUserId'] is 'PqDXJ6ghTAVMlcvQpaTG' then 'LOCAL' else 'DEV'
-# )
-
 # window.onerror = (message, url, lineNumber) ->
 #   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
 #   return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
 window.util =
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://192.168.0.8:3000/"
+    when "LOCAL" then "http://192.168.0.3:3000/"
     when "PROD" then "http://purple.elasticbeanstalk.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 

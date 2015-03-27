@@ -108,6 +108,9 @@ Ext.define('Purple.view.RequestForm', {
             xtype: 'hiddenfield',
             name: 'address_street'
           }, {
+            xtype: 'hiddenfield',
+            name: 'address_zip'
+          }, {
             xtype: 'container',
             id: 'sendRequestButtonContainer',
             flex: 0,

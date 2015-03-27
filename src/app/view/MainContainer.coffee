@@ -13,6 +13,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Feedback'
     'Purple.view.Invite'
     'Purple.view.GasTanks'
+    'Purple.view.GasStations'
   ]
   xtype: 'maincontainer'
   config:
@@ -275,6 +276,21 @@ Ext.define 'Purple.view.MainContainer',
           }
           {
             xtype: 'gastanks'
+          }
+        ]
+      }
+      {
+        title: "Gas Stations"
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'gasstations'
           }
         ]
       }

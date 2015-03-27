@@ -75,7 +75,7 @@ Ext.define('Purple.controller.Menu', {
       this.hideTitles([1]);
       if (util.ctl('Account').isCourier()) {
         this.hideTitles([0, 4]);
-        this.showTitles([2, 3, 8]);
+        this.showTitles([2, 3, 8, 9]);
         if ((_ref = localStorage['purpleCourierGallons87']) == null) {
           localStorage['purpleCourierGallons87'] = 0;
         }
@@ -86,12 +86,12 @@ Ext.define('Purple.controller.Menu', {
           util.ctl('Main').initCourierPing();
         }
       } else {
-        this.hideTitles([8]);
+        this.hideTitles([8, 9]);
         this.showTitles([2, 3, 4]);
       }
       return util.ctl('Account').populateAccountForm();
     } else {
-      this.hideTitles([2, 3, 4, 8]);
+      this.hideTitles([2, 3, 4, 8, 9]);
       return this.showTitles([1]);
     }
   }

@@ -73,6 +73,57 @@ Ext.define('Purple.controller.Main', {
     setTimeout(Ext.bind(this.updateLatlng, this), 5000);
     return navigator.splashscreen.hide();
   },
+  setUpPushNotifications: function() {
+    if (Ext.os.name === "iOS") {
+      return window.plugins.pushNotification.register(Ext.bind(this.registerDeviceForPushNotifications, this), (function(error) {
+        return alert("error: " + error);
+      }), {
+        "badge": "true",
+        "sound": "true",
+        "alert": "true",
+        "ecb": "onNotificationAPN"
+      });
+    } else {
+      return window.plugins.pushNotification.register((function(result) {
+        return alert("success: " + result);
+      }), (function(error) {
+        return alert("error: " + error);
+      }), {
+        "senderID": "replace_with_sender_id",
+        "ecb": "onNotification"
+      });
+    }
+  },
+  registerDeviceForPushNotifications: function(cred) {
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/add-sns",
+      params: Ext.JSON.encode({
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        cred: cred,
+        push_platform: "apns"
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          console.log('success ', response);
+          return localStorage['purpleUserHasPushNotificationsSetUp'] = "true";
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        return console.log(response_obj);
+      }
+    });
+  },
   updateLatlng: function() {
     var _ref,
       _this = this;
@@ -116,12 +167,31 @@ Ext.define('Purple.controller.Main', {
     return (_ref = this.geocoder) != null ? _ref.geocode({
       'latLng': latlng
     }, function(results, status) {
-      var addressComponents, streetAddress;
+      var addressComponents, c, streetAddress, t, _i, _len, _ref1, _results;
       if (status === google.maps.GeocoderStatus.OK) {
-        if (results[1]) {
+        if (((_ref1 = results[0]) != null ? _ref1['address_components'] : void 0) != null) {
           addressComponents = results[0]['address_components'];
           streetAddress = "" + addressComponents[0]['short_name'] + " " + addressComponents[1]['short_name'];
-          return _this.getRequestAddressField().setValue(streetAddress);
+          _this.getRequestAddressField().setValue(streetAddress);
+          _results = [];
+          for (_i = 0, _len = addressComponents.length; _i < _len; _i++) {
+            c = addressComponents[_i];
+            _results.push((function() {
+              var _j, _len1, _ref2, _results1;
+              _ref2 = c.types;
+              _results1 = [];
+              for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+                t = _ref2[_j];
+                if (t === "postal_code") {
+                  _results1.push(this.deliveryAddressZipCode = c['short_name']);
+                } else {
+                  _results1.push(void 0);
+                }
+              }
+              return _results1;
+            }).call(_this));
+          }
+          return _results;
         } else {
           return console.log('No results found.');
         }
@@ -193,9 +263,20 @@ Ext.define('Purple.controller.Main', {
     return this.placesService.getDetails({
       placeId: loc['placeId']
     }, function(place, status) {
-      var latlng;
+      var c, latlng, t, _i, _j, _len, _len1, _ref, _ref1;
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         latlng = place.geometry.location;
+        _ref = place.address_components;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          c = _ref[_i];
+          _ref1 = c.types;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            t = _ref1[_j];
+            if (t === "postal_code") {
+              _this.deliveryAddressZipCode = c['short_name'];
+            }
+          }
+        }
         _this.deliveryLocLat = latlng.lat();
         _this.deliveryLocLng = latlng.lng();
         _this.getMap().getMap().setCenter(latlng);
@@ -224,7 +305,8 @@ Ext.define('Purple.controller.Main', {
           user_id: localStorage['purpleUserId'],
           token: localStorage['purpleToken'],
           lat: this.deliveryLocLat,
-          lng: this.deliveryLocLng
+          lng: this.deliveryLocLng,
+          zip_code: this.deliveryAddressZipCode
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -252,7 +334,8 @@ Ext.define('Purple.controller.Main', {
               return this.getRequestForm().setValues({
                 lat: this.deliveryLocLat,
                 lng: this.deliveryLocLng,
-                address_street: deliveryLocName
+                address_street: deliveryLocName,
+                address_zip: this.deliveryAddressZipCode
               });
             }
           } else {
@@ -267,7 +350,6 @@ Ext.define('Purple.controller.Main', {
     }
   },
   backToMapFromRequestForm: function() {
-    console.log('caleld ', this.getRequestForm());
     return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
   },
   backToRequestForm: function() {
@@ -288,7 +370,14 @@ Ext.define('Purple.controller.Main', {
       }
     }
     gasPrice = appropriateAvailability.price_per_gallon;
-    serviceFee = 875;
+    serviceFee = (function() {
+      switch (vals['time']) {
+        case '< 1 hr':
+          return appropriateAvailability.service_fee[0];
+        case '< 3 hr':
+          return appropriateAvailability.service_fee[1];
+      }
+    })();
     vals['gas_price'] = "" + util.centsToDollars(gasPrice);
     vals['service_fee'] = "" + util.centsToDollars(serviceFee);
     vals['total_price'] = "" + util.centsToDollars(parseFloat(gasPrice) * parseFloat(vals['gallons']) + parseFloat(serviceFee));
@@ -364,7 +453,10 @@ Ext.define('Purple.controller.Main', {
             util.ctl('Orders').loadOrdersList(true);
             this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
             this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
-            return this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
+            this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
+            if (!util.ctl('Account').hasPushNotificationsSetup()) {
+              return this.setUpPushNotifications();
+            }
           } else {
             return navigator.notification.alert(response.message, (function() {}), "Error");
           }

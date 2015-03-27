@@ -700,6 +700,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.view.EditPaymentMethodForm": [],
   "Purple.view.EditVehicleForm": [],
   "Purple.view.Feedback": [],
+  "Purple.view.GasStations": [],
   "Purple.view.GasTanks": [],
   "Purple.view.Help": [],
   "Purple.view.Invite": [],
@@ -1473,6 +1474,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Purple.view.Feedback": [
     "widget.feedback"
+  ],
+  "Purple.view.GasStations": [
+    "widget.gasstations"
   ],
   "Purple.view.GasTanks": [
     "widget.gastanks"

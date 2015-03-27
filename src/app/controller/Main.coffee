@@ -76,6 +76,53 @@ Ext.define 'Purple.controller.Main'
 
     navigator.splashscreen.hide()
 
+  setUpPushNotifications: ->
+    if Ext.os.name is "iOS"
+      window.plugins.pushNotification.register(
+        (Ext.bind @registerDeviceForPushNotifications, this),
+        ((error) -> alert "error: " + error),
+        {
+          "badge": "true"
+          "sound": "true"
+          "alert": "true"
+          "ecb": "onNotificationAPN"
+        }
+      )
+    else
+      # must be Android
+      window.plugins.pushNotification.register(
+        ((result) -> alert "success: " + result),
+        ((error) -> alert "error: " + error),
+        {
+          "senderID": "replace_with_sender_id"
+          "ecb": "onNotification"
+        }
+      )
+
+  registerDeviceForPushNotifications: (cred) ->
+    # cred for APNS (apple) is the device token
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/add-sns"
+      params: Ext.JSON.encode
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        cred: cred
+        push_platform: "apns"
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          console.log 'success ', response
+          localStorage['purpleUserHasPushNotificationsSetUp'] = "true"
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        console.log response_obj
+
   updateLatlng: ->
     @updateLatlngBusy ?= no
     if not @updateLatlngBusy
@@ -111,11 +158,15 @@ Ext.define 'Purple.controller.Main'
     latlng = new google.maps.LatLng lat, lng
     @geocoder?.geocode {'latLng': latlng}, (results, status) =>
       if status is google.maps.GeocoderStatus.OK
-        if results[1]
-          # console.log results
+        if results[0]?['address_components']?
           addressComponents = results[0]['address_components']
           streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
           @getRequestAddressField().setValue streetAddress
+          # find the address component that contains the zip code
+          for c in addressComponents
+            for t in c.types
+              if t is "postal_code"
+                @deliveryAddressZipCode = c['short_name']
         else
           console.log 'No results found.'
       else
@@ -178,6 +229,11 @@ Ext.define 'Purple.controller.Main'
     @placesService.getDetails {placeId: loc['placeId']}, (place, status) =>
       if status is google.maps.places.PlacesServiceStatus.OK
         latlng = place.geometry.location
+        # find the address component that contains the zip code
+        for c in place.address_components
+          for t in c.types
+            if t is "postal_code"
+              @deliveryAddressZipCode = c['short_name']
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
         @getMap().getMap().setCenter latlng
@@ -204,6 +260,7 @@ Ext.define 'Purple.controller.Main'
           token: localStorage['purpleToken']
           lat: @deliveryLocLat
           lng: @deliveryLocLng
+          zip_code: @deliveryAddressZipCode
         headers:
           'Content-Type': 'application/json'
         timeout: 30000
@@ -229,6 +286,7 @@ Ext.define 'Purple.controller.Main'
                 lat: @deliveryLocLat
                 lng: @deliveryLocLng
                 address_street: deliveryLocName
+                address_zip: @deliveryAddressZipCode
               )
           else
             navigator.notification.alert response.message, (->), "Error"
@@ -237,7 +295,6 @@ Ext.define 'Purple.controller.Main'
           console.log response_obj
 
   backToMapFromRequestForm: ->
-    console.log 'caleld ', @getRequestForm()
     @getRequestGasTabContainer().remove(
       @getRequestForm(),
       yes
@@ -263,7 +320,9 @@ Ext.define 'Purple.controller.Main'
         break
 
     gasPrice = appropriateAvailability.price_per_gallon
-    serviceFee = 875
+    serviceFee = switch vals['time']
+      when '< 1 hr' then appropriateAvailability.service_fee[0]
+      when '< 3 hr' then appropriateAvailability.service_fee[1]
     vals['gas_price'] = "" + util.centsToDollars(
       gasPrice
     )
@@ -346,6 +405,9 @@ Ext.define 'Purple.controller.Main'
               @getRequestForm(),
               yes
             )
+            # set up push notifications if they arent set up
+            if not util.ctl('Account').hasPushNotificationsSetup()
+              @setUpPushNotifications()
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->

@@ -143,6 +143,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleUserIsCourier'] = response.user.is_courier;
+          localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up;
           localStorage['purpleToken'] = response.token;
           delete localStorage['purpleDefaultPaymentMethodId'];
           _ref = response.cards;
@@ -340,6 +341,7 @@ Ext.define('Purple.controller.Account', {
     delete localStorage['purpleUserIsCourier'];
     delete localStorage['purpleCourierGallons87'];
     delete localStorage['purpleCourierGallons91'];
+    delete localStorage['purpleUserHasPushNotificationsSetUp'];
     util.ctl('Vehicles').vehicles = [];
     util.ctl('Vehicles').loadVehiclesList();
     util.ctl('Orders').orders = [];
@@ -361,6 +363,9 @@ Ext.define('Purple.controller.Account', {
   },
   isCourier: function() {
     return (localStorage['purpleUserIsCourier'] != null) && localStorage['purpleUserIsCourier'] === 'true';
+  },
+  hasPushNotificationsSetup: function() {
+    return (localStorage['purpleUserHasPushNotificationsSetUp'] != null) && localStorage['purpleUserHasPushNotificationsSetUp'] === 'true';
   },
   populateAccountForm: function() {
     var _ref, _ref1, _ref2, _ref3, _ref4;

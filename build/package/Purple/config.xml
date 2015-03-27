@@ -67,7 +67,7 @@
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
 
-  <preference name="phonegap-version" value="3.6.3" />
+  <preference name="phonegap-version" value="3.7.0" />
   <preference name="fullscreen" value="false" />
   <preference name="exit-on-suspend" value="false" />
   <preference name="orientation" value="portrait" />
@@ -101,7 +101,13 @@
 
   <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.4.0" />
 
-  <!-- Only include this when building the Courier app -->
-  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.5.0" />
+
+  <!-- BEGIN COURIER APP ONLY -->
+  <!-- Only include these when building the Courier app -->
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
+    <string>(required for Courier mode)</string>
+  </gap:config-file>
+  <!-- END COURIER APP ONLY -->
 
 </widget>

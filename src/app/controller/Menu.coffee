@@ -56,15 +56,15 @@ Ext.define 'Purple.controller.Menu'
       @hideTitles [1]
       if util.ctl('Account').isCourier()
         @hideTitles [0, 4]
-        @showTitles [2, 3, 8]
+        @showTitles [2, 3, 8, 9]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         if not util.ctl('Main').courierPingIntervalRef?
           util.ctl('Main').initCourierPing()
       else
-        @hideTitles [8]
+        @hideTitles [8, 9]
         @showTitles [2, 3, 4]
       util.ctl('Account').populateAccountForm()
     else
-      @hideTitles [2, 3, 4, 8]
+      @hideTitles [2, 3, 4, 8, 9]
       @showTitles [1]

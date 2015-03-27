@@ -2,7 +2,7 @@
 
 Ext.define('Purple.view.MainContainer', {
   extend: 'Ext.ux.slidenavigation.View',
-  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.PaymentMethods', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite', 'Purple.view.GasTanks'],
+  requires: ['Purple.view.MapForm', 'Purple.view.RequestForm', 'Purple.view.RequestConfirmationForm', 'Purple.view.LoginForm', 'Purple.view.AccountForm', 'Purple.view.Orders', 'Purple.view.Vehicles', 'Purple.view.PaymentMethods', 'Purple.view.Help', 'Purple.view.Feedback', 'Purple.view.Invite', 'Purple.view.GasTanks', 'Purple.view.GasStations'],
   xtype: 'maincontainer',
   config: {
     fullscreen: true,
@@ -224,6 +224,16 @@ Ext.define('Purple.view.MainContainer', {
             cls: ['slideable', 'bordered']
           }, {
             xtype: 'gastanks'
+          }
+        ]
+      }, {
+        title: "Gas Stations",
+        items: [
+          {
+            xtype: "toptoolbar",
+            cls: ['slideable', 'bordered']
+          }, {
+            xtype: 'gasstations'
           }
         ]
       }
