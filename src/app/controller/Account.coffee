@@ -71,6 +71,7 @@ Ext.define 'Purple.controller.Account'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/register"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         platform_id: platformId
         auth_key: authKey
       headers:
@@ -121,6 +122,7 @@ Ext.define 'Purple.controller.Account'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/login"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         type: type
         platform_id: platformId
         auth_key: authKey
@@ -197,7 +199,6 @@ Ext.define 'Purple.controller.Account'
     )
     
   facebookLoginSuccess: (result) ->
-    console.log 'facebookLoginSuccess'
     @authorizeUser(
       'facebook',
       result['authResponse']['userID'],
@@ -218,8 +219,6 @@ Ext.define 'Purple.controller.Account'
     )
 
   googleLoginSuccess: (result) ->
-    console.log result
-    console.log 'googleLoginSuccess'
     @authorizeUser(
       'google',
       result['userId'],
@@ -239,6 +238,7 @@ Ext.define 'Purple.controller.Account'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         user:
@@ -253,7 +253,6 @@ Ext.define 'Purple.controller.Account'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          console.log 'success ', response
           @getLoginForm().reset()
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleUserName'] = response.user.name
@@ -401,6 +400,7 @@ Ext.define 'Purple.controller.Account'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/forgot-password"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         platform_id: emailAddress
       headers:
         'Content-Type': 'application/json'
@@ -413,7 +413,6 @@ Ext.define 'Purple.controller.Account'
         if response.success
           @getLoginForm().reset()
           @showLoginForm()
-          console.log 'passwrod reset...'
           navigator.notification.alert response.message, (->), "Success!"
         else
           navigator.notification.alert response.message, (->), "Error"

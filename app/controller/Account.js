@@ -68,6 +68,7 @@ Ext.define('Purple.controller.Account', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/register",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         platform_id: platformId,
         auth_key: authKey
       }),
@@ -121,6 +122,7 @@ Ext.define('Purple.controller.Account', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/login",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         type: type,
         platform_id: platformId,
         auth_key: authKey
@@ -198,7 +200,6 @@ Ext.define('Purple.controller.Account', {
     }));
   },
   facebookLoginSuccess: function(result) {
-    console.log('facebookLoginSuccess');
     return this.authorizeUser('facebook', result['authResponse']['userID'], result['authResponse']['accessToken']);
   },
   facebookLoginFailure: function(errorStr) {
@@ -212,8 +213,6 @@ Ext.define('Purple.controller.Account', {
     }));
   },
   googleLoginSuccess: function(result) {
-    console.log(result);
-    console.log('googleLoginSuccess');
     return this.authorizeUser('google', result['userId'], result['oauthToken']);
   },
   accountSetup: function() {
@@ -230,6 +229,7 @@ Ext.define('Purple.controller.Account', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
         user: {
@@ -248,7 +248,6 @@ Ext.define('Purple.controller.Account', {
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
-          console.log('success ', response);
           this.getLoginForm().reset();
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleUserName'] = response.user.name;
@@ -402,6 +401,7 @@ Ext.define('Purple.controller.Account', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/forgot-password",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         platform_id: emailAddress
       }),
       headers: {
@@ -417,7 +417,6 @@ Ext.define('Purple.controller.Account', {
         if (response.success) {
           this.getLoginForm().reset();
           this.showLoginForm();
-          console.log('passwrod reset...');
           return navigator.notification.alert(response.message, (function() {}), "Success!");
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");

@@ -78,7 +78,7 @@ Ext.define 'Purple.view.AccountForm'
             label: 'Name'
             flex: 0
             cls: [
-              'click-to-edit'
+              #'click-to-edit'
               'bottom-margin'
             ]
             disabled: yes
@@ -90,7 +90,7 @@ Ext.define 'Purple.view.AccountForm'
             name: 'phone_number'
             label: 'Phone'
             cls: [
-              'click-to-edit'
+              #'click-to-edit'
               'bottom-margin'
             ]
             disabled: yes

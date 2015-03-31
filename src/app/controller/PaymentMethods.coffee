@@ -81,6 +81,7 @@ Ext.define 'Purple.controller.PaymentMethods'
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}user/details"
         params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
         headers:
@@ -164,6 +165,7 @@ Ext.define 'Purple.controller.PaymentMethods'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         card:
@@ -204,6 +206,7 @@ Ext.define 'Purple.controller.PaymentMethods'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         card:
@@ -253,6 +256,7 @@ Ext.define 'Purple.controller.PaymentMethods'
         Ext.Ajax.request
           url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
           params: Ext.JSON.encode
+            version: util.VERSION_NUMBER
             user_id: localStorage['purpleUserId']
             token: localStorage['purpleToken']
             card:

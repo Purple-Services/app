@@ -164,14 +164,6 @@ Ext.define 'Purple.controller.Vehicles'
       @getEditVehicleFormLicensePlate().setValue vehicle['license_plate']
       if vehicle['photo']? and vehicle['photo'] isnt ''
         @setVehiclePhoto vehicle['photo']
-    else
-      console.log 'new'
-      # @getEditVehicleFormYear().setValue '2015'
-      # @yearChanged null, '2015'
-      # @getEditVehicleFormMake().setValue ''
-      # @getEditVehicleFormMake().setOptions []
-      # @getEditVehicleFormModel().setValue ''
-      # @getEditVehicleFormModel().setOptions []      
 
   backToVehicles: ->
     @getVehiclesTabContainer().remove(
@@ -189,6 +181,7 @@ Ext.define 'Purple.controller.Vehicles'
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}user/details"
         params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
         headers:
@@ -248,6 +241,7 @@ Ext.define 'Purple.controller.Vehicles'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         vehicle: values
@@ -298,6 +292,7 @@ Ext.define 'Purple.controller.Vehicles'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         vehicle:
@@ -341,6 +336,7 @@ Ext.define 'Purple.controller.Vehicles'
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}user/details"
         params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
         headers:
@@ -442,7 +438,6 @@ Ext.define 'Purple.controller.Vehicles'
       correctOrientation: yes      
 
   addImageSuccess: (dataUrl) ->
-    console.log 'success'
     dataUrl = "data:image/jpeg;base64,#{dataUrl}"
     @setVehiclePhoto dataUrl
 

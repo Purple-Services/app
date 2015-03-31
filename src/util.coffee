@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "DEV"
+VERSION = "PROD"
 
 # window.onerror = (message, url, lineNumber) ->
 #   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
@@ -8,13 +8,15 @@ VERSION = "DEV"
 window.util =
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://192.168.0.3:3000/"
-    when "PROD" then "http://purple.elasticbeanstalk.com/"
+    when "PROD" then "https://purpledelivery.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 
   STRIPE_PUBLISHABLE_KEY: switch VERSION
     when "LOCAL" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
     when "PROD" then 'pk_live_r8bUlYTZSxsNzgtjVAIH7bcA'
     when "DEV" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
+
+  VERSION_NUMBER: "1.0.0"
 
   MINIMUM_GALLONS: 10
   GALLONS_INCREMENT: 5

@@ -580,23 +580,29 @@ body {
 #centerMapButton {
     content: '';
     position: absolute;
-    width: 36px;
-    height: 36px;
-    left: 27px;
-    margin-left: -18px;
+    width: 70px;
+    height: 60px;
+    left: 0px;
+    margin-left: 0px;
     margin-top: -44px;
     z-index: 1001;
     background-image: url('../images/center-map-icon.png');
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 36px 36px;
     background-color: transparent;
+    background-position-x: 10px;
 }
 
-/* Google Map */
-/* Remove Google logo */
-img[src="http://maps.gstatic.com/mapfiles/api-3/images/google_white2.png"],
-a[href^="http://maps.google.com/maps"] {
-    display:none !important;
+#googleMapLinkBlocker {
+    content: '';
+    position: absolute;
+    width: 210px;
+    height: 15px;
+    right: 0px;
+    margin-left: 0px;
+    margin-top: -15px;
+    z-index: 1001;
+    background: transparent;
 }
 
 

@@ -172,8 +172,6 @@ Ext.define('Purple.controller.Vehicles', {
       if ((vehicle['photo'] != null) && vehicle['photo'] !== '') {
         return this.setVehiclePhoto(vehicle['photo']);
       }
-    } else {
-      return console.log('new');
     }
   },
   backToVehicles: function() {
@@ -190,6 +188,7 @@ Ext.define('Purple.controller.Vehicles', {
       return Ext.Ajax.request({
         url: "" + util.WEB_SERVICE_BASE_URL + "user/details",
         params: Ext.JSON.encode({
+          version: util.VERSION_NUMBER,
           user_id: localStorage['purpleUserId'],
           token: localStorage['purpleToken']
         }),
@@ -265,6 +264,7 @@ Ext.define('Purple.controller.Vehicles', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
         vehicle: values
@@ -320,6 +320,7 @@ Ext.define('Purple.controller.Vehicles', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/edit",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
         vehicle: {
@@ -376,6 +377,7 @@ Ext.define('Purple.controller.Vehicles', {
       return Ext.Ajax.request({
         url: "" + util.WEB_SERVICE_BASE_URL + "user/details",
         params: Ext.JSON.encode({
+          version: util.VERSION_NUMBER,
           user_id: localStorage['purpleUserId'],
           token: localStorage['purpleToken']
         }),
@@ -491,7 +493,6 @@ Ext.define('Purple.controller.Vehicles', {
     });
   },
   addImageSuccess: function(dataUrl) {
-    console.log('success');
     dataUrl = "data:image/jpeg;base64," + dataUrl;
     return this.setVehiclePhoto(dataUrl);
   },

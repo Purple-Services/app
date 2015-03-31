@@ -119,6 +119,8 @@ Ext.define 'Purple.view.EditPaymentMethodForm'
               'uppercase-input'
             ]
             clearIcon: no
+            component:
+              type: 'tel'
           }
           {
             xtype: 'selectfield'
@@ -287,6 +289,8 @@ Ext.define 'Purple.view.EditPaymentMethodForm'
               'uppercase-input'
             ]
             clearIcon: no
+            component:
+              type: 'tel'
           }
           {
             xtype: 'container'

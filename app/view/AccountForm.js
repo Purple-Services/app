@@ -68,7 +68,7 @@ Ext.define('Purple.view.AccountForm', {
             name: 'name',
             label: 'Name',
             flex: 0,
-            cls: ['click-to-edit', 'bottom-margin'],
+            cls: ['bottom-margin'],
             disabled: true
           }, {
             xtype: 'textfield',
@@ -76,7 +76,7 @@ Ext.define('Purple.view.AccountForm', {
             flex: 0,
             name: 'phone_number',
             label: 'Phone',
-            cls: ['click-to-edit', 'bottom-margin'],
+            cls: ['bottom-margin'],
             disabled: true
           }, {
             xtype: 'textfield',

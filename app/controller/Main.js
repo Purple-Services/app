@@ -98,6 +98,7 @@ Ext.define('Purple.controller.Main', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/add-sns",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
         cred: cred,
@@ -113,7 +114,6 @@ Ext.define('Purple.controller.Main', {
         var response;
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
-          console.log('success ', response);
           return localStorage['purpleUserHasPushNotificationsSetUp'] = "true";
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
@@ -192,11 +192,7 @@ Ext.define('Purple.controller.Main', {
             }).call(_this));
           }
           return _results;
-        } else {
-          return console.log('No results found.');
         }
-      } else {
-        return console.log('Geocoder failed due to: ' + status);
       }
     }) : void 0;
   },
@@ -281,8 +277,6 @@ Ext.define('Purple.controller.Main', {
         _this.deliveryLocLng = latlng.lng();
         _this.getMap().getMap().setCenter(latlng);
         return _this.getMap().getMap().setZoom(17);
-      } else {
-        return console.log('placesService error' + status);
       }
     });
   },
@@ -302,6 +296,7 @@ Ext.define('Purple.controller.Main', {
       return Ext.Ajax.request({
         url: "" + util.WEB_SERVICE_BASE_URL + "dispatch/availability",
         params: Ext.JSON.encode({
+          version: util.VERSION_NUMBER,
           user_id: localStorage['purpleUserId'],
           token: localStorage['purpleToken'],
           lat: this.deliveryLocLat,
@@ -434,6 +429,7 @@ Ext.define('Purple.controller.Main', {
       return Ext.Ajax.request({
         url: "" + util.WEB_SERVICE_BASE_URL + "orders/add",
         params: Ext.JSON.encode({
+          version: util.VERSION_NUMBER,
           user_id: localStorage['purpleUserId'],
           token: localStorage['purpleToken'],
           order: vals
@@ -473,6 +469,7 @@ Ext.define('Purple.controller.Main', {
   sendFeedback: function() {
     var params;
     params = {
+      version: util.VERSION_NUMBER,
       text: this.getFeedbackTextField().getValue()
     };
     if (util.ctl('Account').isUserLoggedIn()) {
@@ -514,6 +511,7 @@ Ext.define('Purple.controller.Main', {
   sendInvites: function() {
     var params;
     params = {
+      version: util.VERSION_NUMBER,
       email: this.getInviteTextField().getValue()
     };
     if (util.ctl('Account').isUserLoggedIn()) {
@@ -572,6 +570,7 @@ Ext.define('Purple.controller.Main', {
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "courier/ping",
       params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
         lat: this.lat,
@@ -590,9 +589,7 @@ Ext.define('Purple.controller.Main', {
       success: function(response_obj) {
         var response;
         response = Ext.JSON.decode(response_obj.responseText);
-        if (response.success) {
-          return console.log('successful ping');
-        } else {
+        if (!response.success) {
           this.errorCount++;
           if (this.errorCount > 10) {
             return navigator.notification.alert("Unable to ping dispatch center.", (function() {}), "Error");

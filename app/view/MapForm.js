@@ -39,6 +39,10 @@ Ext.define('Purple.view.MapForm', {
         }
       }, {
         xtype: 'component',
+        id: 'googleMapLinkBlocker',
+        flex: 0
+      }, {
+        xtype: 'component',
         id: 'spacerBetweenMapAndAddress',
         flex: 0,
         height: 10

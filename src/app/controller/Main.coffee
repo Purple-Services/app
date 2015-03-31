@@ -104,6 +104,7 @@ Ext.define 'Purple.controller.Main'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/add-sns"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         cred: cred
@@ -116,7 +117,6 @@ Ext.define 'Purple.controller.Main'
       success: (response_obj) ->
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          console.log 'success ', response
           localStorage['purpleUserHasPushNotificationsSetUp'] = "true"
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -167,10 +167,10 @@ Ext.define 'Purple.controller.Main'
             for t in c.types
               if t is "postal_code"
                 @deliveryAddressZipCode = c['short_name']
-        else
-          console.log 'No results found.'
-      else
-        console.log 'Geocoder failed due to: ' + status
+        # else
+        #   console.log 'No results found.'
+      # else
+      #   console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
     @getAutocompleteList().hide()
@@ -238,8 +238,8 @@ Ext.define 'Purple.controller.Main'
         @deliveryLocLng = latlng.lng()
         @getMap().getMap().setCenter latlng
         @getMap().getMap().setZoom 17
-      else
-        console.log 'placesService error' + status
+      # else
+      #   console.log 'placesService error' + status
 
   initRequestGasForm: ->
     deliveryLocName = @getRequestAddressField().getValue()
@@ -256,6 +256,7 @@ Ext.define 'Purple.controller.Main'
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
         params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
           lat: @deliveryLocLat
@@ -382,6 +383,7 @@ Ext.define 'Purple.controller.Main'
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}orders/add"
         params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
           order: vals
@@ -417,6 +419,7 @@ Ext.define 'Purple.controller.Main'
 
   sendFeedback: ->
     params =
+      version: util.VERSION_NUMBER
       text: @getFeedbackTextField().getValue()
     if util.ctl('Account').isUserLoggedIn()
       params['user_id'] = localStorage['purpleUserId']
@@ -447,6 +450,7 @@ Ext.define 'Purple.controller.Main'
 
   sendInvites: ->
     params =
+      version: util.VERSION_NUMBER
       email: @getInviteTextField().getValue()
     if util.ctl('Account').isUserLoggedIn()
       params['user_id'] = localStorage['purpleUserId']
@@ -488,6 +492,7 @@ Ext.define 'Purple.controller.Main'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         lat: @lat
@@ -502,9 +507,7 @@ Ext.define 'Purple.controller.Main'
       scope: this
       success: (response_obj) ->
         response = Ext.JSON.decode response_obj.responseText
-        if response.success
-          console.log 'successful ping'
-        else
+        if not response.success
           @errorCount++
           if @errorCount > 10
             navigator.notification.alert "Unable to ping dispatch center.", (->), "Error"

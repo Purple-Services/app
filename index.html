@@ -10,8 +10,7 @@
         <script>
          // iOS
          function onNotificationAPN (event) {
-           if ( event.alert )
-           {
+           if (event.alert) {
              navigator.notification.alert(
                event.alert,
                function(){},
@@ -19,19 +18,22 @@
              );
            }
 
-           if ( event.sound )
-           {
+           if (event.sound) {
              var snd = new Media(event.sound);
              snd.play();
            }
 
-           if ( event.badge )
-           {
+           if (event.badge) {
              window.plugins.pushNotification.setApplicationIconBadgeNumber(function(){alert("badge success")}, function(){alert("badge error")}, event.badge);
            }
 
            // update/reload orders list view
            util.ctl('Orders').loadOrdersList(true);
+           // if on a specific order page, just go back to the orders list
+           // because it gets complicated to update the particular order page
+           if (util.ctl('Orders').getOrder() !== null) {
+             util.ctl('Orders').backToOrders();
+           }
          }
         </script>
         

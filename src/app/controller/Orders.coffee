@@ -201,6 +201,7 @@ Ext.define 'Purple.controller.Orders'
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}user/details"
         params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
         headers:
@@ -296,6 +297,7 @@ Ext.define 'Purple.controller.Orders'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}orders/cancel"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         order_id: id
@@ -331,6 +333,7 @@ Ext.define 'Purple.controller.Orders'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}orders/rate"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         order_id: id
@@ -373,8 +376,6 @@ Ext.define 'Purple.controller.Orders'
   nextStatus: ->
     values = @getOrder().getValues()
     currentStatus = values['status']
-    console.log 'current status: ', currentStatus
-    console.log 'next status: ', util.NEXT_STATUS_MAP[currentStatus]
     id = @getOrder().config.orderId
     Ext.Viewport.setMasked
       xtype: 'loadmask'
@@ -382,6 +383,7 @@ Ext.define 'Purple.controller.Orders'
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}orders/update-status-by-courier"
       params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         order_id: id

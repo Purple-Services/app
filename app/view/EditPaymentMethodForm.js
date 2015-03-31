@@ -94,7 +94,10 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
             labelWidth: 125,
             flex: 0,
             cls: ['bottom-margin', 'uppercase-input'],
-            clearIcon: false
+            clearIcon: false,
+            component: {
+              type: 'tel'
+            }
           }, {
             xtype: 'selectfield',
             flex: 0,
@@ -223,7 +226,10 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
             labelWidth: 125,
             flex: 0,
             cls: ['bottom-margin', 'uppercase-input'],
-            clearIcon: false
+            clearIcon: false,
+            component: {
+              type: 'tel'
+            }
           }, {
             xtype: 'container',
             flex: 0,
