@@ -16,7 +16,7 @@ window.util =
     when "PROD" then 'pk_live_r8bUlYTZSxsNzgtjVAIH7bcA'
     when "DEV" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
 
-  VERSION_NUMBER: "1.0.0"
+  VERSION_NUMBER: "1.0.1"
 
   MINIMUM_GALLONS: 10
   GALLONS_INCREMENT: 5

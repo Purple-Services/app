@@ -24,7 +24,7 @@ window.util = {
         return 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ';
     }
   })(),
-  VERSION_NUMBER: "1.0.0",
+  VERSION_NUMBER: "1.0.1",
   MINIMUM_GALLONS: 10,
   GALLONS_INCREMENT: 5,
   GALLONS_PER_TANK: 5,
