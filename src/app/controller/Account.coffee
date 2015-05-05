@@ -165,9 +165,20 @@ Ext.define 'Purple.controller.Account'
             if @isCourier()
               # a courier account, go to Gas Tanks page
               util.ctl('Menu').selectOption 8
+              # Courier's get their push notifications set up the first time
+              # they log in as a courier (usually this requires a log out,
+              # db change, then log back in). Customers, on the other hand,
+              # get their push notifications set up the upon creation of their
+              # first order.
+              # We call it every time though because it still needs be initiated
+              if not @hasPushNotificationsSetup()
+                util.ctl('Main').setUpPushNotifications()
             else
               # a normal user, go to Request Gas page
               util.ctl('Menu').selectOption 0
+              # initiate push notifications if they have them set up
+              if @hasPushNotificationsSetup()
+                util.ctl('Main').setUpPushNotifications()
             @showLoginForm() # to prepare for next logout, if it comes
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -178,6 +189,7 @@ Ext.define 'Purple.controller.Account'
         console.log 'login error'
 
   facebookLogin: ->
+    ga_storage._trackEvent 'ui', 'Facebook Login Pressed'
     facebookConnectPlugin.getLoginStatus(
       ((result) =>
         if result['status'] is 'connected'
@@ -205,10 +217,12 @@ Ext.define 'Purple.controller.Account'
       result['authResponse']['accessToken']
     )
     
-  facebookLoginFailure: (errorStr) ->
-    alert 'Facebook login error: ', errorStr
+  facebookLoginFailure: (error) ->
+    console.log 'Facebook login error: ' + JSON.stringify(error)
+    alert "Facebook login error. Please make sure your Facebook app is logged in correctly."
 
   googleLogin: ->
+    ga_storage._trackEvent 'ui', 'Google Login Pressed'
     window.plugins.googleplus.login(
       {
         'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
@@ -259,6 +273,7 @@ Ext.define 'Purple.controller.Account'
           util.ctl('Menu').adjustForAppLoginState()
           util.ctl('Menu').selectOption 0
           @showLoginForm() # to prepare for next logout, if it comes
+          ga_storage._trackEvent 'main', 'Account Created'
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
@@ -354,6 +369,8 @@ Ext.define 'Purple.controller.Account'
     
     util.ctl('Menu').adjustForAppLoginState()
     util.ctl('Menu').selectOption 1
+
+    ga_storage._trackEvent 'main', 'Logged Out'
     
   isUserLoggedIn: ->
     localStorage['purpleUserId']? and localStorage['purpleUserId'] isnt '' and
@@ -414,6 +431,7 @@ Ext.define 'Purple.controller.Account'
           @getLoginForm().reset()
           @showLoginForm()
           navigator.notification.alert response.message, (->), "Success!"
+          ga_storage._trackEvent 'main', 'Password Reset Initiated'
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->

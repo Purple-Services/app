@@ -169,8 +169,14 @@ Ext.define('Purple.controller.Account', {
             util.ctl('Menu').adjustForAppLoginState();
             if (this.isCourier()) {
               util.ctl('Menu').selectOption(8);
+              if (!this.hasPushNotificationsSetup()) {
+                util.ctl('Main').setUpPushNotifications();
+              }
             } else {
               util.ctl('Menu').selectOption(0);
+              if (this.hasPushNotificationsSetup()) {
+                util.ctl('Main').setUpPushNotifications();
+              }
             }
             return this.showLoginForm();
           }
@@ -189,6 +195,7 @@ Ext.define('Purple.controller.Account', {
   },
   facebookLogin: function() {
     var _this = this;
+    ga_storage._trackEvent('ui', 'Facebook Login Pressed');
     return facebookConnectPlugin.getLoginStatus((function(result) {
       if (result['status'] === 'connected') {
         return _this.authorizeUser('facebook', result['authResponse']['userID'], result['authResponse']['accessToken']);
@@ -202,10 +209,12 @@ Ext.define('Purple.controller.Account', {
   facebookLoginSuccess: function(result) {
     return this.authorizeUser('facebook', result['authResponse']['userID'], result['authResponse']['accessToken']);
   },
-  facebookLoginFailure: function(errorStr) {
-    return alert('Facebook login error: ', errorStr);
+  facebookLoginFailure: function(error) {
+    console.log('Facebook login error: ' + JSON.stringify(error));
+    return alert("Facebook login error. Please make sure your Facebook app is logged in correctly.");
   },
   googleLogin: function() {
+    ga_storage._trackEvent('ui', 'Google Login Pressed');
     return window.plugins.googleplus.login({
       'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
     }, Ext.bind(this.googleLoginSuccess, this), (function() {
@@ -253,7 +262,8 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserName'] = response.user.name;
           util.ctl('Menu').adjustForAppLoginState();
           util.ctl('Menu').selectOption(0);
-          return this.showLoginForm();
+          this.showLoginForm();
+          return ga_storage._trackEvent('main', 'Account Created');
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
         }
@@ -349,7 +359,8 @@ Ext.define('Purple.controller.Account', {
     util.ctl('PaymentMethods').loadPaymentMethodsList();
     util.ctl('Main').killCourierPing();
     util.ctl('Menu').adjustForAppLoginState();
-    return util.ctl('Menu').selectOption(1);
+    util.ctl('Menu').selectOption(1);
+    return ga_storage._trackEvent('main', 'Logged Out');
   },
   isUserLoggedIn: function() {
     return (localStorage['purpleUserId'] != null) && localStorage['purpleUserId'] !== '' && (localStorage['purpleToken'] != null) && localStorage['purpleToken'] !== '';
@@ -417,7 +428,8 @@ Ext.define('Purple.controller.Account', {
         if (response.success) {
           this.getLoginForm().reset();
           this.showLoginForm();
-          return navigator.notification.alert(response.message, (function() {}), "Success!");
+          navigator.notification.alert(response.message, (function() {}), "Success!");
+          return ga_storage._trackEvent('main', 'Password Reset Initiated');
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
         }

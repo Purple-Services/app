@@ -378,34 +378,42 @@ Ext.define 'Purple.controller.Vehicles'
         util.ctl('Main').backToMapFromRequestForm()
     else
       ready = @getRequestFormGallonsSelect()? and @getRequestFormTimeSelect()?
-      # hacky, but need to make sure DOM is ready (todo: make nicer)
+      # TODO, make nicer:
+      # hacky use of setTimeout, but need to make sure DOM is ready
       setTimeout (=>
-        availability = @getRequestForm().config.availability
+        # get the availability option that corresponds with our octane
         gasType = @getVehicleById(value).gas_type
-        for a in availability
+        for a in @getRequestForm().config.availabilities
           if a['octane'] is gasType
-            appropriateAvailability = a
+            availability = a
             break
-        gallonsOpts = []
-        if appropriateAvailability.gallons < util.MINIMUM_GALLONS
-          navigator.notification.alert "Sorry, we are unable to deliver #{appropriateAvailability.octane} Octane to your location at this time.", (->), "Unavailable"
+            
+        # do we have any gas available in that octane?
+        if availability.gallons < util.MINIMUM_GALLONS
+          navigator.notification.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
           @getRequestFormGallonsSelect().setDisabled yes
           @getRequestFormTimeSelect().setDisabled yes
           @getSendRequestButton().setDisabled yes
           return
-        for g in [util.MINIMUM_GALLONS..appropriateAvailability.gallons] by util.GALLONS_INCREMENT
+
+        # populate options for number of gallons
+        gallonsOpts = []
+        for g in [util.MINIMUM_GALLONS..availability.gallons] by util.GALLONS_INCREMENT
           gallonsOpts.push
             text: "#{g}"
             value: "#{g}"
         @getRequestFormGallonsSelect().setOptions gallonsOpts
         @getRequestFormGallonsSelect().setDisabled no
+
+        # populate the time options
         timeOpts = []
-        for t in appropriateAvailability.time
+        for t, time of availability.times
           timeOpts.push
-            text: "within #{t} hour#{if t is 1 then '' else 's'}"
-            value: "< #{t} hr"
+            text: time['text']
+            value: t
         @getRequestFormTimeSelect().setOptions timeOpts
         @getRequestFormTimeSelect().setDisabled no
+        
         @getSendRequestButton().setDisabled no
       ), (if ready then 5 else 500)
 

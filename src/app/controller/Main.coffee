@@ -69,16 +69,22 @@ Ext.define 'Purple.controller.Main'
     # (the immediate call is usually before the google map loads)
     # However, on my iPhone 5s the immediate call does work.
 
-    # ga_storage._enableSSL() # TODO security - doesn't seem to actually use SSL
-    # ga_storage._setAccount 'UA-55536703-1'
-    # ga_storage._setDomain 'none'
-    # ga_storage._trackEvent 'main', 'App Launch' # , 'label', 'value'
+    # Uncomment this for customer app, but courier doesn't need it
+    ga_storage._enableSSL() # doesn't seem to actually use SSL?
+    ga_storage._setAccount 'UA-61762011-1'
+    ga_storage._setDomain 'none'
+    ga_storage._trackEvent 'main', 'App Launch' # , 'label', 'value'
 
-    navigator.splashscreen.hide()
+    navigator.splashscreen?.hide()
+
+    if util.ctl('Account').hasPushNotificationsSetup()
+      @setUpPushNotifications()
+      # seems like overkill here (esp. since these cause ajax calls)
+      setTimeout (Ext.bind @setUpPushNotifications, this), 5000
 
   setUpPushNotifications: ->
     if Ext.os.name is "iOS"
-      window.plugins.pushNotification.register(
+      window.plugins?.pushNotification?.register(
         (Ext.bind @registerDeviceForPushNotifications, this),
         ((error) -> alert "error: " + error),
         {
@@ -90,17 +96,21 @@ Ext.define 'Purple.controller.Main'
       )
     else
       # must be Android
-      window.plugins.pushNotification.register(
-        ((result) -> alert "success: " + result),
+      window.plugins?.pushNotification?.register(
+        ((result) ->),
         ((error) -> alert "error: " + error),
         {
-          "senderID": "replace_with_sender_id"
+          "senderID": util.GCM_SENDER_ID
           "ecb": "onNotification"
         }
       )
 
-  registerDeviceForPushNotifications: (cred) ->
+  # This is happening pretty often: initial setup and then any app start
+  # and logins. Need to look into this later. I want to make sure it is
+  # registered but I don't think we need to call add-sns ajax so often.
+  registerDeviceForPushNotifications: (cred, pushPlatform = "apns") ->
     # cred for APNS (apple) is the device token
+    # for GCM (android) it is regid
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}user/add-sns"
       params: Ext.JSON.encode
@@ -108,7 +118,7 @@ Ext.define 'Purple.controller.Main'
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         cred: cred
-        push_platform: "apns"
+        push_platform: pushPlatform
       headers:
         'Content-Type': 'application/json'
       timeout: 30000
@@ -193,6 +203,7 @@ Ext.define 'Purple.controller.Main'
     @getBackToMapButton().show()
     @getRequestAddressField().enable()
     @getRequestAddressField().focus()
+    ga_storage._trackEvent 'ui', 'Address Text Input Mode'
 
   generateSuggestions: ->
     query = @getRequestAddressField().getValue()
@@ -242,6 +253,7 @@ Ext.define 'Purple.controller.Main'
       #   console.log 'placesService error' + status
 
   initRequestGasForm: ->
+    ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
     if deliveryLocName is @getRequestAddressField().getInitialConfig().value
       return # just return, it hasn't loaded the location yet
@@ -271,17 +283,19 @@ Ext.define 'Purple.controller.Main'
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
+            availabilities = response.availabilities
             # first, see if there are any gallons available at all
-            totalGallons = response.availability.reduce (a, b) ->
+            totalGallons = availabilities.reduce (a, b) ->
               a.gallons + b.gallons
-            totalNumOfTimeOptions = response.availability.reduce (a, b) ->
-              a.time.count + b.time.count
+            # and, are there any time options available
+            totalNumOfTimeOptions = availabilities.reduce (a, b) ->
+              Object.keys(a.times).length + Object.keys(b.times).length
             if totalGallons < util.MINIMUM_GALLONS or totalNumOfTimeOptions is 0
-              navigator.notification.alert "Sorry, we are unable to deliver gas to your location at this time.", (->), "Unavailable"
+              navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
             else
               @getRequestGasTabContainer().setActiveItem(
                 Ext.create 'Purple.view.RequestForm',
-                  availability: response.availability
+                  availabilities: availabilities
               ) 
               @getRequestForm().setValues(
                 lat: @deliveryLocLat
@@ -313,17 +327,15 @@ Ext.define 'Purple.controller.Main'
       Ext.create 'Purple.view.RequestConfirmationForm'
     )
     vals = @getRequestForm().getValues()
-    availability = @getRequestForm().config.availability
+    availabilities = @getRequestForm().config.availabilities
     gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type
-    for a in availability
+    for a in availabilities
       if a['octane'] is gasType
-        appropriateAvailability = a
+        availability = a
         break
 
-    gasPrice = appropriateAvailability.price_per_gallon
-    serviceFee = switch vals['time']
-      when '< 1 hr' then appropriateAvailability.service_fee[0]
-      when '< 3 hr' then appropriateAvailability.service_fee[1]
+    gasPrice = availability.price_per_gallon
+    serviceFee = availability.times[vals['time']]['service_fee']
     vals['gas_price'] = "" + util.centsToDollars(
       gasPrice
     )
@@ -334,9 +346,7 @@ Ext.define 'Purple.controller.Main'
       parseFloat(gasPrice) * parseFloat(vals['gallons']) +
       parseFloat(serviceFee)
     )
-    vals['display_time'] = switch vals['time']
-      when '< 1 hr' then 'within 1 hour'
-      when '< 3 hr' then 'within 3 hours'
+    vals['display_time'] = availability.times[vals['time']]['text']
     vals['vehicle_id'] = vals['vehicle']
     for v in util.ctl('Vehicles').vehicles
       if v['id'] is vals['vehicle_id']
@@ -510,9 +520,11 @@ Ext.define 'Purple.controller.Main'
         if not response.success
           @errorCount++
           if @errorCount > 10
+            @errorCount = 0
             navigator.notification.alert "Unable to ping dispatch center.", (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         @errorCount++
         if @errorCount > 10
-          navigator.notification.alert "Unable to ping dispatch center. Error #2.", (->), "Error"
+          @errorCount = 0
+          navigator.notification.alert "Unable to ping dispatch center. Problem with internet connectivity.", (->), "Error"

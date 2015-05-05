@@ -6,10 +6,10 @@ Ext.define 'Override.field.Select'
       return false
 
     component = this.getComponent()
-    this.fireEvent 'focus', this, e
+    # this.fireEvent 'focus', this, e
 
-    if Ext.os.is.Android4
-      component.input.dom.focus()
+    # if Ext.os.is.Android4
+    #   component.input.dom.focus()
     component.input.dom.blur()
 
     this.isFocused = true

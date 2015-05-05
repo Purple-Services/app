@@ -120,6 +120,7 @@ Ext.define('Purple.controller.Orders', {
     }
     if (util.ctl('Account').isCourier()) {
       v = order['vehicle'];
+      order['gas_type'] = v['gas_type'];
       order['vehicle_make'] = v['make'];
       order['vehicle_model'] = v['model'];
       order['vehicle_year'] = v['year'];
@@ -186,7 +187,8 @@ Ext.define('Purple.controller.Orders', {
     }
   },
   backToOrders: function() {
-    return this.getOrdersTabContainer().remove(this.getOrder(), true);
+    var _ref;
+    return (_ref = this.getOrdersTabContainer()) != null ? _ref.remove(this.getOrder(), true) : void 0;
   },
   loadOrdersList: function(forceUpdate, callback) {
     if (forceUpdate == null) {

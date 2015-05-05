@@ -108,6 +108,7 @@ Ext.define 'Purple.controller.Orders'
 
     if util.ctl('Account').isCourier()
       v = order['vehicle']
+      order['gas_type'] = v['gas_type']
       order['vehicle_make'] = v['make']
       order['vehicle_model'] = v['model']
       order['vehicle_year'] = v['year']
@@ -186,7 +187,7 @@ Ext.define 'Purple.controller.Orders'
     
 
   backToOrders: ->
-    @getOrdersTabContainer().remove(
+    @getOrdersTabContainer()?.remove(
       @getOrder(),
       yes
     )

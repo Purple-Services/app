@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id          = "6NAJA3N74X.com.purple.app"
+        id = "com.purple.app"
         versionCode = "12" 
-        version     = "1.0.1" >
+        version     = "1.0.2" >
+
+  <!--
+      For iOS use:
+        id = "6NAJA3N74X.com.purple.app"
+      Android cannot start with number, so:
+        id = "com.purple.app"
+  -->
+  
   <!-- versionCode is optional and Android only -->
 
+
+  <!-- BEGIN CUSTOMER APP ONLY -->
   <name>Purple</name>
+  <!-- BEGIN CUSTOMER APP ONLY -->
+  
+  <!-- BEGIN COURIER APP ONLY -->
+  <!-- <name>Purple Courier</name> -->
+  <!-- END COURIER APP ONLY -->
+
+  
   <description>
     Purple mobile app.
   </description>
@@ -14,8 +31,6 @@
   <content src="index.html" />
 
   <icon src="icon.png" />
-
-
   <icon src="icon.png" gap:platform="ios" /> 
   <icon src="icon-57.png" width="57" height="57" gap:platform="ios" />
   <icon src="icon-57@2x.png" width="114" height="114" gap:platform="ios" />
@@ -25,7 +40,19 @@
   <icon src="icon-76@2x.png" width="152" height="152" gap:platform="ios" />
   <icon src="icon-120.png" width="120" height="120" gap:platform="ios" />
   <icon src="icon-152.png" width="152" height="152" gap:platform="ios" />
-  
+
+  <!-- 36px -->
+  <icon src="ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+  <!-- 48px -->
+  <icon src="mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+  <!-- 72px -->
+  <icon src="hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+  <!-- 96px -->
+  <icon src="xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+  <!-- 144px -->
+  <icon src="xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+  <!-- 192px -->
+  <icon src="xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
 
   <!-- Splash Screen Images -->
 
@@ -57,9 +84,9 @@
   <gap:splash src="splash-screens/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
   <gap:splash src="splash-screens/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
   <gap:splash src="splash-screens/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-  <gap:splash src="splash-screens/fr-xhdpi.png" gap:platform="android" gap:qualifier="fr-xhdpi" />
-  <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" />
-  <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" />
+  <!-- <gap:splash src="splash-screens/fr-xhdpi.png" gap:platform="android" gap:qualifier="fr-xhdpi" /> -->
+  <!-- <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" /> -->
+  <!-- <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" /> -->
 
 
   <access origin="*" launch-external="yes" />
@@ -72,37 +99,37 @@
   <preference name="orientation" value="portrait" />
   <preference name="prerendered-icon" value="true" />
 
+
   <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
   <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
   <gap:plugin name="org.apache.cordova.camera" version="0.3.2" />
   <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
-  <gap:plugin name="org.apache.cordova.splashscreen" version="0.3.4" />
   <gap:plugin name="com.phonegap.plugins.childbrowser" version="5.0.0" />
-  
-  <preference name="AutoHideSplashScreen" value="false" />
 
+  <gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0" source="plugins.cordova.io" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="SplashScreen" value="splash-screens/hdpi.png" />
+  <preference name="SplashScreenDelay" value="10000" />
+  
   <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
   </gap:plugin>
 
-  <gap:plugin name="nl.x-services.plugins.googleplus" version="1.0.7" />
+  <gap:plugin name="nl.x-services.plugins.googleplus" version="1.1.2" source="plugins.cordova.io" />
   
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
-  
-  <!-- <gap:plugin name="org.apache.cordova.statusbar" version="0.1.4" /> -->
-
   <preference name="StatusBarOverlaysWebView" value="false" />
   <preference name="StatusBarBackgroundColor" value="#EDEDED" />
   <preference name="StatusBarStyle" value="blacktranslucent" />
 
+  
   <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
 
   <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.4.0" />
 
 
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- Only include these when building the Courier app -->
   <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
   <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
   <!--   <string>(required for Courier mode)</string> -->

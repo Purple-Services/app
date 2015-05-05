@@ -435,25 +435,25 @@ Ext.define('Purple.controller.Vehicles', {
     } else {
       ready = (this.getRequestFormGallonsSelect() != null) && (this.getRequestFormTimeSelect() != null);
       return setTimeout((function() {
-        var a, appropriateAvailability, availability, g, gallonsOpts, gasType, t, timeOpts, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2, _ref3;
-        availability = _this.getRequestForm().config.availability;
+        var a, availability, g, gallonsOpts, gasType, t, time, timeOpts, _i, _j, _len, _ref, _ref1, _ref2, _ref3, _ref4;
         gasType = _this.getVehicleById(value).gas_type;
-        for (_i = 0, _len = availability.length; _i < _len; _i++) {
-          a = availability[_i];
+        _ref = _this.getRequestForm().config.availabilities;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          a = _ref[_i];
           if (a['octane'] === gasType) {
-            appropriateAvailability = a;
+            availability = a;
             break;
           }
         }
-        gallonsOpts = [];
-        if (appropriateAvailability.gallons < util.MINIMUM_GALLONS) {
-          navigator.notification.alert("Sorry, we are unable to deliver " + appropriateAvailability.octane + " Octane to your location at this time.", (function() {}), "Unavailable");
+        if (availability.gallons < util.MINIMUM_GALLONS) {
+          navigator.notification.alert("Sorry, we are unable to deliver " + availability.octane + " Octane to your location at this time.", (function() {}), "Unavailable");
           _this.getRequestFormGallonsSelect().setDisabled(true);
           _this.getRequestFormTimeSelect().setDisabled(true);
           _this.getSendRequestButton().setDisabled(true);
           return;
         }
-        for (g = _j = _ref = util.MINIMUM_GALLONS, _ref1 = appropriateAvailability.gallons, _ref2 = util.GALLONS_INCREMENT; _ref <= _ref1 ? _j <= _ref1 : _j >= _ref1; g = _j += _ref2) {
+        gallonsOpts = [];
+        for (g = _j = _ref1 = util.MINIMUM_GALLONS, _ref2 = availability.gallons, _ref3 = util.GALLONS_INCREMENT; _ref1 <= _ref2 ? _j <= _ref2 : _j >= _ref2; g = _j += _ref3) {
           gallonsOpts.push({
             text: "" + g,
             value: "" + g
@@ -462,12 +462,12 @@ Ext.define('Purple.controller.Vehicles', {
         _this.getRequestFormGallonsSelect().setOptions(gallonsOpts);
         _this.getRequestFormGallonsSelect().setDisabled(false);
         timeOpts = [];
-        _ref3 = appropriateAvailability.time;
-        for (_k = 0, _len1 = _ref3.length; _k < _len1; _k++) {
-          t = _ref3[_k];
+        _ref4 = availability.times;
+        for (t in _ref4) {
+          time = _ref4[t];
           timeOpts.push({
-            text: "within " + t + " hour" + (t === 1 ? '' : 's'),
-            value: "< " + t + " hr"
+            text: time['text'],
+            value: t
           });
         }
         _this.getRequestFormTimeSelect().setOptions(timeOpts);

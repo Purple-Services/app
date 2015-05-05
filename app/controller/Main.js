@@ -66,35 +66,48 @@ Ext.define('Purple.controller.Main', {
   mapInited: false,
   courierPingIntervalRef: null,
   launch: function() {
+    var _ref;
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
     this.updateLatlng();
     setTimeout(Ext.bind(this.updateLatlng, this), 2000);
     setTimeout(Ext.bind(this.updateLatlng, this), 5000);
-    return navigator.splashscreen.hide();
+    ga_storage._enableSSL();
+    ga_storage._setAccount('UA-61762011-1');
+    ga_storage._setDomain('none');
+    ga_storage._trackEvent('main', 'App Launch');
+    if ((_ref = navigator.splashscreen) != null) {
+      _ref.hide();
+    }
+    if (util.ctl('Account').hasPushNotificationsSetup()) {
+      this.setUpPushNotifications();
+      return setTimeout(Ext.bind(this.setUpPushNotifications, this), 5000);
+    }
   },
   setUpPushNotifications: function() {
+    var _ref, _ref1, _ref2, _ref3;
     if (Ext.os.name === "iOS") {
-      return window.plugins.pushNotification.register(Ext.bind(this.registerDeviceForPushNotifications, this), (function(error) {
+      return (_ref = window.plugins) != null ? (_ref1 = _ref.pushNotification) != null ? _ref1.register(Ext.bind(this.registerDeviceForPushNotifications, this), (function(error) {
         return alert("error: " + error);
       }), {
         "badge": "true",
         "sound": "true",
         "alert": "true",
         "ecb": "onNotificationAPN"
-      });
+      }) : void 0 : void 0;
     } else {
-      return window.plugins.pushNotification.register((function(result) {
-        return alert("success: " + result);
-      }), (function(error) {
+      return (_ref2 = window.plugins) != null ? (_ref3 = _ref2.pushNotification) != null ? _ref3.register((function(result) {}), (function(error) {
         return alert("error: " + error);
       }), {
-        "senderID": "replace_with_sender_id",
+        "senderID": util.GCM_SENDER_ID,
         "ecb": "onNotification"
-      });
+      }) : void 0 : void 0;
     }
   },
-  registerDeviceForPushNotifications: function(cred) {
+  registerDeviceForPushNotifications: function(cred, pushPlatform) {
+    if (pushPlatform == null) {
+      pushPlatform = "apns";
+    }
     return Ext.Ajax.request({
       url: "" + util.WEB_SERVICE_BASE_URL + "user/add-sns",
       params: Ext.JSON.encode({
@@ -102,7 +115,7 @@ Ext.define('Purple.controller.Main', {
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
         cred: cred,
-        push_platform: "apns"
+        push_platform: pushPlatform
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -214,7 +227,8 @@ Ext.define('Purple.controller.Main', {
     this.getAutocompleteList().show();
     this.getBackToMapButton().show();
     this.getRequestAddressField().enable();
-    return this.getRequestAddressField().focus();
+    this.getRequestAddressField().focus();
+    return ga_storage._trackEvent('ui', 'Address Text Input Mode');
   },
   generateSuggestions: function() {
     var query, suggestions;
@@ -282,6 +296,7 @@ Ext.define('Purple.controller.Main', {
   },
   initRequestGasForm: function() {
     var deliveryLocName;
+    ga_storage._trackEvent('ui', 'Request Gas Button Pressed');
     deliveryLocName = this.getRequestAddressField().getValue();
     if (deliveryLocName === this.getRequestAddressField().getInitialConfig().value) {
       return;
@@ -310,21 +325,22 @@ Ext.define('Purple.controller.Main', {
         method: 'POST',
         scope: this,
         success: function(response_obj) {
-          var response, totalGallons, totalNumOfTimeOptions;
+          var availabilities, response, totalGallons, totalNumOfTimeOptions;
           Ext.Viewport.setMasked(false);
           response = Ext.JSON.decode(response_obj.responseText);
           if (response.success) {
-            totalGallons = response.availability.reduce(function(a, b) {
+            availabilities = response.availabilities;
+            totalGallons = availabilities.reduce(function(a, b) {
               return a.gallons + b.gallons;
             });
-            totalNumOfTimeOptions = response.availability.reduce(function(a, b) {
-              return a.time.count + b.time.count;
+            totalNumOfTimeOptions = availabilities.reduce(function(a, b) {
+              return Object.keys(a.times).length + Object.keys(b.times).length;
             });
             if (totalGallons < util.MINIMUM_GALLONS || totalNumOfTimeOptions === 0) {
-              return navigator.notification.alert("Sorry, we are unable to deliver gas to your location at this time.", (function() {}), "Unavailable");
+              return navigator.notification.alert(response["unavailable-reason"], (function() {}), "Unavailable");
             } else {
               this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm', {
-                availability: response.availability
+                availabilities: availabilities
               }));
               return this.getRequestForm().setValues({
                 lat: this.deliveryLocLat,
@@ -352,38 +368,24 @@ Ext.define('Purple.controller.Main', {
     return this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
   },
   sendRequest: function() {
-    var a, appropriateAvailability, availability, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref;
+    var a, availabilities, availability, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref;
     this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestConfirmationForm'));
     vals = this.getRequestForm().getValues();
-    availability = this.getRequestForm().config.availability;
+    availabilities = this.getRequestForm().config.availabilities;
     gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type;
-    for (_i = 0, _len = availability.length; _i < _len; _i++) {
-      a = availability[_i];
+    for (_i = 0, _len = availabilities.length; _i < _len; _i++) {
+      a = availabilities[_i];
       if (a['octane'] === gasType) {
-        appropriateAvailability = a;
+        availability = a;
         break;
       }
     }
-    gasPrice = appropriateAvailability.price_per_gallon;
-    serviceFee = (function() {
-      switch (vals['time']) {
-        case '< 1 hr':
-          return appropriateAvailability.service_fee[0];
-        case '< 3 hr':
-          return appropriateAvailability.service_fee[1];
-      }
-    })();
+    gasPrice = availability.price_per_gallon;
+    serviceFee = availability.times[vals['time']]['service_fee'];
     vals['gas_price'] = "" + util.centsToDollars(gasPrice);
     vals['service_fee'] = "" + util.centsToDollars(serviceFee);
     vals['total_price'] = "" + util.centsToDollars(parseFloat(gasPrice) * parseFloat(vals['gallons']) + parseFloat(serviceFee));
-    vals['display_time'] = (function() {
-      switch (vals['time']) {
-        case '< 1 hr':
-          return 'within 1 hour';
-        case '< 3 hr':
-          return 'within 3 hours';
-      }
-    })();
+    vals['display_time'] = availability.times[vals['time']]['text'];
     vals['vehicle_id'] = vals['vehicle'];
     _ref = util.ctl('Vehicles').vehicles;
     for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
@@ -592,6 +594,7 @@ Ext.define('Purple.controller.Main', {
         if (!response.success) {
           this.errorCount++;
           if (this.errorCount > 10) {
+            this.errorCount = 0;
             return navigator.notification.alert("Unable to ping dispatch center.", (function() {}), "Error");
           }
         }
@@ -600,7 +603,8 @@ Ext.define('Purple.controller.Main', {
         Ext.Viewport.setMasked(false);
         this.errorCount++;
         if (this.errorCount > 10) {
-          return navigator.notification.alert("Unable to ping dispatch center. Error #2.", (function() {}), "Error");
+          this.errorCount = 0;
+          return navigator.notification.alert("Unable to ping dispatch center. Problem with internet connectivity.", (function() {}), "Error");
         }
       }
     });
