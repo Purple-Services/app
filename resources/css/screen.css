@@ -134,6 +134,9 @@ body {
 .x-field-textarea {
     border-left: 10px solid #DCD2DA;
 }
+.x-field-textarea textarea {
+  min-height: 0em !important;
+}
 .field-label-text,
 .x-form-label span {
     color: #752B90;

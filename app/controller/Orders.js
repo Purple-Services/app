@@ -71,7 +71,7 @@ Ext.define('Purple.controller.Orders', {
     return order;
   },
   viewOrder: function(orderId) {
-    var c, diff, o, order, v, _i, _j, _len, _len1, _ref, _ref1,
+    var c, diffHours, diffMinutes, o, order, v, _i, _j, _len, _len1, _ref, _ref1,
       _this = this;
     _ref = this.orders;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -89,7 +89,7 @@ Ext.define('Purple.controller.Orders', {
     if (order['status'] === 'complete') {
       this.getOrderRating().show();
     }
-    order['status'] = (function() {
+    order['display_status'] = (function() {
       switch (order['status']) {
         case 'unassigned':
           return 'Choosing a Courier';
@@ -99,17 +99,13 @@ Ext.define('Purple.controller.Orders', {
     })();
     order['time_order_placed'] = Ext.util.Format.date(new Date(order['target_time_start'] * 1000), "g:i a");
     order['time_deadline'] = Ext.util.Format.date(new Date(order['target_time_end'] * 1000), "g:i a");
-    diff = Math.floor((order['target_time_end'] - order['target_time_start']) / (60 * 60));
-    order['display_time'] = (function() {
-      switch (diff) {
-        case 1:
-          return 'within 1 hour';
-        case 3:
-          return 'within 3 hours';
-        default:
-          return 'error calculating';
-      }
-    })();
+    diffMinutes = Math.floor((order['target_time_end'] - order['target_time_start']) / 60);
+    if (diffMinutes < 60) {
+      order['display_time'] = "within " + diffMinutes + " minutes";
+    } else {
+      diffHours = Math.round(diffMinutes / 60);
+      order['display_time'] = "within " + diffHours + " hour" + (diffHours === 1 ? '' : 's');
+    }
     _ref1 = util.ctl('Vehicles').vehicles;
     for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
       v = _ref1[_j];
@@ -447,7 +443,7 @@ Ext.define('Purple.controller.Orders', {
       failure: function(response_obj) {
         Ext.Viewport.setMasked(false);
         console.log(response_obj);
-        return navigator.notification.alert("Connection error. Please try again.", (function() {}), "Error");
+        return navigator.notification.alert("Connection error. Please go back to Orders page and pull down to refresh. Do not press this button again until you have the updated status on the Orders page.", (function() {}), "Error");
       }
     });
   }

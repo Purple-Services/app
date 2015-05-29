@@ -68,14 +68,11 @@ Ext.define('Purple.controller.Main', {
   launch: function() {
     var _ref;
     this.callParent(arguments);
-    this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 10000);
-    this.updateLatlng();
-    setTimeout(Ext.bind(this.updateLatlng, this), 2000);
-    setTimeout(Ext.bind(this.updateLatlng, this), 5000);
+    this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 5000);
     ga_storage._enableSSL();
     ga_storage._setAccount('UA-61762011-1');
     ga_storage._setDomain('none');
-    ga_storage._trackEvent('main', 'App Launch');
+    ga_storage._trackEvent('main', 'App Launch', "Platform: " + Ext.os.name);
     if ((_ref = navigator.splashscreen) != null) {
       _ref.hide();
     }
@@ -162,6 +159,7 @@ Ext.define('Purple.controller.Main', {
     }
   },
   initGeocoder: function() {
+    this.updateLatlng();
     this.geocoder = new google.maps.Geocoder();
     this.placesService = new google.maps.places.PlacesService(this.getMap().getMap());
     return this.mapInited = true;
@@ -565,48 +563,50 @@ Ext.define('Purple.controller.Main', {
     }
   },
   courierPing: function() {
-    var _ref;
+    var _ref, _ref1;
     if ((_ref = this.errorCount) == null) {
       this.errorCount = 0;
     }
-    return Ext.Ajax.request({
-      url: "" + util.WEB_SERVICE_BASE_URL + "courier/ping",
-      params: Ext.JSON.encode({
-        version: util.VERSION_NUMBER,
-        user_id: localStorage['purpleUserId'],
-        token: localStorage['purpleToken'],
-        lat: this.lat,
-        lng: this.lng,
-        gallons: {
-          87: localStorage['purpleCourierGallons87'],
-          91: localStorage['purpleCourierGallons91']
-        }
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 30000,
-      method: 'POST',
-      scope: this,
-      success: function(response_obj) {
-        var response;
-        response = Ext.JSON.decode(response_obj.responseText);
-        if (!response.success) {
-          this.errorCount++;
-          if (this.errorCount > 10) {
-            this.errorCount = 0;
-            return navigator.notification.alert("Unable to ping dispatch center.", (function() {}), "Error");
+    if ((_ref1 = this.courierPingBusy) == null) {
+      this.courierPingBusy = false;
+    }
+    if (!this.courierPingBusy) {
+      this.courierPingBusy = true;
+      return Ext.Ajax.request({
+        url: "" + util.WEB_SERVICE_BASE_URL + "courier/ping",
+        params: Ext.JSON.encode({
+          version: util.VERSION_NUMBER,
+          user_id: localStorage['purpleUserId'],
+          token: localStorage['purpleToken'],
+          lat: this.lat,
+          lng: this.lng,
+          gallons: {
+            87: localStorage['purpleCourierGallons87'],
+            91: localStorage['purpleCourierGallons91']
           }
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+        method: 'POST',
+        scope: this,
+        success: function(response_obj) {
+          var response;
+          this.courierPingBusy = false;
+          response = Ext.JSON.decode(response_obj.responseText);
+          if (!response.success) {
+            this.errorCount++;
+            if (this.errorCount > 10) {
+              this.errorCount = 0;
+              return navigator.notification.alert("Unable to ping dispatch center. Web service problem, please notify Chris.", (function() {}), "Error");
+            }
+          }
+        },
+        failure: function(response_obj) {
+          return this.courierPingBusy = false;
         }
-      },
-      failure: function(response_obj) {
-        Ext.Viewport.setMasked(false);
-        this.errorCount++;
-        if (this.errorCount > 10) {
-          this.errorCount = 0;
-          return navigator.notification.alert("Unable to ping dispatch center. Problem with internet connectivity.", (function() {}), "Error");
-        }
-      }
-    });
+      });
+    }
   }
 });

@@ -40,22 +40,18 @@ Ext.define 'Purple.view.Orders'
             </div>
           </div>
           <div class='x-list-emptytext' style='display:none;'>
-            {[(navigator.onLine ? 'no events' : 'unable to connect to internet<br />pull down to refresh')]}
+            {[(navigator.onLine ? 'no orders' : 'unable to connect to internet<br />pull down to refresh')]}
           </div>
         """)
         refreshFn: (plugin) ->
-          if not navigator.onLine
-            #navigator.notification.
-            alert 'Unable to connect to the internet.', (()->return), 'Oops!'
-          else
-            refresher = ->
-              list = plugin.getParentCmp() # not actually of type List
-              scroller = list.getScrollable().getScroller()
-              util.ctl('Orders').loadOrdersList yes, ->
-                scroller.minPosition.y = 0
-                scroller.scrollTo null, 0, true
-                plugin.resetRefreshState()
-            refresher()
+          refresher = ->
+            list = plugin.getParentCmp() # not actually of type List
+            scroller = list.getScrollable().getScroller()
+            util.ctl('Orders').loadOrdersList yes, ->
+              scroller.minPosition.y = 0
+              scroller.scrollTo null, 0, true
+              plugin.resetRefreshState()
+          refresher()
           return false
       }
     ]

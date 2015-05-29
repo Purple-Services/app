@@ -23,7 +23,6 @@ Ext.define('Purple.controller.Menu', {
         inviteButtonTap: 'inviteButtonTap'
       },
       topToolbar: {
-        menuButtonTap: 'menuButtonTap',
         helpButtonTap: 'helpButtonTap'
       }
     }
@@ -31,17 +30,32 @@ Ext.define('Purple.controller.Menu', {
   launch: function() {
     return this.callParent(arguments);
   },
-  menuButtonTap: function() {
-    return this.getMainContainer().toggleContainer();
+  open: function() {
+    return this.getMainContainer().openContainer();
+  },
+  close: function() {
+    return this.getMainContainer().closeContainer();
+  },
+  isClosed: function() {
+    return this.getMainContainer().isClosed();
   },
   helpButtonTap: function() {
-    return this.selectOption(5);
+    var _ref;
+    if (this.getCurrentIndex() === 5) {
+      return this.selectOption((_ref = this.indexBeforeHelp) != null ? _ref : 2);
+    } else {
+      this.indexBeforeHelp = this.getCurrentIndex();
+      return this.selectOption(5);
+    }
   },
   feedbackButtonTap: function() {
     return this.selectOption(6);
   },
   inviteButtonTap: function() {
     return this.selectOption(7);
+  },
+  getCurrentIndex: function() {
+    return this.getMainContainer().getActiveItem().data.index;
   },
   selectOption: function(index) {
     return this.getMainContainer().getItems().getAt(0).select(index, false, false);

@@ -745,6 +745,17 @@ Ext.define('Ext.ux.slidenavigation.View', {
             cls: 'x-slidenavigation-container',
             style: 'width: 100%; height: 100%; position: absolute; opacity: 1; z-index: 3',
             layout: 'card',
+            listeners: {
+                initialize: function(x) {
+                    x.element.on('tap', function(e){
+                        if (!me.isClosed()) {
+                            me.closeContainer();
+                        } else if (e.target.className.indexOf('menuButton') !== -1) {
+                            me.toggleContainer();
+                        }
+                    });
+                }
+            },
             dragAllowed:        false,
             dragAllowedForced:  false,
             draggable: {

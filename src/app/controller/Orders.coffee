@@ -79,7 +79,7 @@ Ext.define 'Purple.controller.Orders'
     if order['status'] is 'complete'
       @getOrderRating().show()
 
-    order['status'] = switch order['status']
+    order['display_status'] = switch order['status']
       when 'unassigned' then 'Choosing a Courier'
       else order['status']
 
@@ -93,13 +93,16 @@ Ext.define 'Purple.controller.Orders'
       "g:i a"
     )
 
-    diff = Math.floor(
-      (order['target_time_end'] - order['target_time_start']) / (60 * 60)
+    diffMinutes = Math.floor(
+      (order['target_time_end'] - order['target_time_start']) / 60
     )
-    order['display_time'] = switch diff
-      when 1 then 'within 1 hour'
-      when 3 then 'within 3 hours'
-      else 'error calculating'
+    if diffMinutes < 60
+      order['display_time'] = "within #{diffMinutes} minutes"
+    else
+      diffHours = Math.round(
+        diffMinutes / 60
+      )
+      order['display_time'] = "within #{diffHours} hour#{if diffHours is 1 then '' else 's'}"
         
     for v in util.ctl('Vehicles').vehicles
       if v['id'] is order['vehicle_id']
@@ -406,4 +409,4 @@ Ext.define 'Purple.controller.Orders'
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         console.log response_obj
-        navigator.notification.alert "Connection error. Please try again.", (->), "Error"
+        navigator.notification.alert "Connection error. Please go back to Orders page and pull down to refresh. Do not press this button again until you have the updated status on the Orders page.", (->), "Error"

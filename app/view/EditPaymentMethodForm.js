@@ -12,7 +12,7 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
     },
     submitOnAction: false,
     cls: ['request-form', 'vehicle-form', 'accent-bg', 'slideable'],
-    scrollable: {
+    scrollable: Ext.os.name === "Android" ? false : {
       direction: 'vertical',
       directionLock: true
     },

@@ -162,7 +162,7 @@ Ext.define 'Purple.view.RequestForm'
           {
             xtype: 'textareafield'
             name: 'special_instructions'
-            maxRows: 2
+            maxRows: 3
           }
           
           # hidden fields for flowing data
@@ -199,7 +199,7 @@ Ext.define 'Purple.view.RequestForm'
                 ctype: 'sendRequestButton'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Send Request'
+                text: 'Review Order'
                 disabled: yes
                 flex: 0
                 handler: ->

@@ -18,23 +18,36 @@ Ext.define 'Purple.controller.Menu'
       inviteButton:
         inviteButtonTap: 'inviteButtonTap'
       topToolbar:
-        menuButtonTap: 'menuButtonTap'
         helpButtonTap: 'helpButtonTap'
 
   launch: ->
     @callParent arguments
 
-  menuButtonTap: ->
-    @getMainContainer().toggleContainer()
+  open: ->
+    @getMainContainer().openContainer()
+
+  close: ->
+    @getMainContainer().closeContainer()
+
+  isClosed: ->
+    @getMainContainer().isClosed()
 
   helpButtonTap: ->
-    @selectOption 5
+    if @getCurrentIndex() is 5
+      # already on Help page
+      @selectOption (@indexBeforeHelp ? 2)
+    else
+      @indexBeforeHelp = @getCurrentIndex()
+      @selectOption 5
 
   feedbackButtonTap: ->
     @selectOption 6
 
   inviteButtonTap: ->
     @selectOption 7
+
+  getCurrentIndex: ->
+    @getMainContainer().getActiveItem().data.index
 
   selectOption: (index) ->
     @getMainContainer().getItems().getAt(0).select index, no, no

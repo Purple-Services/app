@@ -97,7 +97,7 @@ Ext.define('Purple.view.RequestForm', {
           }, {
             xtype: 'textareafield',
             name: 'special_instructions',
-            maxRows: 2
+            maxRows: 3
           }, {
             xtype: 'hiddenfield',
             name: 'lat'
@@ -128,7 +128,7 @@ Ext.define('Purple.view.RequestForm', {
                 ctype: 'sendRequestButton',
                 ui: 'action',
                 cls: 'button-pop',
-                text: 'Send Request',
+                text: 'Review Order',
                 disabled: true,
                 flex: 0,
                 handler: function() {

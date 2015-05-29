@@ -58,24 +58,16 @@ Ext.define 'Purple.controller.Main'
   launch: ->
     @callParent arguments
 
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 10000
-    # and, call it right away
-    @updateLatlng()
-    # and call it after 2 and 5 seconds so that it hits the google map at a time when it is ready
-    setTimeout (Ext.bind @updateLatlng, this), 2000
-    setTimeout (Ext.bind @updateLatlng, this), 5000
-    # in most cases that is overkill, but on my iPhone 4 the 5 seconds hit is
-    # crucial because otherwise you would have to wait 10 seconds
-    # (the immediate call is usually before the google map loads)
-    # However, on my iPhone 5s the immediate call does work.
+    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Uncomment this for customer app, but courier doesn't need it
     ga_storage._enableSSL() # doesn't seem to actually use SSL?
     ga_storage._setAccount 'UA-61762011-1'
     ga_storage._setDomain 'none'
-    ga_storage._trackEvent 'main', 'App Launch' # , 'label', 'value'
+    ga_storage._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
     navigator.splashscreen?.hide()
+    #StatusBar?.backgroundColorByHexString "#230F2B"
 
     if util.ctl('Account').hasPushNotificationsSetup()
       @setUpPushNotifications()
@@ -153,6 +145,8 @@ Ext.define 'Purple.controller.Main'
       )
 
   initGeocoder: ->
+    # this is called on maprender, so let's make sure we have user loc centered
+    @updateLatlng()
     @geocoder = new google.maps.Geocoder()
     @placesService = new google.maps.places.PlacesService @getMap().getMap()
     @mapInited = true
@@ -499,32 +493,32 @@ Ext.define 'Purple.controller.Main'
 
   courierPing: ->
     @errorCount ?= 0
-    Ext.Ajax.request
-      url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
-      params: Ext.JSON.encode
-        version: util.VERSION_NUMBER
-        user_id: localStorage['purpleUserId']
-        token: localStorage['purpleToken']
-        lat: @lat
-        lng: @lng
-        gallons:
-          87: localStorage['purpleCourierGallons87']
-          91: localStorage['purpleCourierGallons91']
-      headers:
-        'Content-Type': 'application/json'
-      timeout: 30000
-      method: 'POST'
-      scope: this
-      success: (response_obj) ->
-        response = Ext.JSON.decode response_obj.responseText
-        if not response.success
-          @errorCount++
-          if @errorCount > 10
-            @errorCount = 0
-            navigator.notification.alert "Unable to ping dispatch center.", (->), "Error"
-      failure: (response_obj) ->
-        Ext.Viewport.setMasked false
-        @errorCount++
-        if @errorCount > 10
-          @errorCount = 0
-          navigator.notification.alert "Unable to ping dispatch center. Problem with internet connectivity.", (->), "Error"
+    @courierPingBusy ?= no
+    if not @courierPingBusy
+      @courierPingBusy = yes
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
+        params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+          lat: @lat
+          lng: @lng
+          gallons:
+            87: localStorage['purpleCourierGallons87']
+            91: localStorage['purpleCourierGallons91']
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          @courierPingBusy = no
+          response = Ext.JSON.decode response_obj.responseText
+          if not response.success
+            @errorCount++
+            if @errorCount > 10
+              @errorCount = 0
+              navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+        failure: (response_obj) ->
+          @courierPingBusy = no

@@ -115,7 +115,7 @@ Ext.define 'Purple.controller.Account'
   # handles native users as a login
   # handles fb and google users as a login or register
   # (depending on whether or not they exist in our db)
-  authorizeUser: (type, platformId, authKey) ->
+  authorizeUser: (type, platformId, authKey, emailOverride = null) ->
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -126,6 +126,7 @@ Ext.define 'Purple.controller.Account'
         type: type
         platform_id: platformId
         auth_key: authKey
+        email_override: emailOverride
       headers:
         'Content-Type': 'application/json'
       timeout: 30000
@@ -233,10 +234,12 @@ Ext.define 'Purple.controller.Account'
     )
 
   googleLoginSuccess: (result) ->
+    console.log JSON.stringify(result)
     @authorizeUser(
       'google',
       result['userId'],
-      result['oauthToken']
+      result['oauthToken'],
+      result['email'] # revelant to Android version only. iOS will get email scope server-side
     )
 
   accountSetup: ->

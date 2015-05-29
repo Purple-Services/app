@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "com.purple.app"
-        versionCode = "12" 
-        version     = "1.0.2" >
+        id = "6NAJA3N74X.com.purple.app"
+        versionCode = "13"
+        version     = "1.0.3" >
 
   <!--
       For iOS use:
@@ -99,6 +99,7 @@
   <preference name="orientation" value="portrait" />
   <preference name="prerendered-icon" value="true" />
 
+  <preference name="show-splash-screen-spinner" value="false" />
 
   <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
   <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
@@ -119,15 +120,21 @@
   <gap:plugin name="nl.x-services.plugins.googleplus" version="1.1.2" source="plugins.cordova.io" />
   
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
-  <preference name="StatusBarOverlaysWebView" value="false" />
-  <preference name="StatusBarBackgroundColor" value="#EDEDED" />
-  <preference name="StatusBarStyle" value="blacktranslucent" />
+  <!-- <gap:plugin name="org.apache.cordova.statusbar" version="0.1.10" source="plugins.cordova.io" /> -->
+  <preference name="StatusBarOverlaysWebView" value="true" />
+  <preference name="StatusBarBackgroundColor" value="#000" />
+  <preference name="StatusBarStyle" value="lightcontent" />
 
   
   <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
 
   <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.4.0" />
 
+  <feature name="http://api.phonegap.com/1.0/network" />
+  <feature name="http://api.phonegap.com/1.0/camera" />
+  <feature name="http://api.phonegap.com/1.0/notification" />
+  <feature name="http://api.phonegap.com/1.0/geolocation" />
+  <feature name="http://api.phonegap.com/1.0/device" />
 
   <!-- BEGIN COURIER APP ONLY -->
   <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->

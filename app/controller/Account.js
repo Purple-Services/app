@@ -114,7 +114,10 @@ Ext.define('Purple.controller.Account', {
     vals = this.getLoginForm().getValues();
     return this.authorizeUser('native', vals['email_address'], vals['password']);
   },
-  authorizeUser: function(type, platformId, authKey) {
+  authorizeUser: function(type, platformId, authKey, emailOverride) {
+    if (emailOverride == null) {
+      emailOverride = null;
+    }
     Ext.Viewport.setMasked({
       xtype: 'loadmask',
       message: ''
@@ -125,7 +128,8 @@ Ext.define('Purple.controller.Account', {
         version: util.VERSION_NUMBER,
         type: type,
         platform_id: platformId,
-        auth_key: authKey
+        auth_key: authKey,
+        email_override: emailOverride
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -222,7 +226,8 @@ Ext.define('Purple.controller.Account', {
     }));
   },
   googleLoginSuccess: function(result) {
-    return this.authorizeUser('google', result['userId'], result['oauthToken']);
+    console.log(JSON.stringify(result));
+    return this.authorizeUser('google', result['userId'], result['oauthToken'], result['email']);
   },
   accountSetup: function() {
     return this.showAccountSetupForm();

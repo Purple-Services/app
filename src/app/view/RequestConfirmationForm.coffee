@@ -38,7 +38,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             xtype: 'container'
             flex: 0
             cls: 'heading'
-            html: 'Confirmation'
+            html: 'Review'
             items: [
               {
                 xtype: 'button'

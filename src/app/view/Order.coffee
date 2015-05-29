@@ -97,9 +97,13 @@ Ext.define 'Purple.view.Order'
             cls: 'horizontal-rule'
           }
           {
+            xtype: 'hiddenfield'
+            name: 'status'
+          }
+          {
             xtype: 'textfield'
             flex: 0
-            name: 'status'
+            name: 'display_status'
             label: 'Status'
             disabled: yes
             cls: [
