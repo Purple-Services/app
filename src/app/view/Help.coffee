@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Help'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'help'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.Help'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'accent-bg'

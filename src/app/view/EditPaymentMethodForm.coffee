@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.EditPaymentMethodForm'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'editpaymentmethodform'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.EditPaymentMethodForm'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
@@ -72,25 +73,11 @@ Ext.define 'Purple.view.EditPaymentMethodForm'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             ctype: 'editPaymentMethodFormHeading'
             cls: 'heading'
             html: ''
-            items: [
-              {
-                xtype: 'button'
-                ctype: 'backToPaymentMethodsButton'
-                ui: 'plain'
-                text: 'Back to Methods'
-                cls: [
-                  'right-side-aligned-with-heading'
-                  'link'
-                ] 
-                handler: ->
-                  @up().up().up().fireEvent 'backToPaymentMethods'
-              }
-            ]
           }
           {
             xtype: 'component'

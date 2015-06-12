@@ -23,6 +23,7 @@ Ext.define('Purple.view.MainContainer', {
 
     containerSlideDelay: -1,
     container: {
+      height: '100%',
       scrollable: false,
       cls: 'accent-bg'
     },
@@ -52,6 +53,7 @@ Ext.define('Purple.view.MainContainer', {
     list: {
       maxDrag: 265,
       width: 265,
+      height: '100%',
       grouped: false,
       scrollable: false,
       items: [
@@ -72,18 +74,6 @@ Ext.define('Purple.view.MainContainer', {
           cls: 'menu-links',
           items: [
             {
-              xtype: 'button',
-              ctype: 'inviteButton',
-              ui: 'plain',
-              text: 'Invite a Friend',
-              handler: function() {
-                return this.fireEvent('inviteButtonTap');
-              }
-            }, {
-              xtype: 'component',
-              flex: 0,
-              height: 10
-            }, {
               xtype: 'button',
               ctype: 'feedbackButton',
               ui: 'plain',
@@ -207,7 +197,7 @@ Ext.define('Purple.view.MainContainer', {
           }
         ]
       }, {
-        title: "Invite",
+        title: "Get Free Gas!",
         items: [
           {
             xtype: "toptoolbar",
@@ -241,7 +231,7 @@ Ext.define('Purple.view.MainContainer', {
     listeners: {
       initialize: function() {
         util.ctl('Menu').adjustForAppLoginState();
-        util.ctl('Menu').hideTitles([5, 6, 7]);
+        util.ctl('Menu').hideTitles([5, 6]);
         if (util.ctl('Account').isCourier()) {
           return util.ctl('Menu').selectOption(3);
         }

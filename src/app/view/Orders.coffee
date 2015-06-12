@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Orders'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'orders'
   requires: [
     'Ext.form.*'
@@ -12,6 +12,7 @@ Ext.define 'Purple.view.Orders'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
@@ -73,7 +74,7 @@ Ext.define 'Purple.view.Orders'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             cls: 'heading'
             html: 'Orders'

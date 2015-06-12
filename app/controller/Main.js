@@ -14,7 +14,6 @@ Ext.define('Purple.controller.Main', {
       requestAddressField: '#requestAddressField',
       requestGasButtonContainer: '#requestGasButtonContainer',
       autocompleteList: '#autocompleteList',
-      backToMapButton: '#backToMapButton',
       requestForm: 'requestform',
       requestConfirmationForm: 'requestconfirmationform',
       feedback: 'feedback',
@@ -22,7 +21,9 @@ Ext.define('Purple.controller.Main', {
       feedbackThankYouMessage: '[ctype=feedbackThankYouMessage]',
       invite: 'invite',
       inviteTextField: '[ctype=inviteTextField]',
-      inviteThankYouMessage: '[ctype=inviteThankYouMessage]'
+      inviteThankYouMessage: '[ctype=inviteThankYouMessage]',
+      discountField: '#discountField',
+      couponCodeField: '#couponCodeField'
     },
     control: {
       mapForm: {
@@ -38,10 +39,6 @@ Ext.define('Purple.controller.Main', {
       },
       autocompleteList: {
         updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
-      },
-      backToMapButton: {
-        mapMode: 'mapMode',
-        recenterAtUserLoc: 'recenterAtUserLoc'
       },
       requestGasButtonContainer: {
         initRequestGasForm: 'initRequestGasForm'
@@ -69,10 +66,18 @@ Ext.define('Purple.controller.Main', {
     var _ref;
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 5000);
-    ga_storage._enableSSL();
-    ga_storage._setAccount('UA-61762011-1');
-    ga_storage._setDomain('none');
-    ga_storage._trackEvent('main', 'App Launch', "Platform: " + Ext.os.name);
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._enableSSL();
+    }
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._setAccount('UA-61762011-1');
+    }
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._setDomain('none');
+    }
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._trackEvent('main', 'App Launch', "Platform: " + Ext.os.name);
+    }
     if ((_ref = navigator.splashscreen) != null) {
       _ref.hide();
     }
@@ -208,25 +213,32 @@ Ext.define('Purple.controller.Main', {
     }) : void 0;
   },
   mapMode: function() {
-    this.getAutocompleteList().hide();
-    this.getBackToMapButton().hide();
-    this.getMap().show();
-    this.getSpacerBetweenMapAndAddress().show();
-    this.getRequestGasButtonContainer().show();
-    return this.getRequestAddressField().disable();
+    if (this.getMap().isHidden()) {
+      this.getAutocompleteList().hide();
+      this.getMap().show();
+      this.getSpacerBetweenMapAndAddress().show();
+      this.getRequestGasButtonContainer().show();
+      return this.getRequestAddressField().disable();
+    }
   },
   recenterAtUserLoc: function() {
     return this.getMap().getMap().setCenter(new google.maps.LatLng(this.lat, this.lng));
   },
   addressInputMode: function() {
-    this.getMap().hide();
-    this.getSpacerBetweenMapAndAddress().hide();
-    this.getRequestGasButtonContainer().hide();
-    this.getAutocompleteList().show();
-    this.getBackToMapButton().show();
-    this.getRequestAddressField().enable();
-    this.getRequestAddressField().focus();
-    return ga_storage._trackEvent('ui', 'Address Text Input Mode');
+    var _this = this;
+    if (!this.getMap().isHidden()) {
+      this.getMap().hide();
+      this.getSpacerBetweenMapAndAddress().hide();
+      this.getRequestGasButtonContainer().hide();
+      this.getAutocompleteList().show();
+      this.getRequestAddressField().enable();
+      this.getRequestAddressField().focus();
+      util.ctl('Menu').pushOntoBackButton(function() {
+        _this.recenterAtUserLoc();
+        return _this.mapMode();
+      });
+      return ga_storage._trackEvent('ui', 'Address Text Input Mode');
+    }
   },
   generateSuggestions: function() {
     var query, suggestions;
@@ -266,6 +278,7 @@ Ext.define('Purple.controller.Main', {
     var _this = this;
     this.getRequestAddressField().setValue(loc['locationName']);
     this.mapMode();
+    util.ctl('Menu').clearBackButtonStack();
     this.deliveryLocLat = 0;
     this.deliveryLocLng = 0;
     return this.placesService.getDetails({
@@ -323,7 +336,8 @@ Ext.define('Purple.controller.Main', {
         method: 'POST',
         scope: this,
         success: function(response_obj) {
-          var availabilities, response, totalGallons, totalNumOfTimeOptions;
+          var availabilities, response, totalGallons, totalNumOfTimeOptions,
+            _this = this;
           Ext.Viewport.setMasked(false);
           response = Ext.JSON.decode(response_obj.responseText);
           if (response.success) {
@@ -337,6 +351,9 @@ Ext.define('Purple.controller.Main', {
             if (totalGallons < util.MINIMUM_GALLONS || totalNumOfTimeOptions === 0) {
               return navigator.notification.alert(response["unavailable-reason"], (function() {}), "Unavailable");
             } else {
+              util.ctl('Menu').pushOntoBackButton(function() {
+                return _this.backToMapFromRequestForm();
+              });
               this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestForm', {
                 availabilities: availabilities
               }));
@@ -366,8 +383,12 @@ Ext.define('Purple.controller.Main', {
     return this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
   },
   sendRequest: function() {
-    var a, availabilities, availability, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref;
+    var a, availabilities, availability, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref,
+      _this = this;
     this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestConfirmationForm'));
+    util.ctl('Menu').pushOntoBackButton(function() {
+      return _this.backToRequestForm();
+    });
     vals = this.getRequestForm().getValues();
     availabilities = this.getRequestForm().config.availabilities;
     gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type;
@@ -378,9 +399,11 @@ Ext.define('Purple.controller.Main', {
         break;
       }
     }
+    vals['gas_type'] = "" + availability.octane;
     gasPrice = availability.price_per_gallon;
     serviceFee = availability.times[vals['time']]['service_fee'];
     vals['gas_price'] = "" + util.centsToDollars(gasPrice);
+    vals['gas_price_display'] = "$" + vals['gas_price'] + " x " + vals['gallons'];
     vals['service_fee'] = "" + util.centsToDollars(serviceFee);
     vals['total_price'] = "" + util.centsToDollars(parseFloat(gasPrice) * parseFloat(vals['gallons']) + parseFloat(serviceFee));
     vals['display_time'] = availability.times[vals['time']]['text'];
@@ -400,20 +423,67 @@ Ext.define('Purple.controller.Main', {
       return Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls('bottom-margin');
     }
   },
+  promptForCode: function() {
+    var _this = this;
+    return navigator.notification.prompt("Enter a coupon code:", (function(results) {
+      if (results.buttonIndex === 1) {
+        return _this.applyCode(results.input1);
+      }
+    }), "Coupon Code");
+  },
+  applyCode: function(code) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: "" + util.WEB_SERVICE_BASE_URL + "user/code",
+      params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        code: code
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          this.getDiscountField().setValue("- $" + util.centsToDollars(response.value));
+          return this.getCouponCodeField().setValue(code);
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
+  },
   confirmOrder: function() {
     var pmCtl, vals;
     if (!util.ctl('Account').hasDefaultPaymentMethod()) {
       this.getMainContainer().getItems().getAt(0).select(2, false, false);
       pmCtl = util.ctl('PaymentMethods');
       if (!(pmCtl.getPaymentMethods() != null)) {
-        pmCtl.accountPaymentMethodFieldTap();
+        pmCtl.accountPaymentMethodFieldTap(true);
       }
-      if (pmCtl.getEditPaymentMethodForm() != null) {
-        pmCtl.getAccountTabContainer().setActiveItem(pmCtl.getEditPaymentMethodForm());
-      } else {
-        pmCtl.showEditPaymentMethodForm();
-      }
+      pmCtl.showEditPaymentMethodForm('new', true);
+      util.ctl('Menu').pushOntoBackButton(function() {
+        pmCtl.backToAccount();
+        return util.ctl('Menu').selectOption(0);
+      });
       return pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = function() {
+        util.ctl('Menu').popOffBackButtonWithoutAction();
         pmCtl.backToAccount();
         return util.ctl('Menu').selectOption(0);
       };
@@ -450,6 +520,7 @@ Ext.define('Purple.controller.Main', {
             this.getRequestGasTabContainer().setActiveItem(this.getMapForm());
             this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
             this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
+            util.ctl('Menu').clearBackButtonStack();
             if (!util.ctl('Account').hasPushNotificationsSetup()) {
               return this.setUpPushNotifications();
             }

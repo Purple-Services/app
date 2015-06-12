@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.GasStations'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'gasstations'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.GasStations'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
@@ -37,7 +38,7 @@ Ext.define 'Purple.view.GasStations'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             cls: 'heading'
             html: 'Gas Stations'

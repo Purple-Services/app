@@ -8,6 +8,7 @@ Ext.define('Purple.controller.Menu', {
       topToolbar: 'toptoolbar',
       feedbackButton: '[ctype=feedbackButton]',
       inviteButton: '[ctype=inviteButton]',
+      menuButton: '[ctype=menuButton]',
       requestGasTabContainer: '#requestGasTabContainer',
       accountTab: '#accountTab',
       accountTabContainer: '#accountTabContainer',
@@ -23,10 +24,12 @@ Ext.define('Purple.controller.Menu', {
         inviteButtonTap: 'inviteButtonTap'
       },
       topToolbar: {
-        helpButtonTap: 'helpButtonTap'
+        helpButtonTap: 'helpButtonTap',
+        menuButtonTap: 'menuButtonTap'
       }
     }
   },
+  backButtonStack: [],
   launch: function() {
     return this.callParent(arguments);
   },
@@ -39,20 +42,63 @@ Ext.define('Purple.controller.Menu', {
   isClosed: function() {
     return this.getMainContainer().isClosed();
   },
+  lockMenu: function() {
+    return this.getMainContainer().setSlideSelector(false);
+  },
+  unlockMenu: function() {
+    return this.getMainContainer().setSlideSelector('slideable');
+  },
+  pushOntoBackButton: function(fn) {
+    this.backButtonStack.push(fn);
+    this.getMainContainer().addCls('makeMenuButtonBeBackButton');
+    return this.lockMenu();
+  },
+  popOffBackButton: function() {
+    (this.backButtonStack.pop())();
+    if (this.backButtonStack.length === 0) {
+      this.getMainContainer().removeCls('makeMenuButtonBeBackButton');
+      return this.unlockMenu();
+    }
+  },
+  popOffBackButtonWithoutAction: function() {
+    this.backButtonStack.pop();
+    if (this.backButtonStack.length === 0) {
+      this.getMainContainer().removeCls('makeMenuButtonBeBackButton');
+      return this.unlockMenu();
+    }
+  },
+  clearBackButtonStack: function() {
+    this.backButtonStack = [];
+    this.getMainContainer().removeCls('makeMenuButtonBeBackButton');
+    return this.unlockMenu();
+  },
+  menuButtonTap: function() {
+    if (this.backButtonStack.length !== 0) {
+      return this.popOffBackButton();
+    } else {
+      if (this.isClosed()) {
+        return this.open();
+      } else {
+        return this.close();
+      }
+    }
+  },
   helpButtonTap: function() {
-    var _ref;
+    var _ref,
+      _this = this;
     if (this.getCurrentIndex() === 5) {
-      return this.selectOption((_ref = this.indexBeforeHelp) != null ? _ref : 2);
+      this.selectOption((_ref = this.indexBeforeHelp) != null ? _ref : 2);
+      return this.popOffBackButtonWithoutAction();
     } else {
       this.indexBeforeHelp = this.getCurrentIndex();
+      this.pushOntoBackButton(function() {
+        return _this.selectOption(_this.indexBeforeHelp);
+      });
       return this.selectOption(5);
     }
   },
   feedbackButtonTap: function() {
     return this.selectOption(6);
-  },
-  inviteButtonTap: function() {
-    return this.selectOption(7);
   },
   getCurrentIndex: function() {
     return this.getMainContainer().getActiveItem().data.index;
@@ -88,7 +134,7 @@ Ext.define('Purple.controller.Menu', {
     if (util.ctl('Account').isUserLoggedIn()) {
       this.hideTitles([1]);
       if (util.ctl('Account').isCourier()) {
-        this.hideTitles([0, 4]);
+        this.hideTitles([0, 4, 7]);
         this.showTitles([2, 3, 8, 9]);
         if ((_ref = localStorage['purpleCourierGallons87']) == null) {
           localStorage['purpleCourierGallons87'] = 0;
@@ -101,11 +147,11 @@ Ext.define('Purple.controller.Menu', {
         }
       } else {
         this.hideTitles([8, 9]);
-        this.showTitles([2, 3, 4]);
+        this.showTitles([2, 3, 4, 7]);
       }
       return util.ctl('Account').populateAccountForm();
     } else {
-      this.hideTitles([2, 3, 4, 8, 9]);
+      this.hideTitles([2, 3, 4, 7, 8, 9]);
       return this.showTitles([1]);
     }
   }

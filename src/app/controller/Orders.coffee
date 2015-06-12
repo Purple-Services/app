@@ -73,6 +73,8 @@ Ext.define 'Purple.controller.Orders'
         orderId: orderId
         status: order['status']
     )
+    util.ctl('Menu').pushOntoBackButton =>
+      @backToOrders()
 
     @getOrder().addCls "status-#{order['status']}"
 

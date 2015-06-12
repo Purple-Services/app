@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Invite'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'invite'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.Invite'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'invite-form'
@@ -38,7 +39,7 @@ Ext.define 'Purple.view.Invite'
             xtype: 'component'
             flex: 0
             cls: 'heading'
-            html: 'Invite a Friend'
+            html: 'Get Free Gas!'
           }
           {
             xtype: 'component'
@@ -47,36 +48,22 @@ Ext.define 'Purple.view.Invite'
           }
           {
             xtype: 'component'
-            ctype: 'inviteThankYouMessage'
-            showAnimation: 'fadeIn'
-            hideAnimation: 'fadeOut'
             flex: 0
-            html: '<span style="color: #BA1C8D;">Invitation sent. Thank you!</span>'
-            cls: 'field-label-text'
-            hidden: yes
-            style: """
-              padding-top: 20px;
-              padding-bottom: 30px; 
+            html: """
+              Give friends 5 gallons of free gas. After they make their
+              first order, you'll get 5 gallons too!
+              <div style="text-align: center; padding: 35px 0px 0px 0px; color: #ba1c8d">
+                Coupon Code: CHRIS003
+              </div>
             """
-          }
-          {
-            xtype: 'component'
-            flex: 0
-            html: 'Your friend\'s email address:'
             cls: 'field-label-text'
-          }
-          {
-            xtype: 'emailfield'
-            ctype: 'inviteTextField'
-            name: 'text'
           }
           {
             xtype: 'container'
-            id: 'sendInvitesButtonContainer'
             flex: 0
             height: 110
             width: '100%'
-            padding: '0 0 5 0'
+            padding: '10 0 5 0'
             layout:
               type: 'vbox'
               pack: 'center'
@@ -86,10 +73,37 @@ Ext.define 'Purple.view.Invite'
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Send Invite'
+                text: 'Email Invite'
                 flex: 0
+                width: 200
+                margin: '0 0 20 0'
                 handler: ->
-                  @up().up().up().fireEvent 'sendInvites'
+                  plugins?.socialsharing?.shareViaEmail(
+                    'Here is my message.',
+                    'The Subject',
+                    null,
+                    null,
+                    null,
+                    null,
+                    (->), # success, first arg either true or false
+                    (->)  # fatal error
+                  )
+              }
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop button-pop-dark'
+                text: 'Text Invite'
+                flex: 0
+                width: 200
+                handler: ->
+                  #@up().up().up().fireEvent 'sendInvites'
+                  plugins?.socialsharing?.shareViaSMS(
+                    'My message here',
+                    null,
+                    (->),
+                    (->)
+                  )
               }
             ]
           }

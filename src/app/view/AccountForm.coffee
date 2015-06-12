@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.AccountForm'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'accountform'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.AccountForm'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     scrollable: no
     cls: [

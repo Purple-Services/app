@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.RequestConfirmationForm'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'requestconfirmationform'
   requires: [
     'Ext.form.*'
@@ -11,9 +11,11 @@ Ext.define 'Purple.view.RequestConfirmationForm'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
+      'view-order'
       'accent-bg'
       'slideable'
     ]
@@ -35,23 +37,10 @@ Ext.define 'Purple.view.RequestConfirmationForm'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             cls: 'heading'
-            html: 'Review'
-            items: [
-              {
-                xtype: 'button'
-                ui: 'plain'
-                text: 'Edit Order'
-                cls: [
-                  'right-side-aligned-with-heading'
-                  'link'
-                ] 
-                handler: ->
-                  @up().up().up().fireEvent 'backToRequestForm'
-              }
-            ]
+            html: 'Review Order'
           }
           {
             xtype: 'component'
@@ -126,21 +115,11 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             cls: 'horizontal-rule'
           }
           {
-            xtype: 'moneyfield'
-            flex: 0
-            name: 'gas_price'
-            label: 'Gas Price'
-            labelWidth: 115
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-            ]
-          }
-          {
             xtype: 'textfield'
             flex: 0
-            name: 'gallons'
-            label: 'Gallons'
+            name: 'gas_price_display'
+            label: 'Gas Price'
+            labelWidth: 115
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -155,8 +134,25 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             disabled: yes
             cls: [
               'visibly-disabled'
+            ]
+          }
+          {
+            xtype: 'textfield'
+            id: 'discountField'
+            flex: 0
+            name: 'discount'
+            label: 'Coupon Code'
+            labelWidth: 125
+            disabled: yes
+            value: 'Enter'
+            cls: [
+              'click-to-edit'
               'bottom-margin'
             ]
+            listeners:
+              initialize: (field) ->
+                field.element.on 'tap', ->
+                  util.ctl('Main').promptForCode()
           }
           {
             xtype: 'moneyfield'
@@ -169,6 +165,23 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             ]
           }
           # hidden fields for flowing data
+          {
+            xtype: 'hiddenfield'
+            id: 'couponCodeField'
+            name: 'coupon_code'
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'gas_price'
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'gallons'
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'gas_type'
+          }
           {
             xtype: 'hiddenfield'
             name: 'lat'

@@ -44,12 +44,16 @@ Ext.define 'Purple.controller.PaymentMethods'
         break
     return paymentMethod
 
-  showEditPaymentMethodForm: (paymentMethodId = 'new') ->
+  showEditPaymentMethodForm: (paymentMethodId = 'new', suppressBackButtonBehavior = no) ->
     # the way we have things set up, paymentMethodId is always 'new'
     @getAccountTabContainer().setActiveItem(
       Ext.create 'Purple.view.EditPaymentMethodForm',
         paymentMethodId: paymentMethodId
     )
+    if not suppressBackButtonBehavior
+      util.ctl('Menu').pushOntoBackButton =>
+        @backToPaymentMethods()
+      
     @getEditPaymentMethodFormHeading().setHtml(
       if paymentMethodId is 'new'
         'Add Card'
@@ -70,6 +74,11 @@ Ext.define 'Purple.controller.PaymentMethods'
       @getPaymentMethods(),
       yes
     )
+    if @getEditPaymentMethodForm()?
+      @getAccountTabContainer().remove(
+        @getEditPaymentMethodForm(),
+        yes
+      )
 
   loadPaymentMethodsList: ->
     if @paymentMethods?
@@ -322,7 +331,10 @@ Ext.define 'Purple.controller.PaymentMethods'
     field.element.on 'tap', =>
       @accountPaymentMethodFieldTap()
 
-  accountPaymentMethodFieldTap: ->
+  accountPaymentMethodFieldTap: (suppressBackButtonBehavior = no) ->
     @getAccountTabContainer().setActiveItem(
       Ext.create 'Purple.view.PaymentMethods'
     )
+    if not suppressBackButtonBehavior
+      util.ctl('Menu').pushOntoBackButton =>
+        @backToAccount()

@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.LoginForm'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'loginform'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.LoginForm'
       type: 'hbox'
       pack: 'center'
       align: 'center'
+    height: '100%'
     cls: [
       'login-form'
       'strong-accent-bg'

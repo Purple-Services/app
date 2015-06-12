@@ -36,6 +36,7 @@ Ext.define 'Purple.view.MainContainer',
     containerSlideDelay: -1
 
     container:
+      height: '100%'
       scrollable: no
       cls: 'accent-bg'
     
@@ -65,6 +66,7 @@ Ext.define 'Purple.view.MainContainer',
     list:
       maxDrag: 265
       width: 265
+      height: '100%'
       grouped: no
       scrollable: no
       items: [
@@ -86,18 +88,6 @@ Ext.define 'Purple.view.MainContainer',
           docked: 'bottom'
           cls: 'menu-links'
           items: [
-            {
-              xtype: 'button'
-              ctype: 'inviteButton'
-              ui: 'plain'
-              text: 'Invite a Friend'
-              handler: -> @fireEvent 'inviteButtonTap'
-            }
-            {
-              xtype: 'component'
-              flex: 0
-              height: 10
-            }
             {
               xtype: 'button'
               ctype: 'feedbackButton'
@@ -250,7 +240,7 @@ Ext.define 'Purple.view.MainContainer',
         ]
       }
       {
-        title: "Invite"
+        title: "Get Free Gas!"
         items: [
           {
             xtype: "toptoolbar"
@@ -300,9 +290,8 @@ Ext.define 'Purple.view.MainContainer',
       initialize: ->
         util.ctl('Menu').adjustForAppLoginState()
         util.ctl('Menu').hideTitles [
-          5 # always hide Help
-          6 # Feedback
-          7 # Invite
+          5 # always hide Help in main menu
+          6 # always hide Feedback in main menu
         ]
         if util.ctl('Account').isCourier()
           util.ctl('Menu').selectOption 3

@@ -11,6 +11,7 @@ Ext.define('Purple.view.TopToolbar', {
     items: [
       {
         xtype: 'button',
+        ctype: 'menuButton',
         cls: 'menuButton',
         ui: 'plain',
         handler: function() {

@@ -54,13 +54,22 @@ Ext.define('Purple.controller.PaymentMethods', {
     }
     return paymentMethod;
   },
-  showEditPaymentMethodForm: function(paymentMethodId) {
+  showEditPaymentMethodForm: function(paymentMethodId, suppressBackButtonBehavior) {
+    var _this = this;
     if (paymentMethodId == null) {
       paymentMethodId = 'new';
+    }
+    if (suppressBackButtonBehavior == null) {
+      suppressBackButtonBehavior = false;
     }
     this.getAccountTabContainer().setActiveItem(Ext.create('Purple.view.EditPaymentMethodForm', {
       paymentMethodId: paymentMethodId
     }));
+    if (!suppressBackButtonBehavior) {
+      util.ctl('Menu').pushOntoBackButton(function() {
+        return _this.backToPaymentMethods();
+      });
+    }
     return this.getEditPaymentMethodFormHeading().setHtml(paymentMethodId === 'new' ? 'Add Card' : 'Edit Card');
   },
   backToPaymentMethods: function() {
@@ -69,7 +78,10 @@ Ext.define('Purple.controller.PaymentMethods', {
   },
   backToAccount: function() {
     this.getAccountTabContainer().setActiveItem(this.getAccountForm());
-    return this.getAccountTabContainer().remove(this.getPaymentMethods(), true);
+    this.getAccountTabContainer().remove(this.getPaymentMethods(), true);
+    if (this.getEditPaymentMethodForm() != null) {
+      return this.getAccountTabContainer().remove(this.getEditPaymentMethodForm(), true);
+    }
   },
   loadPaymentMethodsList: function() {
     if (this.paymentMethods != null) {
@@ -382,7 +394,16 @@ Ext.define('Purple.controller.PaymentMethods', {
       return _this.accountPaymentMethodFieldTap();
     });
   },
-  accountPaymentMethodFieldTap: function() {
-    return this.getAccountTabContainer().setActiveItem(Ext.create('Purple.view.PaymentMethods'));
+  accountPaymentMethodFieldTap: function(suppressBackButtonBehavior) {
+    var _this = this;
+    if (suppressBackButtonBehavior == null) {
+      suppressBackButtonBehavior = false;
+    }
+    this.getAccountTabContainer().setActiveItem(Ext.create('Purple.view.PaymentMethods'));
+    if (!suppressBackButtonBehavior) {
+      return util.ctl('Menu').pushOntoBackButton(function() {
+        return _this.backToAccount();
+      });
+    }
   }
 });

@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "LOCAL"
+VERSION = "DEV"
 
 # window.onerror = (message, url, lineNumber) ->
 #   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
@@ -9,7 +9,7 @@ window.util =
   VERSION_NUMBER: "1.0.3"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://192.168.0.15:3000/"
+    when "LOCAL" then "http://10.12.12.153:3000/"
     when "PROD" then "https://purpledelivery.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 

@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.EditVehicleForm'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'editvehicleform'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.EditVehicleForm'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
@@ -69,28 +70,27 @@ Ext.define 'Purple.view.EditVehicleForm'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             ctype: 'editVehicleFormHeading'
             cls: 'heading'
             html: ''
-            items: [
-              {
-                xtype: 'button'
-                ctype: 'backToVehiclesButton'
-                ui: 'plain'
-                text: 'Back to Vehicles'
-                cls: [
-                  'right-side-aligned-with-heading'
-                  'link'
-                ] 
-                handler: (button) ->
-                  if button.config.beforeHandler?
-                    button.config.beforeHandler()
-                    button.config.beforeHandler = null
-                  @up().up().up().fireEvent 'backToVehicles'
-              }
-            ]
+            # items: [
+            #   {
+            #     xtype: 'button'
+            #     ctype: 'backToVehiclesButton'
+            #     ui: 'plain'
+            #     #text: 'Back to Vehicles'
+            #     cls: [
+            #       'back-button'
+            #     ] 
+            #     handler: (button) ->
+            #       if button.config.beforeHandler?
+            #         button.config.beforeHandler()
+            #         button.config.beforeHandler = null
+            #       @up().up().up().fireEvent 'backToVehicles'
+            #   }
+            # ]
           }
           {
             xtype: 'component'

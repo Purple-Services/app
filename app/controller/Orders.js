@@ -85,6 +85,9 @@ Ext.define('Purple.controller.Orders', {
       orderId: orderId,
       status: order['status']
     }));
+    util.ctl('Menu').pushOntoBackButton(function() {
+      return _this.backToOrders();
+    });
     this.getOrder().addCls("status-" + order['status']);
     if (order['status'] === 'complete') {
       this.getOrderRating().show();

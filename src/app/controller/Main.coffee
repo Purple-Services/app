@@ -12,7 +12,6 @@ Ext.define 'Purple.controller.Main'
       requestAddressField: '#requestAddressField'
       requestGasButtonContainer: '#requestGasButtonContainer'
       autocompleteList: '#autocompleteList'
-      backToMapButton: '#backToMapButton'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
       feedback: 'feedback'
@@ -21,6 +20,8 @@ Ext.define 'Purple.controller.Main'
       invite: 'invite'
       inviteTextField: '[ctype=inviteTextField]'
       inviteThankYouMessage: '[ctype=inviteThankYouMessage]'
+      discountField: '#discountField'
+      couponCodeField: '#couponCodeField'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -32,9 +33,6 @@ Ext.define 'Purple.controller.Main'
         addressInputMode: 'addressInputMode'
       autocompleteList:
         updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
-      backToMapButton:
-        mapMode: 'mapMode'
-        recenterAtUserLoc: 'recenterAtUserLoc'
       requestGasButtonContainer:
         initRequestGasForm: 'initRequestGasForm'
       requestForm:
@@ -61,10 +59,10 @@ Ext.define 'Purple.controller.Main'
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Uncomment this for customer app, but courier doesn't need it
-    ga_storage._enableSSL() # doesn't seem to actually use SSL?
-    ga_storage._setAccount 'UA-61762011-1'
-    ga_storage._setDomain 'none'
-    ga_storage._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+    ga_storage?._setAccount 'UA-61762011-1'
+    ga_storage?._setDomain 'none'
+    ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
     navigator.splashscreen?.hide()
     #StatusBar?.backgroundColorByHexString "#230F2B"
@@ -177,12 +175,12 @@ Ext.define 'Purple.controller.Main'
       #   console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
-    @getAutocompleteList().hide()
-    @getBackToMapButton().hide()
-    @getMap().show()
-    @getSpacerBetweenMapAndAddress().show()
-    @getRequestGasButtonContainer().show()
-    @getRequestAddressField().disable()
+    if @getMap().isHidden()
+      @getAutocompleteList().hide()
+      @getMap().show()
+      @getSpacerBetweenMapAndAddress().show()
+      @getRequestGasButtonContainer().show()
+      @getRequestAddressField().disable()
 
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
@@ -190,14 +188,17 @@ Ext.define 'Purple.controller.Main'
     )
 
   addressInputMode: ->
-    @getMap().hide()
-    @getSpacerBetweenMapAndAddress().hide()
-    @getRequestGasButtonContainer().hide()
-    @getAutocompleteList().show()
-    @getBackToMapButton().show()
-    @getRequestAddressField().enable()
-    @getRequestAddressField().focus()
-    ga_storage._trackEvent 'ui', 'Address Text Input Mode'
+    if not @getMap().isHidden()
+      @getMap().hide()
+      @getSpacerBetweenMapAndAddress().hide()
+      @getRequestGasButtonContainer().hide()
+      @getAutocompleteList().show()
+      @getRequestAddressField().enable()
+      @getRequestAddressField().focus()
+      util.ctl('Menu').pushOntoBackButton =>
+        @recenterAtUserLoc()
+        @mapMode()
+      ga_storage._trackEvent 'ui', 'Address Text Input Mode'
 
   generateSuggestions: ->
     query = @getRequestAddressField().getValue()
@@ -227,6 +228,7 @@ Ext.define 'Purple.controller.Main'
   updateDeliveryLocAddressByLocArray: (loc) ->
     @getRequestAddressField().setValue loc['locationName']
     @mapMode()
+    util.ctl('Menu').clearBackButtonStack()
     # set latlng to zero just in case they press request gas before this func is
     # done. we don't want an old latlng to be in there that doesn't match address
     @deliveryLocLat = 0
@@ -287,10 +289,12 @@ Ext.define 'Purple.controller.Main'
             if totalGallons < util.MINIMUM_GALLONS or totalNumOfTimeOptions is 0
               navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
             else
+              util.ctl('Menu').pushOntoBackButton =>
+                @backToMapFromRequestForm()
               @getRequestGasTabContainer().setActiveItem(
                 Ext.create 'Purple.view.RequestForm',
                   availabilities: availabilities
-              ) 
+              )
               @getRequestForm().setValues(
                 lat: @deliveryLocLat
                 lng: @deliveryLocLng
@@ -320,6 +324,8 @@ Ext.define 'Purple.controller.Main'
     @getRequestGasTabContainer().setActiveItem(
       Ext.create 'Purple.view.RequestConfirmationForm'
     )
+    util.ctl('Menu').pushOntoBackButton =>
+      @backToRequestForm()
     vals = @getRequestForm().getValues()
     availabilities = @getRequestForm().config.availabilities
     gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type
@@ -328,11 +334,13 @@ Ext.define 'Purple.controller.Main'
         availability = a
         break
 
+    vals['gas_type'] = "" + availability.octane # should already be string though
     gasPrice = availability.price_per_gallon
     serviceFee = availability.times[vals['time']]['service_fee']
     vals['gas_price'] = "" + util.centsToDollars(
       gasPrice
     )
+    vals['gas_price_display'] = "$#{vals['gas_price']} x #{vals['gallons']}"
     vals['service_fee'] = "" + util.centsToDollars(
       serviceFee
     )
@@ -353,19 +361,60 @@ Ext.define 'Purple.controller.Main'
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
 
+  promptForCode: ->
+    navigator.notification.prompt(
+      "Enter a coupon code:",
+      ((results) =>
+        if results.buttonIndex is 1
+          @applyCode results.input1
+      ),
+      "Coupon Code"
+    )
+
+  applyCode: (code) ->
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/code"
+      params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        code: code
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          @getDiscountField().setValue "- $" + util.centsToDollars(response.value)
+          @getCouponCodeField().setValue code
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
+
   confirmOrder: ->
     if not util.ctl('Account').hasDefaultPaymentMethod()
       # select the Account view
       @getMainContainer().getItems().getAt(0).select 2, no, no
       pmCtl = util.ctl('PaymentMethods')
       if not pmCtl.getPaymentMethods()?
-        pmCtl.accountPaymentMethodFieldTap()
-      if pmCtl.getEditPaymentMethodForm()?
-        # there already exists a payment method edit form, just go to that
-        pmCtl.getAccountTabContainer().setActiveItem pmCtl.getEditPaymentMethodForm()
-      else
-        pmCtl.showEditPaymentMethodForm()
+        pmCtl.accountPaymentMethodFieldTap yes
+        
+      pmCtl.showEditPaymentMethodForm 'new', yes
+      util.ctl('Menu').pushOntoBackButton ->
+        pmCtl.backToAccount()
+        util.ctl('Menu').selectOption 0
+      
       pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
+        util.ctl('Menu').popOffBackButtonWithoutAction()
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
     else
@@ -411,6 +460,7 @@ Ext.define 'Purple.controller.Main'
               @getRequestForm(),
               yes
             )
+            util.ctl('Menu').clearBackButtonStack()
             # set up push notifications if they arent set up
             if not util.ctl('Account').hasPushNotificationsSetup()
               @setUpPushNotifications()

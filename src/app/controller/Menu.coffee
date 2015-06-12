@@ -6,6 +6,7 @@ Ext.define 'Purple.controller.Menu'
       topToolbar: 'toptoolbar'
       feedbackButton: '[ctype=feedbackButton]'
       inviteButton: '[ctype=inviteButton]'
+      menuButton: '[ctype=menuButton]'
       requestGasTabContainer: '#requestGasTabContainer'
       accountTab: '#accountTab'
       accountTabContainer: '#accountTabContainer'
@@ -19,6 +20,9 @@ Ext.define 'Purple.controller.Menu'
         inviteButtonTap: 'inviteButtonTap'
       topToolbar:
         helpButtonTap: 'helpButtonTap'
+        menuButtonTap: 'menuButtonTap'
+
+  backButtonStack: []
 
   launch: ->
     @callParent arguments
@@ -32,19 +36,55 @@ Ext.define 'Purple.controller.Menu'
   isClosed: ->
     @getMainContainer().isClosed()
 
+  lockMenu: ->
+    @getMainContainer().setSlideSelector false
+
+  unlockMenu: ->
+    @getMainContainer().setSlideSelector 'slideable'
+
+  pushOntoBackButton: (fn) ->
+    @backButtonStack.push fn
+    @getMainContainer().addCls 'makeMenuButtonBeBackButton'
+    @lockMenu()
+
+  popOffBackButton: ->
+    (@backButtonStack.pop())()
+    if @backButtonStack.length is 0
+      @getMainContainer().removeCls 'makeMenuButtonBeBackButton'
+      @unlockMenu()
+
+  popOffBackButtonWithoutAction: ->
+    @backButtonStack.pop()
+    if @backButtonStack.length is 0
+      @getMainContainer().removeCls 'makeMenuButtonBeBackButton'
+      @unlockMenu()
+
+  clearBackButtonStack: ->
+    @backButtonStack = []
+    @getMainContainer().removeCls 'makeMenuButtonBeBackButton'
+    @unlockMenu()
+
+  menuButtonTap: ->
+    if @backButtonStack.length isnt 0
+      @popOffBackButton()
+    else
+      if @isClosed()
+        @open()
+      else
+        @close()
+
   helpButtonTap: ->
     if @getCurrentIndex() is 5
       # already on Help page
       @selectOption (@indexBeforeHelp ? 2)
+      @popOffBackButtonWithoutAction()
     else
       @indexBeforeHelp = @getCurrentIndex()
+      @pushOntoBackButton => @selectOption @indexBeforeHelp
       @selectOption 5
 
   feedbackButtonTap: ->
     @selectOption 6
-
-  inviteButtonTap: ->
-    @selectOption 7
 
   getCurrentIndex: ->
     @getMainContainer().getActiveItem().data.index
@@ -68,7 +108,7 @@ Ext.define 'Purple.controller.Menu'
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
       if util.ctl('Account').isCourier()
-        @hideTitles [0, 4]
+        @hideTitles [0, 4, 7]
         @showTitles [2, 3, 8, 9]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
@@ -76,8 +116,8 @@ Ext.define 'Purple.controller.Menu'
           util.ctl('Main').initCourierPing()
       else
         @hideTitles [8, 9]
-        @showTitles [2, 3, 4]
+        @showTitles [2, 3, 4, 7]
       util.ctl('Account').populateAccountForm()
     else
-      @hideTitles [2, 3, 4, 8, 9]
+      @hideTitles [2, 3, 4, 7, 8, 9]
       @showTitles [1]

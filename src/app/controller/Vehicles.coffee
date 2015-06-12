@@ -118,11 +118,15 @@ Ext.define 'Purple.controller.Vehicles'
     )
     @getEditVehicleFormModel().setDisabled no
 
-  showEditVehicleForm: (vehicleId = 'new') ->
+  showEditVehicleForm: (vehicleId = 'new', suppressBackButtonBehavior = no) ->
     @getVehiclesTabContainer().setActiveItem(
       Ext.create 'Purple.view.EditVehicleForm',
         vehicleId: vehicleId
     )
+
+    if not suppressBackButtonBehavior
+      util.ctl('Menu').pushOntoBackButton =>
+        @backToVehicles()
 
     @getEditVehicleFormHeading().setHtml(
       if vehicleId is 'new'
@@ -229,7 +233,7 @@ Ext.define 'Purple.controller.Vehicles'
           initialize: (field) =>
             field.element.on 'tap', =>
               vid = field.getId().split('_')[1]
-              @showEditVehicleForm vid
+              @showEditVehicleForm vid, no
 
   saveChanges: (callback) ->
     values = @getEditVehicleForm().getValues()
@@ -369,13 +373,18 @@ Ext.define 'Purple.controller.Vehicles'
   requestFormVehicleSelectChange: (field, value) ->
     if value is 'new'
       util.ctl('Menu').selectOption 4
-      @showEditVehicleForm()
+      @showEditVehicleForm 'new', yes
       @getEditVehicleForm().config.saveChangesCallback = (vehicleId) =>
+        util.ctl('Menu').popOffBackButtonWithoutAction()
         util.ctl('Menu').selectOption 0
         @initRequestFormVehicleSelect()
         @getRequestFormVehicleSelect().setValue vehicleId
-      @getBackToVehiclesButton().config.beforeHandler = ->
+      util.ctl('Menu').pushOntoBackButton =>
+        # to account for the removal of the RequestForm
+        util.ctl('Menu').popOffBackButtonWithoutAction()
+        @backToVehicles()
         util.ctl('Main').backToMapFromRequestForm()
+        util.ctl('Menu').selectOption 0
     else
       ready = @getRequestFormGallonsSelect()? and @getRequestFormTimeSelect()?
       # TODO, make nicer:

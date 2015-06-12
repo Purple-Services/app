@@ -105,6 +105,10 @@ body {
 .menuButton {
     background-image: url('../images/menu-icon.png') !important;
 }
+.makeMenuButtonBeBackButton .menuButton {
+    background-image: url('../images/back-button.png') !important;
+    background-size: 14px !important;
+}
 .helpButton {
     background-image: url('../images/help-icon.png') !important;
 }
@@ -158,6 +162,7 @@ body {
     color: #742C90 !important;
     opacity: 1 !important;
     font-weight: 400 !important;
+    font-size: 17px;
     border-radius: 0px;
     background: transparent;
 }
@@ -178,8 +183,8 @@ body {
 .x-field.click-to-edit .x-component-outer:after {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 14px;
+    width: 14px;
+    height: 12px;
     top: 50%;
     left: auto;
     right: 0px;
@@ -187,7 +192,7 @@ body {
     background-image: url('../images/disclosure.png');
     background-size: contain;
     background-repeat: no-repeat;
-    margin-top: -7px;
+    margin-top: -6px;
     -webkit-mask-image: none;
 }
 
@@ -242,7 +247,7 @@ body {
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
     padding: 8px 20px;
-    background: #ba1c8d;
+    background: #ba1c8d !important;
 }
 .button-pop .x-button-label {
     font-weight: 900;
@@ -255,11 +260,14 @@ body {
     position: relative;
     top: 1px;
     left: 1px;
-    background: #ba1c8d !important;
+}
+
+.button-pop-dark {
+    background-color: #752B90 !important;
 }
 
 .login-form .button-pop {
-    background: #FFF;
+    background: #FFF !important;
     color: #B91B8C;
 }
 .login-form .button-pop.x-button-pressing {
@@ -316,20 +324,31 @@ body {
 .heading {
     position: relative;
     width: 100%;
+    padding: 0px;
+    margin: 20px 0px 0px 0px;
+    /* text-align: right; */
     color: #BA1C8B;
     text-transform: uppercase;
     font-size: 24px;
     line-height: 18px;
     font-weight: 900;
-    padding: 0px;
-    margin: 20px 0px 0px 0px;
 }
 
-.right-side-aligned-with-heading {
-    position: absolute;
-    right: -7px;
-    top: -4px;
-}
+
+/* .back-button { */
+/*     position: absolute; */
+/*     top: -6px; */
+/*     width: 35px; */
+/*     height: 26px !important; */
+/*     background-image: url('../images/back-button.png') !important; */
+/*     background-repeat: no-repeat !important; */
+/*     background-size: contain !important; */
+/*     color: #BA1C8B; */
+/*     text-transform: uppercase; */
+/* } */
+/* .back-button.x-button-pressing { */
+/*     opacity: 0.7; */
+/* } */
 
 .horizontal-rule {
     background: #EDEDED;

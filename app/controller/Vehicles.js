@@ -136,14 +136,23 @@ Ext.define('Purple.controller.Vehicles', {
     }));
     return this.getEditVehicleFormModel().setDisabled(false);
   },
-  showEditVehicleForm: function(vehicleId) {
-    var vehicle;
+  showEditVehicleForm: function(vehicleId, suppressBackButtonBehavior) {
+    var vehicle,
+      _this = this;
     if (vehicleId == null) {
       vehicleId = 'new';
+    }
+    if (suppressBackButtonBehavior == null) {
+      suppressBackButtonBehavior = false;
     }
     this.getVehiclesTabContainer().setActiveItem(Ext.create('Purple.view.EditVehicleForm', {
       vehicleId: vehicleId
     }));
+    if (!suppressBackButtonBehavior) {
+      util.ctl('Menu').pushOntoBackButton(function() {
+        return _this.backToVehicles();
+      });
+    }
     this.getEditVehicleFormHeading().setHtml(vehicleId === 'new' ? 'Add Vehicle' : 'Edit Vehicle');
     this.getEditVehicleFormYear().setOptions(this.getYearList().map(function(x) {
       return {
@@ -244,7 +253,7 @@ Ext.define('Purple.controller.Vehicles', {
             return field.element.on('tap', function() {
               var vid;
               vid = field.getId().split('_')[1];
-              return _this.showEditVehicleForm(vid);
+              return _this.showEditVehicleForm(vid, false);
             });
           }
         }
@@ -423,15 +432,19 @@ Ext.define('Purple.controller.Vehicles', {
       _this = this;
     if (value === 'new') {
       util.ctl('Menu').selectOption(4);
-      this.showEditVehicleForm();
+      this.showEditVehicleForm('new', true);
       this.getEditVehicleForm().config.saveChangesCallback = function(vehicleId) {
+        util.ctl('Menu').popOffBackButtonWithoutAction();
         util.ctl('Menu').selectOption(0);
         _this.initRequestFormVehicleSelect();
         return _this.getRequestFormVehicleSelect().setValue(vehicleId);
       };
-      return this.getBackToVehiclesButton().config.beforeHandler = function() {
-        return util.ctl('Main').backToMapFromRequestForm();
-      };
+      return util.ctl('Menu').pushOntoBackButton(function() {
+        util.ctl('Menu').popOffBackButtonWithoutAction();
+        _this.backToVehicles();
+        util.ctl('Main').backToMapFromRequestForm();
+        return util.ctl('Menu').selectOption(0);
+      });
     } else {
       ready = (this.getRequestFormGallonsSelect() != null) && (this.getRequestFormTimeSelect() != null);
       return setTimeout((function() {

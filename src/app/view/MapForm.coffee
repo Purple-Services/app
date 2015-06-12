@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.MapForm'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'mapform'
   requires: [
     'Ext.form.*'
@@ -8,6 +8,7 @@ Ext.define 'Purple.view.MapForm'
   ]
   config:
     layout: 'vbox'
+    height: '100%'
     cls: 'offwhite-bg'
     scrollable: no
     submitOnAction: no
@@ -103,28 +104,6 @@ Ext.define 'Purple.view.MapForm'
             list.getStore().setData []
           itemtap: (list, index, item, record) ->
             @fireEvent 'updateDeliveryLocAddressByLocArray', record.raw
-      }
-      {
-        xtype: 'container'
-        id: 'backToMapButton'
-        flex: 0
-        layout:
-          type: 'vbox'
-          pack: 'start'
-          align: 'center'
-        padding: '0 0 15 0'
-        hidden: true
-        cls: 'links-container'
-        items: [
-          {
-            xtype: 'button'
-            ui: 'plain'
-            text: 'Back to Map'
-            handler: ->
-              @up().fireEvent 'mapMode'
-              @up().fireEvent 'recenterAtUserLoc'
-          }
-        ]
       }
       {
         xtype: 'container'

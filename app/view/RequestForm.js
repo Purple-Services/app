@@ -10,6 +10,7 @@ Ext.define('Purple.view.RequestForm', {
       pack: 'start',
       align: 'start'
     },
+    height: '100%',
     submitOnAction: false,
     cls: ['request-form', 'accent-bg', 'slideable'],
     scrollable: {
@@ -31,21 +32,10 @@ Ext.define('Purple.view.RequestForm', {
         },
         items: [
           {
-            xtype: 'container',
+            xtype: 'component',
             flex: 0,
             cls: 'heading',
-            html: 'Request Gas',
-            items: [
-              {
-                xtype: 'button',
-                ui: 'plain',
-                text: 'Back to Map',
-                cls: ['right-side-aligned-with-heading', 'link'],
-                handler: function() {
-                  return this.up().up().up().fireEvent('backToMap');
-                }
-              }
-            ]
+            html: 'Request Gas'
           }, {
             xtype: 'component',
             flex: 0,

@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Vehicles'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'vehicles'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.Vehicles'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
@@ -39,7 +40,7 @@ Ext.define 'Purple.view.Vehicles'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             cls: 'heading'
             html: 'Vehicles'
@@ -74,7 +75,7 @@ Ext.define 'Purple.view.Vehicles'
                 text: 'Add Vehicle'
                 flex: 0
                 handler: ->
-                  @up().up().up().fireEvent 'editVehicle', 'new'
+                  @up().up().up().fireEvent 'editVehicle', 'new', no
               }
             ]
           }

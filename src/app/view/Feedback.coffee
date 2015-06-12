@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Feedback'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'feedback'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.Feedback'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'accent-bg'

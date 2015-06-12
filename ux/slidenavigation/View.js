@@ -748,11 +748,11 @@ Ext.define('Ext.ux.slidenavigation.View', {
             listeners: {
                 initialize: function(x) {
                     x.element.on('tap', function(e){
-                        if (!me.isClosed()) {
+                        if (!me.isClosed() && e.target.className.indexOf('menuButton') === -1) {
                             me.closeContainer();
-                        } else if (e.target.className.indexOf('menuButton') !== -1) {
-                            me.toggleContainer();
-                        }
+                        } // else if (e.target.className.indexOf('menuButton') !== -1 && e.target.className.indexOf('backButton') === -1) {
+                        //     me.toggleContainer();
+                        // }
                     });
                 }
             },

@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Order'
-  extend: 'Ext.form.Panel'
+  extend: 'Ext.Container'
   xtype: 'order'
   requires: [
     'Ext.form.*'
@@ -11,6 +11,7 @@ Ext.define 'Purple.view.Order'
       type: 'hbox'
       pack: 'start'
       align: 'start'
+    height: '100%'
     submitOnAction: no
     cls: [
       'request-form'
@@ -71,25 +72,11 @@ Ext.define 'Purple.view.Order'
           align: 'start'
         items: [
           {
-            xtype: 'container'
+            xtype: 'component'
             flex: 0
             ctype: 'editOrderFormHeading'
             cls: 'heading'
             html: 'View Order'
-            items: [
-              {
-                xtype: 'button'
-                ctype: 'backToOrdersButton'
-                ui: 'plain'
-                text: 'Back to Orders'
-                cls: [
-                  'right-side-aligned-with-heading'
-                  'link'
-                ] 
-                handler: ->
-                  @up().up().up().fireEvent 'backToOrders'
-              }
-            ]
           }
           {
             xtype: 'component'
