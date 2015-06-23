@@ -7,7 +7,7 @@ Ext.define('Purple.view.TopToolbar', {
     docked: 'top',
     ui: 'top-toolbar',
     height: 60,
-    title: "<img src=\"resources/images/logo-word.png\" style=\"height: 42px; padding-top: 11px;\" />",
+    title: "<img src=\"resources/images/logo-word.png\" style=\"height: 42px; padding-top: 14px;\" />",
     items: [
       {
         xtype: 'button',
@@ -21,10 +21,10 @@ Ext.define('Purple.view.TopToolbar', {
         xtype: 'spacer'
       }, {
         xtype: 'button',
-        cls: 'helpButton',
+        cls: 'freeGasButton',
         ui: 'plain',
         handler: function() {
-          return this.up().fireEvent('helpButtonTap');
+          return this.up().fireEvent('freeGasButtonTap');
         }
       }
     ]

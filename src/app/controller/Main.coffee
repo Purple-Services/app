@@ -22,6 +22,7 @@ Ext.define 'Purple.controller.Main'
       inviteThankYouMessage: '[ctype=inviteThankYouMessage]'
       discountField: '#discountField'
       couponCodeField: '#couponCodeField'
+      totalPriceField: '#totalPriceField'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -362,16 +363,25 @@ Ext.define 'Purple.controller.Main'
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
 
   promptForCode: ->
-    navigator.notification.prompt(
-      "Enter a coupon code:",
-      ((results) =>
-        if results.buttonIndex is 1
-          @applyCode results.input1
-      ),
-      "Coupon Code"
+    Ext.Msg.prompt(
+      'Coupon Code',
+      false,
+      ((buttonId, text) =>
+        if buttonId is 'ok'
+          @applyCode text)
     )
+    # navigator.notification.prompt(
+    #   "Enter a coupon code:",
+    #   ((results) =>
+    #     if results.buttonIndex is 1
+    #       @applyCode results.input1
+    #   ),
+    #   "Coupon Code"
+    # )
 
   applyCode: (code) ->
+    vals = @getRequestConfirmationForm().getValues()
+    vehicleId = vals['vehicle_id']
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -381,6 +391,7 @@ Ext.define 'Purple.controller.Main'
         version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
+        vehicle_id: vehicleId
         code: code
       headers:
         'Content-Type': 'application/json'
@@ -391,8 +402,14 @@ Ext.define 'Purple.controller.Main'
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          @getDiscountField().setValue "- $" + util.centsToDollars(response.value)
+          @getDiscountField().setValue(
+            "- $" + util.centsToDollars(Math.abs(response.value))
+          )
           @getCouponCodeField().setValue code
+          totalPrice = parseInt(
+            vals['total_price'].replace('$','').replace('.','')
+          ) + response.value
+          @getTotalPriceField().setValue "" + util.centsToDollars(totalPrice)
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->

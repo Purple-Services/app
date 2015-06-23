@@ -29,6 +29,7 @@ body {
     border-radius: 0px !important;
 }
 .x-button-label {
+    font-family: 'Source Sans Pro';
     font-weight: normal;
     line-height: 1.4em;
 }
@@ -84,7 +85,7 @@ body {
 
 
 
-.menuButton, .helpButton {
+.menuButton, .freeGasButton {
     position: relative !important;
     top: 0px !important;
     left: 0px !important;
@@ -98,7 +99,7 @@ body {
     background-color: transparent !important;
 }
 .menuButton.x-button-pressing,
-.helpButton.x-button-pressing,
+.freeGasButton.x-button-pressing,
 #centerMapButton.x-button-pressing {
     opacity: 0.4 !important;
 }
@@ -109,8 +110,13 @@ body {
     background-image: url('../images/back-button.png') !important;
     background-size: 14px !important;
 }
-.helpButton {
-    background-image: url('../images/help-icon.png') !important;
+/* Icon attribution:
+   Icon made by Icomoon from www.flaticon.com is licensed under CC BY 3.0
+ */
+.freeGasButton {
+    background-image: url('../images/present-icon.png') !important;
+    background-size: 27px !important;
+    margin-top: -2px !important;
 }
 
 
@@ -265,6 +271,12 @@ body {
 .button-pop-dark {
     background-color: #752B90 !important;
 }
+.button-pop-facebook {
+    background-color: #425F9C !important;
+}
+.button-pop-twitter {
+    background-color: #54A9EB !important;
+}
 
 .login-form .button-pop {
     background: #FFF !important;
@@ -332,6 +344,41 @@ body {
     font-size: 24px;
     line-height: 18px;
     font-weight: 900;
+}
+
+
+.loose-text {
+    color: #752B90;
+    font-size: 18px;
+    font-weight: normal;
+    padding-bottom: 10px;
+}
+
+
+.x-msgbox {
+    border: none;
+    border-radius: 0px;
+    background: white;
+}
+.x-msgbox .x-title {
+    color: #444;
+    text-shadow: none;
+    text-transform: uppercase;
+    font-size: 20px;
+}
+.x-msgbox .x-field {
+    background: #EDEDED;
+    border-radius: 0px;
+    width: 95%;
+    margin: 0px auto;
+}
+.x-msgbox .x-input-el {
+    text-align: left;
+    text-transform: uppercase;
+}
+.x-msgbox .x-button-normal {
+    background: #ededed !important;
+    color: #444 !important;
 }
 
 

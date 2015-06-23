@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.LoginForm'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'loginform'
   requires: [
     'Ext.form.*'
@@ -17,7 +17,10 @@ Ext.define 'Purple.view.LoginForm'
       'strong-accent-bg'
       'slideable'
     ]
-    scrollable: no
+    scrollable:
+      disabled: yes
+      translatable:
+        translationMethod: 'auto'
     submitOnAction: no
     items: [
       {

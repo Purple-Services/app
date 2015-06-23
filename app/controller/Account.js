@@ -88,6 +88,8 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserId'] = response.user.id;
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleUserIsCourier'] = response.user.is_courier;
+          localStorage['purpleUserReferralCode'] = response.user.referral_code;
+          localStorage['purpleUserReferralGallons'] = response.user.referral_gallons;
           localStorage['purpleToken'] = response.token;
           util.ctl('Vehicles').vehicles = [];
           util.ctl('Vehicles').loadVehiclesList();
@@ -149,6 +151,8 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleUserIsCourier'] = response.user.is_courier;
+          localStorage['purpleUserReferralCode'] = response.user.referral_code;
+          localStorage['purpleUserReferralGallons'] = response.user.referral_gallons;
           localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up;
           localStorage['purpleToken'] = response.token;
           delete localStorage['purpleDefaultPaymentMethodId'];
@@ -356,6 +360,10 @@ Ext.define('Purple.controller.Account', {
     delete localStorage['purpleCourierGallons87'];
     delete localStorage['purpleCourierGallons91'];
     delete localStorage['purpleUserHasPushNotificationsSetUp'];
+    delete localStorage['purpleUserReferralCode'];
+    delete localStorage['purpleUserReferralGallons'];
+    delete localStorage['purpleReferralReferredValue'];
+    delete localStorage['purpleReferralReferrerGallons'];
     util.ctl('Vehicles').vehicles = [];
     util.ctl('Vehicles').loadVehiclesList();
     util.ctl('Orders').orders = [];

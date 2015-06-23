@@ -7,6 +7,7 @@ Ext.define('Purple.controller.Menu', {
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       feedbackButton: '[ctype=feedbackButton]',
+      helpButton: '[ctype=helpButton]',
       inviteButton: '[ctype=inviteButton]',
       menuButton: '[ctype=menuButton]',
       requestGasTabContainer: '#requestGasTabContainer',
@@ -17,6 +18,9 @@ Ext.define('Purple.controller.Menu', {
       map: '#gmap'
     },
     control: {
+      helpButton: {
+        helpButtonTap: 'helpButtonTap'
+      },
       feedbackButton: {
         feedbackButtonTap: 'feedbackButtonTap'
       },
@@ -24,7 +28,7 @@ Ext.define('Purple.controller.Menu', {
         inviteButtonTap: 'inviteButtonTap'
       },
       topToolbar: {
-        helpButtonTap: 'helpButtonTap',
+        freeGasButtonTap: 'freeGasButtonTap',
         menuButtonTap: 'menuButtonTap'
       }
     }
@@ -83,19 +87,24 @@ Ext.define('Purple.controller.Menu', {
       }
     }
   },
-  helpButtonTap: function() {
+  freeGasButtonTap: function() {
     var _ref,
       _this = this;
-    if (this.getCurrentIndex() === 5) {
-      this.selectOption((_ref = this.indexBeforeHelp) != null ? _ref : 2);
+    if (!(util.ctl('Account').isUserLoggedIn() && util.ctl('Account').isCompleteAccount())) {
+      return this.getMainContainer().getItems().getAt(0).select(1, false, false);
+    } else if (this.getCurrentIndex() === 7) {
+      this.selectOption((_ref = this.indexBeforeFreeGas) != null ? _ref : 2);
       return this.popOffBackButtonWithoutAction();
     } else {
-      this.indexBeforeHelp = this.getCurrentIndex();
+      this.indexBeforeFreeGas = this.getCurrentIndex();
       this.pushOntoBackButton(function() {
-        return _this.selectOption(_this.indexBeforeHelp);
+        return _this.selectOption(_this.indexBeforeFreeGas);
       });
-      return this.selectOption(5);
+      return this.selectOption(7);
     }
+  },
+  helpButtonTap: function() {
+    return this.selectOption(5);
   },
   feedbackButtonTap: function() {
     return this.selectOption(6);

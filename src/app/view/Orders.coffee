@@ -22,6 +22,8 @@ Ext.define 'Purple.view.Orders'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     plugins: [
       {
         xclass: 'Purple.plugin.NonListPullRefresh'
@@ -58,7 +60,7 @@ Ext.define 'Purple.view.Orders'
     ]
     listeners:
       initialize: ->
-        @fireEvent 'loadOrdersList'
+        @fireEvent 'loadOrdersList', no, null
     items: [
       {
         xtype: 'spacer'

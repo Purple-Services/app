@@ -15,7 +15,10 @@ Ext.define('Purple.view.RequestForm', {
     cls: ['request-form', 'accent-bg', 'slideable'],
     scrollable: {
       direction: 'vertical',
-      directionLock: true
+      directionLock: true,
+      translatable: {
+        translationMethod: 'auto'
+      }
     },
     items: [
       {

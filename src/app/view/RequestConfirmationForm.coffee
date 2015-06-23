@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.RequestConfirmationForm'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'requestconfirmationform'
   requires: [
     'Ext.form.*'
@@ -22,6 +22,8 @@ Ext.define 'Purple.view.RequestConfirmationForm'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     items: [
       {
         xtype: 'spacer'
@@ -134,6 +136,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             disabled: yes
             cls: [
               'visibly-disabled'
+              'bottom-margin'
             ]
           }
           {
@@ -156,6 +159,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
           }
           {
             xtype: 'moneyfield'
+            id: 'totalPriceField'
             flex: 0
             name: 'total_price'
             label: 'Total'

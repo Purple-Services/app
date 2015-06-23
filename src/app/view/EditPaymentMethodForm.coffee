@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.EditPaymentMethodForm'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'editpaymentmethodform'
   requires: [
     'Ext.form.*'
@@ -19,12 +19,16 @@ Ext.define 'Purple.view.EditPaymentMethodForm'
       'accent-bg'
       'slideable'
     ]
-    # because of a bug with the CVC input field when scrollable
+    # because of a bug with the CVC input field when scrollable, we disable
     # when make this page not scrollable on Android and cros our fingers that
     # the whole page will fit on user's screen
-    scrollable: if Ext.os.name is "Android" then no else
+    scrollable:
+      disabled: Ext.os.name is "Android"
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
+      
     listeners:
       initialize: ->
         if @config.paymentMethodId isnt 'new'

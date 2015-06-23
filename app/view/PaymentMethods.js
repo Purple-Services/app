@@ -70,7 +70,7 @@ Ext.define('Purple.view.PaymentMethods', {
                 text: 'Add Card',
                 flex: 0,
                 handler: function() {
-                  return this.up().up().up().fireEvent('editPaymentMethod', 'new');
+                  return this.up().up().up().fireEvent('editPaymentMethod', 'new', false);
                 }
               }
             ]

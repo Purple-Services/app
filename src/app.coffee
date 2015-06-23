@@ -7,12 +7,15 @@ Ext.Loader.setPath
 Ext.application
   name: 'Purple'
   requires: [
+    'Ext.MessageBox'
     'Override.form.Panel'
     'Override.field.Select'
     'Ux.field.SelectOtherField'
     'Ux.field.MoneyField'
     'Ux.field.RatingField'
     'Purple.plugin.NonListPullRefresh'
+    'Purple.util.SizeMonitor', # TEMP fix, Chrome 43 bug
+    'Purple.util.PaintMonitor' # TEMP fix, Chrome 43 bug
   ]
   controllers: [
     'Main'

@@ -130,9 +130,9 @@ Ext.define('Purple.controller.Orders', {
       order['customer_name'] = c['name'];
       order['customer_phone'] = c['phone_number'];
     }
-    order['gas_price'] = util.centsToDollars(order['gas_price']);
-    order['service_fee'] = util.centsToDollars(order['service_fee']);
-    order['total_price'] = util.centsToDollars(order['total_price']);
+    order['gas_price_display'] = util.centsToDollars(order['gas_price']);
+    order['service_fee_display'] = util.centsToDollars(order['service_fee']);
+    order['total_price_display'] = util.centsToDollars(order['total_price']);
     this.getOrder().setValues(order);
     if (order['special_instructions'] === '') {
       this.getOrderSpecialInstructionsLabel().hide();
@@ -225,6 +225,8 @@ Ext.define('Purple.controller.Orders', {
             util.ctl('Vehicles').vehicles = response.vehicles;
             util.ctl('Vehicles').loadVehiclesList();
             this.renderOrdersList(this.orders);
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value;
+            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons;
             return typeof callback === "function" ? callback() : void 0;
           } else {
             return navigator.notification.alert(response.message, (function() {}), "Error");
@@ -333,6 +335,7 @@ Ext.define('Purple.controller.Orders', {
         if (response.success) {
           this.orders = response.orders;
           this.backToOrders();
+          util.ctl('Menu').popOffBackButtonWithoutAction();
           return this.renderOrdersList(this.orders);
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
@@ -382,6 +385,7 @@ Ext.define('Purple.controller.Orders', {
         if (response.success) {
           this.orders = response.orders;
           this.backToOrders();
+          util.ctl('Menu').popOffBackButtonWithoutAction();
           return this.renderOrdersList(this.orders);
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
@@ -438,6 +442,7 @@ Ext.define('Purple.controller.Orders', {
         if (response.success) {
           this.orders = response.orders;
           this.backToOrders();
+          util.ctl('Menu').popOffBackButtonWithoutAction();
           return this.renderOrdersList(this.orders);
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");

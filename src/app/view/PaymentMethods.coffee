@@ -74,7 +74,7 @@ Ext.define 'Purple.view.PaymentMethods'
                 text: 'Add Card'
                 flex: 0
                 handler: ->
-                  @up().up().up().fireEvent 'editPaymentMethod', 'new'
+                  @up().up().up().fireEvent 'editPaymentMethod', 'new', no
               }
             ]
           }

@@ -124,7 +124,7 @@ Ext.define 'Purple.view.Help'
             cls: 'accordion-text'
             showAnimation: 'fadeIn'
             hidden: yes
-            html: 'If you are interested in becoming a courier for Purple Services and live in the Los Angeles area, please send an email to us at <a href="mailto:purpleservicesinc@gmail.com" target="_blank">purpleservicesinc@gmail.com</a>.'
+            html: 'If you are interested in becoming a courier for Purple Services and live in the Los Angeles area, please send an email to us at <a href="mailto:info@purpledelivery.com" target="_blank">info@purpledelivery.com</a>.'
           }
           {
             xtype: 'textfield'

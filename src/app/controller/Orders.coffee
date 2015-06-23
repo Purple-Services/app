@@ -125,9 +125,9 @@ Ext.define 'Purple.controller.Orders'
       order['customer_name'] = c['name']
       order['customer_phone'] = c['phone_number']
 
-    order['gas_price'] = util.centsToDollars order['gas_price']
-    order['service_fee'] = util.centsToDollars order['service_fee']
-    order['total_price'] = util.centsToDollars order['total_price']
+    order['gas_price_display'] = util.centsToDollars order['gas_price']
+    order['service_fee_display'] = util.centsToDollars order['service_fee']
+    order['total_price_display'] = util.centsToDollars order['total_price']
 
     @getOrder().setValues order
     if order['special_instructions'] is ''
@@ -223,6 +223,8 @@ Ext.define 'Purple.controller.Orders'
             util.ctl('Vehicles').vehicles = response.vehicles
             util.ctl('Vehicles').loadVehiclesList()
             @renderOrdersList @orders
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value
+            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
             callback?()
           else
             navigator.notification.alert response.message, (->), "Error"
@@ -318,6 +320,7 @@ Ext.define 'Purple.controller.Orders'
         if response.success
           @orders = response.orders
           @backToOrders()
+          util.ctl('Menu').popOffBackButtonWithoutAction()
           @renderOrdersList @orders
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -357,6 +360,7 @@ Ext.define 'Purple.controller.Orders'
         if response.success
           @orders = response.orders
           @backToOrders()
+          util.ctl('Menu').popOffBackButtonWithoutAction()
           @renderOrdersList @orders
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -405,6 +409,7 @@ Ext.define 'Purple.controller.Orders'
         if response.success
           @orders = response.orders
           @backToOrders()
+          util.ctl('Menu').popOffBackButtonWithoutAction()
           @renderOrdersList @orders
         else
           navigator.notification.alert response.message, (->), "Error"

@@ -28,7 +28,17 @@ Ext.define('Purple.view.MapForm', {
           zoom: 17,
           mapTypeControl: false,
           zoomControl: false,
-          streetViewControl: false
+          streetViewControl: false,
+          styles: [
+            {
+              "featureType": "poi",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            }
+          ]
         }
       }, {
         xtype: 'button',

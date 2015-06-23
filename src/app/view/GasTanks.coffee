@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.GasTanks'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'gastanks'
   requires: [
     'Ext.form.*'
@@ -24,6 +24,8 @@ Ext.define 'Purple.view.GasTanks'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     items: [
       {
         xtype: 'spacer'

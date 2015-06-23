@@ -15,7 +15,10 @@ Ext.define('Purple.view.Orders', {
     cls: ['request-form', 'accent-bg', 'slideable'],
     scrollable: {
       direction: 'vertical',
-      directionLock: true
+      directionLock: true,
+      translatable: {
+        translationMethod: 'auto'
+      }
     },
     plugins: [
       {
@@ -43,7 +46,7 @@ Ext.define('Purple.view.Orders', {
     ],
     listeners: {
       initialize: function() {
-        return this.fireEvent('loadOrdersList');
+        return this.fireEvent('loadOrdersList', false, null);
       }
     },
     items: [

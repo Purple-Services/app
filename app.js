@@ -9,7 +9,7 @@ Ext.Loader.setPath({
 
 Ext.application({
   name: 'Purple',
-  requires: ['Override.form.Panel', 'Override.field.Select', 'Ux.field.SelectOtherField', 'Ux.field.MoneyField', 'Ux.field.RatingField', 'Purple.plugin.NonListPullRefresh'],
+  requires: ['Ext.MessageBox', 'Override.form.Panel', 'Override.field.Select', 'Ux.field.SelectOtherField', 'Ux.field.MoneyField', 'Ux.field.RatingField', 'Purple.plugin.NonListPullRefresh', 'Purple.util.SizeMonitor', 'Purple.util.PaintMonitor'],
   controllers: ['Main', 'Menu', 'Account', 'Vehicles', 'Orders', 'PaymentMethods', 'GasTanks'],
   views: ['MainContainer', 'TopToolbar'],
   launch: function() {

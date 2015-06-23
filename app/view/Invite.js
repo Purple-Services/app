@@ -43,14 +43,14 @@ Ext.define('Purple.view.Invite', {
           }, {
             xtype: 'component',
             flex: 0,
-            html: "Give friends 5 gallons of free gas. After they make their\nfirst order, you'll get 5 gallons too!\n<div style=\"text-align: center; padding: 35px 0px 0px 0px; color: #ba1c8d\">\n  Coupon Code: CHRIS003\n</div>",
-            cls: 'field-label-text'
+            html: "Get <span style=\"font-weight: 900\">" + localStorage['purpleReferralReferrerGallons'] + " gallons free</span> whenever\nyour friends use your coupon code. Plus, they'll get $" + (Math.floor(util.centsToDollars(Math.abs(localStorage['purpleReferralReferredValue'])))) + " off their order!\n<div style=\"text-align: center; padding: 20px 0px 0px 0px; color: #ba1c8d\">\n  Share Coupon Code: <span style=\"font-weight: 900\">" + localStorage['purpleUserReferralCode'] + "</span>\n</div>",
+            cls: 'loose-text'
           }, {
             xtype: 'container',
             flex: 0,
             height: 110,
             width: '100%',
-            padding: '10 0 5 0',
+            padding: '7 0 5 0',
             layout: {
               type: 'vbox',
               pack: 'center',
@@ -61,10 +61,10 @@ Ext.define('Purple.view.Invite', {
                 xtype: 'button',
                 ui: 'action',
                 cls: 'button-pop',
-                text: 'Email Invite',
+                text: 'Email',
                 flex: 0,
-                width: 200,
-                margin: '0 0 20 0',
+                width: 170,
+                margin: '0 0 15 0',
                 handler: function() {
                   var _ref;
                   return typeof plugins !== "undefined" && plugins !== null ? (_ref = plugins.socialsharing) != null ? _ref.shareViaEmail('Here is my message.', 'The Subject', null, null, null, null, (function() {}), (function() {})) : void 0 : void 0;
@@ -73,12 +73,36 @@ Ext.define('Purple.view.Invite', {
                 xtype: 'button',
                 ui: 'action',
                 cls: 'button-pop button-pop-dark',
-                text: 'Text Invite',
+                text: 'Text',
                 flex: 0,
-                width: 200,
+                width: 170,
+                margin: '0 0 15 0',
                 handler: function() {
                   var _ref;
                   return typeof plugins !== "undefined" && plugins !== null ? (_ref = plugins.socialsharing) != null ? _ref.shareViaSMS('My message here', null, (function() {}), (function() {})) : void 0 : void 0;
+                }
+              }, {
+                xtype: 'button',
+                ui: 'action',
+                cls: 'button-pop button-pop-facebook',
+                text: 'Facebook',
+                flex: 0,
+                width: 170,
+                margin: '0 0 15 0',
+                handler: function() {
+                  var _ref;
+                  return typeof plugins !== "undefined" && plugins !== null ? (_ref = plugins.socialsharing) != null ? _ref.shareViaFacebook('Message via Facebook', null, "" + util.WEB_SERVICE_BASE_URL + "download", (function() {}), (function() {})) : void 0 : void 0;
+                }
+              }, {
+                xtype: 'button',
+                ui: 'action',
+                cls: 'button-pop button-pop-twitter',
+                text: 'Tweet',
+                flex: 0,
+                width: 170,
+                handler: function() {
+                  var _ref;
+                  return typeof plugins !== "undefined" && plugins !== null ? (_ref = plugins.socialsharing) != null ? _ref.shareViaTwitter('Message via Twitter', null, "" + util.WEB_SERVICE_BASE_URL + "download") : void 0 : void 0;
                 }
               }
             ]

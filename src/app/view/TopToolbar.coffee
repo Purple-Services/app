@@ -6,7 +6,7 @@ Ext.define 'Purple.view.TopToolbar',
     ui: 'top-toolbar'
     height: 60
     title: """
-      <img src="resources/images/logo-word.png" style="height: 42px; padding-top: 11px;" />
+      <img src="resources/images/logo-word.png" style="height: 42px; padding-top: 14px;" />
     """
     items: [
       {
@@ -21,8 +21,8 @@ Ext.define 'Purple.view.TopToolbar',
       }
       {
         xtype: 'button'
-        cls: 'helpButton'
+        cls: 'freeGasButton'
         ui: 'plain'
-        handler: -> @up().fireEvent 'helpButtonTap'
+        handler: -> @up().fireEvent 'freeGasButtonTap'
       }
     ]

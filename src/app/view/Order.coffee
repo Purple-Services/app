@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Order'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'order'
   requires: [
     'Ext.form.*'
@@ -23,6 +23,8 @@ Ext.define 'Purple.view.Order'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     listeners:
       initialize: ->
         if util.CANCELLABLE_STATUSES.indexOf(@config.status) isnt -1 and
@@ -263,7 +265,7 @@ Ext.define 'Purple.view.Order'
             xtype: 'moneyfield'
             ctype: 'orderGasPrice'
             flex: 0
-            name: 'gas_price'
+            name: 'gas_price_display'
             label: 'Gas Price'
             labelWidth: 115
             disabled: yes
@@ -299,7 +301,7 @@ Ext.define 'Purple.view.Order'
             xtype: 'moneyfield'
             ctype: 'orderServiceFee'
             flex: 0
-            name: 'service_fee'
+            name: 'service_fee_display'
             label: 'Service Fee'
             labelWidth: 115
             disabled: yes
@@ -312,7 +314,7 @@ Ext.define 'Purple.view.Order'
             xtype: 'moneyfield'
             ctype: 'orderTotalPrice'
             flex: 0
-            name: 'total_price'
+            name: 'total_price_display'
             label: 'Total'
             disabled: yes
             style: 'margin-bottom: 25px;'

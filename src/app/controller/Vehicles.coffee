@@ -201,6 +201,8 @@ Ext.define 'Purple.controller.Vehicles'
             util.ctl('Orders').orders = response.orders
             util.ctl('Orders').loadOrdersList()
             @renderVehiclesList @vehicles
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value
+            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -354,6 +356,8 @@ Ext.define 'Purple.controller.Vehicles'
           if response.success
             @vehicles = response.vehicles
             util.ctl('Orders').orders = response.orders
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value
+            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
             opts = @vehicles.map (v) ->
               {
                 text: "#{v.year} #{v.make} #{v.model}"

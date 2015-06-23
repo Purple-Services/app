@@ -75,9 +75,21 @@ Ext.define('Purple.view.MainContainer', {
           items: [
             {
               xtype: 'button',
+              ctype: 'helpButton',
+              ui: 'plain',
+              text: 'Help',
+              handler: function() {
+                return this.fireEvent('helpButtonTap');
+              }
+            }, {
+              xtype: 'component',
+              flex: 0,
+              height: 10
+            }, {
+              xtype: 'button',
               ctype: 'feedbackButton',
               ui: 'plain',
-              text: 'Feedback?',
+              text: 'Feedback',
               handler: function() {
                 return this.fireEvent('feedbackButtonTap');
               }
@@ -197,7 +209,7 @@ Ext.define('Purple.view.MainContainer', {
           }
         ]
       }, {
-        title: "Get Free Gas!",
+        title: "<img src=\"resources/images/present-icon-white.png\" style=\"height: 22px; padding-right: 4px; position: relative; top: 1px;\" />\nGet Free Gas!",
         items: [
           {
             xtype: "toptoolbar",

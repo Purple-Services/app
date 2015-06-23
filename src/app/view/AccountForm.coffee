@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.AccountForm'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'accountform'
   requires: [
     'Ext.form.*'
@@ -13,7 +13,11 @@ Ext.define 'Purple.view.AccountForm'
       align: 'start'
     height: '100%'
     submitOnAction: no
-    scrollable: no
+    scrollable:
+      direction: 'vertical'
+      directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     cls: [
       'account-form'
       'accent-bg'

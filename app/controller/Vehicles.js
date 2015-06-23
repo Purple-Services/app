@@ -215,7 +215,9 @@ Ext.define('Purple.controller.Vehicles', {
             this.vehicles = response.vehicles;
             util.ctl('Orders').orders = response.orders;
             util.ctl('Orders').loadOrdersList();
-            return this.renderVehiclesList(this.vehicles);
+            this.renderVehiclesList(this.vehicles);
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value;
+            return localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons;
           } else {
             return navigator.notification.alert(response.message, (function() {}), "Error");
           }
@@ -403,6 +405,8 @@ Ext.define('Purple.controller.Vehicles', {
           if (response.success) {
             this.vehicles = response.vehicles;
             util.ctl('Orders').orders = response.orders;
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value;
+            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons;
             opts = this.vehicles.map(function(v) {
               return {
                 text: "" + v.year + " " + v.make + " " + v.model,

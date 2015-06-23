@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.EditVehicleForm'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'editvehicleform'
   requires: [
     'Ext.form.*'
@@ -22,6 +22,8 @@ Ext.define 'Purple.view.EditVehicleForm'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     listeners:
       initialize: ->
         if @config.vehicleId isnt 'new'

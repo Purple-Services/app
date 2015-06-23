@@ -1,5 +1,5 @@
 Ext.define 'Purple.view.Feedback'
-  extend: 'Ext.Container'
+  extend: 'Ext.form.Panel'
   xtype: 'feedback'
   requires: [
     'Ext.form.*'
@@ -20,6 +20,8 @@ Ext.define 'Purple.view.Feedback'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     items: [
       {
         xtype: 'spacer'
@@ -63,7 +65,7 @@ Ext.define 'Purple.view.Feedback'
             xtype: 'component'
             flex: 0
             html: 'We appreciate your feedback and/or suggestions. Thank you for helping us to improve our service.'
-            cls: 'field-label-text'
+            cls: 'loose-text'
           }
           {
             xtype: 'textareafield'

@@ -23,7 +23,8 @@ Ext.define('Purple.controller.Main', {
       inviteTextField: '[ctype=inviteTextField]',
       inviteThankYouMessage: '[ctype=inviteThankYouMessage]',
       discountField: '#discountField',
-      couponCodeField: '#couponCodeField'
+      couponCodeField: '#couponCodeField',
+      totalPriceField: '#totalPriceField'
     },
     control: {
       mapForm: {
@@ -425,13 +426,16 @@ Ext.define('Purple.controller.Main', {
   },
   promptForCode: function() {
     var _this = this;
-    return navigator.notification.prompt("Enter a coupon code:", (function(results) {
-      if (results.buttonIndex === 1) {
-        return _this.applyCode(results.input1);
+    return Ext.Msg.prompt('Coupon Code', false, (function(buttonId, text) {
+      if (buttonId === 'ok') {
+        return _this.applyCode(text);
       }
-    }), "Coupon Code");
+    }));
   },
   applyCode: function(code) {
+    var vals, vehicleId;
+    vals = this.getRequestConfirmationForm().getValues();
+    vehicleId = vals['vehicle_id'];
     Ext.Viewport.setMasked({
       xtype: 'loadmask',
       message: ''
@@ -442,6 +446,7 @@ Ext.define('Purple.controller.Main', {
         version: util.VERSION_NUMBER,
         user_id: localStorage['purpleUserId'],
         token: localStorage['purpleToken'],
+        vehicle_id: vehicleId,
         code: code
       }),
       headers: {
@@ -451,12 +456,14 @@ Ext.define('Purple.controller.Main', {
       method: 'POST',
       scope: this,
       success: function(response_obj) {
-        var response;
+        var response, totalPrice;
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {
-          this.getDiscountField().setValue("- $" + util.centsToDollars(response.value));
-          return this.getCouponCodeField().setValue(code);
+          this.getDiscountField().setValue("- $" + util.centsToDollars(Math.abs(response.value)));
+          this.getCouponCodeField().setValue(code);
+          totalPrice = parseInt(vals['total_price'].replace('$', '').replace('.', '')) + response.value;
+          return this.getTotalPriceField().setValue("" + util.centsToDollars(totalPrice));
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
         }

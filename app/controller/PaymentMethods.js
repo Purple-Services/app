@@ -124,6 +124,8 @@ Ext.define('Purple.controller.PaymentMethods', {
             util.ctl('Orders').loadOrdersList();
             util.ctl('Vehicles').vehicles = response.vehicles;
             util.ctl('Vehicles').loadVehiclesList();
+            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value;
+            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons;
             return this.renderPaymentMethodsList(this.paymentMethods);
           } else {
             return navigator.notification.alert(response.message, (function() {}), "Error");

@@ -5,6 +5,7 @@ Ext.define 'Purple.controller.Menu'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       feedbackButton: '[ctype=feedbackButton]'
+      helpButton: '[ctype=helpButton]'
       inviteButton: '[ctype=inviteButton]'
       menuButton: '[ctype=menuButton]'
       requestGasTabContainer: '#requestGasTabContainer'
@@ -14,12 +15,14 @@ Ext.define 'Purple.controller.Menu'
       mapForm: 'mapform'
       map: '#gmap'
     control:
+      helpButton:
+        helpButtonTap: 'helpButtonTap'
       feedbackButton:
         feedbackButtonTap: 'feedbackButtonTap'
       inviteButton:
         inviteButtonTap: 'inviteButtonTap'
       topToolbar:
-        helpButtonTap: 'helpButtonTap'
+        freeGasButtonTap: 'freeGasButtonTap'
         menuButtonTap: 'menuButtonTap'
 
   backButtonStack: []
@@ -73,15 +76,21 @@ Ext.define 'Purple.controller.Menu'
       else
         @close()
 
-  helpButtonTap: ->
-    if @getCurrentIndex() is 5
-      # already on Help page
-      @selectOption (@indexBeforeHelp ? 2)
+  freeGasButtonTap: ->
+    if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
+      # select the Login view
+      @getMainContainer().getItems().getAt(0).select 1, no, no
+    else if @getCurrentIndex() is 7
+      # already on Free Gas page
+      @selectOption (@indexBeforeFreeGas ? 2)
       @popOffBackButtonWithoutAction()
     else
-      @indexBeforeHelp = @getCurrentIndex()
-      @pushOntoBackButton => @selectOption @indexBeforeHelp
-      @selectOption 5
+      @indexBeforeFreeGas = @getCurrentIndex()
+      @pushOntoBackButton => @selectOption @indexBeforeFreeGas
+      @selectOption 7
+
+  helpButtonTap: ->
+    @selectOption 5
 
   feedbackButtonTap: ->
     @selectOption 6

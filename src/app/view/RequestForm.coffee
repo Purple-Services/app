@@ -21,6 +21,8 @@ Ext.define 'Purple.view.RequestForm'
     scrollable:
       direction: 'vertical'
       directionLock: yes
+      translatable:
+        translationMethod: 'auto'
     items: [
       {
         xtype: 'spacer'

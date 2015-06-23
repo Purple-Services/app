@@ -29,13 +29,22 @@ Ext.define 'Purple.view.MapForm'
         xtype: 'map'
         id: 'gmap'
         flex: 1
-        # useCurrentLocation: yes # might want to handle this myself
-        useCurrentLocation: no
+        useCurrentLocation: no # we handle this ourselves
         mapOptions:
           zoom: 17
           mapTypeControl: no
           zoomControl: no
           streetViewControl: no
+          styles: [
+            {
+              "featureType": "poi"
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            }
+          ]
       }
       {
         xtype: 'button'

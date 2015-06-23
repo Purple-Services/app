@@ -50,20 +50,20 @@ Ext.define 'Purple.view.Invite'
             xtype: 'component'
             flex: 0
             html: """
-              Give friends 5 gallons of free gas. After they make their
-              first order, you'll get 5 gallons too!
-              <div style="text-align: center; padding: 35px 0px 0px 0px; color: #ba1c8d">
-                Coupon Code: CHRIS003
+              Get <span style="font-weight: 900">#{localStorage['purpleReferralReferrerGallons']} gallons free</span> whenever
+              your friends use your coupon code. Plus, they'll get $#{Math.floor(util.centsToDollars(Math.abs(localStorage['purpleReferralReferredValue'])))} off their order!
+              <div style="text-align: center; padding: 20px 0px 0px 0px; color: #ba1c8d">
+                Share Coupon Code: <span style="font-weight: 900">#{localStorage['purpleUserReferralCode']}</span>
               </div>
             """
-            cls: 'field-label-text'
+            cls: 'loose-text'
           }
           {
             xtype: 'container'
             flex: 0
             height: 110
             width: '100%'
-            padding: '10 0 5 0'
+            padding: '7 0 5 0'
             layout:
               type: 'vbox'
               pack: 'center'
@@ -73,10 +73,10 @@ Ext.define 'Purple.view.Invite'
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Email Invite'
+                text: 'Email'
                 flex: 0
-                width: 200
-                margin: '0 0 20 0'
+                width: 170
+                margin: '0 0 15 0'
                 handler: ->
                   plugins?.socialsharing?.shareViaEmail(
                     'Here is my message.',
@@ -93,9 +93,10 @@ Ext.define 'Purple.view.Invite'
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop button-pop-dark'
-                text: 'Text Invite'
+                text: 'Text'
                 flex: 0
-                width: 200
+                width: 170
+                margin: '0 0 15 0'
                 handler: ->
                   #@up().up().up().fireEvent 'sendInvites'
                   plugins?.socialsharing?.shareViaSMS(
@@ -103,6 +104,37 @@ Ext.define 'Purple.view.Invite'
                     null,
                     (->),
                     (->)
+                  )
+              }
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop button-pop-facebook'
+                text: 'Facebook'
+                flex: 0
+                width: 170
+                margin: '0 0 15 0'
+                handler: ->
+                  plugins?.socialsharing?.shareViaFacebook(
+                    'Message via Facebook',
+                    null, # img
+                    "#{util.WEB_SERVICE_BASE_URL}download",
+                    (->),
+                    (->)
+                  )
+              }
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop button-pop-twitter'
+                text: 'Tweet'
+                flex: 0
+                width: 170
+                handler: ->
+                  plugins?.socialsharing?.shareViaTwitter(
+                    'Message via Twitter',
+                    null, # img
+                    "#{util.WEB_SERVICE_BASE_URL}download"
                   )
               }
             ]
