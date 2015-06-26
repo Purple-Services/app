@@ -1,15 +1,20 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "LOCAL"
+VERSION = "DEV"
 
 # window.onerror = (message, url, lineNumber) ->
 #   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
 #   return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
+if VERSION is "LOCAL" or VERSION is "DEV"
+  window.onerror = (message, url, lineNumber) ->
+    alert "#{message} #{lineNumber}"
+    return false
+
 window.util =
-  VERSION_NUMBER: "1.0.3"
+  VERSION_NUMBER: "1.0.4"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://192.168.0.2:3000/"
+    when "LOCAL" then "http://192.168.0.3:3000/"
     when "PROD" then "https://purpledelivery.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 

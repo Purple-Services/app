@@ -11,7 +11,6 @@ Ext.define('Purple.view.Orders', {
       align: 'start'
     },
     height: '100%',
-    submitOnAction: false,
     cls: ['request-form', 'accent-bg', 'slideable'],
     scrollable: {
       direction: 'vertical',

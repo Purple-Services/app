@@ -20,6 +20,7 @@ Ext.define 'Purple.controller.Main'
       invite: 'invite'
       inviteTextField: '[ctype=inviteTextField]'
       inviteThankYouMessage: '[ctype=inviteThankYouMessage]'
+      freeGasField: '#freeGasField'
       discountField: '#discountField'
       couponCodeField: '#couponCodeField'
       totalPriceField: '#totalPriceField'
@@ -280,6 +281,8 @@ Ext.define 'Purple.controller.Main'
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
+            localStorage['purpleUserReferralCode'] = response.user.referral_code
+            localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
             availabilities = response.availabilities
             # first, see if there are any gallons available at all
             totalGallons = availabilities.reduce (a, b) ->
@@ -345,10 +348,21 @@ Ext.define 'Purple.controller.Main'
     vals['service_fee'] = "" + util.centsToDollars(
       serviceFee
     )
-    vals['total_price'] = "" + util.centsToDollars(
-      parseFloat(gasPrice) * parseFloat(vals['gallons']) +
-      parseFloat(serviceFee)
+
+    freeGallonsAvailable = parseInt localStorage['purpleUserReferralGallons']
+    gallonsToSubtract = 0
+    if freeGallonsAvailable is 0
+      @getFreeGasField().hide()
+    else
+      # apply as much free gas as possible
+      gallonsToSubtract = Math.min vals['gallons'], freeGallonsAvailable
+      @getFreeGasField().setValue "- $#{vals['gas_price']} x #{gallonsToSubtract}"
+    
+    # it's called unaltered because it doesn't have a coupon code applied
+    @unalteredTotalPrice = (
+      parseFloat(gasPrice) * (parseFloat(vals['gallons']) - gallonsToSubtract) + parseFloat(serviceFee)
     )
+    vals['total_price'] = "" + util.centsToDollars @unalteredTotalPrice
     vals['display_time'] = availability.times[vals['time']]['text']
     vals['vehicle_id'] = vals['vehicle']
     for v in util.ctl('Vehicles').vehicles
@@ -364,20 +378,12 @@ Ext.define 'Purple.controller.Main'
 
   promptForCode: ->
     Ext.Msg.prompt(
-      'Coupon Code',
+      'Enter Coupon Code',
       false,
       ((buttonId, text) =>
         if buttonId is 'ok'
           @applyCode text)
     )
-    # navigator.notification.prompt(
-    #   "Enter a coupon code:",
-    #   ((results) =>
-    #     if results.buttonIndex is 1
-    #       @applyCode results.input1
-    #   ),
-    #   "Coupon Code"
-    # )
 
   applyCode: (code) ->
     vals = @getRequestConfirmationForm().getValues()
@@ -406,9 +412,10 @@ Ext.define 'Purple.controller.Main'
             "- $" + util.centsToDollars(Math.abs(response.value))
           )
           @getCouponCodeField().setValue code
-          totalPrice = parseInt(
-            vals['total_price'].replace('$','').replace('.','')
-          ) + response.value
+          totalPrice = Math.max(
+            @unalteredTotalPrice + response.value,
+            0
+          )
           @getTotalPriceField().setValue "" + util.centsToDollars(totalPrice)
         else
           navigator.notification.alert response.message, (->), "Error"

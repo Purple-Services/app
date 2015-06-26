@@ -13,7 +13,6 @@ Ext.define 'Purple.view.Orders'
       pack: 'start'
       align: 'start'
     height: '100%'
-    submitOnAction: no
     cls: [
       'request-form'
       'accent-bg'

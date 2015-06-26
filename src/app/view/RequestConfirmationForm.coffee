@@ -141,6 +141,20 @@ Ext.define 'Purple.view.RequestConfirmationForm'
           }
           {
             xtype: 'textfield'
+            id: 'freeGasField'
+            flex: 0
+            name: 'discount'
+            label: 'Free Gallons'
+            labelWidth: 125
+            disabled: yes
+            value: ''
+            cls: [
+              'bottom-margin'
+              'visibly-disabled'
+            ]
+          }
+          {
+            xtype: 'textfield'
             id: 'discountField'
             flex: 0
             name: 'discount'
@@ -151,6 +165,7 @@ Ext.define 'Purple.view.RequestConfirmationForm'
             cls: [
               'click-to-edit'
               'bottom-margin'
+              'visibly-disabled'
             ]
             listeners:
               initialize: (field) ->

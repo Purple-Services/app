@@ -22,6 +22,7 @@ Ext.define('Purple.controller.Main', {
       invite: 'invite',
       inviteTextField: '[ctype=inviteTextField]',
       inviteThankYouMessage: '[ctype=inviteThankYouMessage]',
+      freeGasField: '#freeGasField',
       discountField: '#discountField',
       couponCodeField: '#couponCodeField',
       totalPriceField: '#totalPriceField'
@@ -342,6 +343,8 @@ Ext.define('Purple.controller.Main', {
           Ext.Viewport.setMasked(false);
           response = Ext.JSON.decode(response_obj.responseText);
           if (response.success) {
+            localStorage['purpleUserReferralCode'] = response.user.referral_code;
+            localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons;
             availabilities = response.availabilities;
             totalGallons = availabilities.reduce(function(a, b) {
               return a.gallons + b.gallons;
@@ -384,7 +387,7 @@ Ext.define('Purple.controller.Main', {
     return this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
   },
   sendRequest: function() {
-    var a, availabilities, availability, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref,
+    var a, availabilities, availability, freeGallonsAvailable, gallonsToSubtract, gasPrice, gasType, serviceFee, v, vals, _i, _j, _len, _len1, _ref,
       _this = this;
     this.getRequestGasTabContainer().setActiveItem(Ext.create('Purple.view.RequestConfirmationForm'));
     util.ctl('Menu').pushOntoBackButton(function() {
@@ -406,7 +409,16 @@ Ext.define('Purple.controller.Main', {
     vals['gas_price'] = "" + util.centsToDollars(gasPrice);
     vals['gas_price_display'] = "$" + vals['gas_price'] + " x " + vals['gallons'];
     vals['service_fee'] = "" + util.centsToDollars(serviceFee);
-    vals['total_price'] = "" + util.centsToDollars(parseFloat(gasPrice) * parseFloat(vals['gallons']) + parseFloat(serviceFee));
+    freeGallonsAvailable = parseInt(localStorage['purpleUserReferralGallons']);
+    gallonsToSubtract = 0;
+    if (freeGallonsAvailable === 0) {
+      this.getFreeGasField().hide();
+    } else {
+      gallonsToSubtract = Math.min(vals['gallons'], freeGallonsAvailable);
+      this.getFreeGasField().setValue("- $" + vals['gas_price'] + " x " + gallonsToSubtract);
+    }
+    this.unalteredTotalPrice = parseFloat(gasPrice) * (parseFloat(vals['gallons']) - gallonsToSubtract) + parseFloat(serviceFee);
+    vals['total_price'] = "" + util.centsToDollars(this.unalteredTotalPrice);
     vals['display_time'] = availability.times[vals['time']]['text'];
     vals['vehicle_id'] = vals['vehicle'];
     _ref = util.ctl('Vehicles').vehicles;
@@ -426,7 +438,7 @@ Ext.define('Purple.controller.Main', {
   },
   promptForCode: function() {
     var _this = this;
-    return Ext.Msg.prompt('Coupon Code', false, (function(buttonId, text) {
+    return Ext.Msg.prompt('Enter Coupon Code', false, (function(buttonId, text) {
       if (buttonId === 'ok') {
         return _this.applyCode(text);
       }
@@ -462,7 +474,7 @@ Ext.define('Purple.controller.Main', {
         if (response.success) {
           this.getDiscountField().setValue("- $" + util.centsToDollars(Math.abs(response.value)));
           this.getCouponCodeField().setValue(code);
-          totalPrice = parseInt(vals['total_price'].replace('$', '').replace('.', '')) + response.value;
+          totalPrice = Math.max(this.unalteredTotalPrice + response.value, 0);
           return this.getTotalPriceField().setValue("" + util.centsToDollars(totalPrice));
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");

@@ -301,6 +301,8 @@ Ext.define('Purple.controller.Vehicles', {
               return (new Date(b.timestamp_created)) - (new Date(a.timestamp_created));
             });
             return callback(temp_arr[0].id);
+          } else {
+            return util.ctl('Menu').popOffBackButtonWithoutAction();
           }
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");

@@ -89,7 +89,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleUserIsCourier'] = response.user.is_courier;
           localStorage['purpleUserReferralCode'] = response.user.referral_code;
-          localStorage['purpleUserReferralGallons'] = response.user.referral_gallons;
+          localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons;
           localStorage['purpleToken'] = response.token;
           util.ctl('Vehicles').vehicles = [];
           util.ctl('Vehicles').loadVehiclesList();
@@ -152,7 +152,7 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserEmail'] = response.user.email;
           localStorage['purpleUserIsCourier'] = response.user.is_courier;
           localStorage['purpleUserReferralCode'] = response.user.referral_code;
-          localStorage['purpleUserReferralGallons'] = response.user.referral_gallons;
+          localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons;
           localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up;
           localStorage['purpleToken'] = response.token;
           delete localStorage['purpleDefaultPaymentMethodId'];

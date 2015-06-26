@@ -225,8 +225,6 @@ Ext.define('Purple.controller.Orders', {
             util.ctl('Vehicles').vehicles = response.vehicles;
             util.ctl('Vehicles').loadVehiclesList();
             this.renderOrdersList(this.orders);
-            localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value;
-            localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons;
             return typeof callback === "function" ? callback() : void 0;
           } else {
             return navigator.notification.alert(response.message, (function() {}), "Error");
@@ -278,7 +276,7 @@ Ext.define('Purple.controller.Orders', {
         xtype: 'textfield',
         id: "oid_" + o.id,
         flex: 0,
-        label: "" + (Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS")) + "\n<br /><span class=\"subtext\">" + v.year + " " + v.make + " " + v.model + "</span>\n<span class=\"status-square\"></span>",
+        label: "" + (Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS")) + "\n<br /><span class=\"subtext\">" + v.year + " " + v.make + " " + v.model + "</span>\n<div class=\"status-square\">\n  <div class=\"fill\">\n    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"60px\" height=\"60px\" viewBox=\"0 0 60 60\" enable-background=\"new 0 0 60 60\" xml:space=\"preserve\">\n      <path fill=\"#04ACFF\" id=\"waveShape\" d=\"M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4\nc-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9\nc-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z\"/>\n    </svg>\n  </div>\n</div>",
         labelWidth: '100%',
         cls: cls,
         disabled: true,

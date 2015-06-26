@@ -268,6 +268,15 @@ body {
     left: 1px;
 }
 
+.smaller-button-pop .button-pop {
+    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.15);
+    padding: 8px 12px 9px 12px;
+}
+.smaller-button-pop .button-pop .x-button-label {
+    line-height: 27px;
+    font-size: 22px;
+}
+
 .button-pop-dark {
     background-color: #752B90 !important;
 }
@@ -351,7 +360,7 @@ body {
     color: #752B90;
     font-size: 18px;
     font-weight: normal;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
 }
 
 
@@ -652,8 +661,8 @@ body {
     width: 70px;
     height: 60px;
     left: 0px;
-    margin-left: 0px;
-    margin-top: -44px;
+    margin-left: 5px;
+    margin-top: -49px;
     z-index: 1001;
     background-image: url('../images/center-map-icon.png');
     background-repeat: no-repeat;
@@ -769,34 +778,59 @@ body {
     bottom: 0px;
     width: 60px;
     height: 0px;
-    transition: height 1s ease 0s;
-    background: #762B90;
+    transition: height 1.5s ease 0s;
+    /* background: #762B90; */
 }
-.status-unassigned.order-list-item .x-form-label span .status-square {
-    /* background: #e2c4ed; */
-    
+
+#waveShape {
+    -webkit-animation-name: waveAction;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-duration: .8s;
+    animation-name: waveAction;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-duration: .8s;
+    width:60px;
+    fill: #762B90;
 }
+@-webkit-keyframes waveAction {
+    0% {
+        -webkit-transform: translate(-150px, 0);
+    }
+    100% {
+        -webkit-transform: translate(0, 0);
+    }
+}
+@keyframes waveAction {
+    0% {
+        transform: translate(-150px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
 .status-accepted.order-list-item .x-form-label span .status-square {
-    /* background: linear-gradient(#e2c4ed, #e2c4ed 75%, #762B90 75%); */
-    height: 20px;
+    height: 20px
 }
 .status-enroute.order-list-item .x-form-label span .status-square {
-    /* background: linear-gradient(#e2c4ed, #e2c4ed 50%, #762B90 50%); */
     height: 38px;
 }
 .status-servicing.order-list-item .x-form-label span .status-square {
-    /* background: linear-gradient(#e2c4ed, #e2c4ed 25%, #762B90 25%); */
     height: 48px;
 }
 .status-complete.order-list-item .x-form-label span .status-square {
-    background: #93E785;
     height: 60px;
+}
+.status-complete.order-list-item .x-form-label span #waveShape {
+    fill: #93E785;
 }
 .status-cancelled.order-list-item .x-form-label span {
     color: #999;
 }
 .status-cancelled.order-list-item .x-form-label span .status-square {
-    background: #bbb;
+    height: 0px;
 }
 
 
