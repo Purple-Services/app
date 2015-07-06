@@ -8,10 +8,17 @@ if (VERSION === "LOCAL" || VERSION === "DEV") {
     alert("" + message + " " + lineNumber);
     return false;
   };
+} else {
+  window.onerror = function(message, url, lineNumber) {
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._trackEvent('error', 'App Error', "" + message + " " + lineNumber);
+    }
+    return false;
+  };
 }
 
 window.util = {
-  VERSION_NUMBER: "1.0.4",
+  VERSION_NUMBER: "1.0.6",
   WEB_SERVICE_BASE_URL: (function() {
     switch (VERSION) {
       case "LOCAL":

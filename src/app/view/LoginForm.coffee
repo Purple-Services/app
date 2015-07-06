@@ -22,6 +22,9 @@ Ext.define 'Purple.view.LoginForm'
       translatable:
         translationMethod: 'auto'
     submitOnAction: no
+    listeners:
+      initialize: ->
+        util.ctl('Account').showLoginForm()
     items: [
       {
         xtype: 'container'
@@ -107,7 +110,7 @@ Ext.define 'Purple.view.LoginForm'
         """
         html: """
           By creating an account,
-          <br />you agree to the <a href="javascript:window.plugins.ChildBrowser.showWebPage('#{util.WEB_SERVICE_BASE_URL}/terms', { showLocationBar: true, showAddress: false, showNavigationBar: true })">Terms of Service</a>.
+          <br />you agree to the <a href="javascript:window.open('#{util.WEB_SERVICE_BASE_URL}/terms', '_blank', 'location=no')">Terms of Service</a>.
         """
       }
       {
@@ -355,12 +358,14 @@ Ext.define 'Purple.view.LoginForm'
               }
               {
                 xtype: 'button'
+                id: 'googleLoginButton'
                 cls: 'icon-login-button'
                 ui: 'plain'
                 html: """
                   <img src="resources/images/google-logo.png" />
                 """
                 flex: 0
+                hidden: yes
                 handler: ->
                   # 3 up()'s to get to loginform itself
                   @up().up().up().fireEvent 'googleLogin'

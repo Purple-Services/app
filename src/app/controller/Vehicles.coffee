@@ -319,6 +319,7 @@ Ext.define 'Purple.controller.Vehicles'
           util.ctl('Orders').orders = response.orders
           @backToVehicles()
           @renderVehiclesList @vehicles
+          util.ctl('Menu').popOffBackButtonWithoutAction()
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->

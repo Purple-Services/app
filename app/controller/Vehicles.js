@@ -355,7 +355,8 @@ Ext.define('Purple.controller.Vehicles', {
           this.vehicles = response.vehicles;
           util.ctl('Orders').orders = response.orders;
           this.backToVehicles();
-          return this.renderVehiclesList(this.vehicles);
+          this.renderVehiclesList(this.vehicles);
+          return util.ctl('Menu').popOffBackButtonWithoutAction();
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
         }

@@ -19,6 +19,11 @@ Ext.define('Purple.view.LoginForm', {
       }
     },
     submitOnAction: false,
+    listeners: {
+      initialize: function() {
+        return util.ctl('Account').showLoginForm();
+      }
+    },
     items: [
       {
         xtype: 'container',
@@ -86,7 +91,7 @@ Ext.define('Purple.view.LoginForm', {
         flex: 0,
         hidden: true,
         style: "position: absolute;\nbottom: 15px;\nwidth: 100%;\ntext-align: center;",
-        html: "By creating an account,\n<br />you agree to the <a href=\"javascript:window.plugins.ChildBrowser.showWebPage('" + util.WEB_SERVICE_BASE_URL + "/terms', { showLocationBar: true, showAddress: false, showNavigationBar: true })\">Terms of Service</a>."
+        html: "By creating an account,\n<br />you agree to the <a href=\"javascript:window.open('" + util.WEB_SERVICE_BASE_URL + "/terms', '_blank', 'location=no')\">Terms of Service</a>."
       }, {
         xtype: 'spacer',
         flex: 1
@@ -304,10 +309,12 @@ Ext.define('Purple.view.LoginForm', {
                 flex: 1
               }, {
                 xtype: 'button',
+                id: 'googleLoginButton',
                 cls: 'icon-login-button',
                 ui: 'plain',
                 html: "<img src=\"resources/images/google-logo.png\" />",
                 flex: 0,
+                hidden: true,
                 handler: function() {
                   return this.up().up().up().fireEvent('googleLogin');
                 }

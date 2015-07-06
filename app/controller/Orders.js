@@ -95,7 +95,7 @@ Ext.define('Purple.controller.Orders', {
     order['display_status'] = (function() {
       switch (order['status']) {
         case 'unassigned':
-          return 'Choosing a Courier';
+          return 'Accepted';
         default:
           return order['status'];
       }

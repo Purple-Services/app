@@ -68,18 +68,6 @@ Ext.define('Purple.controller.Main', {
     var _ref;
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 5000);
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._enableSSL();
-    }
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._setAccount('UA-61762011-1');
-    }
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._setDomain('none');
-    }
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._trackEvent('main', 'App Launch', "Platform: " + Ext.os.name);
-    }
     if ((_ref = navigator.splashscreen) != null) {
       _ref.hide();
     }
@@ -540,6 +528,7 @@ Ext.define('Purple.controller.Main', {
             this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
             this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
             util.ctl('Menu').clearBackButtonStack();
+            navigator.notification.alert("Your order has been accepted, and a courier will be on the way soon! Please ensure that the fueling door on your gas tank is unlocked.", (function() {}), "Order Accepted");
             if (!util.ctl('Account').hasPushNotificationsSetup()) {
               return this.setUpPushNotifications();
             }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
-        versionCode = "15"
-        version     = "1.0.5" >
+        id = "com.purple.app"
+        versionCode = "16"
+        version     = "1.0.6" >
 
   <!--
       For iOS use:
@@ -16,11 +16,11 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <name>Purple</name>
+  <!-- <name>Purple</name> -->
   <!-- BEGIN CUSTOMER APP ONLY -->
   
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <name>Purple Courier</name> -->
+  <name>Purple Courier</name>
   <!-- END COURIER APP ONLY -->
 
   
@@ -93,7 +93,8 @@
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
 
-  <preference name="phonegap-version" value="3.7.0" />
+  <preference name="phonegap-version" value="cli-5.1.1" />
+  <!-- <preference name="phonegap-version" value="3.7.0" /> -->
   <preference name="fullscreen" value="false" />
   <preference name="exit-on-suspend" value="false" />
   <preference name="orientation" value="portrait" />
@@ -105,7 +106,7 @@
   <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
   <gap:plugin name="org.apache.cordova.camera" version="0.3.2" />
   <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
-  <gap:plugin name="com.phonegap.plugins.childbrowser" version="5.0.0" />
+  <gap:plugin name="org.apache.cordova.inappbrowser" version="0.6.0" source="plugins.cordova.io" />
 
   
   <gap:plugin name="cordova-plugin-splashscreen" version="2.0.0" source="npm" />
@@ -113,7 +114,12 @@
   <preference name="SplashScreen" value="splash-screens/hdpi.png" />
   <preference name="SplashScreenDelay" value="10000" />
   
-  <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
+  <!-- <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0"> -->
+  <!--   <param name="APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="APP_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
+
+  <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
   </gap:plugin>
@@ -142,10 +148,10 @@
   <feature name="http://api.phonegap.com/1.0/device" />
 
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
-  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
-  <!--   <string>(required for Courier mode)</string> -->
-  <!-- </gap:config-file> -->
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
+    <string>(required for Courier mode)</string>
+  </gap:config-file>
   <!-- END COURIER APP ONLY -->
 
 </widget>

@@ -122,8 +122,8 @@ Ext.define('Purple.view.Invite', {
   },
   populate: function() {
     var inviteMessage, inviteMessageTwitter;
-    inviteMessage = "Get $10 of gas for free when you use my coupon code, " + localStorage['purpleUserReferralCode'] + ". Download the Purple app, to fuel your car wherever you are: " + util.WEB_SERVICE_BASE_URL + "app";
-    inviteMessageTwitter = "Get $10 of gas for free when you use my coupon code, " + localStorage['purpleUserReferralCode'] + ". Download the Purple app: " + util.WEB_SERVICE_BASE_URL + "app";
+    inviteMessage = "Get $" + (Math.floor(util.centsToDollars(Math.abs(this.referralReferredValue)))) + " of gas for free when you use my coupon code, " + localStorage['purpleUserReferralCode'] + ". Download the Purple app, to fuel your car wherever you are: " + util.WEB_SERVICE_BASE_URL + "app";
+    inviteMessageTwitter = "Get $" + (Math.floor(util.centsToDollars(Math.abs(this.referralReferredValue)))) + " of gas for free when you use my coupon code, " + localStorage['purpleUserReferralCode'] + ". Download the Purple app for iPhone or Android.";
     return Ext.getCmp('inviteInnerContainer').add([
       {
         xtype: 'component',

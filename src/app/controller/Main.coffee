@@ -61,10 +61,10 @@ Ext.define 'Purple.controller.Main'
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Uncomment this for customer app, but courier doesn't need it
-    ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    ga_storage?._setAccount 'UA-61762011-1'
-    ga_storage?._setDomain 'none'
-    ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+    # ga_storage?._setAccount 'UA-61762011-1'
+    # ga_storage?._setDomain 'none'
+    # ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
     navigator.splashscreen?.hide()
     #StatusBar?.backgroundColorByHexString "#230F2B"
@@ -485,6 +485,7 @@ Ext.define 'Purple.controller.Main'
               yes
             )
             util.ctl('Menu').clearBackButtonStack()
+            navigator.notification.alert "Your order has been accepted, and a courier will be on the way soon! Please ensure that the fueling door on your gas tank is unlocked.", (->), "Order Accepted"
             # set up push notifications if they arent set up
             if not util.ctl('Account').hasPushNotificationsSetup()
               @setUpPushNotifications()

@@ -881,6 +881,13 @@ body {
 
 
 
+/* FAQ / Help page */
+.faq-question .x-form-label {
+    padding-right: 7px;
+}
+.faq-question .x-form-label span {
+    font-weight: normal;
+}
 .accordion-text {
     color: #333;
     padding: 0px 18px 15px 18px;

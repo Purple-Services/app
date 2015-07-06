@@ -29,6 +29,7 @@ Ext.define 'Purple.controller.Account'
       nameFieldLabel: '#nameFieldLabel'
       phoneNumberField: '#phoneNumberField'
       phoneNumberFieldLabel: '#phoneNumberFieldLabel'
+      googleLoginButton: '#googleLoginButton'
 
       # AccountForm elements
       accountNameField: '#accountNameField'
@@ -340,6 +341,12 @@ Ext.define 'Purple.controller.Account'
     @getPasswordFieldLabel().show()
     @getLoginButtonContainer().show()
     @getShowRegisterButtonContainer().show()
+    if Ext.os.name is "iOS"
+      @getGoogleLoginButton().hide()
+      window.plugins.googleplus.isAvailable (available) =>
+        if available then @getGoogleLoginButton().show()
+    else
+      @getGoogleLoginButton().show()
 
   showForgotPasswordForm: ->
     @getPasswordField().hide()

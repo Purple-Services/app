@@ -29,6 +29,7 @@ Ext.define('Purple.controller.Account', {
       nameFieldLabel: '#nameFieldLabel',
       phoneNumberField: '#phoneNumberField',
       phoneNumberFieldLabel: '#phoneNumberFieldLabel',
+      googleLoginButton: '#googleLoginButton',
       accountNameField: '#accountNameField',
       accountPhoneNumberField: '#accountPhoneNumberField',
       accountEmailField: '#accountEmailField',
@@ -319,6 +320,7 @@ Ext.define('Purple.controller.Account', {
     return this.getRegisterButtonContainer().show();
   },
   showLoginForm: function() {
+    var _this = this;
     this.getFinalStepText().hide();
     this.getNameField().hide();
     this.getNameFieldLabel().hide();
@@ -337,7 +339,17 @@ Ext.define('Purple.controller.Account', {
     this.getPasswordField().show();
     this.getPasswordFieldLabel().show();
     this.getLoginButtonContainer().show();
-    return this.getShowRegisterButtonContainer().show();
+    this.getShowRegisterButtonContainer().show();
+    if (Ext.os.name === "iOS") {
+      this.getGoogleLoginButton().hide();
+      return window.plugins.googleplus.isAvailable(function(available) {
+        if (available) {
+          return _this.getGoogleLoginButton().show();
+        }
+      });
+    } else {
+      return this.getGoogleLoginButton().show();
+    }
   },
   showForgotPasswordForm: function() {
     this.getPasswordField().hide();

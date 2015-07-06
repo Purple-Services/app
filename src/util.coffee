@@ -1,17 +1,17 @@
 # "LOCAL", "PROD", "DEV"
 VERSION = "DEV"
 
-# window.onerror = (message, url, lineNumber) ->
-#   ga_storage?._trackEvent 'general', 'App Error', (util.ctl('Main').deviceId ? 'device id not yet set')
-#   return false # let the default handler run as well (yes this is inverse to the more logical 'true')
-
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
     alert "#{message} #{lineNumber}"
     return false
+else
+  window.onerror = (message, url, lineNumber) ->
+    ga_storage?._trackEvent 'error', 'App Error', "#{message} #{lineNumber}"
+    return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
 window.util =
-  VERSION_NUMBER: "1.0.4"
+  VERSION_NUMBER: "1.0.6"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://192.168.0.3:3000/"

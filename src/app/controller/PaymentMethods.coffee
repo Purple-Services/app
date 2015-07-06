@@ -235,6 +235,7 @@ Ext.define 'Purple.controller.PaymentMethods'
           @backToAccount()
           @paymentMethods = response.cards
           @renderPaymentMethodsList @paymentMethods
+          util.ctl('Menu').popOffBackButtonWithoutAction()
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
@@ -295,6 +296,7 @@ Ext.define 'Purple.controller.PaymentMethods'
               # TODO if was new card then make default and send to account page
               @backToPaymentMethods()
               @renderPaymentMethodsList @paymentMethods
+              util.ctl('Menu').popOffBackButtonWithoutAction()
               if typeof callback is 'function'
                 callback()
             else

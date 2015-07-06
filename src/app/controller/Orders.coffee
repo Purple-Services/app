@@ -81,7 +81,7 @@ Ext.define 'Purple.controller.Orders'
       @getOrderRating().show()
 
     order['display_status'] = switch order['status']
-      when 'unassigned' then 'Choosing a Courier'
+      when 'unassigned' then 'Accepted'
       else order['status']
 
     order['time_order_placed'] = Ext.util.Format.date(

@@ -270,7 +270,8 @@ Ext.define('Purple.controller.PaymentMethods', {
         if (response.success) {
           this.backToAccount();
           this.paymentMethods = response.cards;
-          return this.renderPaymentMethodsList(this.paymentMethods);
+          this.renderPaymentMethodsList(this.paymentMethods);
+          return util.ctl('Menu').popOffBackButtonWithoutAction();
         } else {
           return navigator.notification.alert(response.message, (function() {}), "Error");
         }
@@ -343,6 +344,7 @@ Ext.define('Purple.controller.PaymentMethods', {
               util.ctl('Orders').orders = response.orders;
               this.backToPaymentMethods();
               this.renderPaymentMethodsList(this.paymentMethods);
+              util.ctl('Menu').popOffBackButtonWithoutAction();
               if (typeof callback === 'function') {
                 return callback();
               }

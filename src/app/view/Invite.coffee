@@ -121,10 +121,10 @@ Ext.define 'Purple.view.Invite'
 
   populate: ->
     inviteMessage = """
-      Get $10 of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app, to fuel your car wherever you are: #{util.WEB_SERVICE_BASE_URL}app
+      Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app, to fuel your car wherever you are: #{util.WEB_SERVICE_BASE_URL}app
     """
     inviteMessageTwitter = """
-      Get $10 of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app: #{util.WEB_SERVICE_BASE_URL}app
+      Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app for iPhone or Android.
     """
     Ext.getCmp('inviteInnerContainer').add [
       {
