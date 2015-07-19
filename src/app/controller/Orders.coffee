@@ -80,9 +80,12 @@ Ext.define 'Purple.controller.Orders'
     if order['status'] is 'complete'
       @getOrderRating().show()
 
-    order['display_status'] = switch order['status']
-      when 'unassigned' then 'Accepted'
-      else order['status']
+    order['display_status'] = if util.ctl('Account').isCourier()
+      order['status']
+    else
+      switch order['status']
+        when 'unassigned' then 'Accepted'
+        else order['status']
 
     order['time_order_placed'] = Ext.util.Format.date(
       new Date(order['target_time_start'] * 1000),
@@ -156,6 +159,9 @@ Ext.define 'Purple.controller.Orders'
       @getOrderGasType().show()
 
       switch order['status']
+        when "unassigned"
+          @getNextStatusButtonContainer().getAt(0).setText "Accept Order"
+          @getNextStatusButtonContainer().show()
         when "accepted"
           @getNextStatusButtonContainer().getAt(0).setText "Start Route"
           @getNextStatusButtonContainer().show()
@@ -209,6 +215,7 @@ Ext.define 'Purple.controller.Orders'
           version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
+          os: Ext.os.name # just an additional info
         headers:
           'Content-Type': 'application/json'
         timeout: 30000
@@ -227,6 +234,8 @@ Ext.define 'Purple.controller.Orders'
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
+          if util.ctl('Account').isCourier()
+            navigator.notification.alert "Slow internet connection.", (->), "Error"
           response = Ext.JSON.decode response_obj.responseText
           console.log response
   
@@ -260,15 +269,28 @@ Ext.define 'Purple.controller.Orders'
       o.status is 'enroute' or
       o.status is 'servicing'
         cls.push 'highlighted'
+      if util.ctl('Account').isCourier()
+        isLate = o.status isnt "complete" and
+          (new Date(o.target_time_end * 1000)) < (new Date())
+        dateDisplay = """
+          <span style="#{if isLate then "color: #f00;" else ""}">
+            #{Ext.util.Format.date(
+              new Date(o.target_time_end * 1000),
+              "n/j g:i a"
+            )}
+          </span>
+        """
+      else
+        dateDisplay = Ext.util.Format.date(
+          new Date(o.target_time_start * 1000),
+          "F jS"
+        )
       list.add
         xtype: 'textfield'
         id: "oid_#{o.id}"
         flex: 0
         label: """
-          #{Ext.util.Format.date(
-            new Date(o.target_time_start * 1000),
-            "F jS"
-          )}
+          #{dateDisplay}
           <br /><span class="subtext">#{v.year} #{v.make} #{v.model}</span>
           <div class="status-square">
             <div class="fill">
@@ -384,7 +406,11 @@ Ext.define 'Purple.controller.Orders'
         when 1 then @nextStatus()
         else return
       ),
-      "Are you sure you want to mark this order as #{nextStatus}? (cannot be undone)",
+      (switch nextStatus
+        when "assigned", "accepted"
+          "Are you sure you want to accept this order? (cannot be undone)"
+        else "Are you sure you want to mark this order as #{nextStatus}? (cannot be undone)"
+      ),
       ["Yes", "No"]
     )
 

@@ -143,8 +143,8 @@ Ext.define('Purple.controller.Menu', {
     if (util.ctl('Account').isUserLoggedIn()) {
       this.hideTitles([1]);
       if (util.ctl('Account').isCourier()) {
-        this.hideTitles([0, 4, 7]);
-        this.showTitles([2, 3, 8, 9]);
+        this.hideTitles([0, 4, 7, 8]);
+        this.showTitles([2, 3, 9]);
         if ((_ref = localStorage['purpleCourierGallons87']) == null) {
           localStorage['purpleCourierGallons87'] = 0;
         }
@@ -154,9 +154,11 @@ Ext.define('Purple.controller.Menu', {
         if (!(util.ctl('Main').courierPingIntervalRef != null)) {
           util.ctl('Main').initCourierPing();
         }
+        Ext.get(document.getElementsByTagName('body')[0]).addCls('courier-app');
       } else {
         this.hideTitles([8, 9]);
         this.showTitles([2, 3, 4, 7]);
+        Ext.get(document.getElementsByTagName('body')[0]).removeCls('courier-app');
       }
       return util.ctl('Account').populateAccountForm();
     } else {

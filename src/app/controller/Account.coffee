@@ -169,8 +169,8 @@ Ext.define 'Purple.controller.Account'
           else
             util.ctl('Menu').adjustForAppLoginState()
             if @isCourier()
-              # a courier account, go to Gas Tanks page
-              util.ctl('Menu').selectOption 8
+              # a courier account, go to Orders page; may want to go to Tanks in future
+              util.ctl('Menu').selectOption 3
               # Courier's get their push notifications set up the first time
               # they log in as a courier (usually this requires a log out,
               # db change, then log back in). Customers, on the other hand,
@@ -343,7 +343,7 @@ Ext.define 'Purple.controller.Account'
     @getShowRegisterButtonContainer().show()
     if Ext.os.name is "iOS"
       @getGoogleLoginButton().hide()
-      window.plugins.googleplus.isAvailable (available) =>
+      window.plugins?.googleplus?.isAvailable (available) =>
         if available then @getGoogleLoginButton().show()
     else
       @getGoogleLoginButton().show()

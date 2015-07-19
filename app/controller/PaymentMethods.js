@@ -96,7 +96,8 @@ Ext.define('Purple.controller.PaymentMethods', {
         params: Ext.JSON.encode({
           version: util.VERSION_NUMBER,
           user_id: localStorage['purpleUserId'],
-          token: localStorage['purpleToken']
+          token: localStorage['purpleToken'],
+          os: Ext.os.name
         }),
         headers: {
           'Content-Type': 'application/json'

@@ -117,15 +117,19 @@ Ext.define 'Purple.controller.Menu'
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
       if util.ctl('Account').isCourier()
-        @hideTitles [0, 4, 7]
-        @showTitles [2, 3, 8, 9]
+        # @hideTitles [0, 4, 7]
+        # @showTitles [2, 3, 8, 9]
+        @hideTitles [0, 4, 7, 8] # no Gas Tanks, for now
+        @showTitles [2, 3, 9] # no Gas Tanks, for now
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         if not util.ctl('Main').courierPingIntervalRef?
           util.ctl('Main').initCourierPing()
+        Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
       else
         @hideTitles [8, 9]
         @showTitles [2, 3, 4, 7]
+        Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
       util.ctl('Account').populateAccountForm()
     else
       @hideTitles [2, 3, 4, 7, 8, 9]

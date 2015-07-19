@@ -177,7 +177,7 @@ Ext.define('Purple.controller.Account', {
           } else {
             util.ctl('Menu').adjustForAppLoginState();
             if (this.isCourier()) {
-              util.ctl('Menu').selectOption(8);
+              util.ctl('Menu').selectOption(3);
               if (!this.hasPushNotificationsSetup()) {
                 util.ctl('Main').setUpPushNotifications();
               }
@@ -320,7 +320,8 @@ Ext.define('Purple.controller.Account', {
     return this.getRegisterButtonContainer().show();
   },
   showLoginForm: function() {
-    var _this = this;
+    var _ref, _ref1,
+      _this = this;
     this.getFinalStepText().hide();
     this.getNameField().hide();
     this.getNameFieldLabel().hide();
@@ -342,11 +343,11 @@ Ext.define('Purple.controller.Account', {
     this.getShowRegisterButtonContainer().show();
     if (Ext.os.name === "iOS") {
       this.getGoogleLoginButton().hide();
-      return window.plugins.googleplus.isAvailable(function(available) {
+      return (_ref = window.plugins) != null ? (_ref1 = _ref.googleplus) != null ? _ref1.isAvailable(function(available) {
         if (available) {
           return _this.getGoogleLoginButton().show();
         }
-      });
+      }) : void 0 : void 0;
     } else {
       return this.getGoogleLoginButton().show();
     }

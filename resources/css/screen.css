@@ -119,6 +119,10 @@ body {
     margin-top: -2px !important;
 }
 
+.courier-app .freeGasButton {
+    display: none !important;
+}
+
 
 
 
@@ -793,6 +797,10 @@ body {
     animation-duration: .8s;
     width:60px;
     fill: #762B90;
+}
+.courier-app #waveShape {
+    -webkit-animation-name: none;
+    animation-name: none;
 }
 @-webkit-keyframes waveAction {
     0% {

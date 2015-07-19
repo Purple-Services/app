@@ -2,8 +2,8 @@
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "com.purple.app"
-        versionCode = "16"
-        version     = "1.0.6" >
+        versionCode = "17"
+        version     = "1.0.7" >
 
   <!--
       For iOS use:

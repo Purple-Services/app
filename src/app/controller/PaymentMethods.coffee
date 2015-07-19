@@ -93,6 +93,7 @@ Ext.define 'Purple.controller.PaymentMethods'
           version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
           token: localStorage['purpleToken']
+          os: Ext.os.name # just an additional info
         headers:
           'Content-Type': 'application/json'
         timeout: 30000

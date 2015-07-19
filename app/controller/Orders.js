@@ -93,11 +93,15 @@ Ext.define('Purple.controller.Orders', {
       this.getOrderRating().show();
     }
     order['display_status'] = (function() {
-      switch (order['status']) {
-        case 'unassigned':
-          return 'Accepted';
-        default:
-          return order['status'];
+      if (util.ctl('Account').isCourier()) {
+        return order['status'];
+      } else {
+        switch (order['status']) {
+          case 'unassigned':
+            return 'Accepted';
+          default:
+            return order['status'];
+        }
       }
     })();
     order['time_order_placed'] = Ext.util.Format.date(new Date(order['target_time_start'] * 1000), "g:i a");
@@ -159,6 +163,10 @@ Ext.define('Purple.controller.Orders', {
       this.getOrderCustomerPhone().show();
       this.getOrderGasType().show();
       switch (order['status']) {
+        case "unassigned":
+          this.getNextStatusButtonContainer().getAt(0).setText("Accept Order");
+          this.getNextStatusButtonContainer().show();
+          break;
         case "accepted":
           this.getNextStatusButtonContainer().getAt(0).setText("Start Route");
           this.getNextStatusButtonContainer().show();
@@ -208,7 +216,8 @@ Ext.define('Purple.controller.Orders', {
         params: Ext.JSON.encode({
           version: util.VERSION_NUMBER,
           user_id: localStorage['purpleUserId'],
-          token: localStorage['purpleToken']
+          token: localStorage['purpleToken'],
+          os: Ext.os.name
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -233,6 +242,9 @@ Ext.define('Purple.controller.Orders', {
         failure: function(response_obj) {
           var response;
           Ext.Viewport.setMasked(false);
+          if (util.ctl('Account').isCourier()) {
+            navigator.notification.alert("Slow internet connection.", (function() {}), "Error");
+          }
           response = Ext.JSON.decode(response_obj.responseText);
           return console.log(response);
         }
@@ -240,7 +252,7 @@ Ext.define('Purple.controller.Orders', {
     }
   },
   renderOrdersList: function(orders) {
-    var cls, list, o, v, _i, _len, _results,
+    var cls, dateDisplay, isLate, list, o, v, _i, _len, _results,
       _this = this;
     list = this.getOrdersList();
     if (!(list != null)) {
@@ -272,11 +284,17 @@ Ext.define('Purple.controller.Orders', {
       if (o.status === 'unassigned' || o.status === 'assigned' || o.status === 'accepted' || o.status === 'enroute' || o.status === 'servicing') {
         cls.push('highlighted');
       }
+      if (util.ctl('Account').isCourier()) {
+        isLate = o.status !== "complete" && (new Date(o.target_time_end * 1000)) < (new Date());
+        dateDisplay = "<span style=\"" + (isLate ? "color: #f00;" : "") + "\">\n  " + (Ext.util.Format.date(new Date(o.target_time_end * 1000), "n/j g:i a")) + "\n</span>";
+      } else {
+        dateDisplay = Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS");
+      }
       _results.push(list.add({
         xtype: 'textfield',
         id: "oid_" + o.id,
         flex: 0,
-        label: "" + (Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS")) + "\n<br /><span class=\"subtext\">" + v.year + " " + v.make + " " + v.model + "</span>\n<div class=\"status-square\">\n  <div class=\"fill\">\n    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"60px\" height=\"60px\" viewBox=\"0 0 60 60\" enable-background=\"new 0 0 60 60\" xml:space=\"preserve\">\n      <path fill=\"#04ACFF\" id=\"waveShape\" d=\"M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4\nc-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9\nc-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z\"/>\n    </svg>\n  </div>\n</div>",
+        label: "" + dateDisplay + "\n<br /><span class=\"subtext\">" + v.year + " " + v.make + " " + v.model + "</span>\n<div class=\"status-square\">\n  <div class=\"fill\">\n    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"60px\" height=\"60px\" viewBox=\"0 0 60 60\" enable-background=\"new 0 0 60 60\" xml:space=\"preserve\">\n      <path fill=\"#04ACFF\" id=\"waveShape\" d=\"M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4\nc-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9\nc-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z\"/>\n    </svg>\n  </div>\n</div>",
         labelWidth: '100%',
         cls: cls,
         disabled: true,
@@ -407,7 +425,15 @@ Ext.define('Purple.controller.Orders', {
         case 1:
           return _this.nextStatus();
       }
-    }), "Are you sure you want to mark this order as " + nextStatus + "? (cannot be undone)", ["Yes", "No"]);
+    }), ((function() {
+      switch (nextStatus) {
+        case "assigned":
+        case "accepted":
+          return "Are you sure you want to accept this order? (cannot be undone)";
+        default:
+          return "Are you sure you want to mark this order as " + nextStatus + "? (cannot be undone)";
+      }
+    })()), ["Yes", "No"]);
   },
   nextStatus: function() {
     var currentStatus, id, values;
