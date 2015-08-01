@@ -25,6 +25,20 @@ Ext.define 'Purple.view.MapForm'
         Ext.DomHelper.append mapDom, styleRule
       
     items: [
+      # {
+      #   xtype: 'component'
+      #   id: 'gasPriceMapDisplay'
+      #   flex: 0
+      #   height: 25
+      #   html: """
+      #     <div class="gas-price-map-field-section">
+      #       12
+      #     </div>
+      #     <div class="gas-price-map-field-section">
+      #       32
+      #     </div>
+      #   """
+      # }
       {
         xtype: 'map'
         id: 'gmap'
@@ -47,6 +61,11 @@ Ext.define 'Purple.view.MapForm'
           ]
       }
       {
+        xtype: 'component'
+        id: 'googleMapLinkBlocker'
+        flex: 0
+      }
+      {
         xtype: 'button'
         id: 'centerMapButton'
         flex: 0
@@ -55,14 +74,24 @@ Ext.define 'Purple.view.MapForm'
       }
       {
         xtype: 'component'
-        id: 'googleMapLinkBlocker'
+        id: 'gasPriceMapDisplay'
         flex: 0
+        html: """
+          <span class="gas-price-title">Current Price</span>
+          <br />
+          <span class="gas-price-octane">87 Reg.</span>
+          <span class="gas-price-price" id="gas-price-display-87"></span>
+          <br />
+          <span class="gas-price-octane">91 Pre.</span>
+          <span class="gas-price-price" id="gas-price-display-91"></span>
+        """
+        #   navigator.notification.alert "Our gas price is based on the average price in the area.", (->), "Info"
       }
       {
         xtype: 'component'
         id: 'spacerBetweenMapAndAddress'
         flex: 0
-        height: 10
+        height: 5
       }
       {
         xtype: 'textfield'

@@ -53,6 +53,24 @@ body {
 .x-toolbar-top-toolbar.bordered {
     border-bottom: 6px solid #BA1C8B !important;
 }
+
+.courier-app.disconnected .x-toolbar-top-toolbar .x-title {
+    display: none;
+}
+.courier-app.disconnected .x-toolbar-top-toolbar:after {
+    display: block;
+    content: 'Disconnected';
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 12px;
+    left: 0px;
+    color: #f00;
+    font-size: 23px;
+    pointer-events: none;
+}
+
+
 .x-button-back-special {
     position: absolute;
     top: 26px;
@@ -232,7 +250,17 @@ body {
     color: #FFFFFF !important;
     opacity: 1 !important;
     text-overflow: ellipsis !important;
+    background: url('../images/search.png') no-repeat right 6px center;
+    background-size: 22px;
 }
+
+
+/* .gas-price-map-field-section { */
+/*     width: 50%; */
+/*     display: inline-block; */
+/*     text-align: center; */
+/* } */
+
 
 
 .login-form .x-field {
@@ -659,22 +687,6 @@ body {
     pointer-events: none;
 }
 
-#centerMapButton {
-    content: '';
-    position: absolute;
-    width: 70px;
-    height: 60px;
-    left: 0px;
-    margin-left: 5px;
-    margin-top: -49px;
-    z-index: 1001;
-    background-image: url('../images/center-map-icon.png');
-    background-repeat: no-repeat;
-    background-size: 36px 36px;
-    background-color: transparent;
-    background-position-x: 10px;
-}
-
 #googleMapLinkBlocker {
     content: '';
     position: absolute;
@@ -685,6 +697,49 @@ body {
     margin-top: -15px;
     z-index: 1001;
     background: transparent;
+}
+
+#centerMapButton {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 60px;
+    left: 0px;
+    margin-left: 5px;
+    margin-top: -47px;
+    z-index: 1001;
+    background-image: url('../images/center-map-icon.png');
+    background-repeat: no-repeat;
+    background-size: 36px 36px;
+    background-color: transparent;
+    background-position-x: 0px;
+}
+
+#gasPriceMapDisplay {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    margin-right: 5px;
+    padding: 2px 0px 2px 4px;
+    z-index: 1001;
+    background: #BB1E8D;
+    color: white;
+    line-height: 16px;
+    font-size: 14px;
+    font-family: Helvetica;
+    border-radius: 3px;
+    font-weight: bold;
+}
+#gasPriceMapDisplay .gas-price-octane {
+    opacity: 0.8;
+    padding-right: 8px;
+}
+#gasPriceMapDisplay .gas-price-title {
+    opacity: 0.8;
+}
+#gasPriceMapDisplay .gas-price-price {
+    position: absolute;
+    right: 4px;
 }
 
 

@@ -11,6 +11,7 @@ Ext.define('Purple.controller.Main', {
       mapForm: 'mapform',
       map: '#gmap',
       spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress',
+      gasPriceMapDisplay: '#gasPriceMapDisplay',
       requestAddressField: '#requestAddressField',
       requestGasButtonContainer: '#requestGasButtonContainer',
       autocompleteList: '#autocompleteList',
@@ -68,12 +69,23 @@ Ext.define('Purple.controller.Main', {
     var _ref;
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 5000);
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._enableSSL();
+    }
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._setAccount('UA-61762011-1');
+    }
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._setDomain('none');
+    }
+    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
+      ga_storage._trackEvent('main', 'App Launch', "Platform: " + Ext.os.name);
+    }
     if ((_ref = navigator.splashscreen) != null) {
       _ref.hide();
     }
     if (util.ctl('Account').hasPushNotificationsSetup()) {
-      this.setUpPushNotifications();
-      return setTimeout(Ext.bind(this.setUpPushNotifications, this), 5000);
+      return setTimeout(Ext.bind(this.setUpPushNotifications, this), 4000);
     }
   },
   setUpPushNotifications: function() {
@@ -130,14 +142,14 @@ Ext.define('Purple.controller.Main', {
     });
   },
   updateLatlng: function() {
-    var _ref,
+    var _ref, _ref1,
       _this = this;
     if ((_ref = this.updateLatlngBusy) == null) {
       this.updateLatlngBusy = false;
     }
     if (!this.updateLatlngBusy) {
       this.updateLatlngBusy = true;
-      return navigator.geolocation.getCurrentPosition((function(position) {
+      return (_ref1 = navigator.geolocation) != null ? _ref1.getCurrentPosition((function(position) {
         _this.updateLatlngBusy = false;
         _this.lat = position.coords.latitude;
         _this.lng = position.coords.longitude;
@@ -150,14 +162,18 @@ Ext.define('Purple.controller.Main', {
       }), {
         maximumAge: 0,
         enableHighAccuracy: true
-      });
+      }) : void 0;
     }
   },
   initGeocoder: function() {
     this.updateLatlng();
-    this.geocoder = new google.maps.Geocoder();
-    this.placesService = new google.maps.places.PlacesService(this.getMap().getMap());
-    return this.mapInited = true;
+    if ((typeof google !== "undefined" && google !== null) && (google.maps != null) && (this.getMap() != null)) {
+      this.geocoder = new google.maps.Geocoder();
+      this.placesService = new google.maps.places.PlacesService(this.getMap().getMap());
+      return this.mapInited = true;
+    } else {
+      return navigator.notification.alert("Internet connection problem. Please try closing the app and restarting it.", (function() {}), "Connection Error");
+    }
   },
   adjustDeliveryLocByLatLng: function() {
     var center;
@@ -173,31 +189,55 @@ Ext.define('Purple.controller.Main', {
     return (_ref = this.geocoder) != null ? _ref.geocode({
       'latLng': latlng
     }, function(results, status) {
-      var addressComponents, c, streetAddress, t, _i, _len, _ref1, _results;
+      var addressComponents, c, streetAddress, t, _i, _j, _len, _len1, _ref1, _ref2, _ref3;
       if (status === google.maps.GeocoderStatus.OK) {
         if (((_ref1 = results[0]) != null ? _ref1['address_components'] : void 0) != null) {
           addressComponents = results[0]['address_components'];
           streetAddress = "" + addressComponents[0]['short_name'] + " " + addressComponents[1]['short_name'];
           _this.getRequestAddressField().setValue(streetAddress);
-          _results = [];
           for (_i = 0, _len = addressComponents.length; _i < _len; _i++) {
             c = addressComponents[_i];
-            _results.push((function() {
-              var _j, _len1, _ref2, _results1;
-              _ref2 = c.types;
-              _results1 = [];
-              for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-                t = _ref2[_j];
-                if (t === "postal_code") {
-                  _results1.push(this.deliveryAddressZipCode = c['short_name']);
-                } else {
-                  _results1.push(void 0);
-                }
+            _ref2 = c.types;
+            for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+              t = _ref2[_j];
+              if (t === "postal_code") {
+                _this.deliveryAddressZipCode = c['short_name'];
               }
-              return _results1;
-            }).call(_this));
+            }
           }
-          return _results;
+          if ((_ref3 = _this.busyGettingGasPrice) == null) {
+            _this.busyGettingGasPrice = false;
+          }
+          if (!_this.busyGettingGasPrice) {
+            _this.busyGettingGasPrice = true;
+            return Ext.Ajax.request({
+              url: "" + util.WEB_SERVICE_BASE_URL + "dispatch/gas-prices",
+              params: Ext.JSON.encode({
+                version: util.VERSION_NUMBER,
+                zip_code: _this.deliveryAddressZipCode
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              timeout: 30000,
+              method: 'POST',
+              scope: _this,
+              success: function(response_obj) {
+                var prices, response;
+                response = Ext.JSON.decode(response_obj.responseText);
+                if (response.success) {
+                  prices = response.gas_prices;
+                  Ext.get('gas-price-display-87').setText("$" + (util.centsToDollars(prices["87"])));
+                  Ext.get('gas-price-display-91').setText("$" + (util.centsToDollars(prices["91"])));
+                }
+                return this.busyGettingGasPrice = false;
+              },
+              failure: function(response_obj) {
+                this.busyGettingGasPrice = false;
+                return console.log(response_obj);
+              }
+            });
+          }
         }
       }
     }) : void 0;
@@ -207,6 +247,7 @@ Ext.define('Purple.controller.Main', {
       this.getAutocompleteList().hide();
       this.getMap().show();
       this.getSpacerBetweenMapAndAddress().show();
+      this.getGasPriceMapDisplay().show();
       this.getRequestGasButtonContainer().show();
       return this.getRequestAddressField().disable();
     }
@@ -219,6 +260,7 @@ Ext.define('Purple.controller.Main', {
     if (!this.getMap().isHidden()) {
       this.getMap().hide();
       this.getSpacerBetweenMapAndAddress().hide();
+      this.getGasPriceMapDisplay().hide();
       this.getRequestGasButtonContainer().hide();
       this.getAutocompleteList().show();
       this.getRequestAddressField().enable();
@@ -518,7 +560,7 @@ Ext.define('Purple.controller.Main', {
         method: 'POST',
         scope: this,
         success: function(response_obj) {
-          var response;
+          var response, _ref;
           Ext.Viewport.setMasked(false);
           response = Ext.JSON.decode(response_obj.responseText);
           if (response.success) {
@@ -528,7 +570,7 @@ Ext.define('Purple.controller.Main', {
             this.getRequestGasTabContainer().remove(this.getRequestConfirmationForm(), true);
             this.getRequestGasTabContainer().remove(this.getRequestForm(), true);
             util.ctl('Menu').clearBackButtonStack();
-            navigator.notification.alert("Your order has been accepted, and a courier will be on the way soon! Please ensure that the fueling door on your gas tank is unlocked.", (function() {}), "Order Accepted");
+            navigator.notification.alert(response.message, (function() {}), (_ref = response.message_title) != null ? _ref : "Success");
             if (!util.ctl('Account').hasPushNotificationsSetup()) {
               return this.setUpPushNotifications();
             }
@@ -674,7 +716,15 @@ Ext.define('Purple.controller.Main', {
           var response;
           this.courierPingBusy = false;
           response = Ext.JSON.decode(response_obj.responseText);
-          if (!response.success) {
+          if (response.success) {
+            if (this.disconnectedMessage != null) {
+              clearTimeout(this.disconnectedMessage);
+            }
+            Ext.get(document.getElementsByTagName('body')[0]).removeCls('disconnected');
+            return this.disconnectedMessage = setTimeout((function() {
+              return Ext.get(document.getElementsByTagName('body')[0]).addCls('disconnected');
+            }), 2 * 60 * 1000);
+          } else {
             this.errorCount++;
             if (this.errorCount > 10) {
               this.errorCount = 0;

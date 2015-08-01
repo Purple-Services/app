@@ -429,6 +429,8 @@ Ext.define 'Purple.controller.Vehicles'
           timeOpts.push
             text: time['text']
             value: t
+            order: time['order']
+        timeOpts.sort (a, b) -> a['order'] - b['order']
         @getRequestFormTimeSelect().setOptions timeOpts
         @getRequestFormTimeSelect().setDisabled no
         

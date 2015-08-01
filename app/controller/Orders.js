@@ -243,7 +243,7 @@ Ext.define('Purple.controller.Orders', {
           var response;
           Ext.Viewport.setMasked(false);
           if (util.ctl('Account').isCourier()) {
-            navigator.notification.alert("Slow internet connection.", (function() {}), "Error");
+            navigator.notification.alert("Slow or no internet connection.", (function() {}), "Error");
           }
           response = Ext.JSON.decode(response_obj.responseText);
           return console.log(response);
@@ -285,7 +285,7 @@ Ext.define('Purple.controller.Orders', {
         cls.push('highlighted');
       }
       if (util.ctl('Account').isCourier()) {
-        isLate = o.status !== "complete" && (new Date(o.target_time_end * 1000)) < (new Date());
+        isLate = o.status !== "complete" && o.status !== "cancelled" && (new Date(o.target_time_end * 1000)) < (new Date());
         dateDisplay = "<span style=\"" + (isLate ? "color: #f00;" : "") + "\">\n  " + (Ext.util.Format.date(new Date(o.target_time_end * 1000), "n/j g:i a")) + "\n</span>";
       } else {
         dateDisplay = Ext.util.Format.date(new Date(o.target_time_start * 1000), "F jS");

@@ -9,6 +9,7 @@ Ext.define 'Purple.controller.Main'
       mapForm: 'mapform'
       map: '#gmap'
       spacerBetweenMapAndAddress: '#spacerBetweenMapAndAddress'
+      gasPriceMapDisplay: '#gasPriceMapDisplay'
       requestAddressField: '#requestAddressField'
       requestGasButtonContainer: '#requestGasButtonContainer'
       autocompleteList: '#autocompleteList'
@@ -61,18 +62,15 @@ Ext.define 'Purple.controller.Main'
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Uncomment this for customer app, but courier doesn't need it
-    # ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    # ga_storage?._setAccount 'UA-61762011-1'
-    # ga_storage?._setDomain 'none'
-    # ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+    ga_storage?._setAccount 'UA-61762011-1'
+    ga_storage?._setDomain 'none'
+    ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
     navigator.splashscreen?.hide()
-    #StatusBar?.backgroundColorByHexString "#230F2B"
 
     if util.ctl('Account').hasPushNotificationsSetup()
-      @setUpPushNotifications()
-      # seems like overkill here (esp. since these cause ajax calls)
-      setTimeout (Ext.bind @setUpPushNotifications, this), 5000
+      setTimeout (Ext.bind @setUpPushNotifications, this), 4000
 
   setUpPushNotifications: ->
     if Ext.os.name is "iOS"
@@ -129,7 +127,7 @@ Ext.define 'Purple.controller.Main'
     @updateLatlngBusy ?= no
     if not @updateLatlngBusy
       @updateLatlngBusy = yes
-      navigator.geolocation.getCurrentPosition(
+      navigator.geolocation?.getCurrentPosition(
         ((position) =>
           @updateLatlngBusy = no
           @lat = position.coords.latitude
@@ -147,9 +145,12 @@ Ext.define 'Purple.controller.Main'
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
     @updateLatlng()
-    @geocoder = new google.maps.Geocoder()
-    @placesService = new google.maps.places.PlacesService @getMap().getMap()
-    @mapInited = true
+    if google? and google.maps? and @getMap()?
+      @geocoder = new google.maps.Geocoder()
+      @placesService = new google.maps.places.PlacesService @getMap().getMap()
+      @mapInited = true
+    else
+      navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
@@ -171,6 +172,33 @@ Ext.define 'Purple.controller.Main'
             for t in c.types
               if t is "postal_code"
                 @deliveryAddressZipCode = c['short_name']
+          @busyGettingGasPrice ?= no
+          if not @busyGettingGasPrice
+            @busyGettingGasPrice = yes
+            Ext.Ajax.request
+              url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
+              params: Ext.JSON.encode
+                version: util.VERSION_NUMBER
+                zip_code: @deliveryAddressZipCode
+              headers:
+                'Content-Type': 'application/json'
+              timeout: 30000
+              method: 'POST'
+              scope: this
+              success: (response_obj) ->
+                response = Ext.JSON.decode response_obj.responseText
+                if response.success
+                  prices = response.gas_prices
+                  Ext.get('gas-price-display-87').setText(
+                    "$#{util.centsToDollars prices["87"]}"
+                  )
+                  Ext.get('gas-price-display-91').setText(
+                    "$#{util.centsToDollars prices["91"]}"
+                  )
+                @busyGettingGasPrice = no
+              failure: (response_obj) ->
+                @busyGettingGasPrice = no
+                console.log response_obj
         # else
         #   console.log 'No results found.'
       # else
@@ -181,6 +209,7 @@ Ext.define 'Purple.controller.Main'
       @getAutocompleteList().hide()
       @getMap().show()
       @getSpacerBetweenMapAndAddress().show()
+      @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
 
@@ -193,6 +222,7 @@ Ext.define 'Purple.controller.Main'
     if not @getMap().isHidden()
       @getMap().hide()
       @getSpacerBetweenMapAndAddress().hide()
+      @getGasPriceMapDisplay().hide()
       @getRequestGasButtonContainer().hide()
       @getAutocompleteList().show()
       @getRequestAddressField().enable()
@@ -485,7 +515,7 @@ Ext.define 'Purple.controller.Main'
               yes
             )
             util.ctl('Menu').clearBackButtonStack()
-            navigator.notification.alert "Your order has been accepted, and a courier will be on the way soon! Please ensure that the fueling door on your gas tank is unlocked.", (->), "Order Accepted"
+            navigator.notification.alert response.message, (->), (response.message_title ? "Success")
             # set up push notifications if they arent set up
             if not util.ctl('Account').hasPushNotificationsSetup()
               @setUpPushNotifications()
@@ -590,7 +620,12 @@ Ext.define 'Purple.controller.Main'
         success: (response_obj) ->
           @courierPingBusy = no
           response = Ext.JSON.decode response_obj.responseText
-          if not response.success
+          if response.success
+            if @disconnectedMessage?
+              clearTimeout @disconnectedMessage
+            Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
+            @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
+          else
             @errorCount++
             if @errorCount > 10
               @errorCount = 0

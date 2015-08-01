@@ -235,7 +235,7 @@ Ext.define 'Purple.controller.Orders'
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           if util.ctl('Account').isCourier()
-            navigator.notification.alert "Slow internet connection.", (->), "Error"
+            navigator.notification.alert "Slow or no internet connection.", (->), "Error"
           response = Ext.JSON.decode response_obj.responseText
           console.log response
   
@@ -271,6 +271,7 @@ Ext.define 'Purple.controller.Orders'
         cls.push 'highlighted'
       if util.ctl('Account').isCourier()
         isLate = o.status isnt "complete" and
+          o.status isnt "cancelled" and
           (new Date(o.target_time_end * 1000)) < (new Date())
         dateDisplay = """
           <span style="#{if isLate then "color: #f00;" else ""}">

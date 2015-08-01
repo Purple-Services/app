@@ -14,7 +14,7 @@ window.util =
   VERSION_NUMBER: "1.0.7"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://192.168.0.3:3000/"
+    when "LOCAL" then "http://10.12.12.38:3000/"
     when "PROD" then "https://purpledelivery.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 

@@ -41,6 +41,10 @@ Ext.define('Purple.view.MapForm', {
           ]
         }
       }, {
+        xtype: 'component',
+        id: 'googleMapLinkBlocker',
+        flex: 0
+      }, {
         xtype: 'button',
         id: 'centerMapButton',
         flex: 0,
@@ -50,13 +54,14 @@ Ext.define('Purple.view.MapForm', {
         }
       }, {
         xtype: 'component',
-        id: 'googleMapLinkBlocker',
-        flex: 0
+        id: 'gasPriceMapDisplay',
+        flex: 0,
+        html: "<span class=\"gas-price-title\">Current Price</span>\n<br />\n<span class=\"gas-price-octane\">87 Reg.</span>\n<span class=\"gas-price-price\" id=\"gas-price-display-87\"></span>\n<br />\n<span class=\"gas-price-octane\">91 Pre.</span>\n<span class=\"gas-price-price\" id=\"gas-price-display-91\"></span>"
       }, {
         xtype: 'component',
         id: 'spacerBetweenMapAndAddress',
         flex: 0,
-        height: 10
+        height: 5
       }, {
         xtype: 'textfield',
         id: 'requestAddressField',

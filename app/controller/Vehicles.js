@@ -489,9 +489,13 @@ Ext.define('Purple.controller.Vehicles', {
           time = _ref4[t];
           timeOpts.push({
             text: time['text'],
-            value: t
+            value: t,
+            order: time['order']
           });
         }
+        timeOpts.sort(function(a, b) {
+          return a['order'] - b['order'];
+        });
         _this.getRequestFormTimeSelect().setOptions(timeOpts);
         _this.getRequestFormTimeSelect().setDisabled(false);
         return _this.getSendRequestButton().setDisabled(false);
