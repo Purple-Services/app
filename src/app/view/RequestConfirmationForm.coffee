@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.RequestConfirmationForm'
+Ext.define 'Purple.view.RequestConfirmationForm',
   extend: 'Ext.form.Panel'
   xtype: 'requestconfirmationform'
   requires: [

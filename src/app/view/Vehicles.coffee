@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.Vehicles'
+Ext.define 'Purple.view.Vehicles',
   extend: 'Ext.Container'
   xtype: 'vehicles'
   requires: [

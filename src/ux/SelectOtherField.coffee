@@ -1,4 +1,4 @@
-Ext.define 'Ux.field.SelectOtherField'
+Ext.define 'Ux.field.SelectOtherField',
   extend: 'Ext.field.Select'
   xtype: 'selectotherfield'
 

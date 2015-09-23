@@ -1,4 +1,4 @@
-Ext.define 'Ux.field.PhoneField'
+Ext.define 'Ux.field.PhoneField',
   extend: 'Ext.field.Text'
   xtype: 'phonefield'
 

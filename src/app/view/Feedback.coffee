@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.Feedback'
+Ext.define 'Purple.view.Feedback',
   extend: 'Ext.form.Panel'
   xtype: 'feedback'
   requires: [

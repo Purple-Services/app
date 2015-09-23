@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.PaymentMethods'
+Ext.define 'Purple.view.PaymentMethods',
   extend: 'Ext.Container'
   xtype: 'paymentmethods'
   requires: [

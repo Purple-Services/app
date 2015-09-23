@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.Orders'
+Ext.define 'Purple.view.Orders',
   extend: 'Ext.Container'
   xtype: 'orders'
   requires: [

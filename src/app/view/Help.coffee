@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.Help'
+Ext.define 'Purple.view.Help',
   extend: 'Ext.Container'
   xtype: 'help'
   requires: [

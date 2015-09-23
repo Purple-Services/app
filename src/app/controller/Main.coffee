@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.Main'
+Ext.define 'Purple.controller.Main',
   extend: 'Ext.app.Controller'
   config:
     refs:

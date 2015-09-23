@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.LoginForm'
+Ext.define 'Purple.view.LoginForm',
   extend: 'Ext.form.Panel'
   xtype: 'loginform'
   requires: [

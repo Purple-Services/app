@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.GasStations'
+Ext.define 'Purple.view.GasStations',
   extend: 'Ext.Container'
   xtype: 'gasstations'
   requires: [

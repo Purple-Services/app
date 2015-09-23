@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.Orders'
+Ext.define 'Purple.controller.Orders',
   extend: 'Ext.app.Controller'
   requires: [
     'Purple.view.Order'

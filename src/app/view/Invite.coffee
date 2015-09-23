@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.Invite'
+Ext.define 'Purple.view.Invite',
   extend: 'Ext.Container'
   xtype: 'invite'
   requires: [

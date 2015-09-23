@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "PROD"
+VERSION = "DEV"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -14,7 +14,7 @@ window.util =
   VERSION_NUMBER: "1.0.7"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://10.12.12.38:3000/"
+    when "LOCAL" then "http://localhost:3000/"
     when "PROD" then "https://purpledelivery.com/"
     when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
 

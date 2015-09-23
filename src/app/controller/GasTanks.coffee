@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.GasTanks'
+Ext.define 'Purple.controller.GasTanks',
   extend: 'Ext.app.Controller'
   requires: [
     'Purple.view.Order'

@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.Order'
+Ext.define 'Purple.view.Order',
   extend: 'Ext.form.Panel'
   xtype: 'order'
   requires: [

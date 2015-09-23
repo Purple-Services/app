@@ -1,4 +1,4 @@
-Ext.define 'Override.field.Select'
+Ext.define 'Override.field.Select',
   override: 'Ext.field.Select'
   
   onFocus: (e) ->

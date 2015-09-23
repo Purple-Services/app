@@ -1,4 +1,4 @@
-Ext.define 'Ux.field.MoneyField'
+Ext.define 'Ux.field.MoneyField',
   extend: 'Ext.field.Text'
   xtype: 'moneyfield'
 

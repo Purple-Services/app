@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.Account'
+Ext.define 'Purple.controller.Account',
   extend: 'Ext.app.Controller'
   config:
     refs:

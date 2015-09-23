@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.EditVehicleForm'
+Ext.define 'Purple.view.EditVehicleForm',
   extend: 'Ext.form.Panel'
   xtype: 'editvehicleform'
   requires: [

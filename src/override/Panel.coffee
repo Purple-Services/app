@@ -1,4 +1,4 @@
-Ext.define 'Override.form.Panel'
+Ext.define 'Override.form.Panel',
   override: 'Ext.form.Panel'
   getElementConfig: ->
     config = this.callParent()

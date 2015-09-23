@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.Menu'
+Ext.define 'Purple.controller.Menu',
   extend: 'Ext.app.Controller'
   config:
     refs:

@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.RequestForm'
+Ext.define 'Purple.view.RequestForm',
   extend: 'Ext.form.Panel'
   xtype: 'requestform'
   requires: [

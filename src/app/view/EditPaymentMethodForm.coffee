@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.EditPaymentMethodForm'
+Ext.define 'Purple.view.EditPaymentMethodForm',
   extend: 'Ext.form.Panel'
   xtype: 'editpaymentmethodform'
   requires: [

@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.MapForm'
+Ext.define 'Purple.view.MapForm',
   extend: 'Ext.Container'
   xtype: 'mapform'
   requires: [

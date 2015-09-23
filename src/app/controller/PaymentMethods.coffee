@@ -1,4 +1,4 @@
-Ext.define 'Purple.controller.PaymentMethods'
+Ext.define 'Purple.controller.PaymentMethods',
   extend: 'Ext.app.Controller'
   requires: [
     'Purple.view.EditPaymentMethodForm'

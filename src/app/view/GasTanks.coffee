@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.GasTanks'
+Ext.define 'Purple.view.GasTanks',
   extend: 'Ext.form.Panel'
   xtype: 'gastanks'
   requires: [

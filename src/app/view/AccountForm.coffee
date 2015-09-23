@@ -1,4 +1,4 @@
-Ext.define 'Purple.view.AccountForm'
+Ext.define 'Purple.view.AccountForm',
   extend: 'Ext.form.Panel'
   xtype: 'accountform'
   requires: [
