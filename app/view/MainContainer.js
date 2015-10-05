@@ -212,7 +212,7 @@ Ext.define('Purple.view.MainContainer', {
         items: [
           {
             xtype: "toptoolbar",
-            cls: ['slideable', 'bordered']
+            cls: ['slideable', 'bordered', 'hide-free-gas-button']
           }, {
             xtype: 'invite'
           }

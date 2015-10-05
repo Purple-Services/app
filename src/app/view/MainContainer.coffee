@@ -266,6 +266,7 @@ Ext.define 'Purple.view.MainContainer',
             cls: [
               'slideable'
               'bordered'
+              'hide-free-gas-button'
             ]
           }
           {
