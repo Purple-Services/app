@@ -33,7 +33,9 @@ Ext.define('Purple.controller.Account', {
       accountPhoneNumberField: '#accountPhoneNumberField',
       accountEmailField: '#accountEmailField',
       accountPaymentMethodField: '#accountPaymentMethodField',
-      accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]'
+      accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]',
+      accountTabContainer: '#accountTabContainer',
+      editAccountForm: 'editaccountform'
     },
     control: {
       loginForm: {
@@ -46,6 +48,18 @@ Ext.define('Purple.controller.Account', {
         showRegisterButtonTap: 'showRegisterForm',
         showLoginButtonTap: 'showLoginForm',
         showForgotPasswordButtonTap: 'showForgotPasswordForm'
+      },
+      accountNameField: {
+        initialize: 'initAccountNameField'
+      },
+      accountPhoneNumberField: {
+        initialize: 'initAccountPhoneNumberField'
+      },
+      accountEmailField: {
+        initialize: 'initAccountEmailField'
+      },
+      editAccountForm: {
+        saveChanges: 'saveChanges'
       },
       accountForm: {
         logoutButtonTap: 'logout'
@@ -404,30 +418,6 @@ Ext.define('Purple.controller.Account', {
   hasPushNotificationsSetup: function() {
     return (localStorage['purpleUserHasPushNotificationsSetUp'] != null) && localStorage['purpleUserHasPushNotificationsSetUp'] === 'true';
   },
-  populateAccountForm: function() {
-    var ref, ref1, ref2, ref3, ref4;
-    if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
-      if ((ref = this.getAccountNameField()) != null) {
-        ref.setValue(localStorage['purpleUserName']);
-      }
-    }
-    if ((localStorage['purpleUserPhoneNumber'] != null) && localStorage['purpleUserPhoneNumber'] !== '') {
-      if ((ref1 = this.getAccountPhoneNumberField()) != null) {
-        ref1.setValue(localStorage['purpleUserPhoneNumber']);
-      }
-    }
-    if ((localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '') {
-      if ((ref2 = this.getAccountEmailField()) != null) {
-        ref2.setValue(localStorage['purpleUserEmail']);
-      }
-    }
-    if (this.isCourier()) {
-      if ((ref3 = this.getAccountPaymentMethodField()) != null) {
-        ref3.hide();
-      }
-      return (ref4 = this.getAccountHorizontalRuleAbovePaymentMethod()) != null ? ref4.hide() : void 0;
-    }
-  },
   resetPassword: function() {
     var emailAddress, vals;
     vals = this.getLoginForm().getValues();
@@ -467,6 +457,92 @@ Ext.define('Purple.controller.Account', {
         response = Ext.JSON.decode(response_obj.responseText);
         console.log(response);
         return console.log('forgot password ajax error');
+      }
+    });
+  },
+  populateAccountForm: function() {
+    var ref, ref1, ref2, ref3, ref4;
+    if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
+      if ((ref = this.getAccountNameField()) != null) {
+        ref.setValue(localStorage['purpleUserName']);
+      }
+    }
+    if ((localStorage['purpleUserPhoneNumber'] != null) && localStorage['purpleUserPhoneNumber'] !== '') {
+      if ((ref1 = this.getAccountPhoneNumberField()) != null) {
+        ref1.setValue(localStorage['purpleUserPhoneNumber']);
+      }
+    }
+    if ((localStorage['purpleUserEmail'] != null) && localStorage['purpleUserEmail'] !== '') {
+      if ((ref2 = this.getAccountEmailField()) != null) {
+        ref2.setValue(localStorage['purpleUserEmail']);
+      }
+    }
+    if (this.isCourier()) {
+      if ((ref3 = this.getAccountPaymentMethodField()) != null) {
+        ref3.hide();
+      }
+      return (ref4 = this.getAccountHorizontalRuleAbovePaymentMethod()) != null ? ref4.hide() : void 0;
+    }
+  },
+  initAccountNameField: function(field) {
+    return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
+  },
+  initAccountPhoneNumberField: function(field) {
+    return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
+  },
+  initAccountEmailField: function(field) {
+    return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
+  },
+  showEditAccountForm: function() {
+    this.getAccountTabContainer().setActiveItem(Ext.create('Purple.view.EditAccountForm'));
+    this.getEditAccountForm().setValues(this.getAccountForm().getValues());
+    return util.ctl('Menu').pushOntoBackButton((function(_this) {
+      return function() {
+        _this.getAccountTabContainer().setActiveItem(_this.getAccountForm());
+        return _this.getAccountTabContainer().remove(_this.getEditAccountForm(), true);
+      };
+    })(this));
+  },
+  saveChanges: function() {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        user: this.getEditAccountForm().getValues()
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          localStorage['purpleUserEmail'] = response.user.email;
+          localStorage['purpleUserPhoneNumber'] = response.user.phone_number;
+          localStorage['purpleUserName'] = response.user.name;
+          this.populateAccountForm();
+          this.getAccountTabContainer().setActiveItem(this.getAccountForm());
+          this.getAccountTabContainer().remove(this.getEditAccountForm(), true);
+          return util.ctl('Menu').popOffBackButtonWithoutAction();
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
       }
     });
   }

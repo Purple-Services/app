@@ -37,6 +37,9 @@ Ext.define 'Purple.controller.Account',
       accountEmailField: '#accountEmailField'
       accountPaymentMethodField: '#accountPaymentMethodField'
       accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]'
+
+      accountTabContainer: '#accountTabContainer'
+      editAccountForm: 'editaccountform'
       
     control:
       loginForm:
@@ -49,6 +52,14 @@ Ext.define 'Purple.controller.Account',
         showRegisterButtonTap: 'showRegisterForm'
         showLoginButtonTap: 'showLoginForm'
         showForgotPasswordButtonTap: 'showForgotPasswordForm'
+      accountNameField:
+        initialize: 'initAccountNameField'
+      accountPhoneNumberField:
+        initialize: 'initAccountPhoneNumberField'
+      accountEmailField:
+        initialize: 'initAccountEmailField'
+      editAccountForm:
+        saveChanges: 'saveChanges'
       accountForm:
         logoutButtonTap: 'logout'
 
@@ -412,19 +423,6 @@ Ext.define 'Purple.controller.Account',
   hasPushNotificationsSetup: ->
     localStorage['purpleUserHasPushNotificationsSetUp']? and localStorage['purpleUserHasPushNotificationsSetUp'] is 'true'
 
-  populateAccountForm: ->
-    if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
-      @getAccountNameField()?.setValue localStorage['purpleUserName']
-    if localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt ''
-      @getAccountPhoneNumberField()?.setValue localStorage['purpleUserPhoneNumber']
-    if localStorage['purpleUserEmail']? and localStorage['purpleUserEmail'] isnt ''
-      @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
-    if @isCourier()
-      @getAccountPaymentMethodField()?.hide()
-      @getAccountHorizontalRuleAbovePaymentMethod()?.hide()
-    # TODO  (is this todo still relevant?)
-    #@getAccountPaymentMethodField().setValue ''
-
   # only for users of type = 'native'
   resetPassword: ->
     vals = @getLoginForm().getValues()
@@ -457,3 +455,79 @@ Ext.define 'Purple.controller.Account',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
         console.log 'forgot password ajax error'
+
+  populateAccountForm: ->
+    if localStorage['purpleUserName']? and
+    localStorage['purpleUserName'] isnt ''
+      @getAccountNameField()?.setValue localStorage['purpleUserName']
+    if localStorage['purpleUserPhoneNumber']? and
+    localStorage['purpleUserPhoneNumber'] isnt ''
+      @getAccountPhoneNumberField()?.setValue localStorage['purpleUserPhoneNumber']
+    if localStorage['purpleUserEmail']? and
+    localStorage['purpleUserEmail'] isnt ''
+      @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
+    if @isCourier()
+      @getAccountPaymentMethodField()?.hide()
+      @getAccountHorizontalRuleAbovePaymentMethod()?.hide()
+    # TODO  (is this todo still relevant?)
+    #@getAccountPaymentMethodField().setValue ''
+
+  initAccountNameField: (field) ->
+    field.element.on 'tap', Ext.bind @showEditAccountForm, this
+
+  initAccountPhoneNumberField: (field) ->
+    field.element.on 'tap', Ext.bind @showEditAccountForm, this
+
+  initAccountEmailField: (field) ->
+    field.element.on 'tap', Ext.bind @showEditAccountForm, this
+
+  showEditAccountForm: ->
+    @getAccountTabContainer().setActiveItem(
+      Ext.create 'Purple.view.EditAccountForm'
+    )
+    @getEditAccountForm().setValues @getAccountForm().getValues()
+    util.ctl('Menu').pushOntoBackButton =>
+      # back to Account page
+      @getAccountTabContainer().setActiveItem @getAccountForm()
+      @getAccountTabContainer().remove(
+        @getEditAccountForm(),
+        yes
+      )
+
+  saveChanges: ->
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
+      params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        user: @getEditAccountForm().getValues()
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          localStorage['purpleUserEmail'] = response.user.email
+          localStorage['purpleUserPhoneNumber'] = response.user.phone_number
+          localStorage['purpleUserName'] = response.user.name
+          # back to Account page
+          @populateAccountForm()
+          @getAccountTabContainer().setActiveItem @getAccountForm()
+          @getAccountTabContainer().remove(
+            @getEditAccountForm(),
+            yes
+          )
+          util.ctl('Menu').popOffBackButtonWithoutAction()
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response

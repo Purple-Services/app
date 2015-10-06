@@ -14,10 +14,7 @@ Ext.define 'Purple.view.AccountForm',
     height: '100%'
     submitOnAction: no
     scrollable:
-      direction: 'vertical'
-      directionLock: yes
-      translatable:
-        translationMethod: 'auto'
+      disabled: true
     cls: [
       'account-form'
       'accent-bg'
@@ -83,7 +80,7 @@ Ext.define 'Purple.view.AccountForm',
             label: 'Name'
             flex: 0
             cls: [
-              #'click-to-edit'
+              'click-to-edit'
               'bottom-margin'
             ]
             disabled: yes
@@ -95,7 +92,7 @@ Ext.define 'Purple.view.AccountForm',
             name: 'phone_number'
             label: 'Phone'
             cls: [
-              #'click-to-edit'
+              'click-to-edit'
               'bottom-margin'
             ]
             disabled: yes
@@ -106,6 +103,9 @@ Ext.define 'Purple.view.AccountForm',
             flex: 0
             name: 'email'
             label: 'Email'
+            cls: [
+              'click-to-edit'
+            ]
             disabled: yes
           }
           {

@@ -12,11 +12,7 @@ Ext.define('Purple.view.AccountForm', {
     height: '100%',
     submitOnAction: false,
     scrollable: {
-      direction: 'vertical',
-      directionLock: true,
-      translatable: {
-        translationMethod: 'auto'
-      }
+      disabled: true
     },
     cls: ['account-form', 'accent-bg', 'slideable'],
     listeners: {
@@ -74,7 +70,7 @@ Ext.define('Purple.view.AccountForm', {
             name: 'name',
             label: 'Name',
             flex: 0,
-            cls: ['bottom-margin'],
+            cls: ['click-to-edit', 'bottom-margin'],
             disabled: true
           }, {
             xtype: 'textfield',
@@ -82,7 +78,7 @@ Ext.define('Purple.view.AccountForm', {
             flex: 0,
             name: 'phone_number',
             label: 'Phone',
-            cls: ['bottom-margin'],
+            cls: ['click-to-edit', 'bottom-margin'],
             disabled: true
           }, {
             xtype: 'textfield',
@@ -90,6 +86,7 @@ Ext.define('Purple.view.AccountForm', {
             flex: 0,
             name: 'email',
             label: 'Email',
+            cls: ['click-to-edit'],
             disabled: true
           }, {
             xtype: 'component',
