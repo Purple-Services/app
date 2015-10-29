@@ -216,6 +216,10 @@ Ext.define('Purple.controller.Account', {
     });
   },
   facebookLogin: function() {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
     ga_storage._trackEvent('ui', 'Facebook Login Pressed');
     return facebookConnectPlugin.getLoginStatus(((function(_this) {
       return function(result) {
@@ -226,6 +230,7 @@ Ext.define('Purple.controller.Account', {
         }
       };
     })(this)), (function() {
+      Ext.Viewport.setMasked(false);
       return console.log('error', arguments);
     }));
   },
@@ -233,14 +238,20 @@ Ext.define('Purple.controller.Account', {
     return this.authorizeUser('facebook', result['authResponse']['userID'], result['authResponse']['accessToken']);
   },
   facebookLoginFailure: function(error) {
-    console.log('Facebook login error: ' + JSON.stringify(error));
-    return alert("Facebook login error. Please make sure your Facebook app is logged in correctly.");
+    Ext.Viewport.setMasked(false);
+    alert("Facebook login error. Please make sure your Facebook app is logged in correctly.");
+    return console.log('Facebook login error: ' + JSON.stringify(error));
   },
   googleLogin: function() {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
     ga_storage._trackEvent('ui', 'Google Login Pressed');
     return window.plugins.googleplus.login({
       'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
     }, Ext.bind(this.googleLoginSuccess, this), (function() {
+      Ext.Viewport.setMasked(false);
       return console.log('error', arguments);
     }));
   },

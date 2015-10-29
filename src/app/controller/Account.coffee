@@ -206,6 +206,9 @@ Ext.define 'Purple.controller.Account',
         console.log 'login error'
 
   facebookLogin: ->
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
     ga_storage._trackEvent 'ui', 'Facebook Login Pressed'
     facebookConnectPlugin.getLoginStatus(
       ((result) =>
@@ -224,7 +227,9 @@ Ext.define 'Purple.controller.Account',
             (Ext.bind @facebookLoginFailure, this)
           )
       ),
-      (-> console.log 'error', arguments)
+      (->
+        Ext.Viewport.setMasked false
+        console.log 'error', arguments)
     )
     
   facebookLoginSuccess: (result) ->
@@ -235,10 +240,14 @@ Ext.define 'Purple.controller.Account',
     )
     
   facebookLoginFailure: (error) ->
-    console.log 'Facebook login error: ' + JSON.stringify(error)
+    Ext.Viewport.setMasked false
     alert "Facebook login error. Please make sure your Facebook app is logged in correctly."
+    console.log 'Facebook login error: ' + JSON.stringify(error)
 
   googleLogin: ->
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
     ga_storage._trackEvent 'ui', 'Google Login Pressed'
     window.plugins.googleplus.login(
       {
@@ -246,7 +255,9 @@ Ext.define 'Purple.controller.Account',
         # note: there is no API key needed for Android devices
       },
       (Ext.bind @googleLoginSuccess, this),
-      (-> console.log 'error', arguments)
+      (->
+        Ext.Viewport.setMasked false
+        console.log 'error', arguments)
     )
 
   googleLoginSuccess: (result) ->
