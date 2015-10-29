@@ -78,6 +78,7 @@ Ext.define 'Purple.view.AccountForm',
             id: 'accountNameField'
             name: 'name'
             label: 'Name'
+            labelWidth: 70
             flex: 0
             cls: [
               'click-to-edit'
@@ -91,6 +92,7 @@ Ext.define 'Purple.view.AccountForm',
             flex: 0
             name: 'phone_number'
             label: 'Phone'
+            labelWidth: 70
             cls: [
               'click-to-edit'
               'bottom-margin'
@@ -103,6 +105,7 @@ Ext.define 'Purple.view.AccountForm',
             flex: 0
             name: 'email'
             label: 'Email'
+            labelWidth: 70
             cls: [
               'click-to-edit'
             ]
@@ -120,7 +123,7 @@ Ext.define 'Purple.view.AccountForm',
             flex: 0
             name: 'payment_method'
             label: 'Payment'
-            labelWidth: '40%'
+            labelWidth: 105
             cls: [
               'click-to-edit'
             ]

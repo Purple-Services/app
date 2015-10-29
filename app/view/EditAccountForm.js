@@ -44,7 +44,7 @@ Ext.define('Purple.view.EditAccountForm', {
             ctype: 'editAccountName',
             name: 'name',
             label: 'Name',
-            labelWidth: 125,
+            labelWidth: 70,
             flex: 0,
             cls: ['bottom-margin'],
             clearIcon: false
@@ -53,7 +53,7 @@ Ext.define('Purple.view.EditAccountForm', {
             ctype: 'editAccountPhoneNumber',
             name: 'phone_number',
             label: 'Phone',
-            labelWidth: 125,
+            labelWidth: 70,
             flex: 0,
             cls: ['bottom-margin'],
             clearIcon: false
@@ -62,7 +62,7 @@ Ext.define('Purple.view.EditAccountForm', {
             ctype: 'editAccountEmail',
             name: 'email',
             label: 'Email',
-            labelWidth: 125,
+            labelWidth: 70,
             flex: 0,
             cls: ['bottom-margin'],
             clearIcon: false
