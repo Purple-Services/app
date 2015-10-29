@@ -245,20 +245,25 @@ Ext.define 'Purple.controller.PaymentMethods',
         console.log response
 
   saveChanges: (callback) ->
-    Stripe.setPublishableKey util.STRIPE_PUBLISHABLE_KEY
-    
     values = @getEditPaymentMethodForm().getValues()
-    paymentMethodId = @getEditPaymentMethodForm().config.paymentMethodId
-    values['id'] = paymentMethodId
-    Ext.Viewport.setMasked
-      xtype: 'loadmask'
-      message: ''
-      
     card =
       number: values['card_number']
       cvc: values['card_cvc']
       exp_month: values['card_exp_month']
       exp_year: values['card_exp_year']
+      address_zip: "" + values['card_billing_zip']
+
+    for f, field of card
+      if field is ""
+        navigator.notification.alert "All fields are required.", (->), "Error"
+        return
+
+    Stripe.setPublishableKey util.STRIPE_PUBLISHABLE_KEY
+    paymentMethodId = @getEditPaymentMethodForm().config.paymentMethodId
+    values['id'] = paymentMethodId
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
       
     Stripe.card.createToken card, (status, response) =>
       if response.error

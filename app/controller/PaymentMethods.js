@@ -288,21 +288,29 @@ Ext.define('Purple.controller.PaymentMethods', {
     });
   },
   saveChanges: function(callback) {
-    var card, paymentMethodId, values;
-    Stripe.setPublishableKey(util.STRIPE_PUBLISHABLE_KEY);
+    var card, f, field, paymentMethodId, values;
     values = this.getEditPaymentMethodForm().getValues();
+    card = {
+      number: values['card_number'],
+      cvc: values['card_cvc'],
+      exp_month: values['card_exp_month'],
+      exp_year: values['card_exp_year'],
+      address_zip: "" + values['card_billing_zip']
+    };
+    for (f in card) {
+      field = card[f];
+      if (field === "") {
+        navigator.notification.alert("All fields are required.", (function() {}), "Error");
+        return;
+      }
+    }
+    Stripe.setPublishableKey(util.STRIPE_PUBLISHABLE_KEY);
     paymentMethodId = this.getEditPaymentMethodForm().config.paymentMethodId;
     values['id'] = paymentMethodId;
     Ext.Viewport.setMasked({
       xtype: 'loadmask',
       message: ''
     });
-    card = {
-      number: values['card_number'],
-      cvc: values['card_cvc'],
-      exp_month: values['card_exp_month'],
-      exp_year: values['card_exp_year']
-    };
     return Stripe.card.createToken(card, (function(_this) {
       return function(status, response) {
         var stripe_token;

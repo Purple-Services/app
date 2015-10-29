@@ -689,6 +689,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Purple.util.PaintMonitor": [],
   "Purple.util.SizeMonitor": [],
   "Purple.view.AccountForm": [],
+  "Purple.view.EditAccountForm": [],
   "Purple.view.EditPaymentMethodForm": [],
   "Purple.view.EditVehicleForm": [],
   "Purple.view.Feedback": [],
@@ -1458,6 +1459,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Purple.util.SizeMonitor": [],
   "Purple.view.AccountForm": [
     "widget.accountform"
+  ],
+  "Purple.view.EditAccountForm": [
+    "widget.editaccountform"
   ],
   "Purple.view.EditPaymentMethodForm": [
     "widget.editpaymentmethodform"

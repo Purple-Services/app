@@ -224,6 +224,18 @@ Ext.define('Purple.view.EditPaymentMethodForm', {
               type: 'tel'
             }
           }, {
+            xtype: 'textfield',
+            ctype: 'editPaymentMethodFormBillingZip',
+            name: 'card_billing_zip',
+            label: 'Billing ZIP Code',
+            labelWidth: 155,
+            flex: 0,
+            cls: ['bottom-margin', 'uppercase-input'],
+            clearIcon: false,
+            component: {
+              type: 'tel'
+            }
+          }, {
             xtype: 'container',
             flex: 0,
             height: 110,
