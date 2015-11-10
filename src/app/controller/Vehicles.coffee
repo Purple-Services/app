@@ -98,8 +98,17 @@ Ext.define 'Purple.controller.Vehicles',
     @colorList
 
   yearChanged: (field, value) ->
+    year = @getEditVehicleFormYear().getValue()
+    make = @getEditVehicleFormMake().getValue()
     @getEditVehicleFormMake().setOptions(
       @getMakeList(value).map (x) ->
+        {
+          text: x
+          value: x
+        }
+    )
+    @getEditVehicleFormModel().setOptions(
+      @getModelList(year, make).map (x) ->
         {
           text: x
           value: x

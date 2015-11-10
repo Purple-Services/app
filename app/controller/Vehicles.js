@@ -116,7 +116,16 @@ Ext.define('Purple.controller.Vehicles', {
     return this.colorList;
   },
   yearChanged: function(field, value) {
+    var make, year;
+    year = this.getEditVehicleFormYear().getValue();
+    make = this.getEditVehicleFormMake().getValue();
     this.getEditVehicleFormMake().setOptions(this.getMakeList(value).map(function(x) {
+      return {
+        text: x,
+        value: x
+      };
+    }));
+    this.getEditVehicleFormModel().setOptions(this.getModelList(year, make).map(function(x) {
       return {
         text: x,
         value: x
