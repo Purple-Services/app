@@ -8,6 +8,9 @@
   // Copy the result and replace the resources/json/vehicleList.js contents with what it returns
 
 
+// This function takes the current vehicle list, the JSON object if the year you'd like to update, 
+// and the year of the vehicles you'd like to update, and returns an updated vehicle list object.
+
 var updateVehicleList = function(vehicleList, vehicleObject, year){
   vehicleList[year] = {};
   for (var i = 0; i < vehicleObject.makesCount; i++){
