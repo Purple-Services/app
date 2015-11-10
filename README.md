@@ -7,4 +7,4 @@ To transcompile CoffeeScript into the proper JS folders, you can use something l
 
 To build the app for upload to PhoneGap Build service, you can use:
 
-    sencha app build package
+    sencha app build

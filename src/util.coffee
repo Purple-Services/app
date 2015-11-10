@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "PROD"
+VERSION = "DEV"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -16,7 +16,7 @@ window.util =
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://localhost:3000/"
     when "PROD" then "https://purpledelivery.com/"
-    when "DEV" then "http://purple-dev.elasticbeanstalk.com/"
+    when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
 
   STRIPE_PUBLISHABLE_KEY: switch VERSION
     when "LOCAL" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
