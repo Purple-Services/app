@@ -166,6 +166,7 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
 
+
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     latlng = new google.maps.LatLng lat, lng
     @geocoder?.geocode {'latLng': latlng}, (results, status) =>
@@ -193,6 +194,7 @@ Ext.define 'Purple.controller.Main',
               method: 'POST'
               scope: this
               success: (response_obj) ->
+                console.log 'success'
                 @getRequestGasButton().setDisabled no
                 response = Ext.JSON.decode response_obj.responseText
                 if response.success
@@ -209,8 +211,9 @@ Ext.define 'Purple.controller.Main',
                 console.log response_obj
         # else
         #   console.log 'No results found.'
-      # else
-      #   console.log 'Geocoder failed due to: ' + status
+
+      else
+        console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
     if @getMap().isHidden()
