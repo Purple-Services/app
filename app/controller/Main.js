@@ -33,7 +33,8 @@ Ext.define('Purple.controller.Main', {
         recenterAtUserLoc: 'recenterAtUserLoc'
       },
       map: {
-        centerchange: 'adjustDeliveryLocByLatLng',
+        centerchange: 'centerChanging',
+        idle: 'adjustDeliveryLocByLatLng',
         maprender: 'initGeocoder'
       },
       requestAddressField: {
@@ -178,8 +179,12 @@ Ext.define('Purple.controller.Main', {
       return navigator.notification.alert("Internet connection problem. Please try closing the app and restarting it.", (function() {}), "Connection Error");
     }
   },
+  centerChanging: function() {
+    return this.getRequestGasButton().setDisabled(true);
+  },
   adjustDeliveryLocByLatLng: function() {
     var center;
+    this.getRequestGasButton().setDisabled(true);
     center = this.getMap().getMap().getCenter();
     this.deliveryLocLat = center.lat();
     this.deliveryLocLng = center.lng();
@@ -187,7 +192,6 @@ Ext.define('Purple.controller.Main', {
   },
   updateDeliveryLocAddressByLatLng: function(lat, lng) {
     var latlng, ref;
-    this.getRequestGasButton().setDisabled(true);
     latlng = new google.maps.LatLng(lat, lng);
     return (ref = this.geocoder) != null ? ref.geocode({
       'latLng': latlng
@@ -228,6 +232,7 @@ Ext.define('Purple.controller.Main', {
                 scope: _this,
                 success: function(response_obj) {
                   var prices, response;
+                  console.log('success');
                   this.getRequestGasButton().setDisabled(false);
                   response = Ext.JSON.decode(response_obj.responseText);
                   if (response.success) {
@@ -244,6 +249,8 @@ Ext.define('Purple.controller.Main', {
               });
             }
           }
+        } else {
+          return console.log('Geocoder failed due to: ' + status);
         }
       };
     })(this)) : void 0;

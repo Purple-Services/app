@@ -30,7 +30,8 @@ Ext.define 'Purple.controller.Main',
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
       map:
-        centerchange: 'adjustDeliveryLocByLatLng'
+        centerchange: 'centerChanging'
+        idle: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
@@ -153,15 +154,23 @@ Ext.define 'Purple.controller.Main',
     else
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
+  centerChanging: ->
+    @getRequestGasButton().setDisabled yes
+
   adjustDeliveryLocByLatLng: ->
+    @getRequestGasButton().setDisabled yes
     center = @getMap().getMap().getCenter()
     # might want to send actual 
     @deliveryLocLat = center.lat()
     @deliveryLocLng = center.lng()
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
+
+
+# options
+  # throttle the amount of times this function can be called
+  # only call the function when the pin stops moving
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
-    @getRequestGasButton().setDisabled yes
     latlng = new google.maps.LatLng lat, lng
     @geocoder?.geocode {'latLng': latlng}, (results, status) =>
       if status is google.maps.GeocoderStatus.OK
@@ -188,6 +197,7 @@ Ext.define 'Purple.controller.Main',
               method: 'POST'
               scope: this
               success: (response_obj) ->
+                console.log 'success'
                 @getRequestGasButton().setDisabled no
                 response = Ext.JSON.decode response_obj.responseText
                 if response.success
@@ -204,8 +214,17 @@ Ext.define 'Purple.controller.Main',
                 console.log response_obj
         # else
         #   console.log 'No results found.'
-      # else
-      #   console.log 'Geocoder failed due to: ' + status
+
+    ## this is not working because the context of setTimeout messes up the function calls
+      # else if status is google.maps.GeocoderStatus.OVER_QUERY_LIMIT
+      #   console.log 'over query limit called'
+      #   context = @
+      #   setTimeout (->
+      #     context.updateDeliveryLocAddressByLatLng lat, lng
+      #     return
+      #   ), 5000
+      else
+        console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
     if @getMap().isHidden()
