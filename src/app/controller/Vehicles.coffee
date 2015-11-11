@@ -101,11 +101,13 @@ Ext.define 'Purple.controller.Vehicles',
     year = @getEditVehicleFormYear().getValue()
     make = @getEditVehicleFormMake().getValue()
     @getEditVehicleFormMake().setOptions(
-      @getMakeList(value).map (x) ->
+      options = @getMakeList(value).map (x) ->
         {
           text: x
           value: x
         }
+      options.sort (a,b) ->
+        a.text.localeCompare(b.text)
     )
     @getEditVehicleFormModel().setOptions(
       @getModelList(year, make).map (x) ->

@@ -2,3 +2,4 @@
 [#]*[#]
 *.mp4
 .[#]*
+resources/sass/.sass-cache/
