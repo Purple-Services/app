@@ -248,8 +248,6 @@ Ext.define('Purple.controller.Main', {
               });
             }
           }
-        } else {
-          return console.log('Geocoder failed due to: ' + status);
         }
       };
     })(this)) : void 0;

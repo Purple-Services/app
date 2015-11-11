@@ -209,8 +209,8 @@ Ext.define 'Purple.controller.Main',
                 console.log response_obj
         # else
         #   console.log 'No results found.'
-      else
-        console.log 'Geocoder failed due to: ' + status
+      # else
+      #   console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
     if @getMap().isHidden()
