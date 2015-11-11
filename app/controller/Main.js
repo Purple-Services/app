@@ -13,6 +13,7 @@ Ext.define('Purple.controller.Main', {
       gasPriceMapDisplay: '#gasPriceMapDisplay',
       requestAddressField: '#requestAddressField',
       requestGasButtonContainer: '#requestGasButtonContainer',
+      requestGasButton: '#requestGasButton',
       autocompleteList: '#autocompleteList',
       requestForm: 'requestform',
       requestConfirmationForm: 'requestconfirmationform',
@@ -32,7 +33,8 @@ Ext.define('Purple.controller.Main', {
         recenterAtUserLoc: 'recenterAtUserLoc'
       },
       map: {
-        centerchange: 'adjustDeliveryLocByLatLng',
+        centerchange: 'centerChanging',
+        idle: 'adjustDeliveryLocByLatLng',
         maprender: 'initGeocoder'
       },
       requestAddressField: {
@@ -177,8 +179,12 @@ Ext.define('Purple.controller.Main', {
       return navigator.notification.alert("Internet connection problem. Please try closing the app and restarting it.", (function() {}), "Connection Error");
     }
   },
+  centerChanging: function() {
+    return this.getRequestGasButton().setDisabled(true);
+  },
   adjustDeliveryLocByLatLng: function() {
     var center;
+    this.getRequestGasButton().setDisabled(true);
     center = this.getMap().getMap().getCenter();
     this.deliveryLocLat = center.lat();
     this.deliveryLocLng = center.lng();
@@ -226,6 +232,7 @@ Ext.define('Purple.controller.Main', {
                 scope: _this,
                 success: function(response_obj) {
                   var prices, response;
+                  this.getRequestGasButton().setDisabled(false);
                   response = Ext.JSON.decode(response_obj.responseText);
                   if (response.success) {
                     prices = response.gas_prices;
@@ -278,6 +285,7 @@ Ext.define('Purple.controller.Main', {
   },
   generateSuggestions: function() {
     var query, suggestions;
+    this.getRequestGasButton().setDisabled(true);
     query = this.getRequestAddressField().getValue();
     suggestions = new Array();
     return Ext.Ajax.request({

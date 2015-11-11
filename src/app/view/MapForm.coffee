@@ -159,10 +159,12 @@ Ext.define 'Purple.view.MapForm',
         items: [
           {
             xtype: 'button'
+            id: 'requestGasButton'
             ui: 'action'
             cls: 'button-pop'
             text: 'Request Gas'
             flex: 0
+            disabled: no
             handler: ->
               @up().fireEvent 'initRequestGasForm'
           }
