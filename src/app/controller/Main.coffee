@@ -12,6 +12,7 @@ Ext.define 'Purple.controller.Main',
       gasPriceMapDisplay: '#gasPriceMapDisplay'
       requestAddressField: '#requestAddressField'
       requestGasButtonContainer: '#requestGasButtonContainer'
+      requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
@@ -160,6 +161,7 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
+    @getRequestGasButton().setDisabled yes
     latlng = new google.maps.LatLng lat, lng
     @geocoder?.geocode {'latLng': latlng}, (results, status) =>
       if status is google.maps.GeocoderStatus.OK
@@ -186,6 +188,7 @@ Ext.define 'Purple.controller.Main',
               method: 'POST'
               scope: this
               success: (response_obj) ->
+                @getRequestGasButton().setDisabled no
                 response = Ext.JSON.decode response_obj.responseText
                 if response.success
                   prices = response.gas_prices
@@ -233,6 +236,7 @@ Ext.define 'Purple.controller.Main',
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
 
   generateSuggestions: ->
+    @getRequestGasButton().setDisabled yes
     query = @getRequestAddressField().getValue()
     suggestions = new Array()
     Ext.Ajax.request
@@ -283,6 +287,7 @@ Ext.define 'Purple.controller.Main',
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
+    console.log(@getRequestAddressField().getValue())
     if deliveryLocName is @getRequestAddressField().getInitialConfig().value
       return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
