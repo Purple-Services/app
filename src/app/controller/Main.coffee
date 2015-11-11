@@ -194,7 +194,6 @@ Ext.define 'Purple.controller.Main',
               method: 'POST'
               scope: this
               success: (response_obj) ->
-                console.log 'success'
                 @getRequestGasButton().setDisabled no
                 response = Ext.JSON.decode response_obj.responseText
                 if response.success
@@ -212,8 +211,8 @@ Ext.define 'Purple.controller.Main',
         # else
         #   console.log 'No results found.'
 
-      else
-        console.log 'Geocoder failed due to: ' + status
+      # else
+      #   console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
     if @getMap().isHidden()
@@ -295,7 +294,6 @@ Ext.define 'Purple.controller.Main',
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
-    console.log(@getRequestAddressField().getValue())
     if deliveryLocName is @getRequestAddressField().getInitialConfig().value
       return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())

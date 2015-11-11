@@ -30,6 +30,7 @@ Ext.define 'Override.ux.Map',
       event.addListener map, 'idle', Ext.bind(me.onIdle, me)
       @addMapListeners()
     @getMap()
+    
   onIdle: ->
     mapOptions = @getMapOptions()
     map = @getMap()

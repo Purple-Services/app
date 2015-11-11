@@ -232,7 +232,6 @@ Ext.define('Purple.controller.Main', {
                 scope: _this,
                 success: function(response_obj) {
                   var prices, response;
-                  console.log('success');
                   this.getRequestGasButton().setDisabled(false);
                   response = Ext.JSON.decode(response_obj.responseText);
                   if (response.success) {
@@ -249,8 +248,6 @@ Ext.define('Purple.controller.Main', {
               });
             }
           }
-        } else {
-          return console.log('Geocoder failed due to: ' + status);
         }
       };
     })(this)) : void 0;
@@ -357,7 +354,6 @@ Ext.define('Purple.controller.Main', {
     var deliveryLocName;
     ga_storage._trackEvent('ui', 'Request Gas Button Pressed');
     deliveryLocName = this.getRequestAddressField().getValue();
-    console.log(this.getRequestAddressField().getValue());
     if (deliveryLocName === this.getRequestAddressField().getInitialConfig().value) {
       return;
     }
