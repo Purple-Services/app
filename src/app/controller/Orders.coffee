@@ -136,7 +136,9 @@ Ext.define 'Purple.controller.Orders',
       @getOrderSpecialInstructionsLabel().hide()
       @getOrderSpecialInstructions().hide()
       @getOrderAddressStreet().removeCls 'bottom-margin'
-
+    else 
+      @getOrderSpecialInstructions().setHtml(order['special_instructions'])
+      # Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(order['special_instructions'])
     if util.ctl('Account').isCourier()
       @getOrderTimePlaced().hide()
       @getOrderDisplayTime().hide()

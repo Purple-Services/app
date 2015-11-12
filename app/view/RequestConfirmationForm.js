@@ -164,7 +164,6 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             name: 'address_zip'
           }, {
             xtype: 'hiddenfield',
-            id: 'specialInstructionsField',
             name: 'special_instructions'
           }, {
             xtype: 'container',

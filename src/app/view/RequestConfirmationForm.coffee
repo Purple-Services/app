@@ -213,7 +213,6 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           }
           {
             xtype: 'hiddenfield'
-            id: 'specialInstructionsField'
             name: 'special_instructions'
           }
           {
