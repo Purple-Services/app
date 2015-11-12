@@ -471,6 +471,8 @@ Ext.define('Purple.controller.Main', {
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide();
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide();
       return Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls('bottom-margin');
+    } else {
+      return Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(vals['special_instructions']);
     }
   },
   promptForCode: function() {

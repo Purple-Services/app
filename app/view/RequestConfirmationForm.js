@@ -78,13 +78,13 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             html: 'Special Instructions',
             cls: ['visibly-disabled', 'field-label-text']
           }, {
-            xtype: 'textareafield',
+            xtype: 'component',
             id: 'specialInstructionsConfirmation',
             name: 'special_instructions',
-            maxRows: 4,
+            style: 'border-left: 10px solid #DCD2DA; padding: 10px 0 12px 5px;  color: rgb(85, 85, 85); width: 100%; background-color: rgb(237, 237, 237); font-size: 17px; font-weight: normal',
+            html: '',
             disabled: true,
-            height: 'auto',
-            cls: ['visibly-disabled', 'field-label-text']
+            height: 'auto'
           }, {
             xtype: 'component',
             flex: 0,
@@ -162,6 +162,10 @@ Ext.define('Purple.view.RequestConfirmationForm', {
           }, {
             xtype: 'hiddenfield',
             name: 'address_zip'
+          }, {
+            xtype: 'hiddenfield',
+            id: 'specialInstructionsField',
+            name: 'special_instructions'
           }, {
             xtype: 'container',
             id: 'cofirmOrderButtonContainer',
