@@ -81,7 +81,7 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             xtype: 'component',
             id: 'specialInstructionsConfirmation',
             name: 'special_instructions',
-            style: 'border-left: 10px solid #DCD2DA; padding: 10px 0 12px 5px;  color: rgb(85, 85, 85); width: 100%; background-color: rgb(237, 237, 237); font-size: 17px; font-weight: normal',
+            cls: 'special-instructions-confirmation',
             html: '',
             disabled: true,
             height: 'auto'
