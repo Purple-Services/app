@@ -185,6 +185,9 @@ body {
 .x-field-input {
     background: transparent;
 }
+#specialInstructionsConfirmation {
+    resize: none;
+}
 .x-input-el {
     text-align: right;
     -webkit-text-fill-color: #742C90 !important;

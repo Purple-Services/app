@@ -106,6 +106,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             name: 'special_instructions'
             maxRows: 4
             disabled: yes
+            height: 'auto'
             cls: [
               'visibly-disabled'
               'field-label-text'
