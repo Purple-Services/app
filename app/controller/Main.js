@@ -67,18 +67,6 @@ Ext.define('Purple.controller.Main', {
     var ref;
     this.callParent(arguments);
     this.gpsIntervalRef = setInterval(Ext.bind(this.updateLatlng, this), 5000);
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._enableSSL();
-    }
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._setAccount('UA-61762011-1');
-    }
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._setDomain('none');
-    }
-    if (typeof ga_storage !== "undefined" && ga_storage !== null) {
-      ga_storage._trackEvent('main', 'App Launch', "Platform: " + Ext.os.name);
-    }
     if ((ref = navigator.splashscreen) != null) {
       ref.hide();
     }

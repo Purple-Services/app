@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
+        id = "com.purple.app"
         versionCode = "17"
         version     = "1.0.7" >
 
@@ -22,11 +22,11 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <name>Purple</name>
+  <!-- <name>Purple</name> -->
   <!-- BEGIN CUSTOMER APP ONLY -->
   
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <name>Purple Courier</name> -->
+  <name>Purple Courier</name>
   <!-- END COURIER APP ONLY -->
 
   
@@ -99,9 +99,9 @@
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
 
-  <preference name="phonegap-version" value="cli-5.2.0" />
+  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
   <!-- cli-5.1.1 doesn't work for Android, just use 3.7.0 -->
-  <!-- <preference name="phonegap-version" value="3.7.0" /> -->
+  <preference name="phonegap-version" value="3.7.0" />
   <preference name="fullscreen" value="false" />
   <preference name="exit-on-suspend" value="false" />
   <preference name="orientation" value="portrait" />
@@ -137,10 +137,10 @@
   <!--   <param name="APP_NAME" value="Purple" /> -->
   <!-- </gap:plugin> -->
 
-  <gap:plugin name="phonegap-facebook-plugin" version="0.6.1" source="npm">
-    <param name="APP_ID" value="1588773851335820" />
-    <param name="APP_NAME" value="Purple" />
-  </gap:plugin>
+  <!-- <gap:plugin name="phonegap-facebook-plugin" version="0.6.1" source="npm"> -->
+  <!--   <param name="APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="APP_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
   
   <!-- <gap:plugin name="cordova-plugin-googleplus" version="4.0.3" source="npm"> -->
   <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
@@ -160,10 +160,10 @@
   <feature name="http://api.phonegap.com/1.0/device" />
 
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
-  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
-  <!--   <string>(required for Courier mode)</string> -->
-  <!-- </gap:config-file> -->
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
+    <string>(required for Courier mode)</string>
+  </gap:config-file>
   <!-- END COURIER APP ONLY -->
 
 </widget>

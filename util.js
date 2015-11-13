@@ -1,6 +1,6 @@
 var VERSION;
 
-VERSION = "DEV";
+VERSION = "PROD";
 
 if (VERSION === "LOCAL" || VERSION === "DEV") {
   window.onerror = function(message, url, lineNumber) {
