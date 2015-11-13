@@ -209,9 +209,7 @@ Ext.define('Purple.view.Order', {
             cls: ['visibly-disabled', 'field-label-text']
           }, {
             xtype: 'component',
-            id: 'specialInstructionsConfirmation',
             ctype: 'orderSpecialInstructions',
-            name: 'special_instructions',
             cls: 'special-instructions-confirmation',
             html: '',
             disabled: true,

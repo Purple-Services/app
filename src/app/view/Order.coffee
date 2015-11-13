@@ -247,9 +247,7 @@ Ext.define 'Purple.view.Order',
           }
           {
             xtype: 'component'
-            id: 'specialInstructionsConfirmation'
             ctype: 'orderSpecialInstructions'
-            name: 'special_instructions'
             cls: 'special-instructions-confirmation'
             html: ''
             disabled: yes
