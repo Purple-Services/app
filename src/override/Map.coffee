@@ -27,14 +27,9 @@ Ext.define 'Override.ux.Map',
       event.addListener map, 'maptypeid_changed', Ext.bind(me.onTypeChange, me)
       event.addListener map, 'center_changed', Ext.bind(me.onCenterChange, me)
       event.addListenerOnce map, 'tilesloaded', Ext.bind(me.onTilesLoaded, me)
-      event.addListener map, 'idle', Ext.bind(me.onIdle, me)
+      event.addListener map, 'dragstart', Ext.bind(me.onDragStart, me)
       @addMapListeners()
     @getMap()
     
-  onIdle: ->
-    mapOptions = @getMapOptions()
-    map = @getMap()
-    center = undefined
-    center = if map and map.getCenter then map.getCenter() else mapOptions.center
-    @options = Ext.apply(mapOptions, center: center)
-    @fireEvent 'idle', this, map, center
+  onDragStart: ->
+    @fireEvent 'dragstart'

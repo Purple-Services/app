@@ -33,8 +33,8 @@ Ext.define('Purple.controller.Main', {
         recenterAtUserLoc: 'recenterAtUserLoc'
       },
       map: {
-        centerchange: 'centerChanging',
-        idle: 'adjustDeliveryLocByLatLng',
+        dragstart: 'dragStart',
+        centerchange: 'adjustDeliveryLocByLatLng',
         maprender: 'initGeocoder'
       },
       requestAddressField: {
@@ -179,12 +179,11 @@ Ext.define('Purple.controller.Main', {
       return navigator.notification.alert("Internet connection problem. Please try closing the app and restarting it.", (function() {}), "Connection Error");
     }
   },
-  centerChanging: function() {
+  dragStart: function() {
     return this.getRequestGasButton().setDisabled(true);
   },
   adjustDeliveryLocByLatLng: function() {
     var center;
-    this.getRequestGasButton().setDisabled(true);
     center = this.getMap().getMap().getCenter();
     this.deliveryLocLat = center.lat();
     this.deliveryLocLng = center.lng();
