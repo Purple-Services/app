@@ -101,15 +101,13 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             ]
           }
           {
-            xtype: 'textareafield'
+            xtype: 'component'
             id: 'specialInstructionsConfirmation'
             name: 'special_instructions'
-            maxRows: 4
+            cls: 'special-instructions-confirmation'
+            html: ''
             disabled: yes
-            cls: [
-              'visibly-disabled'
-              'field-label-text'
-            ]
+            height: 'auto'
           }
           {
             xtype: 'component'
@@ -212,6 +210,10 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           {
             xtype: 'hiddenfield'
             name: 'address_zip'
+          }
+          {
+            xtype: 'hiddenfield'
+            name: 'special_instructions'
           }
           {
             xtype: 'container'

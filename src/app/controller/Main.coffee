@@ -416,7 +416,8 @@ Ext.define 'Purple.controller.Main',
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
-
+    else
+      Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(vals['special_instructions'])
   promptForCode: ->
     Ext.Msg.prompt(
       'Enter Coupon Code',

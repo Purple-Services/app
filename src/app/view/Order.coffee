@@ -246,15 +246,12 @@ Ext.define 'Purple.view.Order',
             ]
           }
           {
-            xtype: 'textareafield'
+            xtype: 'component'
             ctype: 'orderSpecialInstructions'
-            name: 'special_instructions'
-            maxRows: 4
+            cls: 'special-instructions-confirmation'
+            html: ''
             disabled: yes
-            cls: [
-              'visibly-disabled'
-              'field-label-text'
-            ]
+            height: 'auto'
           }
           {
             xtype: 'component'
