@@ -185,9 +185,6 @@ body {
 .x-field-input {
     background: transparent;
 }
-#specialInstructionsConfirmation {
-    resize: none;
-}
 .x-input-el {
     text-align: right;
     -webkit-text-fill-color: #742C90 !important;
@@ -210,6 +207,7 @@ body {
     background-color: rgb(237, 237, 237); 
     font-size: 17px; 
     font-weight: normal;
+    resize: none;
 }
 .invite-form input {
     text-align: left;
