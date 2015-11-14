@@ -184,7 +184,6 @@ Ext.define('Purple.controller.Main', {
     return this.getRequestGasButton().setDisabled(true);
   },
   boundChanged: function() {
-    console.log('bound changed');
     return this.getRequestGasButton().setDisabled(true);
   },
   adjustDeliveryLocByLatLng: function() {

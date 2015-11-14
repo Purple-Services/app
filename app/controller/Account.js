@@ -155,7 +155,6 @@ Ext.define('Purple.controller.Account', {
       scope: this,
       success: function(response_obj) {
         var c, card, ref, response;
-        util.ctl('Main').setUpPushNotifications();
         Ext.Viewport.setMasked(false);
         response = Ext.JSON.decode(response_obj.responseText);
         if (response.success) {

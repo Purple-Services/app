@@ -159,7 +159,6 @@ Ext.define 'Purple.controller.Main',
     @getRequestGasButton().setDisabled yes
 
   boundChanged: ->
-    console.log 'bound changed'
     @getRequestGasButton().setDisabled yes
 
   adjustDeliveryLocByLatLng: ->
