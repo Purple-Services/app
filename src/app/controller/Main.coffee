@@ -31,6 +31,7 @@ Ext.define 'Purple.controller.Main',
         recenterAtUserLoc: 'recenterAtUserLoc'
       map:
         dragstart: 'dragStart'
+        boundchange: 'boundChanged'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
@@ -155,6 +156,10 @@ Ext.define 'Purple.controller.Main',
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   dragStart: ->
+    @getRequestGasButton().setDisabled yes
+
+  boundChanged: ->
+    console.log 'bound changed'
     @getRequestGasButton().setDisabled yes
 
   adjustDeliveryLocByLatLng: ->

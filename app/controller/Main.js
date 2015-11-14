@@ -34,6 +34,7 @@ Ext.define('Purple.controller.Main', {
       },
       map: {
         dragstart: 'dragStart',
+        boundchange: 'boundChanged',
         centerchange: 'adjustDeliveryLocByLatLng',
         maprender: 'initGeocoder'
       },
@@ -180,6 +181,10 @@ Ext.define('Purple.controller.Main', {
     }
   },
   dragStart: function() {
+    return this.getRequestGasButton().setDisabled(true);
+  },
+  boundChanged: function() {
+    console.log('bound changed');
     return this.getRequestGasButton().setDisabled(true);
   },
   adjustDeliveryLocByLatLng: function() {
