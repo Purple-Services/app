@@ -105,6 +105,30 @@ Ext.define 'Purple.view.AccountForm',
             label: 'Email'
             cls: [
               'click-to-edit'
+              'bottom-margin'
+            ]
+            disabled: yes
+          }
+          {
+            xtype: 'textfield'
+            id: 'accountHomeField'
+            flex: 0
+            name: 'home'
+            label: 'Home'
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+            ]
+            disabled: yes
+          }
+          {
+            xtype: 'textfield'
+            id: 'accountWorkField'
+            flex: 0
+            name: 'work'
+            label: 'Work'
+            cls: [
+              'click-to-edit'
             ]
             disabled: yes
           }
