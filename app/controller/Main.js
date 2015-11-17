@@ -3,6 +3,8 @@ Ext.define('Purple.controller.Main', {
   extend: 'Ext.app.Controller',
   config: {
     refs: {
+      accountHomeField: '#accountHomeField',
+      accountWorkField: '#accountWorkField',
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       loginForm: 'loginform',
@@ -15,6 +17,8 @@ Ext.define('Purple.controller.Main', {
       requestGasButtonContainer: '#requestGasButtonContainer',
       requestGasButton: '#requestGasButton',
       autocompleteList: '#autocompleteList',
+      homeAutocomplete: '#homeAutocomplete',
+      workAutocomplete: '#workAutocomplete',
       requestForm: 'requestform',
       requestConfirmationForm: 'requestconfirmationform',
       feedback: 'feedback',
@@ -26,20 +30,34 @@ Ext.define('Purple.controller.Main', {
       freeGasField: '#freeGasField',
       discountField: '#discountField',
       couponCodeField: '#couponCodeField',
-      totalPriceField: '#totalPriceField'
+      totalPriceField: '#totalPriceField',
+      homeAddressContainer: '#homeAddressContainer',
+      workAddressContainer: '#workAddressContainer',
+      accountHomeAddress: '#accountHomeAddress',
+      accountWorkAddress: '#accountWorkAddress'
     },
     control: {
       mapForm: {
-        recenterAtUserLoc: 'recenterAtUserLoc'
+        recenterAtUserLoc: 'recenterAtUserLoc',
+        changeHomeAddress: 'changeHomeAddress',
+        changeWorkAddress: 'changeWorkAddress'
       },
       map: {
-        centerchange: 'centerChanging',
-        idle: 'adjustDeliveryLocByLatLng',
+        dragstart: 'dragStart',
+        boundchange: 'boundChanged',
+        centerchange: 'adjustDeliveryLocByLatLng',
         maprender: 'initGeocoder'
       },
       requestAddressField: {
         generateSuggestions: 'generateSuggestions',
-        addressInputMode: 'addressInputMode'
+        addressInputMode: 'addressInputMode',
+        homeAddressInputMode: 'homeAddressInputMode'
+      },
+      workAutocomplete: {
+        updateWorkAddress: 'updateWorkAddress'
+      },
+      homeAutocomplete: {
+        updateHomeAddress: 'updateHomeAddress'
       },
       autocompleteList: {
         updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
@@ -60,6 +78,12 @@ Ext.define('Purple.controller.Main', {
       },
       invite: {
         sendInvites: 'sendInvites'
+      },
+      accountHomeAddress: {
+        initialize: 'initAccountHomeAddress'
+      },
+      accountWorkAddress: {
+        initialize: 'initAccountWorkAddress'
       }
     }
   },
@@ -179,12 +203,14 @@ Ext.define('Purple.controller.Main', {
       return navigator.notification.alert("Internet connection problem. Please try closing the app and restarting it.", (function() {}), "Connection Error");
     }
   },
-  centerChanging: function() {
+  dragStart: function() {
+    return this.getRequestGasButton().setDisabled(true);
+  },
+  boundChanged: function() {
     return this.getRequestGasButton().setDisabled(true);
   },
   adjustDeliveryLocByLatLng: function() {
     var center;
-    this.getRequestGasButton().setDisabled(true);
     center = this.getMap().getMap().getCenter();
     this.deliveryLocLat = center.lat();
     this.deliveryLocLng = center.lng();
@@ -259,21 +285,26 @@ Ext.define('Purple.controller.Main', {
       this.getSpacerBetweenMapAndAddress().show();
       this.getGasPriceMapDisplay().show();
       this.getRequestGasButtonContainer().show();
-      return this.getRequestAddressField().disable();
+      this.getRequestAddressField().disable();
+      this.getHomeAddressContainer().hide();
+      return this.getWorkAddressContainer().hide();
     }
   },
   recenterAtUserLoc: function() {
     return this.getMap().getMap().setCenter(new google.maps.LatLng(this.lat, this.lng));
   },
-  addressInputMode: function() {
+  addressInputMode: function(homeChange) {
     if (!this.getMap().isHidden()) {
       this.getMap().hide();
       this.getSpacerBetweenMapAndAddress().hide();
       this.getGasPriceMapDisplay().hide();
       this.getRequestGasButtonContainer().hide();
       this.getAutocompleteList().show();
+      this.getHomeAutocomplete().hide();
       this.getRequestAddressField().enable();
       this.getRequestAddressField().focus();
+      this.getHomeAddressContainer().show();
+      this.getWorkAddressContainer().show();
       util.ctl('Menu').pushOntoBackButton((function(_this) {
         return function() {
           _this.recenterAtUserLoc();
@@ -281,7 +312,35 @@ Ext.define('Purple.controller.Main', {
         };
       })(this));
       return ga_storage._trackEvent('ui', 'Address Text Input Mode');
+    } else if (homeChange === 'home') {
+      this.getHomeAutocomplete().hide();
+      this.getWorkAutocomplete().hide();
+      this.getHomeAddressContainer().show();
+      this.getAutocompleteList().show();
+      return this.getWorkAddressContainer().show();
     }
+  },
+  homeAddressInputMode: function() {
+    this.getAutocompleteList().hide();
+    this.getHomeAutocomplete().show();
+    this.getHomeAddressContainer().hide();
+    this.getWorkAddressContainer().hide();
+    return util.ctl('Menu').pushOntoBackButton((function(_this) {
+      return function() {
+        return _this.addressInputMode();
+      };
+    })(this));
+  },
+  workAddressInputMode: function() {
+    this.getAutocompleteList().hide();
+    this.getWorkAutocomplete().show();
+    this.getHomeAddressContainer().hide();
+    this.getWorkAddressContainer().hide();
+    return util.ctl('Menu').pushOntoBackButton((function(_this) {
+      return function() {
+        return _this.addressInputMode();
+      };
+    })(this));
   },
   generateSuggestions: function() {
     var query, suggestions;
@@ -313,7 +372,9 @@ Ext.define('Purple.controller.Main', {
               'placeId': p.place_id
             });
           }
-          return this.getAutocompleteList().getStore().setData(suggestions);
+          this.getAutocompleteList().getStore().setData(suggestions);
+          this.getHomeAutocomplete().getStore().setData(suggestions);
+          return this.getWorkAutocomplete().getStore().setData(suggestions);
         }
       }
     });
@@ -349,6 +410,36 @@ Ext.define('Purple.controller.Main', {
         }
       };
     })(this));
+  },
+  changeHomeAddress: function() {
+    return this.homeAddressInputMode();
+  },
+  changeWorkAddress: function() {
+    return this.workAddressInputMode();
+  },
+  updateHomeAddress: function(loc) {
+    localStorage['purpleUserHome'] = loc['locationName'];
+    this.getAccountHomeAddress().setValue(localStorage['purpleUserHome']);
+    this.addressInputMode('home');
+    return this.homeLoc = loc;
+  },
+  updateWorkAddress: function(loc) {
+    localStorage['purpleUserWork'] = loc['locationName'];
+    this.getAccountWorkAddress().setValue(localStorage['purpleUserWork']);
+    this.addressInputMode('home');
+    return this.workLoc = loc;
+  },
+  initAccountHomeAddress: function(field) {
+    return field.element.on('tap', this.searchHome, this);
+  },
+  initAccountWorkAddress: function(field) {
+    return field.element.on('tap', this.searchWork, this);
+  },
+  searchHome: function() {
+    return this.updateDeliveryLocAddressByLocArray(this.homeLoc);
+  },
+  searchWork: function() {
+    return this.updateDeliveryLocAddressByLocArray(this.workLoc);
   },
   initRequestGasForm: function() {
     var deliveryLocName;
@@ -549,7 +640,7 @@ Ext.define('Purple.controller.Main', {
         pmCtl.backToAccount();
         return util.ctl('Menu').selectOption(0);
       });
-      return pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = function() {
+      return pmCtl.getEditPaymentMethodForm().config.savessCallback = function() {
         util.ctl('Menu').popOffBackButtonWithoutAction();
         pmCtl.backToAccount();
         return util.ctl('Menu').selectOption(0);

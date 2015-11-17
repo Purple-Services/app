@@ -97,6 +97,70 @@ Ext.define('Purple.view.MapForm', {
           }
         }
       }, {
+        xtype: 'container',
+        layout: 'hbox',
+        id: 'homeAddressContainer',
+        flex: 0,
+        cls: ['bottom-margin'],
+        hidden: true,
+        disabled: true,
+        items: [
+          {
+            xtype: 'textfield',
+            id: 'accountHomeAddress',
+            flex: 0,
+            name: 'home',
+            label: 'Home',
+            style: 'width: 80%; display: inline-block;',
+            cls: ['bottom-margin'],
+            disabled: true
+          }, {
+            xtype: 'button',
+            id: 'changeHomeAddressButton',
+            ui: 'action',
+            text: 'Change',
+            style: 'width: 20%; display: inline-block; background: none;',
+            flex: 0,
+            cls: [],
+            disabled: false,
+            handler: function() {
+              return this.up().up().fireEvent('changeHomeAddress');
+            }
+          }
+        ]
+      }, {
+        xtype: 'container',
+        layout: 'hbox',
+        id: 'workAddressContainer',
+        flex: 0,
+        cls: ['bottom-margin'],
+        hidden: true,
+        disabled: true,
+        items: [
+          {
+            xtype: 'textfield',
+            id: 'accountWorkAddress',
+            flex: 0,
+            name: 'work',
+            label: 'Work',
+            style: 'width: 80%; display: inline-block;',
+            cls: ['bottom-margin'],
+            disabled: true
+          }, {
+            xtype: 'button',
+            id: 'changeWorkAddressButton',
+            ui: 'action',
+            text: 'Change',
+            style: 'width: 20%; display: inline-block; background: none;',
+            flex: 0,
+            cls: [],
+            disabled: false,
+            handler: function() {
+              return this.up().up().fireEvent('changeWorkAddress');
+            }
+          }
+        ]
+      }, {
         xtype: 'list',
         id: 'autocompleteList',
         flex: 1,
@@ -118,6 +182,48 @@ Ext.define('Purple.view.MapForm', {
           }
         }
       }, {
+        xtype: 'list',
+        id: 'homeAutocomplete',
+        flex: 1,
+        hidden: true,
+        scrollable: true,
+        itemTpl: "{locationName}<br />\n<span class=\"locationVicinity\">{locationVicinity}</span>",
+        data: [
+          {
+            locationName: 'Mock Name',
+            locationVicinity: 'Mock Vicinity'
+          }
+        ],
+        listeners: {
+          show: function(list) {
+            return list.getStore().setData([]);
+          },
+          itemtap: function(list, index, item, record) {
+            return this.fireEvent('updateHomeAddress', record.raw);
+          }
+        }
+      }, {
+        xtype: 'list',
+        id: 'workAutocomplete',
+        flex: 1,
+        hidden: true,
+        scrollable: true,
+        itemTpl: "{locationName}<br />\n<span class=\"locationVicinity\">{locationVicinity}</span>",
+        data: [
+          {
+            locationName: 'Mock Name',
+            locationVicinity: 'Mock Vicinity'
+          }
+        ],
+        listeners: {
+          show: function(list) {
+            return list.getStore().setData([]);
+          },
+          itemtap: function(list, index, item, record) {
+            return this.fireEvent('updateWorkAddress', record.raw);
+          }
+        }
+      }, {
         xtype: 'container',
         id: 'requestGasButtonContainer',
         cls: ['slideable'],
@@ -134,7 +240,7 @@ Ext.define('Purple.view.MapForm', {
             xtype: 'button',
             id: 'requestGasButton',
             ui: 'action',
-            cls: 'button-pop',
+            cls: ['button-pop'],
             text: 'Request Gas',
             flex: 0,
             disabled: false,

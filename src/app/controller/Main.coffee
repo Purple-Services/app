@@ -2,6 +2,8 @@ Ext.define 'Purple.controller.Main',
   extend: 'Ext.app.Controller'
   config:
     refs:
+      accountHomeField: '#accountHomeField'
+      accountWorkField: '#accountWorkField'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       loginForm: 'loginform'
@@ -14,6 +16,8 @@ Ext.define 'Purple.controller.Main',
       requestGasButtonContainer: '#requestGasButtonContainer'
       requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
+      homeAutocomplete: '#homeAutocomplete'
+      workAutocomplete: '#workAutocomplete'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
       feedback: 'feedback'
@@ -26,16 +30,28 @@ Ext.define 'Purple.controller.Main',
       discountField: '#discountField'
       couponCodeField: '#couponCodeField'
       totalPriceField: '#totalPriceField'
+      homeAddressContainer: '#homeAddressContainer'
+      workAddressContainer: '#workAddressContainer'
+      accountHomeAddress: '#accountHomeAddress'
+      accountWorkAddress: '#accountWorkAddress'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
+        changeHomeAddress: 'changeHomeAddress'
+        changeWorkAddress: 'changeWorkAddress'
       map:
-        centerchange: 'centerChanging'
-        idle: 'adjustDeliveryLocByLatLng'
+        dragstart: 'dragStart'
+        boundchange: 'boundChanged'
+        centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
+        homeAddressInputMode: 'homeAddressInputMode'
+      workAutocomplete:
+        updateWorkAddress: 'updateWorkAddress'
+      homeAutocomplete:
+        updateHomeAddress: 'updateHomeAddress'
       autocompleteList:
         updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
       requestGasButtonContainer:
@@ -50,6 +66,10 @@ Ext.define 'Purple.controller.Main',
         sendFeedback: 'sendFeedback'
       invite:
         sendInvites: 'sendInvites'
+      accountHomeAddress:
+        initialize: 'initAccountHomeAddress'
+      accountWorkAddress:
+        initialize: 'initAccountWorkAddress'
 
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
@@ -154,18 +174,18 @@ Ext.define 'Purple.controller.Main',
     else
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
-  centerChanging: ->
+  dragStart: ->
+    @getRequestGasButton().setDisabled yes
+
+  boundChanged: ->
     @getRequestGasButton().setDisabled yes
 
   adjustDeliveryLocByLatLng: ->
-    @getRequestGasButton().setDisabled yes
     center = @getMap().getMap().getCenter()
     # might want to send actual 
     @deliveryLocLat = center.lat()
     @deliveryLocLng = center.lng()
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
-
-
 
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     latlng = new google.maps.LatLng lat, lng
@@ -222,25 +242,52 @@ Ext.define 'Purple.controller.Main',
       @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
+      @getHomeAddressContainer().hide()
+      @getWorkAddressContainer().hide()
 
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
       new google.maps.LatLng @lat, @lng
     )
 
-  addressInputMode: ->
+  addressInputMode: (homeChange)->
     if not @getMap().isHidden()
       @getMap().hide()
       @getSpacerBetweenMapAndAddress().hide()
       @getGasPriceMapDisplay().hide()
       @getRequestGasButtonContainer().hide()
       @getAutocompleteList().show()
+      @getHomeAutocomplete().hide()
       @getRequestAddressField().enable()
       @getRequestAddressField().focus()
+      @getHomeAddressContainer().show()
+      @getWorkAddressContainer().show()
       util.ctl('Menu').pushOntoBackButton =>
         @recenterAtUserLoc()
         @mapMode()
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
+    else if homeChange == 'home'
+      @getHomeAutocomplete().hide()
+      @getWorkAutocomplete().hide()
+      @getHomeAddressContainer().show()
+      @getAutocompleteList().show()
+      @getWorkAddressContainer().show()
+
+  homeAddressInputMode: ->
+    @getAutocompleteList().hide()
+    @getHomeAutocomplete().show()
+    @getHomeAddressContainer().hide()
+    @getWorkAddressContainer().hide()
+    util.ctl('Menu').pushOntoBackButton =>
+      @addressInputMode()
+
+  workAddressInputMode: ->
+    @getAutocompleteList().hide()
+    @getWorkAutocomplete().show()
+    @getHomeAddressContainer().hide()
+    @getWorkAddressContainer().hide()
+    util.ctl('Menu').pushOntoBackButton =>
+      @addressInputMode()
 
   generateSuggestions: ->
     @getRequestGasButton().setDisabled yes
@@ -267,6 +314,8 @@ Ext.define 'Purple.controller.Main',
               'locationLng': '0'
               'placeId': p.place_id
           @getAutocompleteList().getStore().setData suggestions
+          @getHomeAutocomplete().getStore().setData suggestions
+          @getWorkAutocomplete().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
     @getRequestAddressField().setValue loc['locationName']
@@ -290,6 +339,35 @@ Ext.define 'Purple.controller.Main',
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
+  changeHomeAddress: ->
+    @homeAddressInputMode()
+
+  changeWorkAddress: ->
+    @workAddressInputMode()
+
+  updateHomeAddress: (loc) ->
+    localStorage['purpleUserHome'] = loc['locationName']
+    @getAccountHomeAddress().setValue(localStorage['purpleUserHome'])
+    @addressInputMode('home')
+    @homeLoc = loc
+
+  updateWorkAddress: (loc) ->
+    localStorage['purpleUserWork'] = loc['locationName']
+    @getAccountWorkAddress().setValue(localStorage['purpleUserWork'])
+    @addressInputMode('home')
+    @workLoc = loc
+
+  initAccountHomeAddress: (field) ->
+    field.element.on 'tap', @searchHome, this
+
+  initAccountWorkAddress: (field) ->
+    field.element.on 'tap', @searchWork, this
+
+  searchHome: ->
+    @updateDeliveryLocAddressByLocArray @homeLoc
+
+  searchWork: ->
+    @updateDeliveryLocAddressByLocArray @workLoc
 
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
@@ -479,7 +557,7 @@ Ext.define 'Purple.controller.Main',
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
       
-      pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
+      pmCtl.getEditPaymentMethodForm().config.savessCallback = ->
         util.ctl('Menu').popOffBackButtonWithoutAction()
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
