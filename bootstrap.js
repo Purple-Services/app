@@ -43,6 +43,7 @@ Ext.Loader.addClassPathMappings({
   "Ext.ux.parse": "touch/src/ux/parse",
   "Override.field": "override",
   "Override.form": "override",
+  "Override.ux": "override",
   "Purple": "app",
   "SignatureField.Canvas": "ux/SignatureField.js",
   "Ux.field": "ux"
@@ -678,6 +679,7 @@ Ext.ClassManager.addNameAlternateMappings({
   ],
   "Override.field.Select": [],
   "Override.form.Panel": [],
+  "Override.ux.Map": [],
   "Purple.controller.Account": [],
   "Purple.controller.GasTanks": [],
   "Purple.controller.Main": [],
@@ -1445,6 +1447,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.WindowsPhone": [],
   "Override.field.Select": [],
   "Override.form.Panel": [],
+  "Override.ux.Map": [],
   "Purple.controller.Account": [],
   "Purple.controller.GasTanks": [],
   "Purple.controller.Main": [],

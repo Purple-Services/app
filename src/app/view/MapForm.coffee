@@ -95,6 +95,15 @@ Ext.define 'Purple.view.MapForm',
       }
       {
         xtype: 'textfield'
+        id: 'currentTask'
+        flex: 0
+        value: 'Add Home Address'
+        cls: 'current-task-heading'
+        disabled: yes
+        hidden: yes
+      }
+      {
+        xtype: 'textfield'
         id: 'requestAddressField'
         flex: 0
         name: 'request_address'
@@ -134,26 +143,7 @@ Ext.define 'Purple.view.MapForm',
             xtype: 'textfield'
             id: 'addHomeAddress'
             flex: 0
-            label: 'Add Home...'
-            cls: 'account-home-address'
-            disabled: yes
-          }
-        ]
-      }
-      {
-        xtype: 'container'
-        layout: 'hbox'
-        id: 'addWorkAddressContainer'
-        flex: 0
-        cls: 'list-container'
-        hidden: yes
-        disabled: yes
-        items: [
-          {
-            xtype: 'textfield'
-            id: 'addWorkAddress'
-            flex: 0
-            label: 'Add Work...'
+            label: 'Add Home'
             cls: 'account-home-address'
             disabled: yes
           }
@@ -188,6 +178,25 @@ Ext.define 'Purple.view.MapForm',
             disabled: no
             handler: ->
               @up().up().fireEvent 'changeHomeAddress'
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'addWorkAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'addWorkAddress'
+            flex: 0
+            label: 'Add Work'
+            cls: 'account-home-address'
+            disabled: yes
           }
         ]
       }

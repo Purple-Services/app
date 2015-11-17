@@ -34,7 +34,10 @@ Ext.define('Purple.controller.Main', {
       accountHomeAddress: '#accountHomeAddress',
       accountWorkAddress: '#accountWorkAddress',
       addHomeAddressContainer: '#addHomeAddressContainer',
-      addWorkAddressContainer: '#addWorkAddressContainer'
+      addWorkAddressContainer: '#addWorkAddressContainer',
+      addHomeAddress: '#addHomeAddress',
+      addWorkAddress: '#addWorkAddress',
+      currentTask: '#currentTask'
     },
     control: {
       mapForm: {
@@ -294,7 +297,8 @@ Ext.define('Purple.controller.Main', {
       this.getHomeAddressContainer().hide();
       this.getWorkAddressContainer().hide();
       this.getAddWorkAddressContainer().hide();
-      return this.getAddHomeAddressContainer().hide();
+      this.getAddHomeAddressContainer().hide();
+      return this.getCurrentTask().hide();
     }
   },
   recenterAtUserLoc: function() {
@@ -302,6 +306,7 @@ Ext.define('Purple.controller.Main', {
   },
   addressInputMode: function(homeChange) {
     if (!this.getMap().isHidden()) {
+      this.hideAll();
       this.getMap().hide();
       this.getSpacerBetweenMapAndAddress().hide();
       this.getGasPriceMapDisplay().hide();
@@ -318,8 +323,7 @@ Ext.define('Purple.controller.Main', {
       })(this));
       return ga_storage._trackEvent('ui', 'Address Text Input Mode');
     } else if (homeChange === 'home') {
-      this.getHomeAutocomplete().hide();
-      this.getWorkAutocomplete().hide();
+      this.hideAll();
       this.getAutocompleteList().show();
       this.showHomeAndWork();
       return util.ctl('Menu').pushOntoBackButton((function(_this) {
@@ -342,17 +346,35 @@ Ext.define('Purple.controller.Main', {
       return this.getAddWorkAddressContainer().show();
     }
   },
+  showTitles: function(location) {
+    if (location === 'home') {
+      if (localStorage['purpleUserHome']) {
+        this.getCurrentTask().setValue('Edit Home Address');
+      } else {
+        this.getCurrentTask().setValue('Add Home Address');
+      }
+    } else {
+      if (localStorage['purpleUserWork']) {
+        this.getCurrentTask().setValue('Edit Work Address');
+      } else {
+        this.getCurrentTask().setValue('Add Work Address');
+      }
+    }
+    return this.getCurrentTask().show();
+  },
   hideAll: function() {
     this.getAddWorkAddressContainer().hide();
     this.getAddHomeAddressContainer().hide();
     this.getAutocompleteList().hide();
     this.getHomeAutocomplete().hide();
     this.getHomeAddressContainer().hide();
-    return this.getWorkAddressContainer().hide();
+    this.getWorkAddressContainer().hide();
+    return this.getCurrentTask().hide();
   },
   homeAddressInputMode: function() {
     this.hideAll();
     this.getHomeAutocomplete().show();
+    this.showTitles('home');
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
         return _this.addressInputMode('home');
@@ -362,6 +384,7 @@ Ext.define('Purple.controller.Main', {
   workAddressInputMode: function() {
     this.hideAll();
     this.getWorkAutocomplete().show();
+    this.showTitles('work');
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
         return _this.addressInputMode('home');

@@ -34,6 +34,9 @@ Ext.define 'Purple.controller.Main',
       accountWorkAddress: '#accountWorkAddress'
       addHomeAddressContainer: '#addHomeAddressContainer'
       addWorkAddressContainer: '#addWorkAddressContainer'
+      addHomeAddress: '#addHomeAddress'
+      addWorkAddress: '#addWorkAddress'
+      currentTask: '#currentTask'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -250,6 +253,7 @@ Ext.define 'Purple.controller.Main',
       @getWorkAddressContainer().hide()
       @getAddWorkAddressContainer().hide()
       @getAddHomeAddressContainer().hide()
+      @getCurrentTask().hide()
 
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
@@ -258,6 +262,7 @@ Ext.define 'Purple.controller.Main',
 
   addressInputMode: (homeChange)->
     if not @getMap().isHidden()
+      @hideAll()
       @getMap().hide()
       @getSpacerBetweenMapAndAddress().hide()
       @getGasPriceMapDisplay().hide()
@@ -271,8 +276,7 @@ Ext.define 'Purple.controller.Main',
         @mapMode()
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
     else if homeChange == 'home'
-      @getHomeAutocomplete().hide()
-      @getWorkAutocomplete().hide()
+      @hideAll()
       @getAutocompleteList().show()
       @showHomeAndWork()
       util.ctl('Menu').pushOntoBackButton =>
@@ -289,6 +293,19 @@ Ext.define 'Purple.controller.Main',
     else
       @getAddWorkAddressContainer().show()
 
+  showTitles: (location) ->
+    if location == 'home'
+      if localStorage['purpleUserHome']
+        @getCurrentTask().setValue('Edit Home Address')
+      else
+        @getCurrentTask().setValue('Add Home Address')
+    else
+      if localStorage['purpleUserWork']
+        @getCurrentTask().setValue('Edit Work Address')
+      else
+        @getCurrentTask().setValue('Add Work Address')
+    @getCurrentTask().show()
+
   hideAll: ->
     @getAddWorkAddressContainer().hide()
     @getAddHomeAddressContainer().hide()
@@ -296,16 +313,19 @@ Ext.define 'Purple.controller.Main',
     @getHomeAutocomplete().hide()
     @getHomeAddressContainer().hide()
     @getWorkAddressContainer().hide()
+    @getCurrentTask().hide()
 
   homeAddressInputMode: ->
     @hideAll()
     @getHomeAutocomplete().show()
+    @showTitles('home')
     util.ctl('Menu').pushOntoBackButton =>
       @addressInputMode('home')
 
   workAddressInputMode: ->
     @hideAll()
     @getWorkAutocomplete().show()
+    @showTitles('work')
     util.ctl('Menu').pushOntoBackButton =>
       @addressInputMode('home')
 

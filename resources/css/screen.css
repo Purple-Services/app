@@ -818,6 +818,12 @@ body {
     background-position: center !important;
 }
 
+.current-task-heading .x-input-el{
+    font-size: 20px;
+    text-align: left;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+}
 .list-container .compose-button {
     width: 20%; 
     background: none; 
@@ -827,7 +833,7 @@ body {
     border-bottom: 1px solid rgb(226, 196, 237);
 }
 .account-home-address {
-    padding: 5px 15px 0 12px;
+    padding: 5px 15px 0 15px;
     line-height: 0.8;
 }
 .account-home-address .x-form-label span {
@@ -836,9 +842,11 @@ body {
 .account-home-address .x-form-label {
     border: none;
     padding-bottom: 0px;
+    padding-left: 0px;
 }
 .account-home-address .x-input-el {
     padding-top: 0px;
+    padding-left: 0px;
     text-align: left;
     color: rgb(159, 24, 120);
     -webkit-text-fill-color: rgb(159, 24, 120);
