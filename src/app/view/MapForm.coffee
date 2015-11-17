@@ -126,7 +126,7 @@ Ext.define 'Purple.view.MapForm',
         layout: 'hbox'
         id: 'homeAddressContainer'
         flex: 0
-        cls: []
+        cls: 'list-container'
         hidden: yes
         disabled: yes
         items: [
@@ -136,16 +136,16 @@ Ext.define 'Purple.view.MapForm',
             flex: 0
             name: 'home'
             label: 'Home'
-            style: 'width: 80%; display: inline-block;'
-            cls: [
-            ]
+            labelAlign: 'top'
+            style: 'width: 80%;'
+            cls: 'account-home-address'
             disabled: yes
           }
           {
             xtype: 'button'
             id: 'changeHomeAddressButton'
             ui: 'action'
-            style: 'width: 20%; display: inline-block; background: none; color: purple;'
+            style: 'width: 20%; background: none; color: rgb(159, 24, 120);'
             flex: 0
             iconCls: 'compose'
             cls: [
@@ -160,10 +160,7 @@ Ext.define 'Purple.view.MapForm',
         xtype: 'container'
         layout: 'hbox'
         id: 'workAddressContainer'
-        flex: 0
-        cls: [
-          'bottom-margin'
-        ]
+        cls: 'list-container'
         hidden: yes
         disabled: yes
         items: [
@@ -173,17 +170,16 @@ Ext.define 'Purple.view.MapForm',
             flex: 0
             name: 'work'
             label: 'Work'
-            style: 'width: 80%; display: inline-block;'
-            cls: [
-              'bottom-margin'
-            ]
+            labelAlign: 'top'
+            style: 'width: 80%;'
+            cls: 'account-home-address'
             disabled: yes
           }
           {
             xtype: 'button'
             id: 'changeWorkAddressButton'
             ui: 'action'
-            style: 'width: 20%; display: inline-block; background: none; color: purple;'
+            style: 'width: 20%; background: none; color: rgb(159, 24, 120);'
             flex: 0
             iconCls: 'compose'
             cls: [

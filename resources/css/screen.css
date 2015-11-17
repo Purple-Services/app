@@ -187,8 +187,8 @@ body {
 }
 .x-input-el {
     text-align: right;
-    -webkit-text-fill-color: #742C90 !important;
-    color: #742C90 !important;
+    -webkit-text-fill-color: #742C90;
+    color: #742C90;
     opacity: 1 !important;
     font-weight: 400 !important;
     font-size: 17px;
@@ -832,8 +832,26 @@ body {
     background-position: center !important;
 }
 
-
-
+.list-container {
+    border-bottom: 1px solid rgb(226, 196, 237);
+}
+.account-home-address {
+    padding: 5px 15px 0 12px;
+    line-height: 0.8;
+}
+.account-home-address .x-form-label span {
+    color: rgb(159, 24, 120);
+}
+.account-home-address .x-form-label {
+    border: none;
+    padding-bottom: 0px;
+}
+.account-home-address .x-input-el {
+    padding-top: 0px;
+    text-align: left;
+    color: rgb(159, 24, 120);
+    -webkit-text-fill-color: rgb(159, 24, 120);
+}
 .order-list-item .x-form-label {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
