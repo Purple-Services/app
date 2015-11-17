@@ -124,6 +124,44 @@ Ext.define 'Purple.view.MapForm',
       {
         xtype: 'container'
         layout: 'hbox'
+        id: 'addHomeAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'addHomeAddress'
+            flex: 0
+            label: 'Add Home...'
+            cls: 'account-home-address'
+            disabled: yes
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'addWorkAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'addWorkAddress'
+            flex: 0
+            label: 'Add Work...'
+            cls: 'account-home-address'
+            disabled: yes
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
         id: 'homeAddressContainer'
         flex: 0
         cls: 'list-container'
@@ -134,7 +172,6 @@ Ext.define 'Purple.view.MapForm',
             xtype: 'textfield'
             id: 'accountHomeAddress'
             flex: 0
-            name: 'home'
             label: 'Home'
             labelAlign: 'top'
             style: 'width: 80%;'
@@ -145,11 +182,9 @@ Ext.define 'Purple.view.MapForm',
             xtype: 'button'
             id: 'changeHomeAddressButton'
             ui: 'action'
-            style: 'width: 20%; background: none; color: rgb(159, 24, 120);'
             flex: 0
             iconCls: 'compose'
-            cls: [
-            ]
+            cls: 'compose-button'
             disabled: no
             handler: ->
               @up().up().fireEvent 'changeHomeAddress'
@@ -168,7 +203,6 @@ Ext.define 'Purple.view.MapForm',
             xtype: 'textfield'
             id: 'accountWorkAddress'
             flex: 0
-            name: 'work'
             label: 'Work'
             labelAlign: 'top'
             style: 'width: 80%;'
@@ -179,11 +213,9 @@ Ext.define 'Purple.view.MapForm',
             xtype: 'button'
             id: 'changeWorkAddressButton'
             ui: 'action'
-            style: 'width: 20%; background: none; color: rgb(159, 24, 120);'
             flex: 0
             iconCls: 'compose'
-            cls: [
-            ]
+            cls: 'compose-button'
             disabled: no
             handler: ->
               @up().up().fireEvent 'changeWorkAddress'

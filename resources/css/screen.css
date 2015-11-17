@@ -832,6 +832,11 @@ body {
     background-position: center !important;
 }
 
+.list-container .compose-button {
+    width: 20%; 
+    background: none; 
+    color: rgb(159, 24, 120);
+}
 .list-container {
     border-bottom: 1px solid rgb(226, 196, 237);
 }
