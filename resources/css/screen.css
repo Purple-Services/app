@@ -292,7 +292,6 @@ body {
 }
 
 
-
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
     padding: 8px 20px;
@@ -600,11 +599,25 @@ body {
     background-color: transparent;
 }
 
-
+#homeAddressContainer {
+    border-left: 0;
+}
 #autocompleteList .x-list-item.x-list-item-tpl {
     font-weight: 900;
 }
 #autocompleteList .x-list-item.x-list-item-tpl .locationVicinity {
+    font-weight: 400;
+}
+#homeAutocomplete .x-list-item.x-list-item-tpl {
+    font-weight: 900;
+}
+#homeAutocomplete .x-list-item.x-list-item-tpl .locationVicinity {
+    font-weight: 400;
+}
+#workAutocomplete .x-list-item.x-list-item-tpl {
+    font-weight: 900;
+}
+#workAutocomplete .x-list-item.x-list-item-tpl .locationVicinity {
     font-weight: 400;
 }
 

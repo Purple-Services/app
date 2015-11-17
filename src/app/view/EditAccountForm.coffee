@@ -85,30 +85,6 @@ Ext.define 'Purple.view.EditAccountForm',
             clearIcon: no
           }
           {
-            xtype: 'textfield'
-            ctype: 'editAccountHome'
-            name: 'home'
-            label: 'Home'
-            labelWidth: 125
-            flex: 0
-            cls: [
-              'bottom-margin'
-            ]
-            clearIcon: no
-          }
-          {
-            xtype: 'textfield'
-            ctype: 'editAccountWork'
-            name: 'work'
-            label: 'Work'
-            labelWidth: 125
-            flex: 0
-            cls: [
-              'bottom-margin'
-            ]
-            clearIcon: no
-          }
-          {
             xtype: 'container'
             flex: 0
             height: 110

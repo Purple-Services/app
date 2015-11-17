@@ -101,7 +101,7 @@ Ext.define('Purple.view.MapForm', {
         layout: 'hbox',
         id: 'homeAddressContainer',
         flex: 0,
-        cls: ['bottom-margin'],
+        cls: [],
         hidden: true,
         disabled: true,
         items: [
@@ -112,15 +112,15 @@ Ext.define('Purple.view.MapForm', {
             name: 'home',
             label: 'Home',
             style: 'width: 80%; display: inline-block;',
-            cls: ['bottom-margin'],
+            cls: [],
             disabled: true
           }, {
             xtype: 'button',
             id: 'changeHomeAddressButton',
             ui: 'action',
-            text: 'Change',
-            style: 'width: 20%; display: inline-block; background: none;',
+            style: 'width: 20%; display: inline-block; background: none; color: purple;',
             flex: 0,
+            iconCls: 'compose',
             cls: [],
             disabled: false,
             handler: function() {
@@ -150,9 +150,9 @@ Ext.define('Purple.view.MapForm', {
             xtype: 'button',
             id: 'changeWorkAddressButton',
             ui: 'action',
-            text: 'Change',
-            style: 'width: 20%; display: inline-block; background: none;',
+            style: 'width: 20%; display: inline-block; background: none; color: purple;',
             flex: 0,
+            iconCls: 'compose',
             cls: [],
             disabled: false,
             handler: function() {

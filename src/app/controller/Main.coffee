@@ -279,7 +279,7 @@ Ext.define 'Purple.controller.Main',
     @getHomeAddressContainer().hide()
     @getWorkAddressContainer().hide()
     util.ctl('Menu').pushOntoBackButton =>
-      @addressInputMode()
+      @addressInputMode('home')
 
   workAddressInputMode: ->
     @getAutocompleteList().hide()
@@ -287,7 +287,7 @@ Ext.define 'Purple.controller.Main',
     @getHomeAddressContainer().hide()
     @getWorkAddressContainer().hide()
     util.ctl('Menu').pushOntoBackButton =>
-      @addressInputMode()
+      @addressInputMode('home')
 
   generateSuggestions: ->
     @getRequestGasButton().setDisabled yes
@@ -358,9 +358,11 @@ Ext.define 'Purple.controller.Main',
     @workLoc = loc
 
   initAccountHomeAddress: (field) ->
+    @getAccountHomeAddress().setValue(localStorage['purpleUserHome'])
     field.element.on 'tap', @searchHome, this
 
   initAccountWorkAddress: (field) ->
+    @getAccountWorkAddress().setValue(localStorage['purpleUserWork'])
     field.element.on 'tap', @searchWork, this
 
   searchHome: ->

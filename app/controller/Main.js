@@ -327,7 +327,7 @@ Ext.define('Purple.controller.Main', {
     this.getWorkAddressContainer().hide();
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
-        return _this.addressInputMode();
+        return _this.addressInputMode('home');
       };
     })(this));
   },
@@ -338,7 +338,7 @@ Ext.define('Purple.controller.Main', {
     this.getWorkAddressContainer().hide();
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
-        return _this.addressInputMode();
+        return _this.addressInputMode('home');
       };
     })(this));
   },
@@ -430,9 +430,11 @@ Ext.define('Purple.controller.Main', {
     return this.workLoc = loc;
   },
   initAccountHomeAddress: function(field) {
+    this.getAccountHomeAddress().setValue(localStorage['purpleUserHome']);
     return field.element.on('tap', this.searchHome, this);
   },
   initAccountWorkAddress: function(field) {
+    this.getAccountWorkAddress().setValue(localStorage['purpleUserWork']);
     return field.element.on('tap', this.searchWork, this);
   },
   searchHome: function() {

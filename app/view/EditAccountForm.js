@@ -67,24 +67,6 @@ Ext.define('Purple.view.EditAccountForm', {
             cls: ['bottom-margin'],
             clearIcon: false
           }, {
-            xtype: 'textfield',
-            ctype: 'editAccountHome',
-            name: 'home',
-            label: 'Home',
-            labelWidth: 125,
-            flex: 0,
-            cls: ['bottom-margin'],
-            clearIcon: false
-          }, {
-            xtype: 'textfield',
-            ctype: 'editAccountWork',
-            name: 'work',
-            label: 'Work',
-            labelWidth: 125,
-            flex: 0,
-            cls: ['bottom-margin'],
-            clearIcon: false
-          }, {
             xtype: 'container',
             flex: 0,
             height: 110,

@@ -32,8 +32,6 @@ Ext.define('Purple.controller.Account', {
       accountNameField: '#accountNameField',
       accountPhoneNumberField: '#accountPhoneNumberField',
       accountEmailField: '#accountEmailField',
-      accountHomeField: '#accountHomeField',
-      accountWorkField: '#accountWorkField',
       accountPaymentMethodField: '#accountPaymentMethodField',
       accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]',
       accountTabContainer: '#accountTabContainer',
@@ -59,12 +57,6 @@ Ext.define('Purple.controller.Account', {
       },
       accountEmailField: {
         initialize: 'initAccountEmailField'
-      },
-      accountHomeField: {
-        initialize: 'initAccountHomeField'
-      },
-      accountWorkField: {
-        initialize: 'initAccountWorkField'
       },
       editAccountForm: {
         saveChanges: 'saveChanges'
@@ -480,7 +472,7 @@ Ext.define('Purple.controller.Account', {
     });
   },
   populateAccountForm: function() {
-    var ref, ref1, ref2, ref3, ref4, ref5, ref6;
+    var ref, ref1, ref2, ref3, ref4;
     if ((localStorage['purpleUserName'] != null) && localStorage['purpleUserName'] !== '') {
       if ((ref = this.getAccountNameField()) != null) {
         ref.setValue(localStorage['purpleUserName']);
@@ -496,21 +488,11 @@ Ext.define('Purple.controller.Account', {
         ref2.setValue(localStorage['purpleUserEmail']);
       }
     }
-    if ((localStorage['purpleUserHome'] != null) && localStorage['purpleUserHome'] !== '') {
-      if ((ref3 = this.getAccountHomeField()) != null) {
-        ref3.setValue(localStorage['purpleUserHome']);
-      }
-    }
-    if ((localStorage['purpleUserWork'] != null) && localStorage['purpleUserWork'] !== '') {
-      if ((ref4 = this.getAccountWorkField()) != null) {
-        ref4.setValue(localStorage['purpleUserWork']);
-      }
-    }
     if (this.isCourier()) {
-      if ((ref5 = this.getAccountPaymentMethodField()) != null) {
-        ref5.hide();
+      if ((ref3 = this.getAccountPaymentMethodField()) != null) {
+        ref3.hide();
       }
-      return (ref6 = this.getAccountHorizontalRuleAbovePaymentMethod()) != null ? ref6.hide() : void 0;
+      return (ref4 = this.getAccountHorizontalRuleAbovePaymentMethod()) != null ? ref4.hide() : void 0;
     }
   },
   initAccountNameField: function(field) {
@@ -520,12 +502,6 @@ Ext.define('Purple.controller.Account', {
     return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
   },
   initAccountEmailField: function(field) {
-    return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
-  },
-  initAccountHomeField: function(field) {
-    return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
-  },
-  initAccountWorkField: function(field) {
     return field.element.on('tap', Ext.bind(this.showEditAccountForm, this));
   },
   showEditAccountForm: function() {
@@ -539,8 +515,6 @@ Ext.define('Purple.controller.Account', {
     })(this));
   },
   saveChanges: function() {
-    localStorage['purpleUserHome'] = this.getEditAccountForm().getValues().home;
-    localStorage['purpleUserWork'] = this.getEditAccountForm().getValues().work;
     Ext.Viewport.setMasked({
       xtype: 'loadmask',
       message: ''

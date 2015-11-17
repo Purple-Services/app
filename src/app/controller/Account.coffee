@@ -35,8 +35,6 @@ Ext.define 'Purple.controller.Account',
       accountNameField: '#accountNameField'
       accountPhoneNumberField: '#accountPhoneNumberField'
       accountEmailField: '#accountEmailField'
-      accountHomeField: '#accountHomeField'
-      accountWorkField: '#accountWorkField'
       accountPaymentMethodField: '#accountPaymentMethodField'
       accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]'
 
@@ -60,10 +58,6 @@ Ext.define 'Purple.controller.Account',
         initialize: 'initAccountPhoneNumberField'
       accountEmailField:
         initialize: 'initAccountEmailField'
-      accountHomeField:
-        initialize: 'initAccountHomeField'
-      accountWorkField:
-        initialize: 'initAccountWorkField'
       editAccountForm:
         saveChanges: 'saveChanges'
       accountForm:
@@ -483,12 +477,6 @@ Ext.define 'Purple.controller.Account',
     if localStorage['purpleUserEmail']? and
     localStorage['purpleUserEmail'] isnt ''
       @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
-    if localStorage['purpleUserHome']? and
-    localStorage['purpleUserHome'] isnt ''
-      @getAccountHomeField()?.setValue localStorage['purpleUserHome']
-    if localStorage['purpleUserWork']? and
-    localStorage['purpleUserWork'] isnt ''
-      @getAccountWorkField()?.setValue localStorage['purpleUserWork']
     if @isCourier()
       @getAccountPaymentMethodField()?.hide()
       @getAccountHorizontalRuleAbovePaymentMethod()?.hide()
@@ -502,12 +490,6 @@ Ext.define 'Purple.controller.Account',
     field.element.on 'tap', Ext.bind @showEditAccountForm, this
 
   initAccountEmailField: (field) ->
-    field.element.on 'tap', Ext.bind @showEditAccountForm, this
-
-  initAccountHomeField: (field) ->
-    field.element.on 'tap', Ext.bind @showEditAccountForm, this
-
-  initAccountWorkField: (field) ->
     field.element.on 'tap', Ext.bind @showEditAccountForm, this
 
   showEditAccountForm: ->
@@ -524,8 +506,6 @@ Ext.define 'Purple.controller.Account',
       )
 
   saveChanges: ->
-    localStorage['purpleUserHome'] = @getEditAccountForm().getValues().home
-    localStorage['purpleUserWork'] = @getEditAccountForm().getValues().work
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
