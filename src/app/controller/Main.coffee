@@ -2,8 +2,6 @@ Ext.define 'Purple.controller.Main',
   extend: 'Ext.app.Controller'
   config:
     refs:
-      accountHomeField: '#accountHomeField'
-      accountWorkField: '#accountWorkField'
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       loginForm: 'loginform'
@@ -36,8 +34,6 @@ Ext.define 'Purple.controller.Main',
       accountWorkAddress: '#accountWorkAddress'
       addHomeAddressContainer: '#addHomeAddressContainer'
       addWorkAddressContainer: '#addWorkAddressContainer'
-      addHomeAddress: '#addHomeAddress'
-      addWorkAddress: '#addWorkAddress'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -267,7 +263,6 @@ Ext.define 'Purple.controller.Main',
       @getGasPriceMapDisplay().hide()
       @getRequestGasButtonContainer().hide()
       @getAutocompleteList().show()
-      @getHomeAutocomplete().hide()
       @getRequestAddressField().enable()
       @getRequestAddressField().focus()
       @showHomeAndWork()
@@ -280,6 +275,9 @@ Ext.define 'Purple.controller.Main',
       @getWorkAutocomplete().hide()
       @getAutocompleteList().show()
       @showHomeAndWork()
+      util.ctl('Menu').pushOntoBackButton =>
+        @recenterAtUserLoc()
+        @mapMode()
 
   showHomeAndWork: ->
     if localStorage['purpleUserHome']

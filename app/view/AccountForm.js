@@ -86,7 +86,7 @@ Ext.define('Purple.view.AccountForm', {
             flex: 0,
             name: 'email',
             label: 'Email',
-            cls: ['click-to-edit', 'bottom-margin'],
+            cls: ['click-to-edit'],
             disabled: true
           }, {
             xtype: 'component',

@@ -105,7 +105,6 @@ Ext.define 'Purple.view.AccountForm',
             label: 'Email'
             cls: [
               'click-to-edit'
-              'bottom-margin'
             ]
             disabled: yes
           }

@@ -273,7 +273,7 @@ Ext.define('Purple.view.MapForm', {
             xtype: 'button',
             id: 'requestGasButton',
             ui: 'action',
-            cls: ['button-pop'],
+            cls: 'button-pop',
             text: 'Request Gas',
             flex: 0,
             disabled: false,

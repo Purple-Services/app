@@ -3,8 +3,6 @@ Ext.define('Purple.controller.Main', {
   extend: 'Ext.app.Controller',
   config: {
     refs: {
-      accountHomeField: '#accountHomeField',
-      accountWorkField: '#accountWorkField',
       mainContainer: 'maincontainer',
       topToolbar: 'toptoolbar',
       loginForm: 'loginform',
@@ -36,9 +34,7 @@ Ext.define('Purple.controller.Main', {
       accountHomeAddress: '#accountHomeAddress',
       accountWorkAddress: '#accountWorkAddress',
       addHomeAddressContainer: '#addHomeAddressContainer',
-      addWorkAddressContainer: '#addWorkAddressContainer',
-      addHomeAddress: '#addHomeAddress',
-      addWorkAddress: '#addWorkAddress'
+      addWorkAddressContainer: '#addWorkAddressContainer'
     },
     control: {
       mapForm: {
@@ -311,7 +307,6 @@ Ext.define('Purple.controller.Main', {
       this.getGasPriceMapDisplay().hide();
       this.getRequestGasButtonContainer().hide();
       this.getAutocompleteList().show();
-      this.getHomeAutocomplete().hide();
       this.getRequestAddressField().enable();
       this.getRequestAddressField().focus();
       this.showHomeAndWork();
@@ -326,7 +321,13 @@ Ext.define('Purple.controller.Main', {
       this.getHomeAutocomplete().hide();
       this.getWorkAutocomplete().hide();
       this.getAutocompleteList().show();
-      return this.showHomeAndWork();
+      this.showHomeAndWork();
+      return util.ctl('Menu').pushOntoBackButton((function(_this) {
+        return function() {
+          _this.recenterAtUserLoc();
+          return _this.mapMode();
+        };
+      })(this));
     }
   },
   showHomeAndWork: function() {
