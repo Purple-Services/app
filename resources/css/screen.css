@@ -101,11 +101,15 @@ body {
     color: #4CABEF;
 }
 
-.compose-button{
+.compose-button .x-button-icon{
     background-repeat: no-repeat !important;
-    background-size: 22px !important;
     background-position: center !important;
     background-color: transparent !important;
+}
+.compose-button.x-button-pressing {
+    background-color: transparent !important;
+    background-image: none !important;
+    opacity: 0.4 !important;
 }
 .menuButton, .freeGasButton {
     position: relative !important;
@@ -122,8 +126,7 @@ body {
 }
 .menuButton.x-button-pressing,
 .freeGasButton.x-button-pressing,
-#centerMapButton.x-button-pressing,
-.compose-button.x-button-pressing {
+#centerMapButton.x-button-pressing {
     opacity: 0.4 !important;
 }
 .menuButton {
