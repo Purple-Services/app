@@ -2,3 +2,6 @@
 [#]*[#]
 *.mp4
 .[#]*
+resources/sass/.sass-cache/
+.DS_Store
+build/*/*.zip

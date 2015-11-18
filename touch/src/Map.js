@@ -397,7 +397,7 @@ Ext.define('Ext.Map', {
         this.fireEvent('centerchange', this, map, center);
 
     },
-
+    
     // @private
     destroy: function() {
         Ext.destroy(this.getGeo());

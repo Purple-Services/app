@@ -199,6 +199,16 @@ body {
     text-align: left;
 }
 
+.special-instructions-confirmation {
+    border-left: 10px solid #DCD2DA; 
+    padding: 10px 0 12px 5px;  
+    color: rgb(85, 85, 85); 
+    width: 100%; 
+    background-color: rgb(237, 237, 237); 
+    font-size: 17px; 
+    font-weight: normal;
+    resize: none;
+}
 .invite-form input {
     text-align: left;
 }

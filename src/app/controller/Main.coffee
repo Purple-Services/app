@@ -12,6 +12,7 @@ Ext.define 'Purple.controller.Main',
       gasPriceMapDisplay: '#gasPriceMapDisplay'
       requestAddressField: '#requestAddressField'
       requestGasButtonContainer: '#requestGasButtonContainer'
+      requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
@@ -29,6 +30,8 @@ Ext.define 'Purple.controller.Main',
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
       map:
+        dragstart: 'dragStart'
+        boundchange: 'boundChanged'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
@@ -152,12 +155,20 @@ Ext.define 'Purple.controller.Main',
     else
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
+  dragStart: ->
+    @getRequestGasButton().setDisabled yes
+
+  boundChanged: ->
+    @getRequestGasButton().setDisabled yes
+
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
     # might want to send actual 
     @deliveryLocLat = center.lat()
     @deliveryLocLng = center.lng()
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
+
+
 
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     latlng = new google.maps.LatLng lat, lng
@@ -186,6 +197,7 @@ Ext.define 'Purple.controller.Main',
               method: 'POST'
               scope: this
               success: (response_obj) ->
+                @getRequestGasButton().setDisabled no
                 response = Ext.JSON.decode response_obj.responseText
                 if response.success
                   prices = response.gas_prices
@@ -201,6 +213,7 @@ Ext.define 'Purple.controller.Main',
                 console.log response_obj
         # else
         #   console.log 'No results found.'
+
       # else
       #   console.log 'Geocoder failed due to: ' + status
 
@@ -233,6 +246,7 @@ Ext.define 'Purple.controller.Main',
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
 
   generateSuggestions: ->
+    @getRequestGasButton().setDisabled yes
     query = @getRequestAddressField().getValue()
     suggestions = new Array()
     Ext.Ajax.request
@@ -405,7 +419,8 @@ Ext.define 'Purple.controller.Main',
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
-
+    else
+      Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(vals['special_instructions'])
   promptForCode: ->
     Ext.Msg.prompt(
       'Enter Coupon Code',
