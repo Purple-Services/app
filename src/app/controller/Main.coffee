@@ -36,7 +36,6 @@ Ext.define 'Purple.controller.Main',
       addWorkAddressContainer: '#addWorkAddressContainer'
       addHomeAddress: '#addHomeAddress'
       addWorkAddress: '#addWorkAddress'
-      currentTask: '#currentTask'
       removeHomeAddressContainer: '#removeHomeAddressContainer'
       removeWorkAddressContainer: '#removeWorkAddressContainer'
       removeHomeAddress: '#removeHomeAddress'
@@ -259,7 +258,6 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().disable()
       @getAddWorkAddressContainer().hide()
       @getAddHomeAddressContainer().hide()
-      @getCurrentTask().hide()
 
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
@@ -302,18 +300,16 @@ Ext.define 'Purple.controller.Main',
   showTitles: (location) ->
     if location == 'home'
       if localStorage['purpleUserHome']
-        @getCurrentTask().setValue('Edit Home Address')
+        @getRequestAddressField().setValue('Change Home Address...')
       else
-        @getCurrentTask().setValue('Add Home Address')
+        @getRequestAddressField().setValue('Add Home Address...')
     else
       if localStorage['purpleUserWork']
-        @getCurrentTask().setValue('Edit Work Address')
+        @getRequestAddressField().setValue('Edit Work Address...')
       else
-        @getCurrentTask().setValue('Add Work Address')
-    @getCurrentTask().show()
+        @getRequestAddressField().setValue('Add Work Address...')
 
   removeHomeAddress: ->
-    console.log 'remove home'
     localStorage['purpleUserHome'] = ''
     @addressInputMode('home')
 
@@ -335,10 +331,10 @@ Ext.define 'Purple.controller.Main',
     @getWorkAutocomplete().hide()
     @getHomeAddressContainer().hide()
     @getWorkAddressContainer().hide()
-    @getCurrentTask().hide()
     @getRemoveHomeAddressContainer().hide()
     @getRemoveWorkAddressContainer().hide()
     @getCenterMapButton().hide()
+    @getRequestAddressField().setValue('')
 
   homeAddressInputMode: ->
     @hideAll()

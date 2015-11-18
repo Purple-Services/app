@@ -37,7 +37,6 @@ Ext.define('Purple.controller.Main', {
       addWorkAddressContainer: '#addWorkAddressContainer',
       addHomeAddress: '#addHomeAddress',
       addWorkAddress: '#addWorkAddress',
-      currentTask: '#currentTask',
       removeHomeAddressContainer: '#removeHomeAddressContainer',
       removeWorkAddressContainer: '#removeWorkAddressContainer',
       removeHomeAddress: '#removeHomeAddress',
@@ -307,8 +306,7 @@ Ext.define('Purple.controller.Main', {
       this.getRequestGasButtonContainer().show();
       this.getRequestAddressField().disable();
       this.getAddWorkAddressContainer().hide();
-      this.getAddHomeAddressContainer().hide();
-      return this.getCurrentTask().hide();
+      return this.getAddHomeAddressContainer().hide();
     }
   },
   recenterAtUserLoc: function() {
@@ -359,21 +357,19 @@ Ext.define('Purple.controller.Main', {
   showTitles: function(location) {
     if (location === 'home') {
       if (localStorage['purpleUserHome']) {
-        this.getCurrentTask().setValue('Edit Home Address');
+        return this.getRequestAddressField().setValue('Change Home Address...');
       } else {
-        this.getCurrentTask().setValue('Add Home Address');
+        return this.getRequestAddressField().setValue('Add Home Address...');
       }
     } else {
       if (localStorage['purpleUserWork']) {
-        this.getCurrentTask().setValue('Edit Work Address');
+        return this.getRequestAddressField().setValue('Edit Work Address...');
       } else {
-        this.getCurrentTask().setValue('Add Work Address');
+        return this.getRequestAddressField().setValue('Add Work Address...');
       }
     }
-    return this.getCurrentTask().show();
   },
   removeHomeAddress: function() {
-    console.log('remove home');
     localStorage['purpleUserHome'] = '';
     return this.addressInputMode('home');
   },
@@ -397,10 +393,10 @@ Ext.define('Purple.controller.Main', {
     this.getWorkAutocomplete().hide();
     this.getHomeAddressContainer().hide();
     this.getWorkAddressContainer().hide();
-    this.getCurrentTask().hide();
     this.getRemoveHomeAddressContainer().hide();
     this.getRemoveWorkAddressContainer().hide();
-    return this.getCenterMapButton().hide();
+    this.getCenterMapButton().hide();
+    return this.getRequestAddressField().setValue('');
   },
   homeAddressInputMode: function() {
     this.hideAll();

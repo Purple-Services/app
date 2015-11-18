@@ -63,14 +63,6 @@ Ext.define('Purple.view.MapForm', {
         height: 5
       }, {
         xtype: 'textfield',
-        id: 'currentTask',
-        flex: 0,
-        value: 'Add Home Address',
-        cls: 'current-task-heading',
-        disabled: true,
-        hidden: true
-      }, {
-        xtype: 'textfield',
         id: 'requestAddressField',
         flex: 0,
         name: 'request_address',
