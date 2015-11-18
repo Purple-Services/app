@@ -826,9 +826,6 @@ body {
     background-position: center !important;
 }
 
-#removeHomeAddress, #removeWorkAddress{
-    width: 500px;
-}
 .current-task-heading .x-input-el {
     text-align: left;
     font-family: 'Source Sans Pro';
@@ -846,6 +843,12 @@ body {
 .list-container {
     border-bottom: 1px solid rgb(226, 196, 237);
 }
+.remove-address {
+    padding: 12px 15px;
+    color: rgb(159, 24, 120);
+    font-weight: 900;
+    width: 100%;
+}
 .account-home-address {
     padding: 5px 15px 0 15px;
     line-height: 0.8;
@@ -857,6 +860,7 @@ body {
     border: none;
     padding-bottom: 0px;
     padding-left: 0px;
+    width: 100% !important;
 }
 .account-home-address .x-input-el {
     padding-top: 0px;

@@ -150,12 +150,11 @@ Ext.define 'Purple.view.MapForm',
         disabled: yes
         items: [
           {
-            xtype: 'textfield'
+            xtype: 'component'
             id: 'removeHomeAddress'
             flex: 0
-            label: 'Remove Home'
-            cls: 'account-home-address'
-            disabled: yes
+            html: 'Remove Home'
+            cls: 'remove-address'
           }
         ]
       }
@@ -169,12 +168,12 @@ Ext.define 'Purple.view.MapForm',
         disabled: yes
         items: [
           {
-            xtype: 'textfield'
+            xtype: 'component'
             id: 'removeWorkAddress'
             flex: 0
-            label: 'Remove Work'
-            cls: 'account-home-address'
-            disabled: yes
+            html: 'Remove Work'
+            cls: 'remove-address'
+            height: 50
           }
         ]
       }
