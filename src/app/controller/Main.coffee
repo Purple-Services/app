@@ -256,9 +256,7 @@ Ext.define 'Purple.controller.Main',
       @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
-      @getAddWorkAddressContainer().hide()
-      @getAddHomeAddressContainer().hide()
-
+       
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
       new google.maps.LatLng @lat, @lng

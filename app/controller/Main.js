@@ -304,9 +304,7 @@ Ext.define('Purple.controller.Main', {
       this.getSpacerBetweenMapAndAddress().show();
       this.getGasPriceMapDisplay().show();
       this.getRequestGasButtonContainer().show();
-      this.getRequestAddressField().disable();
-      this.getAddWorkAddressContainer().hide();
-      return this.getAddHomeAddressContainer().hide();
+      return this.getRequestAddressField().disable();
     }
   },
   recenterAtUserLoc: function() {

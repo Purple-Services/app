@@ -90,7 +90,7 @@ Ext.define('Purple.controller.Menu', {
     var ref;
     if (!(util.ctl('Account').isUserLoggedIn() && util.ctl('Account').isCompleteAccount())) {
       this.getMainContainer().getItems().getAt(0).select(1, false, false);
-      return this.clearBackButtonStack();
+      return this.unlockMenu();
     } else if (this.getCurrentIndex() === 7) {
       this.selectOption((ref = this.indexBeforeFreeGas) != null ? ref : 2);
       return this.popOffBackButtonWithoutAction();
