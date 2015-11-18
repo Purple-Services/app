@@ -41,6 +41,7 @@ Ext.define 'Purple.controller.Main',
       removeWorkAddressContainer: '#removeWorkAddressContainer'
       removeHomeAddress: '#removeHomeAddress'
       removeWorkAddress: '#removeWorkAddress'
+      centerMapButton: '#centerMapButton'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -251,6 +252,7 @@ Ext.define 'Purple.controller.Main',
     if @getMap().isHidden()
       @hideAll()
       @getMap().show()
+      @getCenterMapButton().show()
       @getSpacerBetweenMapAndAddress().show()
       @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
@@ -336,6 +338,7 @@ Ext.define 'Purple.controller.Main',
     @getCurrentTask().hide()
     @getRemoveHomeAddressContainer().hide()
     @getRemoveWorkAddressContainer().hide()
+    @getCenterMapButton().hide()
 
   homeAddressInputMode: ->
     @hideAll()

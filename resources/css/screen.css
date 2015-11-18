@@ -101,8 +101,12 @@ body {
     color: #4CABEF;
 }
 
-
-
+.compose-button{
+    background-repeat: no-repeat !important;
+    background-size: 22px !important;
+    background-position: center !important;
+    background-color: transparent !important;
+}
 .menuButton, .freeGasButton {
     position: relative !important;
     top: 0px !important;
@@ -118,7 +122,8 @@ body {
 }
 .menuButton.x-button-pressing,
 .freeGasButton.x-button-pressing,
-#centerMapButton.x-button-pressing {
+#centerMapButton.x-button-pressing,
+.compose-button.x-button-pressing {
     opacity: 0.4 !important;
 }
 .menuButton {
@@ -818,11 +823,17 @@ body {
     background-position: center !important;
 }
 
-.current-task-heading .x-input-el{
-    font-size: 20px;
+#removeHomeAddress, #removeWorkAddress{
+    width: 500px;
+}
+.current-task-heading .x-input-el {
     text-align: left;
-    font-weight: 800 !important;
+    font-family: 'Source Sans Pro';
+    font-size: 24px;
+    color: rgb(186, 28, 141);
+    font-weight: 900 !important;
     text-transform: uppercase;
+    -webkit-text-fill-color: rgb(186, 28, 141);
 }
 .list-container .compose-button {
     width: 20%; 

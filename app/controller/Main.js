@@ -41,7 +41,8 @@ Ext.define('Purple.controller.Main', {
       removeHomeAddressContainer: '#removeHomeAddressContainer',
       removeWorkAddressContainer: '#removeWorkAddressContainer',
       removeHomeAddress: '#removeHomeAddress',
-      removeWorkAddress: '#removeWorkAddress'
+      removeWorkAddress: '#removeWorkAddress',
+      centerMapButton: '#centerMapButton'
     },
     control: {
       mapForm: {
@@ -300,6 +301,7 @@ Ext.define('Purple.controller.Main', {
     if (this.getMap().isHidden()) {
       this.hideAll();
       this.getMap().show();
+      this.getCenterMapButton().show();
       this.getSpacerBetweenMapAndAddress().show();
       this.getGasPriceMapDisplay().show();
       this.getRequestGasButtonContainer().show();
@@ -397,7 +399,8 @@ Ext.define('Purple.controller.Main', {
     this.getWorkAddressContainer().hide();
     this.getCurrentTask().hide();
     this.getRemoveHomeAddressContainer().hide();
-    return this.getRemoveWorkAddressContainer().hide();
+    this.getRemoveWorkAddressContainer().hide();
+    return this.getCenterMapButton().hide();
   },
   homeAddressInputMode: function() {
     this.hideAll();
