@@ -37,7 +37,11 @@ Ext.define('Purple.controller.Main', {
       addWorkAddressContainer: '#addWorkAddressContainer',
       addHomeAddress: '#addHomeAddress',
       addWorkAddress: '#addWorkAddress',
-      currentTask: '#currentTask'
+      currentTask: '#currentTask',
+      removeHomeAddressContainer: '#removeHomeAddressContainer',
+      removeWorkAddressContainer: '#removeWorkAddressContainer',
+      removeHomeAddress: '#removeHomeAddress',
+      removeWorkAddress: '#removeWorkAddress'
     },
     control: {
       mapForm: {
@@ -92,6 +96,12 @@ Ext.define('Purple.controller.Main', {
       },
       addWorkAddress: {
         initialize: 'initAddWorkAddress'
+      },
+      removeHomeAddress: {
+        initialize: 'initRemoveHomeAddress'
+      },
+      removeWorkAddress: {
+        initialize: 'initRemoveWorkAddress'
       }
     }
   },
@@ -288,14 +298,12 @@ Ext.define('Purple.controller.Main', {
   },
   mapMode: function() {
     if (this.getMap().isHidden()) {
-      this.getAutocompleteList().hide();
+      this.hideAll();
       this.getMap().show();
       this.getSpacerBetweenMapAndAddress().show();
       this.getGasPriceMapDisplay().show();
       this.getRequestGasButtonContainer().show();
       this.getRequestAddressField().disable();
-      this.getHomeAddressContainer().hide();
-      this.getWorkAddressContainer().hide();
       this.getAddWorkAddressContainer().hide();
       this.getAddHomeAddressContainer().hide();
       return this.getCurrentTask().hide();
@@ -362,18 +370,39 @@ Ext.define('Purple.controller.Main', {
     }
     return this.getCurrentTask().show();
   },
+  removeHomeAddress: function() {
+    console.log('remove home');
+    localStorage['purpleUserHome'] = '';
+    return this.addressInputMode('home');
+  },
+  removeWorkAddress: function() {
+    localStorage['purpleUserWork'] = '';
+    return this.addressInputMode('home');
+  },
+  showRemoveButtons: function(location) {
+    if (location === 'home' && localStorage['purpleUserHome']) {
+      this.getRemoveHomeAddressContainer().show();
+    }
+    if (location === 'work' && localStorage['purpleUserWork']) {
+      return this.getRemoveWorkAddressContainer().show();
+    }
+  },
   hideAll: function() {
     this.getAddWorkAddressContainer().hide();
     this.getAddHomeAddressContainer().hide();
     this.getAutocompleteList().hide();
     this.getHomeAutocomplete().hide();
+    this.getWorkAutocomplete().hide();
     this.getHomeAddressContainer().hide();
     this.getWorkAddressContainer().hide();
-    return this.getCurrentTask().hide();
+    this.getCurrentTask().hide();
+    this.getRemoveHomeAddressContainer().hide();
+    return this.getRemoveWorkAddressContainer().hide();
   },
   homeAddressInputMode: function() {
     this.hideAll();
     this.getHomeAutocomplete().show();
+    this.showRemoveButtons('home');
     this.showTitles('home');
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
@@ -384,6 +413,7 @@ Ext.define('Purple.controller.Main', {
   workAddressInputMode: function() {
     this.hideAll();
     this.getWorkAutocomplete().show();
+    this.showRemoveButtons('work');
     this.showTitles('work');
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
@@ -491,6 +521,12 @@ Ext.define('Purple.controller.Main', {
   },
   initAddHomeAddress: function(field) {
     return field.element.on('tap', this.changeHomeAddress, this);
+  },
+  initRemoveHomeAddress: function(field) {
+    return field.element.on('tap', this.removeHomeAddress, this);
+  },
+  initRemoveWorkAddress: function(field) {
+    return field.element.on('tap', this.removeWorkAddress, this);
   },
   searchHome: function() {
     return this.updateDeliveryLocAddressByLocArray(this.homeLoc);

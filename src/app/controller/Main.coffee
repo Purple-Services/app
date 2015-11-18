@@ -37,6 +37,10 @@ Ext.define 'Purple.controller.Main',
       addHomeAddress: '#addHomeAddress'
       addWorkAddress: '#addWorkAddress'
       currentTask: '#currentTask'
+      removeHomeAddressContainer: '#removeHomeAddressContainer'
+      removeWorkAddressContainer: '#removeWorkAddressContainer'
+      removeHomeAddress: '#removeHomeAddress'
+      removeWorkAddress: '#removeWorkAddress'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
@@ -76,8 +80,10 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initAddHomeAddress'
       addWorkAddress:
         initialize: 'initAddWorkAddress'
-
-
+      removeHomeAddress:
+        initialize: 'initRemoveHomeAddress'
+      removeWorkAddress:
+        initialize: 'initRemoveWorkAddress'
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -243,14 +249,12 @@ Ext.define 'Purple.controller.Main',
 
   mapMode: ->
     if @getMap().isHidden()
-      @getAutocompleteList().hide()
+      @hideAll()
       @getMap().show()
       @getSpacerBetweenMapAndAddress().show()
       @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
-      @getHomeAddressContainer().hide()
-      @getWorkAddressContainer().hide()
       @getAddWorkAddressContainer().hide()
       @getAddHomeAddressContainer().hide()
       @getCurrentTask().hide()
@@ -306,18 +310,37 @@ Ext.define 'Purple.controller.Main',
         @getCurrentTask().setValue('Add Work Address')
     @getCurrentTask().show()
 
+  removeHomeAddress: ->
+    console.log 'remove home'
+    localStorage['purpleUserHome'] = ''
+    @addressInputMode('home')
+
+  removeWorkAddress: ->
+    localStorage['purpleUserWork'] = ''
+    @addressInputMode('home')
+
+  showRemoveButtons: (location) ->
+    if location == 'home' && localStorage['purpleUserHome']
+      @getRemoveHomeAddressContainer().show()
+    if location == 'work' && localStorage['purpleUserWork']
+      @getRemoveWorkAddressContainer().show()
+
   hideAll: ->
     @getAddWorkAddressContainer().hide()
     @getAddHomeAddressContainer().hide()
     @getAutocompleteList().hide()
     @getHomeAutocomplete().hide()
+    @getWorkAutocomplete().hide()
     @getHomeAddressContainer().hide()
     @getWorkAddressContainer().hide()
     @getCurrentTask().hide()
+    @getRemoveHomeAddressContainer().hide()
+    @getRemoveWorkAddressContainer().hide()
 
   homeAddressInputMode: ->
     @hideAll()
     @getHomeAutocomplete().show()
+    @showRemoveButtons('home')
     @showTitles('home')
     util.ctl('Menu').pushOntoBackButton =>
       @addressInputMode('home')
@@ -325,6 +348,7 @@ Ext.define 'Purple.controller.Main',
   workAddressInputMode: ->
     @hideAll()
     @getWorkAutocomplete().show()
+    @showRemoveButtons('work')
     @showTitles('work')
     util.ctl('Menu').pushOntoBackButton =>
       @addressInputMode('home')
@@ -410,6 +434,12 @@ Ext.define 'Purple.controller.Main',
 
   initAddHomeAddress: (field) ->
     field.element.on 'tap', @changeHomeAddress, this
+
+  initRemoveHomeAddress: (field) ->
+    field.element.on 'tap', @removeHomeAddress, this
+
+  initRemoveWorkAddress: (field) ->
+    field.element.on 'tap', @removeWorkAddress, this
 
   searchHome: ->
     @updateDeliveryLocAddressByLocArray @homeLoc

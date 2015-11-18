@@ -125,6 +125,42 @@ Ext.define('Purple.view.MapForm', {
       }, {
         xtype: 'container',
         layout: 'hbox',
+        id: 'removeHomeAddressContainer',
+        flex: 0,
+        cls: 'list-container',
+        hidden: true,
+        disabled: true,
+        items: [
+          {
+            xtype: 'textfield',
+            id: 'removeHomeAddress',
+            flex: 0,
+            label: 'Remove Home',
+            cls: 'account-home-address',
+            disabled: true
+          }
+        ]
+      }, {
+        xtype: 'container',
+        layout: 'hbox',
+        id: 'removeWorkAddressContainer',
+        flex: 0,
+        cls: 'list-container',
+        hidden: true,
+        disabled: true,
+        items: [
+          {
+            xtype: 'textfield',
+            id: 'removeWorkAddress',
+            flex: 0,
+            label: 'Remove Work',
+            cls: 'account-home-address',
+            disabled: true
+          }
+        ]
+      }, {
+        xtype: 'container',
+        layout: 'hbox',
         id: 'homeAddressContainer',
         flex: 0,
         cls: 'list-container',
