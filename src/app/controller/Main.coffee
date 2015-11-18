@@ -283,6 +283,7 @@ Ext.define 'Purple.controller.Main',
       @hideAll()
       @getAutocompleteList().show()
       @showHomeAndWork()
+      util.ctl('Menu').clearBackButtonStack()
       util.ctl('Menu').pushOntoBackButton =>
         @recenterAtUserLoc()
         @mapMode()
@@ -318,9 +319,9 @@ Ext.define 'Purple.controller.Main',
     @addressInputMode('home')
 
   showRemoveButtons: (location) ->
-    if location == 'home' && localStorage['purpleUserHome']
+    if location == 'home' and localStorage['purpleUserHome']
       @getRemoveHomeAddressContainer().show()
-    if location == 'work' && localStorage['purpleUserWork']
+    if location == 'work' and localStorage['purpleUserWork']
       @getRemoveWorkAddressContainer().show()
 
   hideAll: ->
@@ -411,13 +412,13 @@ Ext.define 'Purple.controller.Main',
   updateHomeAddress: (loc) ->
     localStorage['purpleUserHome'] = loc['locationName']
     @getAccountHomeAddress().setValue(localStorage['purpleUserHome'])
-    @addressInputMode('home')
+    @updateDeliveryLocAddressByLocArray loc
     @homeLoc = loc
 
   updateWorkAddress: (loc) ->
     localStorage['purpleUserWork'] = loc['locationName']
     @getAccountWorkAddress().setValue(localStorage['purpleUserWork'])
-    @addressInputMode('home')
+    @updateDeliveryLocAddressByLocArray loc
     @workLoc = loc
 
   initAccountHomeAddress: (field) ->

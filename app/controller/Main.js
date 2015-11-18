@@ -334,6 +334,7 @@ Ext.define('Purple.controller.Main', {
       this.hideAll();
       this.getAutocompleteList().show();
       this.showHomeAndWork();
+      util.ctl('Menu').clearBackButtonStack();
       return util.ctl('Menu').pushOntoBackButton((function(_this) {
         return function() {
           _this.recenterAtUserLoc();
@@ -498,13 +499,13 @@ Ext.define('Purple.controller.Main', {
   updateHomeAddress: function(loc) {
     localStorage['purpleUserHome'] = loc['locationName'];
     this.getAccountHomeAddress().setValue(localStorage['purpleUserHome']);
-    this.addressInputMode('home');
+    this.updateDeliveryLocAddressByLocArray(loc);
     return this.homeLoc = loc;
   },
   updateWorkAddress: function(loc) {
     localStorage['purpleUserWork'] = loc['locationName'];
     this.getAccountWorkAddress().setValue(localStorage['purpleUserWork']);
-    this.addressInputMode('home');
+    this.updateDeliveryLocAddressByLocArray(loc);
     return this.workLoc = loc;
   },
   initAccountHomeAddress: function(field) {
