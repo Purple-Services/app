@@ -279,6 +279,7 @@ Ext.define 'Purple.view.MapForm',
           show: (list) ->
             list.getStore().setData []
           itemtap: (list, index, item, record) ->
+            #handleAutoCompleteListTap
             @fireEvent 'updateDeliveryLocAddressByLocArray', record.raw
       }
       {

@@ -46,17 +46,21 @@ Ext.define 'Purple.controller.Menu',
     @getMainContainer().setSlideSelector 'slideable'
 
   pushOntoBackButton: (fn) ->
+    console.log 'push'
+    console.log @backButtonStack
     @backButtonStack.push fn
     @getMainContainer().addCls 'makeMenuButtonBeBackButton'
     @lockMenu()
 
   popOffBackButton: ->
+    console.log 'calledpop'
     (@backButtonStack.pop())()
     if @backButtonStack.length is 0
       @getMainContainer().removeCls 'makeMenuButtonBeBackButton'
       @unlockMenu()
 
   popOffBackButtonWithoutAction: ->
+    console.log 'pop'
     @backButtonStack.pop()
     if @backButtonStack.length is 0
       @getMainContainer().removeCls 'makeMenuButtonBeBackButton'

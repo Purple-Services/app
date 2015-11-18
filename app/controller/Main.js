@@ -310,7 +310,7 @@ Ext.define('Purple.controller.Main', {
   recenterAtUserLoc: function() {
     return this.getMap().getMap().setCenter(new google.maps.LatLng(this.lat, this.lng));
   },
-  addressInputMode: function(homeChange) {
+  addressInputMode: function() {
     if (!this.getMap().isHidden()) {
       this.hideAll();
       this.getMap().hide();
@@ -328,18 +328,18 @@ Ext.define('Purple.controller.Main', {
         };
       })(this));
       return ga_storage._trackEvent('ui', 'Address Text Input Mode');
-    } else if (homeChange === 'home') {
-      this.hideAll();
-      this.getAutocompleteList().show();
-      this.showHomeAndWork();
-      util.ctl('Menu').clearBackButtonStack();
-      return util.ctl('Menu').pushOntoBackButton((function(_this) {
-        return function() {
-          _this.recenterAtUserLoc();
-          return _this.mapMode();
-        };
-      })(this));
     }
+  },
+  editSavedLoc: function() {
+    this.hideAll();
+    this.getAutocompleteList().show();
+    this.showHomeAndWork();
+    return util.ctl('Menu').pushOntoBackButton((function(_this) {
+      return function() {
+        _this.recenterAtUserLoc();
+        return _this.mapMode();
+      };
+    })(this));
   },
   showHomeAndWork: function() {
     if (localStorage['purpleUserHome']) {
@@ -370,11 +370,15 @@ Ext.define('Purple.controller.Main', {
   },
   removeHomeAddress: function() {
     localStorage['purpleUserHome'] = '';
-    return this.addressInputMode('home');
+    this.editSavedLoc();
+    util.ctl('Menu').popOffBackButtonWithoutAction();
+    return util.ctl('Menu').popOffBackButtonWithoutAction();
   },
   removeWorkAddress: function() {
     localStorage['purpleUserWork'] = '';
-    return this.addressInputMode('home');
+    this.editSavedLoc();
+    util.ctl('Menu').popOffBackButtonWithoutAction();
+    return util.ctl('Menu').popOffBackButtonWithoutAction();
   },
   showRemoveButtons: function(location) {
     if (location === 'home' && localStorage['purpleUserHome']) {
@@ -404,7 +408,8 @@ Ext.define('Purple.controller.Main', {
     this.showTitles('home');
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
-        return _this.addressInputMode('home');
+        _this.editSavedLoc();
+        return util.ctl('Menu').popOffBackButtonWithoutAction();
       };
     })(this));
   },
@@ -415,7 +420,8 @@ Ext.define('Purple.controller.Main', {
     this.showTitles('work');
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
-        return _this.addressInputMode('home');
+        _this.editSavedLoc();
+        return util.ctl('Menu').popOffBackButtonWithoutAction();
       };
     })(this));
   },

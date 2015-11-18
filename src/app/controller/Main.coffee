@@ -256,13 +256,13 @@ Ext.define 'Purple.controller.Main',
       @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
-       
+
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
       new google.maps.LatLng @lat, @lng
     )
 
-  addressInputMode: (homeChange)->
+  addressInputMode: ->
     if not @getMap().isHidden()
       @hideAll()
       @getMap().hide()
@@ -277,14 +277,14 @@ Ext.define 'Purple.controller.Main',
         @recenterAtUserLoc()
         @mapMode()
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
-    else if homeChange == 'home'
-      @hideAll()
-      @getAutocompleteList().show()
-      @showHomeAndWork()
-      util.ctl('Menu').clearBackButtonStack()
-      util.ctl('Menu').pushOntoBackButton =>
-        @recenterAtUserLoc()
-        @mapMode()
+
+  editSavedLoc: ->
+    @hideAll()
+    @getAutocompleteList().show()
+    @showHomeAndWork()
+    util.ctl('Menu').pushOntoBackButton =>
+      @recenterAtUserLoc()
+      @mapMode()
 
   showHomeAndWork: ->
     if localStorage['purpleUserHome']
@@ -310,11 +310,15 @@ Ext.define 'Purple.controller.Main',
 
   removeHomeAddress: ->
     localStorage['purpleUserHome'] = ''
-    @addressInputMode('home')
+    @editSavedLoc()
+    util.ctl('Menu').popOffBackButtonWithoutAction()
+    util.ctl('Menu').popOffBackButtonWithoutAction()
 
   removeWorkAddress: ->
     localStorage['purpleUserWork'] = ''
-    @addressInputMode('home')
+    @editSavedLoc()
+    util.ctl('Menu').popOffBackButtonWithoutAction()
+    util.ctl('Menu').popOffBackButtonWithoutAction()
 
   showRemoveButtons: (location) ->
     if location == 'home' and localStorage['purpleUserHome']
@@ -341,7 +345,8 @@ Ext.define 'Purple.controller.Main',
     @showRemoveButtons('home')
     @showTitles('home')
     util.ctl('Menu').pushOntoBackButton =>
-      @addressInputMode('home')
+      @editSavedLoc()
+      util.ctl('Menu').popOffBackButtonWithoutAction()
 
   workAddressInputMode: ->
     @hideAll()
@@ -349,7 +354,8 @@ Ext.define 'Purple.controller.Main',
     @showRemoveButtons('work')
     @showTitles('work')
     util.ctl('Menu').pushOntoBackButton =>
-      @addressInputMode('home')
+      @editSavedLoc()
+      util.ctl('Menu').popOffBackButtonWithoutAction()
 
   generateSuggestions: ->
     @getRequestGasButton().setDisabled yes
