@@ -130,10 +130,10 @@
   <!--   <param name="APP_NAME" value="Purple" /> -->
   <!-- </gap:plugin> -->
 
-  <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">
+<!--   <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
-  </gap:plugin>
+  </gap:plugin> -->
 
   <!-- <gap:plugin name="cordova-plugin-facebookconnect-orlando" version="0.11.0" source="npm"> -->
   <!--   <param name="APP_ID" value="1588773851335820" /> -->

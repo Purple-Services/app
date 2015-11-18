@@ -30,8 +30,9 @@ Ext.define 'Purple.controller.Main',
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
       map:
-        centerchange: 'centerChanging'
-        idle: 'adjustDeliveryLocByLatLng'
+        dragstart: 'dragStart'
+        boundchange: 'boundChanged'
+        centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
@@ -154,11 +155,13 @@ Ext.define 'Purple.controller.Main',
     else
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
-  centerChanging: ->
+  dragStart: ->
+    @getRequestGasButton().setDisabled yes
+
+  boundChanged: ->
     @getRequestGasButton().setDisabled yes
 
   adjustDeliveryLocByLatLng: ->
-    @getRequestGasButton().setDisabled yes
     center = @getMap().getMap().getCenter()
     # might want to send actual 
     @deliveryLocLat = center.lat()

@@ -159,7 +159,6 @@ Ext.define('Ext.Map', {
             event.addListener(map, 'maptypeid_changed', Ext.bind(me.onTypeChange, me));
             event.addListener(map, 'center_changed', Ext.bind(me.onCenterChange, me));
             event.addListenerOnce(map, 'tilesloaded', Ext.bind(me.onTilesLoaded, me));
-            event.addListener map, 'idle', Ext.bind(me.onIdle, me)
             this.addMapListeners();
         }
         return this.getMap();

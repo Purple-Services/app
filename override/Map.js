@@ -35,20 +35,16 @@ Ext.define('Override.ux.Map', {
       event.addListener(map, 'maptypeid_changed', Ext.bind(me.onTypeChange, me));
       event.addListener(map, 'center_changed', Ext.bind(me.onCenterChange, me));
       event.addListenerOnce(map, 'tilesloaded', Ext.bind(me.onTilesLoaded, me));
-      event.addListener(map, 'idle', Ext.bind(me.onIdle, me));
+      event.addListener(map, 'dragstart', Ext.bind(me.onDragStart, me));
+      event.addListener(map, 'bounds_changed', Ext.bind(me.onBoundChange, me));
       this.addMapListeners();
     }
     return this.getMap();
   },
-  onIdle: function() {
-    var center, map, mapOptions;
-    mapOptions = this.getMapOptions();
-    map = this.getMap();
-    center = void 0;
-    center = map && map.getCenter ? map.getCenter() : mapOptions.center;
-    this.options = Ext.apply(mapOptions, {
-      center: center
-    });
-    return this.fireEvent('idle', this, map, center);
+  onDragStart: function() {
+    return this.fireEvent('dragstart');
+  },
+  onBoundChange: function() {
+    return this.fireEvent('boundchange');
   }
 });
