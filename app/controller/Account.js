@@ -169,6 +169,10 @@ Ext.define('Purple.controller.Account', {
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons;
           localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up;
           localStorage['purpleToken'] = response.token;
+          localStorage['purpleUserHomeLocationName'] = response.saved_locations.home.displayText;
+          localStorage['purpleUserHomePlaceId'] = response.saved_locations.home.googlePlaceId;
+          localStorage['purpleUserWorkLocationName'] = response.saved_locations.work.displayText;
+          localStorage['purpleUserWorkPlaceId'] = response.saved_locations.work.googlePlaceId;
           delete localStorage['purpleDefaultPaymentMethodId'];
           ref = response.cards;
           for (c in ref) {

@@ -290,13 +290,14 @@ Ext.define('Purple.controller.Main', {
   },
   mapMode: function() {
     if (this.getMap().isHidden()) {
-      this.hideAll();
+      this.hideAllSavedLoc();
       this.getMap().show();
       this.getCenterMapButton().show();
       this.getSpacerBetweenMapAndAddress().show();
       this.getGasPriceMapDisplay().show();
       this.getRequestGasButtonContainer().show();
-      return this.getRequestAddressField().disable();
+      this.getRequestAddressField().disable();
+      return this.getRequestAddressField().setValue("Updating Location...");
     }
   },
   recenterAtUserLoc: function() {
@@ -304,7 +305,8 @@ Ext.define('Purple.controller.Main', {
   },
   addressInputMode: function() {
     if (!this.getMap().isHidden()) {
-      this.hideAll();
+      this.addressInputSubMode = '';
+      this.hideAllSavedLoc();
       this.getMap().hide();
       this.getSpacerBetweenMapAndAddress().hide();
       this.getGasPriceMapDisplay().hide();
@@ -312,7 +314,7 @@ Ext.define('Purple.controller.Main', {
       this.getAutocompleteList().show();
       this.getRequestAddressField().enable();
       this.getRequestAddressField().focus();
-      this.showHomeAndWork();
+      this.showSavedLoc();
       util.ctl('Menu').pushOntoBackButton((function(_this) {
         return function() {
           _this.recenterAtUserLoc();
@@ -323,9 +325,10 @@ Ext.define('Purple.controller.Main', {
     }
   },
   editSavedLoc: function() {
-    this.hideAll();
+    this.addressInputSubMode = '';
+    this.hideAllSavedLoc();
     this.getAutocompleteList().show();
-    this.showHomeAndWork();
+    this.showSavedLoc();
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
         _this.recenterAtUserLoc();
@@ -333,54 +336,66 @@ Ext.define('Purple.controller.Main', {
       };
     })(this));
   },
-  showHomeAndWork: function() {
-    if (localStorage['purpleUserHome']) {
+  showSavedLoc: function() {
+    if (localStorage['purpleUserHomeLocationName']) {
+      this.getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName']);
       this.getHomeAddressContainer().show();
     } else {
       this.getAddHomeAddressContainer().show();
     }
-    if (localStorage['purpleUserWork']) {
+    if (localStorage['purpleUserWorkLocationName']) {
+      this.getAccountWorkAddress().setValue(localStorage['purpleUserWorkLocationName']);
       return this.getWorkAddressContainer().show();
     } else {
       return this.getAddWorkAddressContainer().show();
     }
   },
   showTitles: function(location) {
-    if (location === 'home') {
-      if (localStorage['purpleUserHome']) {
+    if (this.addressInputSubMode === 'home') {
+      if (localStorage['purpleUserHomeLocationName']) {
         return this.getRequestAddressField().setValue('Change Home Address...');
       } else {
         return this.getRequestAddressField().setValue('Add Home Address...');
       }
-    } else {
-      if (localStorage['purpleUserWork']) {
+    } else if (this.addressInputSubMode === 'work') {
+      if (localStorage['purpleUserWorkLocationName']) {
         return this.getRequestAddressField().setValue('Edit Work Address...');
       } else {
         return this.getRequestAddressField().setValue('Add Work Address...');
       }
     }
   },
-  removeHomeAddress: function() {
-    localStorage['purpleUserHome'] = '';
-    this.editSavedLoc();
-    util.ctl('Menu').popOffBackButtonWithoutAction();
-    return util.ctl('Menu').popOffBackButtonWithoutAction();
-  },
-  removeWorkAddress: function() {
-    localStorage['purpleUserWork'] = '';
-    this.editSavedLoc();
-    util.ctl('Menu').popOffBackButtonWithoutAction();
-    return util.ctl('Menu').popOffBackButtonWithoutAction();
+  removeAddress: function() {
+    return this.updateSavedLocations({
+      home: this.addressInputSubMode === 'home' ? {
+        displayText: '',
+        googlePlaceId: ''
+      } : {
+        displayText: localStorage['purpleUserHomeLocationName'],
+        googlePlaceId: localStorage['purpleUserHomePlaceId']
+      },
+      work: this.addressInputSubMode === 'work' ? {
+        displayText: '',
+        googlePlaceId: ''
+      } : {
+        displayText: localStorage['purpleUserWorkLocationName'],
+        googlePlaceId: localStorage['purpleUserWorkPlaceId']
+      }
+    }, function() {
+      util.ctl('Main').editSavedLoc();
+      util.ctl('Menu').popOffBackButtonWithoutAction();
+      return util.ctl('Menu').popOffBackButtonWithoutAction();
+    });
   },
   showRemoveButtons: function(location) {
-    if (location === 'home' && localStorage['purpleUserHome']) {
+    if (this.addressInputSubMode === 'home' && localStorage['purpleUserHomeLocationName']) {
       this.getRemoveHomeAddressContainer().show();
     }
-    if (location === 'work' && localStorage['purpleUserWork']) {
+    if (this.addressInputSubMode === 'work' && localStorage['purpleUserWorkLocationName']) {
       return this.getRemoveWorkAddressContainer().show();
     }
   },
-  hideAll: function() {
+  hideAllSavedLoc: function() {
     this.getAddWorkAddressContainer().hide();
     this.getAddHomeAddressContainer().hide();
     this.getAutocompleteList().hide();
@@ -392,10 +407,10 @@ Ext.define('Purple.controller.Main', {
     return this.getRequestAddressField().setValue('');
   },
   editAddressInputMode: function() {
-    this.hideAll();
+    this.hideAllSavedLoc();
     this.getAutocompleteList().show();
-    this.showRemoveButtons(this.currentMode);
-    this.showTitles(this.currentMode);
+    this.showRemoveButtons();
+    this.showTitles();
     return util.ctl('Menu').pushOntoBackButton((function(_this) {
       return function() {
         _this.editSavedLoc();
@@ -472,37 +487,55 @@ Ext.define('Purple.controller.Main', {
   },
   handleAutoCompleteListTap: function(loc) {
     this.loc = loc;
-    if (this.currentMode) {
+    if (this.addressInputSubMode) {
       this.updateAddress();
     }
     return this.updateDeliveryLocAddressByLocArray(loc);
   },
   changeHomeAddress: function() {
-    this.currentMode = 'home';
+    this.addressInputSubMode = 'home';
     return this.editAddressInputMode();
   },
   changeWorkAddress: function() {
-    this.currentMode = 'work';
+    this.addressInputSubMode = 'work';
     return this.editAddressInputMode();
   },
   updateAddress: function() {
-    if (this.currentMode === 'home') {
-      localStorage['purpleUserHome'] = this.loc['locationName'];
-      localStorage['purpleUserHomePlaceId'] = this.loc['placeId'];
-      this.getAccountHomeAddress().setValue(localStorage['purpleUserHome']);
+    if (this.addressInputSubMode === 'home') {
+      this.updateSavedLocations({
+        home: {
+          displayText: this.loc['locationName'],
+          googlePlaceId: this.loc['placeId']
+        },
+        work: {
+          displayText: localStorage['purpleUserWorkLocationName'],
+          googlePlaceId: localStorage['purpleUserWorkPlaceId']
+        }
+      }, function() {
+        return util.ctl('Main').getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName']);
+      });
     }
-    if (this.currentMode === 'work') {
-      localStorage['purpleUserWork'] = this.loc['locationName'];
-      localStorage['purpleUserWorkPlaceId'] = this.loc['placeId'];
-      return this.getAccountWorkAddress().setValue(localStorage['purpleUserWork']);
+    if (this.addressInputSubMode === 'work') {
+      return this.updateSavedLocations({
+        home: {
+          displayText: localStorage['purpleUserHomeLocationName'],
+          googlePlaceId: localStorage['purpleUserHomePlaceId']
+        },
+        work: {
+          displayText: this.loc['locationName'],
+          googlePlaceId: this.loc['placeId']
+        }
+      }, function() {
+        return util.ctl('Main').getAccountWorkAddress().setValue(localStorage['purpleUserWorkLocationName']);
+      });
     }
   },
   initAccountHomeAddress: function(field) {
-    this.getAccountHomeAddress().setValue(localStorage['purpleUserHome']);
+    this.getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName']);
     return field.element.on('tap', this.searchHome, this);
   },
   initAccountWorkAddress: function(field) {
-    this.getAccountWorkAddress().setValue(localStorage['purpleUserWork']);
+    this.getAccountWorkAddress().setValue(localStorage['purpleUserWorkLocationName']);
     return field.element.on('tap', this.searchWork, this);
   },
   initAddWorkAddress: function(field) {
@@ -512,10 +545,10 @@ Ext.define('Purple.controller.Main', {
     return field.element.on('tap', this.changeHomeAddress, this);
   },
   initRemoveHomeAddress: function(field) {
-    return field.element.on('tap', this.removeHomeAddress, this);
+    return field.element.on('tap', this.removeAddress, this);
   },
   initRemoveWorkAddress: function(field) {
-    return field.element.on('tap', this.removeWorkAddress, this);
+    return field.element.on('tap', this.removeAddress, this);
   },
   currentLocation: function(locationName, placeId) {
     return {
@@ -524,10 +557,51 @@ Ext.define('Purple.controller.Main', {
     };
   },
   searchHome: function() {
-    return this.updateDeliveryLocAddressByLocArray(this.currentLocation(localStorage['purpleUserHome'], localStorage['purpleUserHomePlaceId']));
+    return this.updateDeliveryLocAddressByLocArray(this.currentLocation(localStorage['purpleUserHomeLocationName'], localStorage['purpleUserHomePlaceId']));
   },
   searchWork: function() {
-    return this.updateDeliveryLocAddressByLocArray(this.currentLocation(localStorage['purpleUserWork'], localStorage['purpleUserWorkPlaceId']));
+    return this.updateDeliveryLocAddressByLocArray(this.currentLocation(localStorage['purpleUserWorkLocationName'], localStorage['purpleUserWorkPlaceId']));
+  },
+  updateSavedLocations: function(savedLocations, callback) {
+    Ext.Viewport.setMasked({
+      xtype: 'loadmask',
+      message: ''
+    });
+    return Ext.Ajax.request({
+      url: util.WEB_SERVICE_BASE_URL + "user/edit",
+      params: Ext.JSON.encode({
+        version: util.VERSION_NUMBER,
+        user_id: localStorage['purpleUserId'],
+        token: localStorage['purpleToken'],
+        saved_locations: savedLocations
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000,
+      method: 'POST',
+      scope: this,
+      success: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        if (response.success) {
+          localStorage['purpleUserHomeLocationName'] = response.saved_locations.home.displayText;
+          localStorage['purpleUserHomePlaceId'] = response.saved_locations.home.googlePlaceId;
+          localStorage['purpleUserWorkLocationName'] = response.saved_locations.work.displayText;
+          localStorage['purpleUserWorkPlaceId'] = response.saved_locations.work.googlePlaceId;
+          return typeof callback === "function" ? callback() : void 0;
+        } else {
+          return navigator.notification.alert(response.message, (function() {}), "Error");
+        }
+      },
+      failure: function(response_obj) {
+        var response;
+        Ext.Viewport.setMasked(false);
+        response = Ext.JSON.decode(response_obj.responseText);
+        return console.log(response);
+      }
+    });
   },
   initRequestGasForm: function() {
     var deliveryLocName;
@@ -728,7 +802,7 @@ Ext.define('Purple.controller.Main', {
         pmCtl.backToAccount();
         return util.ctl('Menu').selectOption(0);
       });
-      return pmCtl.getEditPaymentMethodForm().config.savessCallback = function() {
+      return pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = function() {
         util.ctl('Menu').popOffBackButtonWithoutAction();
         pmCtl.backToAccount();
         return util.ctl('Menu').selectOption(0);

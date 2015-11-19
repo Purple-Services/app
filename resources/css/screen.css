@@ -195,8 +195,8 @@ body {
 }
 .x-input-el {
     text-align: right;
-    -webkit-text-fill-color: #742C90;
-    color: #742C90;
+    -webkit-text-fill-color: #742C90 !important;
+    color: #742C90 !important;
     opacity: 1 !important;
     font-weight: 400 !important;
     font-size: 17px;
@@ -866,8 +866,8 @@ body {
     padding-top: 0px;
     padding-left: 0px;
     text-align: left;
-    color: rgb(159, 24, 120);
-    -webkit-text-fill-color: rgb(159, 24, 120);
+    color: rgb(159, 24, 120) !important;
+    -webkit-text-fill-color: rgb(159, 24, 120) !important;
 }
 .order-list-item .x-form-label {
     padding-top: 0px !important;
