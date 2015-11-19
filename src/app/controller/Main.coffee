@@ -14,8 +14,6 @@ Ext.define 'Purple.controller.Main',
       requestGasButtonContainer: '#requestGasButtonContainer'
       requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
-      homeAutocomplete: '#homeAutocomplete'
-      workAutocomplete: '#workAutocomplete'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
       feedback: 'feedback'
@@ -54,12 +52,8 @@ Ext.define 'Purple.controller.Main',
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
-      workAutocomplete:
-        updateWorkAddress: 'updateWorkAddress'
-      homeAutocomplete:
-        updateHomeAddress: 'updateHomeAddress'
       autocompleteList:
-        updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
+        handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
         initRequestGasForm: 'initRequestGasForm'
       requestForm:
@@ -330,8 +324,6 @@ Ext.define 'Purple.controller.Main',
     @getAddWorkAddressContainer().hide()
     @getAddHomeAddressContainer().hide()
     @getAutocompleteList().hide()
-    @getHomeAutocomplete().hide()
-    @getWorkAutocomplete().hide()
     @getHomeAddressContainer().hide()
     @getWorkAddressContainer().hide()
     @getRemoveHomeAddressContainer().hide()
@@ -339,20 +331,11 @@ Ext.define 'Purple.controller.Main',
     @getCenterMapButton().hide()
     @getRequestAddressField().setValue('')
 
-  homeAddressInputMode: ->
+  editAddressInputMode: ->
     @hideAll()
-    @getHomeAutocomplete().show()
-    @showRemoveButtons('home')
-    @showTitles('home')
-    util.ctl('Menu').pushOntoBackButton =>
-      @editSavedLoc()
-      util.ctl('Menu').popOffBackButtonWithoutAction()
-
-  workAddressInputMode: ->
-    @hideAll()
-    @getWorkAutocomplete().show()
-    @showRemoveButtons('work')
-    @showTitles('work')
+    @getAutocompleteList().show()
+    @showRemoveButtons(@currentMode)
+    @showTitles(@currentMode)
     util.ctl('Menu').pushOntoBackButton =>
       @editSavedLoc()
       util.ctl('Menu').popOffBackButtonWithoutAction()
@@ -382,8 +365,6 @@ Ext.define 'Purple.controller.Main',
               'locationLng': '0'
               'placeId': p.place_id
           @getAutocompleteList().getStore().setData suggestions
-          @getHomeAutocomplete().getStore().setData suggestions
-          @getWorkAutocomplete().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
     @getRequestAddressField().setValue loc['locationName']
@@ -407,23 +388,29 @@ Ext.define 'Purple.controller.Main',
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
+  handleAutoCompleteListTap: (loc) ->
+    @loc = loc
+    if @currentMode
+      @updateAddress()
+    @updateDeliveryLocAddressByLocArray loc
+
   changeHomeAddress: ->
-    @homeAddressInputMode()
+    @currentMode = 'home'
+    @editAddressInputMode()
 
   changeWorkAddress: ->
-    @workAddressInputMode()
+    @currentMode = 'work'
+    @editAddressInputMode()
 
-  updateHomeAddress: (loc) ->
-    localStorage['purpleUserHome'] = loc['locationName']
-    @getAccountHomeAddress().setValue(localStorage['purpleUserHome'])
-    @updateDeliveryLocAddressByLocArray loc
-    @homeLoc = loc
-
-  updateWorkAddress: (loc) ->
-    localStorage['purpleUserWork'] = loc['locationName']
-    @getAccountWorkAddress().setValue(localStorage['purpleUserWork'])
-    @updateDeliveryLocAddressByLocArray loc
-    @workLoc = loc
+  updateAddress: ->
+    if @currentMode == 'home'
+      localStorage['purpleUserHome'] = @loc['locationName']
+      localStorage['purpleUserHomePlaceId'] = @loc['placeId']
+      @getAccountHomeAddress().setValue(localStorage['purpleUserHome'])
+    if @currentMode == 'work'
+      localStorage['purpleUserWork'] = @loc['locationName']
+      localStorage['purpleUserWorkPlaceId'] = @loc['placeId']
+      @getAccountWorkAddress().setValue(localStorage['purpleUserWork'])
 
   initAccountHomeAddress: (field) ->
     @getAccountHomeAddress().setValue(localStorage['purpleUserHome'])
@@ -445,11 +432,14 @@ Ext.define 'Purple.controller.Main',
   initRemoveWorkAddress: (field) ->
     field.element.on 'tap', @removeWorkAddress, this
 
+  currentLocation: (locationName, placeId) ->
+    {locationName: locationName, placeId: placeId}
+
   searchHome: ->
-    @updateDeliveryLocAddressByLocArray @homeLoc
+    @updateDeliveryLocAddressByLocArray @currentLocation(localStorage['purpleUserHome'], localStorage['purpleUserHomePlaceId'])
 
   searchWork: ->
-    @updateDeliveryLocAddressByLocArray @workLoc
+    @updateDeliveryLocAddressByLocArray @currentLocation(localStorage['purpleUserWork'], localStorage['purpleUserWorkPlaceId'])
 
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'

@@ -246,49 +246,7 @@ Ext.define('Purple.view.MapForm', {
             return list.getStore().setData([]);
           },
           itemtap: function(list, index, item, record) {
-            return this.fireEvent('updateDeliveryLocAddressByLocArray', record.raw);
-          }
-        }
-      }, {
-        xtype: 'list',
-        id: 'homeAutocomplete',
-        flex: 1,
-        hidden: true,
-        scrollable: true,
-        itemTpl: "{locationName}<br />\n<span class=\"locationVicinity\">{locationVicinity}</span>",
-        data: [
-          {
-            locationName: 'Mock Name',
-            locationVicinity: 'Mock Vicinity'
-          }
-        ],
-        listeners: {
-          show: function(list) {
-            return list.getStore().setData([]);
-          },
-          itemtap: function(list, index, item, record) {
-            return this.fireEvent('updateHomeAddress', record.raw);
-          }
-        }
-      }, {
-        xtype: 'list',
-        id: 'workAutocomplete',
-        flex: 1,
-        hidden: true,
-        scrollable: true,
-        itemTpl: "{locationName}<br />\n<span class=\"locationVicinity\">{locationVicinity}</span>",
-        data: [
-          {
-            locationName: 'Mock Name',
-            locationVicinity: 'Mock Vicinity'
-          }
-        ],
-        listeners: {
-          show: function(list) {
-            return list.getStore().setData([]);
-          },
-          itemtap: function(list, index, item, record) {
-            return this.fireEvent('updateWorkAddress', record.raw);
+            return this.fireEvent('handleAutoCompleteListTap', record.raw);
           }
         }
       }, {

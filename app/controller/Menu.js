@@ -52,14 +52,11 @@ Ext.define('Purple.controller.Menu', {
     return this.getMainContainer().setSlideSelector('slideable');
   },
   pushOntoBackButton: function(fn) {
-    console.log('push');
-    console.log(this.backButtonStack);
     this.backButtonStack.push(fn);
     this.getMainContainer().addCls('makeMenuButtonBeBackButton');
     return this.lockMenu();
   },
   popOffBackButton: function() {
-    console.log('calledpop');
     (this.backButtonStack.pop())();
     if (this.backButtonStack.length === 0) {
       this.getMainContainer().removeCls('makeMenuButtonBeBackButton');
@@ -67,7 +64,6 @@ Ext.define('Purple.controller.Menu', {
     }
   },
   popOffBackButtonWithoutAction: function() {
-    console.log('pop');
     this.backButtonStack.pop();
     if (this.backButtonStack.length === 0) {
       this.getMainContainer().removeCls('makeMenuButtonBeBackButton');
