@@ -281,50 +281,6 @@ Ext.define 'Purple.view.MapForm',
           itemtap: (list, index, item, record) ->
             @fireEvent 'handleAutoCompleteListTap', record.raw
       }
-      # {
-      #   xtype: 'list'
-      #   id: 'homeAutocomplete'
-      #   flex: 1
-      #   hidden: yes
-      #   scrollable: yes
-      #   itemTpl: """
-      #     {locationName}<br />
-      #     <span class="locationVicinity">{locationVicinity}</span>
-      #   """
-      #   data: [
-      #     {
-      #       locationName: 'Mock Name'
-      #       locationVicinity: 'Mock Vicinity'
-      #     }
-      #   ]
-      #   listeners:
-      #     show: (list) ->
-      #       list.getStore().setData []
-      #     itemtap: (list, index, item, record) ->
-      #       @fireEvent 'updateHomeAddress', record.raw
-      # }
-      # {
-      #   xtype: 'list'
-      #   id: 'workAutocomplete'
-      #   flex: 1
-      #   hidden: yes
-      #   scrollable: yes
-      #   itemTpl: """
-      #     {locationName}<br />
-      #     <span class="locationVicinity">{locationVicinity}</span>
-      #   """
-      #   data: [
-      #     {
-      #       locationName: 'Mock Name'
-      #       locationVicinity: 'Mock Vicinity'
-      #     }
-      #   ]
-      #   listeners:
-      #     show: (list) ->
-      #       list.getStore().setData []
-      #     itemtap: (list, index, item, record) ->
-      #       @fireEvent 'updateWorkAddress', record.raw
-      # }
       {
         xtype: 'container'
         id: 'requestGasButtonContainer'
