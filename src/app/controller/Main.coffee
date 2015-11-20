@@ -420,16 +420,22 @@ Ext.define 'Purple.controller.Main',
         home: 
           displayText: @loc['locationName']
           googlePlaceId: @loc['placeId']
-        work: 
+        work: if localStorage['purpleUserWorkLocationName']
           displayText: localStorage['purpleUserWorkLocationName']
           googlePlaceId: localStorage['purpleUserWorkPlaceId']
+        else
+          displayText: ''
+          googlePlaceId: ''
         }, ->
           util.ctl('Main').getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName'])
     if @addressInputSubMode == 'work'
       @updateSavedLocations {
-        home: 
+        home: if localStorage['purpleUserHomeLocationName']
           displayText: localStorage['purpleUserHomeLocationName']
           googlePlaceId: localStorage['purpleUserHomePlaceId']
+        else
+          displayText: ''
+          googlePlaceId: ''
         work: 
           displayText: @loc['locationName']
           googlePlaceId: @loc['placeId']

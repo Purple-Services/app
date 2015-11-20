@@ -507,9 +507,12 @@ Ext.define('Purple.controller.Main', {
           displayText: this.loc['locationName'],
           googlePlaceId: this.loc['placeId']
         },
-        work: {
+        work: localStorage['purpleUserWorkLocationName'] ? {
           displayText: localStorage['purpleUserWorkLocationName'],
           googlePlaceId: localStorage['purpleUserWorkPlaceId']
+        } : {
+          displayText: '',
+          googlePlaceId: ''
         }
       }, function() {
         return util.ctl('Main').getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName']);
@@ -517,9 +520,12 @@ Ext.define('Purple.controller.Main', {
     }
     if (this.addressInputSubMode === 'work') {
       return this.updateSavedLocations({
-        home: {
+        home: localStorage['purpleUserHomeLocationName'] ? {
           displayText: localStorage['purpleUserHomeLocationName'],
           googlePlaceId: localStorage['purpleUserHomePlaceId']
+        } : {
+          displayText: '',
+          googlePlaceId: ''
         },
         work: {
           displayText: this.loc['locationName'],
