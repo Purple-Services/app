@@ -118,7 +118,7 @@ Ext.define 'Purple.view.EditVehicleForm',
             ]
           }
           {
-            xtype: 'selectfield'
+            xtype: 'selectotherfield'
             ctype: 'editVehicleFormMake'
             flex: 0
             name: 'make'
@@ -136,7 +136,7 @@ Ext.define 'Purple.view.EditVehicleForm',
             ]
           }
           {
-            xtype: 'selectfield'
+            xtype: 'selectotherfield'
             ctype: 'editVehicleFormModel'
             flex: 0
             name: 'model'
@@ -154,7 +154,7 @@ Ext.define 'Purple.view.EditVehicleForm',
             ]
           }
           {
-            xtype: 'selectfield'
+            xtype: 'selectotherfield'
             ctype: 'editVehicleFormColor'
             flex: 0
             name: 'color'

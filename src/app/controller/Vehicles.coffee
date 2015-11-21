@@ -38,6 +38,10 @@ Ext.define 'Purple.controller.Vehicles',
         change: 'yearChanged'
       editVehicleFormMake:
         change: 'makeChanged'
+      editVehicleFormModel:
+        change: 'modelChanged'
+      editVehicleFormColor:
+        change: 'colorChanged'
       editVehicleFormTakePhotoButton:
         takePhoto: 'addImage'
       requestFormVehicleSelect:
@@ -46,7 +50,6 @@ Ext.define 'Purple.controller.Vehicles',
 
   # will be null until they log in
   vehicles: null
-
   # all possible vehicle options
   vehicleList: window.vehicleList
   colorList: [
@@ -70,6 +73,41 @@ Ext.define 'Purple.controller.Vehicles',
 
   launch: ->
     @callParent arguments
+
+  updateVehicleList: (category, text) ->
+    if category is 'make' and !vehicleList[@getEditVehicleFormYear().getValue()][text]
+      vehicleList[@getEditVehicleFormYear().getValue()][text] = []
+      @yearChanged @, @getEditVehicleFormYear().getValue()
+      @getEditVehicleFormMake().setValue text
+    if category is 'model' and !vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()][text]
+      vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()].push text
+      @updateModelList @getEditVehicleFormYear().getValue(), @getEditVehicleFormMake().getValue()
+      @getEditVehicleFormModel().setValue text
+
+  updateMakeList: (year) ->
+    @getEditVehicleFormMake().setOptions(
+      options = @getMakeList(year).map (x) ->
+        {
+          text: x
+          value: x
+        }
+      options.sort (a,b) ->
+        a.text.localeCompare(b.text)
+    )
+    @getEditVehicleFormMake().addOtherField()
+
+
+  updateModelList: (year, value) ->
+    @getEditVehicleFormModel().setOptions(
+      options = @getModelList(year, value).map (x) ->
+        {
+          text: x
+          value: x
+        }
+      options.sort (a,b) ->
+        a.text.localeCompare(b.text)
+    )
+    @getEditVehicleFormModel().addOtherField()
 
   getVehicleById: (id) ->
     for v in @vehicles
@@ -116,6 +154,7 @@ Ext.define 'Purple.controller.Vehicles',
           value: x
         }
     )
+    @getEditVehicleFormMake().addOtherField()
     @getEditVehicleFormMake().setDisabled no
 
   makeChanged: (field, value) ->
@@ -127,7 +166,15 @@ Ext.define 'Purple.controller.Vehicles',
           value: x
         }
     )
+    @getEditVehicleFormModel().addOtherField()
+    @getEditVehicleFormMake().fieldChange(field, value)
     @getEditVehicleFormModel().setDisabled no
+
+  modelChanged: (field, value) ->
+    @getEditVehicleFormModel().fieldChange(field, value)
+
+  colorChanged: (field, value) ->
+    @getEditVehicleFormColor().fieldChange(field, value)
 
   showEditVehicleForm: (vehicleId = 'new', suppressBackButtonBehavior = no) ->
     @getVehiclesTabContainer().setActiveItem(
@@ -162,6 +209,7 @@ Ext.define 'Purple.controller.Vehicles',
           value: x
         }
     )
+    @getEditVehicleFormColor().addOtherField()
     @getEditVehicleFormColor().setDisabled no
     
     if vehicleId isnt 'new'
