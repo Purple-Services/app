@@ -188,15 +188,23 @@ Ext.define('Purple.controller.Vehicles', {
     if (make) {
       this.updateModelList(year, make);
     }
-    this.getEditVehicleFormMake().addOtherField();
-    return this.getEditVehicleFormMake().setDisabled(false);
+    if (year) {
+      this.getEditVehicleFormMake().setDisabled(false);
+    } else {
+      this.getEditVehicleFormMake().setDisabled(true);
+    }
+    return this.getEditVehicleFormMake().addOtherField();
   },
   makeChanged: function(field, value) {
     var year;
     year = this.getEditVehicleFormYear().getValue();
     this.updateModelList(year, value);
     this.getEditVehicleFormModel().addOtherField();
-    this.getEditVehicleFormModel().setDisabled(false);
+    if (value) {
+      this.getEditVehicleFormModel().setDisabled(false);
+    } else {
+      this.getEditVehicleFormModel().setDisabled(true);
+    }
     return this.getEditVehicleFormMake().fieldChange(field, value);
   },
   modelChanged: function(field, value) {
@@ -206,7 +214,7 @@ Ext.define('Purple.controller.Vehicles', {
     return this.getEditVehicleFormColor().fieldChange(field, value);
   },
   showEditVehicleForm: function(vehicleId, suppressBackButtonBehavior) {
-    var vehicle;
+    var options, vehicle;
     if (vehicleId == null) {
       vehicleId = 'new';
     }
@@ -224,11 +232,13 @@ Ext.define('Purple.controller.Vehicles', {
       })(this));
     }
     this.getEditVehicleFormHeading().setHtml(vehicleId === 'new' ? 'Add Vehicle' : 'Edit Vehicle');
-    this.getEditVehicleFormYear().setOptions(this.getYearList().map(function(x) {
+    this.getEditVehicleFormYear().setOptions(options = this.getYearList().map(function(x) {
       return {
         text: x,
         value: x
       };
+    }), options.unshift({
+      '': ''
     }));
     this.getEditVehicleFormYear().setDisabled(false);
     this.getEditVehicleFormColor().setOptions(this.getColorList().map(function(x) {

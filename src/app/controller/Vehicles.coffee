@@ -160,14 +160,21 @@ Ext.define 'Purple.controller.Vehicles',
     @updateMakeList(year)
     if make
       @updateModelList(year, make)
+    if year
+      @getEditVehicleFormMake().setDisabled no
+    else
+      @getEditVehicleFormMake().setDisabled yes
     @getEditVehicleFormMake().addOtherField()
-    @getEditVehicleFormMake().setDisabled no
+
 
   makeChanged: (field, value) ->
     year = @getEditVehicleFormYear().getValue()
     @updateModelList(year, value)
     @getEditVehicleFormModel().addOtherField()
-    @getEditVehicleFormModel().setDisabled no
+    if value
+      @getEditVehicleFormModel().setDisabled no
+    else
+      @getEditVehicleFormModel().setDisabled yes
     @getEditVehicleFormMake().fieldChange(field, value)
      
   modelChanged: (field, value) ->
@@ -194,11 +201,12 @@ Ext.define 'Purple.controller.Vehicles',
     )
     
     @getEditVehicleFormYear().setOptions(
-      @getYearList().map (x) ->
+      options = @getYearList().map (x) ->
         {
           text: x
           value: x
         }
+      options.unshift '':''
     )
     @getEditVehicleFormYear().setDisabled no
     
