@@ -173,7 +173,7 @@ Ext.define 'Purple.controller.Main',
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     latlng = new google.maps.LatLng lat, lng
     @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-      if status is google.maps.GeocoderStatus.OK
+      if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
         if results[0]?['address_components']?
           addressComponents = results[0]['address_components']
           streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
