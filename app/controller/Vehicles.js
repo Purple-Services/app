@@ -66,7 +66,7 @@ Ext.define('Purple.controller.Vehicles', {
   updateVehicleList: function(category, text) {
     if (category === 'make' && !vehicleList[this.getEditVehicleFormYear().getValue()][text]) {
       vehicleList[this.getEditVehicleFormYear().getValue()][text] = [];
-      this.yearChanged(this, this.getEditVehicleFormYear().getValue());
+      this.updateMakeList(this.getEditVehicleFormYear().getValue());
       this.getEditVehicleFormMake().setValue(text);
     }
     if (category === 'model' && !vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()][text]) {
@@ -169,12 +169,14 @@ Ext.define('Purple.controller.Vehicles', {
     }), options.sort(function(a, b) {
       return a.text.localeCompare(b.text);
     }));
-    this.getEditVehicleFormModel().setOptions(this.getModelList(year, make).map(function(x) {
-      return {
-        text: x,
-        value: x
-      };
-    }));
+    if (make) {
+      this.getEditVehicleFormModel().setOptions(this.getModelList(year, make).map(function(x) {
+        return {
+          text: x,
+          value: x
+        };
+      }));
+    }
     this.getEditVehicleFormMake().addOtherField();
     return this.getEditVehicleFormMake().setDisabled(false);
   },
@@ -188,8 +190,8 @@ Ext.define('Purple.controller.Vehicles', {
       };
     }));
     this.getEditVehicleFormModel().addOtherField();
-    this.getEditVehicleFormMake().fieldChange(field, value);
-    return this.getEditVehicleFormModel().setDisabled(false);
+    this.getEditVehicleFormModel().setDisabled(false);
+    return this.getEditVehicleFormMake().fieldChange(field, value);
   },
   modelChanged: function(field, value) {
     return this.getEditVehicleFormModel().fieldChange(field, value);

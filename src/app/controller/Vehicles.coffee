@@ -77,7 +77,7 @@ Ext.define 'Purple.controller.Vehicles',
   updateVehicleList: (category, text) ->
     if category is 'make' and !vehicleList[@getEditVehicleFormYear().getValue()][text]
       vehicleList[@getEditVehicleFormYear().getValue()][text] = []
-      @yearChanged @, @getEditVehicleFormYear().getValue()
+      @updateMakeList @getEditVehicleFormYear().getValue()
       @getEditVehicleFormMake().setValue text
     if category is 'model' and !vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()][text]
       vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()].push text
@@ -147,13 +147,14 @@ Ext.define 'Purple.controller.Vehicles',
       options.sort (a,b) ->
         a.text.localeCompare(b.text)
     )
-    @getEditVehicleFormModel().setOptions(
-      @getModelList(year, make).map (x) ->
-        {
-          text: x
-          value: x
-        }
-    )
+    if make
+      @getEditVehicleFormModel().setOptions(
+        @getModelList(year, make).map (x) ->
+          {
+            text: x
+            value: x
+          }
+      )
     @getEditVehicleFormMake().addOtherField()
     @getEditVehicleFormMake().setDisabled no
 
@@ -167,9 +168,9 @@ Ext.define 'Purple.controller.Vehicles',
         }
     )
     @getEditVehicleFormModel().addOtherField()
-    @getEditVehicleFormMake().fieldChange(field, value)
     @getEditVehicleFormModel().setDisabled no
-
+    @getEditVehicleFormMake().fieldChange(field, value)
+     
   modelChanged: (field, value) ->
     @getEditVehicleFormModel().fieldChange(field, value)
 

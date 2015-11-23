@@ -8,13 +8,21 @@ Ext.define('Ux.field.SelectOtherField', {
     promptMessage: 'Enter new option:'
   },
   addOtherField: function() {
-    var opts;
+    var i, opts;
     opts = this.getOptions();
+    i = 0;
+    while (i < opts.length) {
+      if (opts[i] === this.getOtherText()) {
+        return;
+      }
+      i++;
+    }
     opts.push({
       text: this.getOtherText(),
       value: this.getOtherText()
     });
-    return this.updateOptions(opts);
+    this.updateOptions(opts);
+    return this.optionsAdded = true;
   },
   fieldChange: function(cmp, newValue) {
     if (newValue === this.getOtherText()) {
