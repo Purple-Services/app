@@ -12,7 +12,7 @@ Ext.define('Ux.field.SelectOtherField', {
     opts = this.getOptions();
     i = 0;
     while (i < opts.length) {
-      if (opts[i] === this.getOtherText()) {
+      if (opts[i].value === this.getOtherText()) {
         return;
       }
       i++;
@@ -21,8 +21,7 @@ Ext.define('Ux.field.SelectOtherField', {
       text: this.getOtherText(),
       value: this.getOtherText()
     });
-    this.updateOptions(opts);
-    return this.optionsAdded = true;
+    return this.updateOptions(opts);
   },
   fieldChange: function(cmp, newValue) {
     if (newValue === this.getOtherText()) {

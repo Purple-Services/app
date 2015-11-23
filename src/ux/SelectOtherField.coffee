@@ -11,14 +11,13 @@ Ext.define 'Ux.field.SelectOtherField',
     opts = @getOptions()
     i = 0
     while i < opts.length
-      if opts[i] == @getOtherText()
+      if opts[i].value == @getOtherText()
         return
       i++
     opts.push
       text: @getOtherText()
       value: @getOtherText()
     @updateOptions opts
-    @optionsAdded = true
 
   fieldChange: (cmp, newValue) ->
     if newValue is @getOtherText()

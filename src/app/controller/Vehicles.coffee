@@ -37,10 +37,8 @@ Ext.define 'Purple.controller.Vehicles',
       editVehicleFormYear:
         change: 'yearChanged'
       editVehicleFormMake:
-        action: 'makeChanged'
         change: 'makeChanged'
       editVehicleFormModel:
-        action: 'modelChanged'
         change: 'modelChanged'
       editVehicleFormColor:
         change: 'colorChanged'
@@ -55,6 +53,7 @@ Ext.define 'Purple.controller.Vehicles',
   # all possible vehicle options
   vehicleList: window.vehicleList
   colorList: [
+    ''
     'White'
     'Black'
     'Silver'
@@ -77,14 +76,16 @@ Ext.define 'Purple.controller.Vehicles',
     @callParent arguments
 
   updateVehicleList: (category, text) ->
-    if category is 'make' and !vehicleList[@getEditVehicleFormYear().getValue()][text]
-      vehicleList[@getEditVehicleFormYear().getValue()][text] = []
+    if category is 'make' and !@vehicleList[@getEditVehicleFormYear().getValue()][text]
+      @vehicleList[@getEditVehicleFormYear().getValue()][text] = []
       @updateMakeList @getEditVehicleFormYear().getValue()
       @getEditVehicleFormMake().setValue text
-    if category is 'model' and !vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()][text]
-      vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()].push text
+    if category is 'model' and !@vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()][text]
+      @vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()].push text
       @updateModelList @getEditVehicleFormYear().getValue(), @getEditVehicleFormMake().getValue()
       @getEditVehicleFormModel().setValue text
+    if category is 'color' and !@colorList[text]
+      @updateColorList(text)
 
   updateMakeList: (year) ->
     @getEditVehicleFormMake().setOptions(
@@ -112,6 +113,18 @@ Ext.define 'Purple.controller.Vehicles',
         a.text.localeCompare(b.text)
     )
     @getEditVehicleFormModel().addOtherField()
+
+  updateColorList: (text) ->
+    @colorList.push text
+    @getEditVehicleFormColor().setOptions(
+      @getColorList().map (x) ->
+        {
+          text: x
+          value: x
+        }
+    )
+    @getEditVehicleFormColor().addOtherField()
+    @getEditVehicleFormColor().setValue text
 
   getVehicleById: (id) ->
     for v in @vehicles
@@ -142,38 +155,15 @@ Ext.define 'Purple.controller.Vehicles',
   yearChanged: (field, value) ->
     year = @getEditVehicleFormYear().getValue()
     make = @getEditVehicleFormMake().getValue()
-    @getEditVehicleFormMake().setOptions(
-      options = @getMakeList(value).map (x) ->
-        {
-          text: x
-          value: x
-        }
-      options.push text: '', value: ''
-      options.sort (a,b) ->
-        a.text.localeCompare(b.text)
-    )
+    @updateMakeList(year)
     if make
-      @getEditVehicleFormModel().setOptions(
-        options = @getModelList(year, make).map (x) ->
-          {
-            text: x
-            value: x
-          }
-        options.push text: '', value: ''
-      )
+      @updateModelList(year, make)
     @getEditVehicleFormMake().addOtherField()
     @getEditVehicleFormMake().setDisabled no
 
   makeChanged: (field, value) ->
     year = @getEditVehicleFormYear().getValue()
-    @getEditVehicleFormModel().setOptions(
-      options = @getModelList(year, value).map (x) ->
-        {
-          text: x
-          value: x
-        }
-      options.push text: '', value: ''
-    )
+    @updateModelList(year, value)
     @getEditVehicleFormModel().addOtherField()
     @getEditVehicleFormModel().setDisabled no
     @getEditVehicleFormMake().fieldChange(field, value)

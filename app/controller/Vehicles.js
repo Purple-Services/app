@@ -40,11 +40,9 @@ Ext.define('Purple.controller.Vehicles', {
         change: 'yearChanged'
       },
       editVehicleFormMake: {
-        action: 'makeChanged',
         change: 'makeChanged'
       },
       editVehicleFormModel: {
-        action: 'modelChanged',
         change: 'modelChanged'
       },
       editVehicleFormColor: {
@@ -61,20 +59,23 @@ Ext.define('Purple.controller.Vehicles', {
   },
   vehicles: null,
   vehicleList: window.vehicleList,
-  colorList: ['White', 'Black', 'Silver', 'Gray', 'Red', 'Blue', 'Brown', 'Biege', 'Cream', 'Yellow', 'Gold', 'Green', 'Pink', 'Purple', 'Copper', 'Camo'],
+  colorList: ['', 'White', 'Black', 'Silver', 'Gray', 'Red', 'Blue', 'Brown', 'Biege', 'Cream', 'Yellow', 'Gold', 'Green', 'Pink', 'Purple', 'Copper', 'Camo'],
   launch: function() {
     return this.callParent(arguments);
   },
   updateVehicleList: function(category, text) {
-    if (category === 'make' && !vehicleList[this.getEditVehicleFormYear().getValue()][text]) {
-      vehicleList[this.getEditVehicleFormYear().getValue()][text] = [];
+    if (category === 'make' && !this.vehicleList[this.getEditVehicleFormYear().getValue()][text]) {
+      this.vehicleList[this.getEditVehicleFormYear().getValue()][text] = [];
       this.updateMakeList(this.getEditVehicleFormYear().getValue());
       this.getEditVehicleFormMake().setValue(text);
     }
-    if (category === 'model' && !vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()][text]) {
-      vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()].push(text);
+    if (category === 'model' && !this.vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()][text]) {
+      this.vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()].push(text);
       this.updateModelList(this.getEditVehicleFormYear().getValue(), this.getEditVehicleFormMake().getValue());
-      return this.getEditVehicleFormModel().setValue(text);
+      this.getEditVehicleFormModel().setValue(text);
+    }
+    if (category === 'color' && !this.colorList[text]) {
+      return this.updateColorList(text);
     }
   },
   updateMakeList: function(year) {
@@ -106,6 +107,17 @@ Ext.define('Purple.controller.Vehicles', {
       return a.text.localeCompare(b.text);
     }));
     return this.getEditVehicleFormModel().addOtherField();
+  },
+  updateColorList: function(text) {
+    this.colorList.push(text);
+    this.getEditVehicleFormColor().setOptions(this.getColorList().map(function(x) {
+      return {
+        text: x,
+        value: x
+      };
+    }));
+    this.getEditVehicleFormColor().addOtherField();
+    return this.getEditVehicleFormColor().setValue(text);
   },
   getVehicleById: function(id) {
     var i, len, ref, v, vehicle;
@@ -166,46 +178,20 @@ Ext.define('Purple.controller.Vehicles', {
     return this.colorList;
   },
   yearChanged: function(field, value) {
-    var make, options, year;
+    var make, year;
     year = this.getEditVehicleFormYear().getValue();
     make = this.getEditVehicleFormMake().getValue();
-    this.getEditVehicleFormMake().setOptions(options = this.getMakeList(value).map(function(x) {
-      return {
-        text: x,
-        value: x
-      };
-    }), options.push({
-      text: '',
-      value: ''
-    }), options.sort(function(a, b) {
-      return a.text.localeCompare(b.text);
-    }));
+    this.updateMakeList(year);
     if (make) {
-      this.getEditVehicleFormModel().setOptions(options = this.getModelList(year, make).map(function(x) {
-        return {
-          text: x,
-          value: x
-        };
-      }), options.push({
-        text: '',
-        value: ''
-      }));
+      this.updateModelList(year, make);
     }
     this.getEditVehicleFormMake().addOtherField();
     return this.getEditVehicleFormMake().setDisabled(false);
   },
   makeChanged: function(field, value) {
-    var options, year;
+    var year;
     year = this.getEditVehicleFormYear().getValue();
-    this.getEditVehicleFormModel().setOptions(options = this.getModelList(year, value).map(function(x) {
-      return {
-        text: x,
-        value: x
-      };
-    }), options.push({
-      text: '',
-      value: ''
-    }));
+    this.updateModelList(year, value);
     this.getEditVehicleFormModel().addOtherField();
     this.getEditVehicleFormModel().setDisabled(false);
     return this.getEditVehicleFormMake().fieldChange(field, value);
