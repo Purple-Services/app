@@ -76,13 +76,15 @@ Ext.define 'Purple.controller.Vehicles',
     @callParent arguments
 
   updateVehicleList: (category, text) ->
-    if category is 'make' and !@vehicleList[@getEditVehicleFormYear().getValue()][text]
-      @vehicleList[@getEditVehicleFormYear().getValue()][text] = []
-      @updateMakeList @getEditVehicleFormYear().getValue()
+    year = @getEditVehicleFormYear().getValue()
+    make = @getEditVehicleFormMake().getValue()
+    if category is 'make' and !@vehicleList[year][text]
+      @vehicleList[year][text] = []
+      @updateMakeList year
       @getEditVehicleFormMake().setValue text
-    if category is 'model' and !@vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()][text]
-      @vehicleList[@getEditVehicleFormYear().getValue()][@getEditVehicleFormMake().getValue()].push text
-      @updateModelList @getEditVehicleFormYear().getValue(), @getEditVehicleFormMake().getValue()
+    if category is 'model' and !@vehicleList[year][make][text]
+      @vehicleList[year][make].push text
+      @updateModelList year, make
       @getEditVehicleFormModel().setValue text
     if category is 'color' and !@colorList[text]
       @updateColorList(text)

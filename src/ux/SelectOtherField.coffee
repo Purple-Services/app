@@ -9,11 +9,9 @@ Ext.define 'Ux.field.SelectOtherField',
 
   addOtherField: ->
     opts = @getOptions()
-    i = 0
-    while i < opts.length
-      if opts[i].value == @getOtherText()
+    for i in opts
+      if i.value == @getOtherText()
         return
-      i++
     opts.push
       text: @getOtherText()
       value: @getOtherText()
@@ -23,6 +21,11 @@ Ext.define 'Ux.field.SelectOtherField',
     if newValue is @getOtherText()
       Ext.Msg.prompt @getPromptTitle(), @getPromptMessage(), (choice, text) =>
         if choice is 'ok' and text.trim() isnt ''
+          opts = @getOptions()
+          for i in opts
+            if i.value.toUpperCase() == text.toUpperCase()
+              @setValue text
+              return
           @insertOption text
         if choice is 'cancel'
           @setValue ''

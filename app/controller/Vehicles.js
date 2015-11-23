@@ -64,14 +64,17 @@ Ext.define('Purple.controller.Vehicles', {
     return this.callParent(arguments);
   },
   updateVehicleList: function(category, text) {
-    if (category === 'make' && !this.vehicleList[this.getEditVehicleFormYear().getValue()][text]) {
-      this.vehicleList[this.getEditVehicleFormYear().getValue()][text] = [];
-      this.updateMakeList(this.getEditVehicleFormYear().getValue());
+    var make, year;
+    year = this.getEditVehicleFormYear().getValue();
+    make = this.getEditVehicleFormMake().getValue();
+    if (category === 'make' && !this.vehicleList[year][text]) {
+      this.vehicleList[year][text] = [];
+      this.updateMakeList(year);
       this.getEditVehicleFormMake().setValue(text);
     }
-    if (category === 'model' && !this.vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()][text]) {
-      this.vehicleList[this.getEditVehicleFormYear().getValue()][this.getEditVehicleFormMake().getValue()].push(text);
-      this.updateModelList(this.getEditVehicleFormYear().getValue(), this.getEditVehicleFormMake().getValue());
+    if (category === 'model' && !this.vehicleList[year][make][text]) {
+      this.vehicleList[year][make].push(text);
+      this.updateModelList(year, make);
       this.getEditVehicleFormModel().setValue(text);
     }
     if (category === 'color' && !this.colorList[text]) {

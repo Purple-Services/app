@@ -8,14 +8,13 @@ Ext.define('Ux.field.SelectOtherField', {
     promptMessage: 'Enter new option:'
   },
   addOtherField: function() {
-    var i, opts;
+    var i, j, len, opts;
     opts = this.getOptions();
-    i = 0;
-    while (i < opts.length) {
-      if (opts[i].value === this.getOtherText()) {
+    for (j = 0, len = opts.length; j < len; j++) {
+      i = opts[j];
+      if (i.value === this.getOtherText()) {
         return;
       }
-      i++;
     }
     opts.push({
       text: this.getOtherText(),
@@ -27,7 +26,16 @@ Ext.define('Ux.field.SelectOtherField', {
     if (newValue === this.getOtherText()) {
       return Ext.Msg.prompt(this.getPromptTitle(), this.getPromptMessage(), (function(_this) {
         return function(choice, text) {
+          var i, j, len, opts;
           if (choice === 'ok' && text.trim() !== '') {
+            opts = _this.getOptions();
+            for (j = 0, len = opts.length; j < len; j++) {
+              i = opts[j];
+              if (i.value.toUpperCase() === text.toUpperCase()) {
+                _this.setValue(text);
+                return;
+              }
+            }
             _this.insertOption(text);
           }
           if (choice === 'cancel') {
