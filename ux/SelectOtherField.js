@@ -38,7 +38,7 @@ Ext.define('Ux.field.SelectOtherField', {
             }
             _this.insertOption(text);
           }
-          if (choice === 'cancel') {
+          if (choice === 'cancel' || !text.trim()) {
             return _this.setValue('');
           }
         };

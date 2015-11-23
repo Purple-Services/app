@@ -27,7 +27,7 @@ Ext.define 'Ux.field.SelectOtherField',
               @setValue text
               return
           @insertOption text
-        if choice is 'cancel'
+        if choice is 'cancel' or !text.trim()
           @setValue ''
 
   insertOption: (text) ->

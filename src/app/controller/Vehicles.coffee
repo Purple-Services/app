@@ -50,6 +50,7 @@ Ext.define 'Purple.controller.Vehicles',
 
   # will be null until they log in
   vehicles: null
+
   # all possible vehicle options
   vehicleList: window.vehicleList
   colorList: [
@@ -80,16 +81,16 @@ Ext.define 'Purple.controller.Vehicles',
     make = @getEditVehicleFormMake().getValue()
     if category is 'make' and !@vehicleList[year][text]
       @vehicleList[year][text] = []
-      @updateMakeList year
+      @updateMakeOptions year
       @getEditVehicleFormMake().setValue text
     if category is 'model' and !@vehicleList[year][make][text]
       @vehicleList[year][make].push text
-      @updateModelList year, make
+      @updateModelOptions year, make
       @getEditVehicleFormModel().setValue text
     if category is 'color' and !@colorList[text]
-      @updateColorList(text)
+      @updateColorOptions(text)
 
-  updateMakeList: (year) ->
+  updateMakeOptions: (year) ->
     @getEditVehicleFormMake().setOptions(
       options = @getMakeList(year).map (x) ->
         {
@@ -103,7 +104,7 @@ Ext.define 'Purple.controller.Vehicles',
     @getEditVehicleFormMake().addOtherField()
 
 
-  updateModelList: (year, value) ->
+  updateModelOptions: (year, value) ->
     @getEditVehicleFormModel().setOptions(
       options = @getModelList(year, value).map (x) ->
         {
@@ -116,7 +117,7 @@ Ext.define 'Purple.controller.Vehicles',
     )
     @getEditVehicleFormModel().addOtherField()
 
-  updateColorList: (text) ->
+  updateColorOptions: (text) ->
     @colorList.push text
     @getEditVehicleFormColor().setOptions(
       @getColorList().map (x) ->
@@ -157,9 +158,9 @@ Ext.define 'Purple.controller.Vehicles',
   yearChanged: (field, value) ->
     year = @getEditVehicleFormYear().getValue()
     make = @getEditVehicleFormMake().getValue()
-    @updateMakeList(year)
+    @updateMakeOptions(year)
     if make
-      @updateModelList(year, make)
+      @updateModelOptions(year, make)
     if year
       @getEditVehicleFormMake().setDisabled no
     else
@@ -169,9 +170,9 @@ Ext.define 'Purple.controller.Vehicles',
 
   makeChanged: (field, value) ->
     year = @getEditVehicleFormYear().getValue()
-    @updateModelList(year, value)
+    @updateModelOptions(year, value)
     @getEditVehicleFormModel().addOtherField()
-    if value
+    if value and value isnt 'Other...'
       @getEditVehicleFormModel().setDisabled no
     else
       @getEditVehicleFormModel().setDisabled yes
