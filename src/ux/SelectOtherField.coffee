@@ -25,6 +25,8 @@ Ext.define 'Ux.field.SelectOtherField',
       Ext.Msg.prompt @getPromptTitle(), @getPromptMessage(), (choice, text) =>
         if choice is 'ok' and text.trim() isnt ''
           @insertOption text
+        if choice is 'cancel'
+          @setValue ''
 
   insertOption: (text) ->
     util.ctl("Vehicles").updateVehicleList(@_name, text)

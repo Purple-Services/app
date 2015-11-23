@@ -40,9 +40,11 @@ Ext.define('Purple.controller.Vehicles', {
         change: 'yearChanged'
       },
       editVehicleFormMake: {
+        action: 'makeChanged',
         change: 'makeChanged'
       },
       editVehicleFormModel: {
+        action: 'modelChanged',
         change: 'modelChanged'
       },
       editVehicleFormColor: {
@@ -82,6 +84,9 @@ Ext.define('Purple.controller.Vehicles', {
         text: x,
         value: x
       };
+    }), options.push({
+      text: '',
+      value: ''
     }), options.sort(function(a, b) {
       return a.text.localeCompare(b.text);
     }));
@@ -94,6 +99,9 @@ Ext.define('Purple.controller.Vehicles', {
         text: x,
         value: x
       };
+    }), options.push({
+      text: '',
+      value: ''
     }), options.sort(function(a, b) {
       return a.text.localeCompare(b.text);
     }));
@@ -166,28 +174,37 @@ Ext.define('Purple.controller.Vehicles', {
         text: x,
         value: x
       };
+    }), options.push({
+      text: '',
+      value: ''
     }), options.sort(function(a, b) {
       return a.text.localeCompare(b.text);
     }));
     if (make) {
-      this.getEditVehicleFormModel().setOptions(this.getModelList(year, make).map(function(x) {
+      this.getEditVehicleFormModel().setOptions(options = this.getModelList(year, make).map(function(x) {
         return {
           text: x,
           value: x
         };
+      }), options.push({
+        text: '',
+        value: ''
       }));
     }
     this.getEditVehicleFormMake().addOtherField();
     return this.getEditVehicleFormMake().setDisabled(false);
   },
   makeChanged: function(field, value) {
-    var year;
+    var options, year;
     year = this.getEditVehicleFormYear().getValue();
-    this.getEditVehicleFormModel().setOptions(this.getModelList(year, value).map(function(x) {
+    this.getEditVehicleFormModel().setOptions(options = this.getModelList(year, value).map(function(x) {
       return {
         text: x,
         value: x
       };
+    }), options.push({
+      text: '',
+      value: ''
     }));
     this.getEditVehicleFormModel().addOtherField();
     this.getEditVehicleFormModel().setDisabled(false);

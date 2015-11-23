@@ -29,7 +29,10 @@ Ext.define('Ux.field.SelectOtherField', {
       return Ext.Msg.prompt(this.getPromptTitle(), this.getPromptMessage(), (function(_this) {
         return function(choice, text) {
           if (choice === 'ok' && text.trim() !== '') {
-            return _this.insertOption(text);
+            _this.insertOption(text);
+          }
+          if (choice === 'cancel') {
+            return _this.setValue('');
           }
         };
       })(this));

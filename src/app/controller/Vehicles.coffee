@@ -37,8 +37,10 @@ Ext.define 'Purple.controller.Vehicles',
       editVehicleFormYear:
         change: 'yearChanged'
       editVehicleFormMake:
+        action: 'makeChanged'
         change: 'makeChanged'
       editVehicleFormModel:
+        action: 'modelChanged'
         change: 'modelChanged'
       editVehicleFormColor:
         change: 'colorChanged'
@@ -91,6 +93,7 @@ Ext.define 'Purple.controller.Vehicles',
           text: x
           value: x
         }
+      options.push text: '', value: ''
       options.sort (a,b) ->
         a.text.localeCompare(b.text)
     )
@@ -104,6 +107,7 @@ Ext.define 'Purple.controller.Vehicles',
           text: x
           value: x
         }
+      options.push text: '', value: ''
       options.sort (a,b) ->
         a.text.localeCompare(b.text)
     )
@@ -144,16 +148,18 @@ Ext.define 'Purple.controller.Vehicles',
           text: x
           value: x
         }
+      options.push text: '', value: ''
       options.sort (a,b) ->
         a.text.localeCompare(b.text)
     )
     if make
       @getEditVehicleFormModel().setOptions(
-        @getModelList(year, make).map (x) ->
+        options = @getModelList(year, make).map (x) ->
           {
             text: x
             value: x
           }
+        options.push text: '', value: ''
       )
     @getEditVehicleFormMake().addOtherField()
     @getEditVehicleFormMake().setDisabled no
@@ -161,11 +167,12 @@ Ext.define 'Purple.controller.Vehicles',
   makeChanged: (field, value) ->
     year = @getEditVehicleFormYear().getValue()
     @getEditVehicleFormModel().setOptions(
-      @getModelList(year, value).map (x) ->
+      options = @getModelList(year, value).map (x) ->
         {
           text: x
           value: x
         }
+      options.push text: '', value: ''
     )
     @getEditVehicleFormModel().addOtherField()
     @getEditVehicleFormModel().setDisabled no
