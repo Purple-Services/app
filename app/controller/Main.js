@@ -490,8 +490,9 @@ Ext.define('Purple.controller.Main', {
     return Ext.Msg.prompt('Enter Coupon Code', false, ((function(_this) {
       return function(buttonId, text) {
         if (buttonId === 'ok') {
-          return _this.applyCode(text);
+          _this.applyCode(text);
         }
+        return Ext.select('.x-msgbox').setStyle('text-transform', 'none');
       };
     })(this)));
   },

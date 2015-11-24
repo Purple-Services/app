@@ -21,6 +21,9 @@ body {
     font-family: 'Source Sans Pro';
     text-shadow: none !important;
 }
+input {
+    text-transform: inherit;
+}
 .x-layout-card-item, .x-scroll-container {
     background: transparent !important;
 }
@@ -415,7 +418,6 @@ body {
 .x-msgbox .x-title {
     color: #444;
     text-shadow: none;
-    text-transform: uppercase;
     font-size: 20px;
 }
 .x-msgbox .x-field {
@@ -426,7 +428,6 @@ body {
 }
 .x-msgbox .x-input-el {
     text-align: left;
-    text-transform: uppercase;
 }
 .x-msgbox .x-button-normal {
     background: #ededed !important;

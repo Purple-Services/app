@@ -128,7 +128,8 @@ Ext.define('Purple.view.RequestConfirmationForm', {
             listeners: {
               initialize: function(field) {
                 return field.element.on('tap', function() {
-                  return util.ctl('Main').promptForCode();
+                  util.ctl('Main').promptForCode();
+                  return Ext.select('.x-msgbox').setStyle('text-transform', 'uppercase');
                 });
               }
             }
