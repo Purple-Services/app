@@ -72,12 +72,12 @@ Ext.define('Purple.controller.Vehicles', {
       this.updateMakeOptions(year);
       this.getEditVehicleFormMake().setValue(text);
     }
-    if (category === 'model' && this.vehicleList[year][make].indexOf(text === -1)) {
+    if (category === 'model' && this.vehicleList[year][make].indexOf(text) === -1) {
       this.vehicleList[year][make].push(text);
       this.updateModelOptions(year, make);
       this.getEditVehicleFormModel().setValue(text);
     }
-    if (category === 'color' && this.colorList.indexOf(text === -1)) {
+    if (category === 'color' && this.colorList.indexOf(text) === -1) {
       this.updateColorOptions(text);
       return this.getEditVehicleFormColor().setValue(text);
     }
@@ -133,11 +133,11 @@ Ext.define('Purple.controller.Vehicles', {
       this.vehicleList[vehicle.year][vehicle.make] = [];
       this.updateMakeOptions(vehicle.year);
     }
-    if (this.vehicleList[vehicle.year][vehicle.make].indexOf(vehicle.model === -1)) {
+    if (this.vehicleList[vehicle.year][vehicle.make].indexOf(vehicle.model) === -1) {
       this.vehicleList[vehicle.year][vehicle.make].push(vehicle.model);
       this.updateModelOptions(vehicle.year, vehicle.make);
     }
-    if (this.colorList.indexOf(vehicle.color === -1)) {
+    if (this.colorList.indexOf(vehicle.color) === -1) {
       return this.updateColorOptions(vehicle.color);
     }
   },

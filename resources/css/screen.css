@@ -21,6 +21,9 @@ body {
     font-family: 'Source Sans Pro';
     text-shadow: none !important;
 }
+input {
+    text-transform: inherit;
+}
 .x-layout-card-item, .x-scroll-container {
     background: transparent !important;
 }

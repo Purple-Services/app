@@ -83,11 +83,11 @@ Ext.define 'Purple.controller.Vehicles',
       @vehicleList[year][text] = []
       @updateMakeOptions year
       @getEditVehicleFormMake().setValue text
-    if category is 'model' and @vehicleList[year][make].indexOf text is -1
+    if category is 'model' and @vehicleList[year][make].indexOf(text) is -1
       @vehicleList[year][make].push text
       @updateModelOptions year, make
       @getEditVehicleFormModel().setValue text
-    if category is 'color' and @colorList.indexOf text is -1
+    if category is 'color' and @colorList.indexOf(text) is -1
       @updateColorOptions text
       @getEditVehicleFormColor().setValue text
 
@@ -130,10 +130,10 @@ Ext.define 'Purple.controller.Vehicles',
     if not @vehicleList[vehicle.year][vehicle.make]
       @vehicleList[vehicle.year][vehicle.make] = []
       @updateMakeOptions vehicle.year
-    if @vehicleList[vehicle.year][vehicle.make].indexOf vehicle.model is -1
+    if @vehicleList[vehicle.year][vehicle.make].indexOf(vehicle.model) is -1
       @vehicleList[vehicle.year][vehicle.make].push vehicle.model
       @updateModelOptions vehicle.year, vehicle.make
-    if @colorList.indexOf vehicle.color is -1
+    if @colorList.indexOf(vehicle.color) is -1
       @updateColorOptions vehicle.color
 
   getVehicleById: (id) ->

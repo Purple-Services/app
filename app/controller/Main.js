@@ -201,7 +201,7 @@ Ext.define('Purple.controller.Main', {
     }, (function(_this) {
       return function(results, status) {
         var addressComponents, c, i, j, len, len1, ref1, ref2, streetAddress, t;
-        if (status === google.maps.GeocoderStatus.OK) {
+        if (status === google.maps.GeocoderStatus.OK && !_this.getMap().isHidden()) {
           if (((ref1 = results[0]) != null ? ref1['address_components'] : void 0) != null) {
             addressComponents = results[0]['address_components'];
             streetAddress = addressComponents[0]['short_name'] + " " + addressComponents[1]['short_name'];
@@ -490,8 +490,9 @@ Ext.define('Purple.controller.Main', {
     return Ext.Msg.prompt('Enter Coupon Code', false, ((function(_this) {
       return function(buttonId, text) {
         if (buttonId === 'ok') {
-          return _this.applyCode(text);
+          _this.applyCode(text);
         }
+        return Ext.select('.x-msgbox').setStyle('text-transform', 'none');
       };
     })(this)));
   },
