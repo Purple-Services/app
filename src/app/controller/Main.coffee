@@ -296,12 +296,12 @@ Ext.define 'Purple.controller.Main',
       @getAddWorkAddressContainer().show()
 
   showTitles: (location) ->
-    if @addressInputSubMode == 'home'
+    if @addressInputSubMode is 'home'
       if localStorage['purpleUserHomeLocationName']
         @getRequestAddressField().setValue('Change Home Address...')
       else
         @getRequestAddressField().setValue('Add Home Address...')
-    else if @addressInputSubMode == 'work'
+    else if @addressInputSubMode is 'work'
       if localStorage['purpleUserWorkLocationName']
         @getRequestAddressField().setValue('Edit Work Address...')
       else
@@ -327,9 +327,9 @@ Ext.define 'Purple.controller.Main',
         util.ctl('Menu').popOffBackButtonWithoutAction()
 
   showRemoveButtons: (location) ->
-    if @addressInputSubMode == 'home' and localStorage['purpleUserHomeLocationName']
+    if @addressInputSubMode is 'home' and localStorage['purpleUserHomeLocationName']
       @getRemoveHomeAddressContainer().show()
-    if @addressInputSubMode == 'work' and localStorage['purpleUserWorkLocationName']
+    if @addressInputSubMode is 'work' and localStorage['purpleUserWorkLocationName']
       @getRemoveWorkAddressContainer().show()
 
   hideAllSavedLoc: ->
@@ -415,7 +415,7 @@ Ext.define 'Purple.controller.Main',
     @editAddressInputMode()
 
   updateAddress: ->
-    if @addressInputSubMode == 'home'
+    if @addressInputSubMode is 'home'
       @updateSavedLocations {
         home: 
           displayText: @loc['locationName']
@@ -428,7 +428,7 @@ Ext.define 'Purple.controller.Main',
           googlePlaceId: ''
         }, ->
           util.ctl('Main').getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName'])
-    if @addressInputSubMode == 'work'
+    if @addressInputSubMode is 'work'
       @updateSavedLocations {
         home: if localStorage['purpleUserHomeLocationName']
           displayText: localStorage['purpleUserHomeLocationName']

@@ -110,7 +110,7 @@ Ext.define('Purple.view.MapForm', {
             id: 'addHomeAddress',
             flex: 0,
             label: 'Add Home',
-            cls: 'account-home-address',
+            cls: 'saved-address-field',
             disabled: true
           }
         ]
@@ -165,7 +165,7 @@ Ext.define('Purple.view.MapForm', {
             label: 'Home',
             labelAlign: 'top',
             style: 'width: 80%;',
-            cls: 'account-home-address',
+            cls: 'saved-address-field',
             disabled: true
           }, {
             xtype: 'button',
@@ -194,7 +194,7 @@ Ext.define('Purple.view.MapForm', {
             id: 'addWorkAddress',
             flex: 0,
             label: 'Add Work',
-            cls: 'account-home-address',
+            cls: 'saved-address-field',
             disabled: true
           }
         ]
@@ -213,7 +213,7 @@ Ext.define('Purple.view.MapForm', {
             label: 'Work',
             labelAlign: 'top',
             style: 'width: 80%;',
-            cls: 'account-home-address',
+            cls: 'saved-address-field',
             disabled: true
           }, {
             xtype: 'button',
