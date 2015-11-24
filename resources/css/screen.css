@@ -401,14 +401,12 @@ input {
     font-weight: 900;
 }
 
-
 .loose-text {
     color: #752B90;
     font-size: 18px;
     font-weight: normal;
     padding-bottom: 6px;
 }
-
 
 .x-msgbox {
     border: none;
@@ -418,6 +416,7 @@ input {
 .x-msgbox .x-title {
     color: #444;
     text-shadow: none;
+    text-transform: uppercase;
     font-size: 20px;
 }
 .x-msgbox .x-field {
