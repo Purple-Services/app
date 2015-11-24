@@ -83,11 +83,11 @@ Ext.define 'Purple.controller.Vehicles',
       @vehicleList[year][text] = []
       @updateMakeOptions year
       @getEditVehicleFormMake().setValue text
-    if category is 'model' and !@vehicleList[year][make][text]
+    if category is 'model' and @vehicleList[year][make].indexOf(text) is -1
       @vehicleList[year][make].push text
       @updateModelOptions year, make
       @getEditVehicleFormModel().setValue text
-    if category is 'color' and !@colorList[text]
+    if category is 'color' and @colorList.indexOf(text) is -1
       @updateColorOptions(text)
 
   updateMakeOptions: (year) ->
@@ -104,9 +104,9 @@ Ext.define 'Purple.controller.Vehicles',
     @getEditVehicleFormMake().addOtherField()
 
 
-  updateModelOptions: (year, value) ->
+  updateModelOptions: (year, make) ->
     @getEditVehicleFormModel().setOptions(
-      options = @getModelList(year, value).map (x) ->
+      options = @getModelList(year, make).map (x) ->
         {
           text: x
           value: x
@@ -128,6 +128,16 @@ Ext.define 'Purple.controller.Vehicles',
     )
     @getEditVehicleFormColor().addOtherField()
     @getEditVehicleFormColor().setValue text
+
+  addSavedVehicles: (vehicle) ->
+    if !@vehicleList[vehicle.year][vehicle.make]
+      @vehicleList[vehicle.year][vehicle.make] = []
+      @updateMakeOptions(vehicle.year)
+    if @vehicleList[vehicle.year][vehicle.make].indexOf(vehicle.model) is -1
+      @vehicleList[vehicle.year][vehicle.make].push vehicle.model
+      @updateModelOptions(vehicle.year, vehicle.make)
+    if @colorList.indexOf(vehicle.color) is -1
+      @updateColorOptions(vehicle.color)
 
   getVehicleById: (id) ->
     for v in @vehicles
@@ -189,6 +199,9 @@ Ext.define 'Purple.controller.Vehicles',
       Ext.create 'Purple.view.EditVehicleForm',
         vehicleId: vehicleId
     )
+
+    for vehicle in @vehicles
+      @addSavedVehicles(vehicle)
 
     if not suppressBackButtonBehavior
       util.ctl('Menu').pushOntoBackButton =>

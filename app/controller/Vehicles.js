@@ -72,12 +72,12 @@ Ext.define('Purple.controller.Vehicles', {
       this.updateMakeOptions(year);
       this.getEditVehicleFormMake().setValue(text);
     }
-    if (category === 'model' && !this.vehicleList[year][make][text]) {
+    if (category === 'model' && this.vehicleList[year][make].indexOf(text) === -1) {
       this.vehicleList[year][make].push(text);
       this.updateModelOptions(year, make);
       this.getEditVehicleFormModel().setValue(text);
     }
-    if (category === 'color' && !this.colorList[text]) {
+    if (category === 'color' && this.colorList.indexOf(text) === -1) {
       return this.updateColorOptions(text);
     }
   },
@@ -96,9 +96,9 @@ Ext.define('Purple.controller.Vehicles', {
     }));
     return this.getEditVehicleFormMake().addOtherField();
   },
-  updateModelOptions: function(year, value) {
+  updateModelOptions: function(year, make) {
     var options;
-    this.getEditVehicleFormModel().setOptions(options = this.getModelList(year, value).map(function(x) {
+    this.getEditVehicleFormModel().setOptions(options = this.getModelList(year, make).map(function(x) {
       return {
         text: x,
         value: x
@@ -121,6 +121,19 @@ Ext.define('Purple.controller.Vehicles', {
     }));
     this.getEditVehicleFormColor().addOtherField();
     return this.getEditVehicleFormColor().setValue(text);
+  },
+  addSavedVehicles: function(vehicle) {
+    if (!this.vehicleList[vehicle.year][vehicle.make]) {
+      this.vehicleList[vehicle.year][vehicle.make] = [];
+      this.updateMakeOptions(vehicle.year);
+    }
+    if (this.vehicleList[vehicle.year][vehicle.make].indexOf(vehicle.model) === -1) {
+      this.vehicleList[vehicle.year][vehicle.make].push(vehicle.model);
+      this.updateModelOptions(vehicle.year, vehicle.make);
+    }
+    if (this.colorList.indexOf(vehicle.color) === -1) {
+      return this.updateColorOptions(vehicle.color);
+    }
   },
   getVehicleById: function(id) {
     var i, len, ref, v, vehicle;
@@ -214,7 +227,7 @@ Ext.define('Purple.controller.Vehicles', {
     return this.getEditVehicleFormColor().fieldChange(field, value);
   },
   showEditVehicleForm: function(vehicleId, suppressBackButtonBehavior) {
-    var options, vehicle;
+    var i, len, options, ref, vehicle;
     if (vehicleId == null) {
       vehicleId = 'new';
     }
@@ -224,6 +237,11 @@ Ext.define('Purple.controller.Vehicles', {
     this.getVehiclesTabContainer().setActiveItem(Ext.create('Purple.view.EditVehicleForm', {
       vehicleId: vehicleId
     }));
+    ref = this.vehicles;
+    for (i = 0, len = ref.length; i < len; i++) {
+      vehicle = ref[i];
+      this.addSavedVehicles(vehicle);
+    }
     if (!suppressBackButtonBehavior) {
       util.ctl('Menu').pushOntoBackButton((function(_this) {
         return function() {

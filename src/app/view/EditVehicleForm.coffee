@@ -123,6 +123,8 @@ Ext.define 'Purple.view.EditVehicleForm',
             flex: 0
             name: 'make'
             label: 'Make'
+            promptTitle: 'Enter New Make'
+            promptMessage: ''
             listPicker:
               title: 'Select Vehicle Make'
             cls: [
@@ -141,6 +143,8 @@ Ext.define 'Purple.view.EditVehicleForm',
             flex: 0
             name: 'model'
             label: 'Model'
+            promptTitle: 'Enter New Model'
+            promptMessage: ''
             listPicker:
               title: 'Select Vehicle Model'
             cls: [
@@ -159,6 +163,8 @@ Ext.define 'Purple.view.EditVehicleForm',
             flex: 0
             name: 'color'
             label: 'Color'
+            promptTitle: 'Enter New Color'
+            promptMessage: ''
             listPicker:
               title: 'Select Vehicle Color'
             cls: [

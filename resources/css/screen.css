@@ -398,14 +398,12 @@ body {
     font-weight: 900;
 }
 
-
 .loose-text {
     color: #752B90;
     font-size: 18px;
     font-weight: normal;
     padding-bottom: 6px;
 }
-
 
 .x-msgbox {
     border: none;
@@ -426,7 +424,6 @@ body {
 }
 .x-msgbox .x-input-el {
     text-align: left;
-    text-transform: uppercase;
 }
 .x-msgbox .x-button-normal {
     background: #ededed !important;

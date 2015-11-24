@@ -10,7 +10,7 @@ Ext.define 'Ux.field.SelectOtherField',
   addOtherField: ->
     opts = @getOptions()
     for i in opts
-      if i.value == @getOtherText()
+      if i.value is @getOtherText()
         return
     opts.push
       text: @getOtherText()
@@ -23,7 +23,7 @@ Ext.define 'Ux.field.SelectOtherField',
         if choice is 'ok' and text.trim() isnt ''
           opts = @getOptions()
           for i in opts
-            if i.value.toUpperCase() == text.toUpperCase()
+            if i.value.toUpperCase() is text.toUpperCase()
               @setValue text
               return
           @insertOption text
@@ -32,4 +32,5 @@ Ext.define 'Ux.field.SelectOtherField',
 
   insertOption: (text) ->
     util.ctl("Vehicles").updateVehicleList(@_name, text)
+
 
