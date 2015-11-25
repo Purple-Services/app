@@ -7,7 +7,8 @@
 /build/*/*.zip
 /.sencha_backup
 /app.js
-/app
+/app/controller
+/app/view
 /ux/MoneyField.js
 /ux/PhoneField.js
 /ux/SelectOtherField.js
