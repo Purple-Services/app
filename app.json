@@ -116,8 +116,8 @@
      * Extra resources to be copied along when build
      */
     "resources": [
-        /* "resources/images",
-        "resources/fonts" */ /* I couldn't this to work, just copy directly */
+        "resources/images",
+        "resources/fonts" /* I couldn't this to work, just copy directly */
     ],
 
     /**
