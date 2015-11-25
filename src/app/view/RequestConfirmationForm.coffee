@@ -169,6 +169,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
               initialize: (field) ->
                 field.element.on 'tap', ->
                   util.ctl('Main').promptForCode()
+                  Ext.select('.x-msgbox .x-input-el').setStyle('text-transform', 'uppercase')
           }
           {
             xtype: 'moneyfield'

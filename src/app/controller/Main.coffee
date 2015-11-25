@@ -638,7 +638,9 @@ Ext.define 'Purple.controller.Main',
       false,
       ((buttonId, text) =>
         if buttonId is 'ok'
-          @applyCode text)
+          @applyCode text
+        Ext.select('.x-msgbox .x-input-el').setStyle('text-transform', 'none')
+        )
     )
 
   applyCode: (code) ->
