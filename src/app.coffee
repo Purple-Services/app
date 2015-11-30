@@ -38,3 +38,5 @@ Ext.application
     Ext.Viewport.add [
       Ext.create 'Purple.view.MainContainer'
     ]
+    # clean out that preload div, we no longer need those there
+    #document.getElementById('images-to-preload').innerHTML = ""
