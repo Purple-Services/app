@@ -12,6 +12,7 @@ Ext.define 'Purple.controller.Main',
       gasPriceMapDisplay: '#gasPriceMapDisplay'
       requestAddressField: '#requestAddressField'
       requestGasButtonContainer: '#requestGasButtonContainer'
+      requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
       requestForm: 'requestform'
       requestConfirmationForm: 'requestconfirmationform'
@@ -25,17 +26,34 @@ Ext.define 'Purple.controller.Main',
       discountField: '#discountField'
       couponCodeField: '#couponCodeField'
       totalPriceField: '#totalPriceField'
+      homeAddressContainer: '#homeAddressContainer'
+      workAddressContainer: '#workAddressContainer'
+      accountHomeAddress: '#accountHomeAddress'
+      accountWorkAddress: '#accountWorkAddress'
+      addHomeAddressContainer: '#addHomeAddressContainer'
+      addWorkAddressContainer: '#addWorkAddressContainer'
+      addHomeAddress: '#addHomeAddress'
+      addWorkAddress: '#addWorkAddress'
+      removeHomeAddressContainer: '#removeHomeAddressContainer'
+      removeWorkAddressContainer: '#removeWorkAddressContainer'
+      removeHomeAddress: '#removeHomeAddress'
+      removeWorkAddress: '#removeWorkAddress'
+      centerMapButton: '#centerMapButton'
     control:
       mapForm:
         recenterAtUserLoc: 'recenterAtUserLoc'
+        changeHomeAddress: 'changeHomeAddress'
+        changeWorkAddress: 'changeWorkAddress'
       map:
+        dragstart: 'dragStart'
+        boundchange: 'boundChanged'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
       autocompleteList:
-        updateDeliveryLocAddressByLocArray: 'updateDeliveryLocAddressByLocArray'
+        handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
         initRequestGasForm: 'initRequestGasForm'
       requestForm:
@@ -48,7 +66,18 @@ Ext.define 'Purple.controller.Main',
         sendFeedback: 'sendFeedback'
       invite:
         sendInvites: 'sendInvites'
-
+      accountHomeAddress:
+        initialize: 'initAccountHomeAddress'
+      accountWorkAddress:
+        initialize: 'initAccountWorkAddress'
+      addHomeAddress:
+        initialize: 'initAddHomeAddress'
+      addWorkAddress:
+        initialize: 'initAddWorkAddress'
+      removeHomeAddress:
+        initialize: 'initRemoveHomeAddress'
+      removeWorkAddress:
+        initialize: 'initRemoveWorkAddress'
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -152,6 +181,12 @@ Ext.define 'Purple.controller.Main',
     else
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
+  dragStart: ->
+    @getRequestGasButton().setDisabled yes
+
+  boundChanged: ->
+    @getRequestGasButton().setDisabled yes
+
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
     # might want to send actual 
@@ -162,7 +197,7 @@ Ext.define 'Purple.controller.Main',
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     latlng = new google.maps.LatLng lat, lng
     @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-      if status is google.maps.GeocoderStatus.OK
+      if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
         if results[0]?['address_components']?
           addressComponents = results[0]['address_components']
           streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
@@ -186,6 +221,7 @@ Ext.define 'Purple.controller.Main',
               method: 'POST'
               scope: this
               success: (response_obj) ->
+                @getRequestGasButton().setDisabled no
                 response = Ext.JSON.decode response_obj.responseText
                 if response.success
                   prices = response.gas_prices
@@ -201,17 +237,20 @@ Ext.define 'Purple.controller.Main',
                 console.log response_obj
         # else
         #   console.log 'No results found.'
+
       # else
       #   console.log 'Geocoder failed due to: ' + status
 
   mapMode: ->
     if @getMap().isHidden()
-      @getAutocompleteList().hide()
+      @hideAllSavedLoc()
       @getMap().show()
+      @getCenterMapButton().show()
       @getSpacerBetweenMapAndAddress().show()
       @getGasPriceMapDisplay().show()
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
+      @getRequestAddressField().setValue("Updating Location...")
 
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
@@ -220,6 +259,8 @@ Ext.define 'Purple.controller.Main',
 
   addressInputMode: ->
     if not @getMap().isHidden()
+      @addressInputSubMode = ''
+      @hideAllSavedLoc()
       @getMap().hide()
       @getSpacerBetweenMapAndAddress().hide()
       @getGasPriceMapDisplay().hide()
@@ -227,12 +268,92 @@ Ext.define 'Purple.controller.Main',
       @getAutocompleteList().show()
       @getRequestAddressField().enable()
       @getRequestAddressField().focus()
+      @showSavedLoc()
       util.ctl('Menu').pushOntoBackButton =>
         @recenterAtUserLoc()
         @mapMode()
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
 
+  editSavedLoc: ->
+    @addressInputSubMode = ''
+    @hideAllSavedLoc()
+    @getAutocompleteList().show()
+    @showSavedLoc()
+    util.ctl('Menu').pushOntoBackButton =>
+      @recenterAtUserLoc()
+      @mapMode()
+
+  showSavedLoc: ->
+    if localStorage['purpleUserHomeLocationName']
+      @getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName'])
+      @getHomeAddressContainer().show()
+    else
+      @getAddHomeAddressContainer().show()
+    if localStorage['purpleUserWorkLocationName']
+      @getAccountWorkAddress().setValue(localStorage['purpleUserWorkLocationName'])
+      @getWorkAddressContainer().show()
+    else
+      @getAddWorkAddressContainer().show()
+
+  showTitles: (location) ->
+    if @addressInputSubMode is 'home'
+      if localStorage['purpleUserHomeLocationName']
+        @getRequestAddressField().setValue('Change Home Address...')
+      else
+        @getRequestAddressField().setValue('Add Home Address...')
+    else if @addressInputSubMode is 'work'
+      if localStorage['purpleUserWorkLocationName']
+        @getRequestAddressField().setValue('Edit Work Address...')
+      else
+        @getRequestAddressField().setValue('Add Work Address...')
+
+  removeAddress: ->
+    @updateSavedLocations {
+      home: if @addressInputSubMode is 'home'
+        displayText: ''
+        googlePlaceId: ''
+      else
+        displayText: localStorage['purpleUserHomeLocationName']
+        googlePlaceId: localStorage['purpleUserHomePlaceId']
+      work: if @addressInputSubMode is 'work'
+        displayText: ''
+        googlePlaceId: ''
+      else
+        displayText: localStorage['purpleUserWorkLocationName']
+        googlePlaceId: localStorage['purpleUserWorkPlaceId']
+      }, ->
+        util.ctl('Main').editSavedLoc()
+        util.ctl('Menu').popOffBackButtonWithoutAction()
+        util.ctl('Menu').popOffBackButtonWithoutAction()
+
+  showRemoveButtons: (location) ->
+    if @addressInputSubMode is 'home' and localStorage['purpleUserHomeLocationName']
+      @getRemoveHomeAddressContainer().show()
+    if @addressInputSubMode is 'work' and localStorage['purpleUserWorkLocationName']
+      @getRemoveWorkAddressContainer().show()
+
+  hideAllSavedLoc: ->
+    @getAddWorkAddressContainer().hide()
+    @getAddHomeAddressContainer().hide()
+    @getAutocompleteList().hide()
+    @getHomeAddressContainer().hide()
+    @getWorkAddressContainer().hide()
+    @getRemoveHomeAddressContainer().hide()
+    @getRemoveWorkAddressContainer().hide()
+    @getCenterMapButton().hide()
+    @getRequestAddressField().setValue('')
+
+  editAddressInputMode: ->
+    @hideAllSavedLoc()
+    @getAutocompleteList().show()
+    @showRemoveButtons()
+    @showTitles()
+    util.ctl('Menu').pushOntoBackButton =>
+      @editSavedLoc()
+      util.ctl('Menu').popOffBackButtonWithoutAction()
+
   generateSuggestions: ->
+    @getRequestGasButton().setDisabled yes
     query = @getRequestAddressField().getValue()
     suggestions = new Array()
     Ext.Ajax.request
@@ -279,6 +400,109 @@ Ext.define 'Purple.controller.Main',
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
+  handleAutoCompleteListTap: (loc) ->
+    @loc = loc
+    if @addressInputSubMode
+      @updateAddress()
+    @updateDeliveryLocAddressByLocArray loc
+
+  changeHomeAddress: ->
+    @addressInputSubMode = 'home'
+    @editAddressInputMode()
+
+  changeWorkAddress: ->
+    @addressInputSubMode = 'work'
+    @editAddressInputMode()
+
+  updateAddress: ->
+    if @addressInputSubMode is 'home'
+      @updateSavedLocations {
+        home: 
+          displayText: @loc['locationName']
+          googlePlaceId: @loc['placeId']
+        work: if localStorage['purpleUserWorkLocationName']
+          displayText: localStorage['purpleUserWorkLocationName']
+          googlePlaceId: localStorage['purpleUserWorkPlaceId']
+        else
+          displayText: ''
+          googlePlaceId: ''
+        }, ->
+          util.ctl('Main').getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName'])
+    if @addressInputSubMode is 'work'
+      @updateSavedLocations {
+        home: if localStorage['purpleUserHomeLocationName']
+          displayText: localStorage['purpleUserHomeLocationName']
+          googlePlaceId: localStorage['purpleUserHomePlaceId']
+        else
+          displayText: ''
+          googlePlaceId: ''
+        work: 
+          displayText: @loc['locationName']
+          googlePlaceId: @loc['placeId']
+        }, ->
+          util.ctl('Main').getAccountWorkAddress().setValue(localStorage['purpleUserWorkLocationName'])
+
+
+  initAccountHomeAddress: (field) ->
+    @getAccountHomeAddress().setValue(localStorage['purpleUserHomeLocationName'])
+    field.element.on 'tap', @searchHome, this
+
+  initAccountWorkAddress: (field) ->
+    @getAccountWorkAddress().setValue(localStorage['purpleUserWorkLocationName'])
+    field.element.on 'tap', @searchWork, this
+
+  initAddWorkAddress: (field) ->
+    field.element.on 'tap', @changeWorkAddress, this
+
+  initAddHomeAddress: (field) ->
+    field.element.on 'tap', @changeHomeAddress, this
+
+  initRemoveHomeAddress: (field) ->
+    field.element.on 'tap', @removeAddress, this
+
+  initRemoveWorkAddress: (field) ->
+    field.element.on 'tap', @removeAddress, this
+
+  currentLocation: (locationName, placeId) ->
+    {locationName: locationName, placeId: placeId}
+
+  searchHome: ->
+    @updateDeliveryLocAddressByLocArray @currentLocation(localStorage['purpleUserHomeLocationName'], localStorage['purpleUserHomePlaceId'])
+
+  searchWork: ->
+    @updateDeliveryLocAddressByLocArray @currentLocation(localStorage['purpleUserWorkLocationName'], localStorage['purpleUserWorkPlaceId'])
+  
+  updateSavedLocations: (savedLocations, callback) ->
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      url: "#{util.WEB_SERVICE_BASE_URL}user/edit"
+      params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        saved_locations: savedLocations
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          localStorage['purpleUserHomeLocationName'] = response.saved_locations.home.displayText
+          localStorage['purpleUserHomePlaceId'] = response.saved_locations.home.googlePlaceId
+          localStorage['purpleUserWorkLocationName'] = response.saved_locations.work.displayText
+          localStorage['purpleUserWorkPlaceId'] = response.saved_locations.work.googlePlaceId
+          callback?()
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        console.log response
 
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
@@ -405,14 +629,18 @@ Ext.define 'Purple.controller.Main',
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
-
+    else
+      Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(vals['special_instructions'])
+  
   promptForCode: ->
     Ext.Msg.prompt(
       'Enter Coupon Code',
       false,
       ((buttonId, text) =>
         if buttonId is 'ok'
-          @applyCode text)
+          @applyCode text
+        Ext.select('.x-msgbox .x-input-el').setStyle('text-transform', 'none')
+        )
     )
 
   applyCode: (code) ->

@@ -7,25 +7,30 @@ Ext.define 'Ux.field.SelectOtherField',
     promptTitle: 'New Option'
     promptMessage: 'Enter new option:'
 
-  initialize: ->
-    @callParent()
+  addOtherField: ->
     opts = @getOptions()
+    for i in opts
+      if i.value is @getOtherText()
+        return
     opts.push
       text: @getOtherText()
       value: @getOtherText()
     @updateOptions opts
 
-  onChange: (cmp, newValue) ->
-    @callParent()
+  fieldChange: (cmp, newValue) ->
     if newValue is @getOtherText()
       Ext.Msg.prompt @getPromptTitle(), @getPromptMessage(), (choice, text) =>
         if choice is 'ok' and text.trim() isnt ''
+          opts = @getOptions()
+          for i in opts
+            if i.value.toUpperCase() is text.toUpperCase()
+              @setValue text
+              return
           @insertOption text
-          @setValue text
+        if choice is 'cancel' or !text.trim()
+          @setValue ''
 
   insertOption: (text) ->
-    opts = @getOptions()
-    opts.splice -1, 0,
-      text: text
-      value: text
-    @updateOptions opts
+    util.ctl("Vehicles").updateVehicleList(@_name, text)
+
+

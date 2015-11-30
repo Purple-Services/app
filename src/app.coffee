@@ -3,6 +3,7 @@ Ext.Loader.setPath
   'Ext.ux': 'ux'
   'Override.form': 'override'
   'Override.field': 'override'
+  'Override.ux': 'override'
 
 Ext.application
   name: 'Purple'
@@ -10,6 +11,7 @@ Ext.application
     'Ext.MessageBox'
     'Override.form.Panel'
     'Override.field.Select'
+    'Override.ux.Map'
     'Ux.field.SelectOtherField'
     'Ux.field.MoneyField'
     'Ux.field.RatingField'

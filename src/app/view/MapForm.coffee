@@ -122,6 +122,144 @@ Ext.define 'Purple.view.MapForm',
             true
       }
       {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'addHomeAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'addHomeAddress'
+            flex: 0
+            label: 'Add Home'
+            cls: 'saved-address-field'
+            disabled: yes
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'removeHomeAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'component'
+            id: 'removeHomeAddress'
+            flex: 0
+            html: 'Remove Home'
+            cls: 'remove-address'
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'removeWorkAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'component'
+            id: 'removeWorkAddress'
+            flex: 0
+            html: 'Remove Work'
+            cls: 'remove-address'
+            height: 50
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'homeAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'accountHomeAddress'
+            flex: 0
+            label: 'Home'
+            labelAlign: 'top'
+            style: 'width: 80%;'
+            cls: 'saved-address-field'
+            disabled: yes
+          }
+          {
+            xtype: 'button'
+            id: 'changeHomeAddressButton'
+            ui: 'action'
+            flex: 0
+            iconCls: 'compose'
+            cls: 'compose-button'
+            disabled: no
+            handler: ->
+              @up().up().fireEvent 'changeHomeAddress'
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'addWorkAddressContainer'
+        flex: 0
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'addWorkAddress'
+            flex: 0
+            label: 'Add Work'
+            cls: 'saved-address-field'
+            disabled: yes
+          }
+        ]
+      }
+      {
+        xtype: 'container'
+        layout: 'hbox'
+        id: 'workAddressContainer'
+        cls: 'list-container'
+        hidden: yes
+        disabled: yes
+        items: [
+          {
+            xtype: 'textfield'
+            id: 'accountWorkAddress'
+            flex: 0
+            label: 'Work'
+            labelAlign: 'top'
+            style: 'width: 80%;'
+            cls: 'saved-address-field'
+            disabled: yes
+          }
+          {
+            xtype: 'button'
+            id: 'changeWorkAddressButton'
+            ui: 'action'
+            flex: 0
+            iconCls: 'compose'
+            cls: 'compose-button'
+            disabled: no
+            handler: ->
+              @up().up().fireEvent 'changeWorkAddress'
+          }
+        ]
+      }
+      {
         xtype: 'list'
         id: 'autocompleteList'
         flex: 1
@@ -141,7 +279,7 @@ Ext.define 'Purple.view.MapForm',
           show: (list) ->
             list.getStore().setData []
           itemtap: (list, index, item, record) ->
-            @fireEvent 'updateDeliveryLocAddressByLocArray', record.raw
+            @fireEvent 'handleAutoCompleteListTap', record.raw
       }
       {
         xtype: 'container'
@@ -159,10 +297,12 @@ Ext.define 'Purple.view.MapForm',
         items: [
           {
             xtype: 'button'
+            id: 'requestGasButton'
             ui: 'action'
             cls: 'button-pop'
             text: 'Request Gas'
             flex: 0
+            disabled: no
             handler: ->
               @up().fireEvent 'initRequestGasForm'
           }
