@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "com.purple.app"
+        id = "6NAJA3N74X.com.purple.app"
         versionCode = "17"
         version     = "1.0.7" >
 
@@ -73,15 +73,15 @@
   <!-- iPhone 6 -->
   <gap:splash src="splash-screens/Default-667h@2x.png" gap:platform="ios" width="750" height="1334" />
   <gap:splash src="splash-screens/Default-Portrait-736h@3x.png" gap:platform="ios" width="1242" height="2208" />
-  <gap:splash src="splash-screens/Default-Landscape-736h@3x.png" gap:platform="ios" width="2208" height="1242" />
+  <!-- <gap:splash src="splash-screens/Default-Landscape-736h@3x.png" gap:platform="ios" width="2208" height="1242" /> -->
 
   <!-- iPad -->
-  <gap:splash src="splash-screens/Default-Portrait.png" gap:platform="ios" width="768" height="1024" />
-  <gap:splash src="splash-screens/Default-Landscape.png" gap:platform="ios" width="1024" height="768" />
+  <!-- <gap:splash src="splash-screens/Default-Portrait.png" gap:platform="ios" width="768" height="1024" /> -->
+  <!-- <gap:splash src="splash-screens/Default-Landscape.png" gap:platform="ios" width="1024" height="768" /> -->
 
   <!-- Retina iPad -->
-  <gap:splash src="splash-screens/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" />
-  <gap:splash src="splash-screens/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" />
+  <!-- <gap:splash src="splash-screens/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" /> -->
+  <!-- <gap:splash src="splash-screens/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" /> -->
 
   <!-- Android -->
   <gap:splash src="splash-screens/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
