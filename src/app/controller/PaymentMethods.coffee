@@ -233,8 +233,16 @@ Ext.define 'Purple.controller.PaymentMethods',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          @backToAccount()
           @paymentMethods = response.cards
+          delete localStorage['purpleDefaultPaymentMethodId']
+          for c, card of response.cards
+            if card.default
+              localStorage['purpleDefaultPaymentMethodId'] = card.id
+              localStorage['purpleDefaultPaymentMethodDisplayText'] = """
+                #{card.brand} *#{card.last4}
+              """
+          @refreshAccountPaymentMethodField()
+          @backToAccount()
           @renderPaymentMethodsList @paymentMethods
           util.ctl('Menu').popOffBackButtonWithoutAction()
         else
