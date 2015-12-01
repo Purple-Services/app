@@ -52,6 +52,7 @@ Ext.define 'Purple.controller.Main',
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
+        showLogin: 'showLogin'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
@@ -91,10 +92,10 @@ Ext.define 'Purple.controller.Main',
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Uncomment this for customer app, but courier doesn't need it
-    ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    ga_storage?._setAccount 'UA-61762011-1'
-    ga_storage?._setDomain 'none'
-    ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+    # ga_storage?._setAccount 'UA-61762011-1'
+    # ga_storage?._setDomain 'none'
+    # ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
     navigator.splashscreen?.hide()
 
@@ -526,6 +527,9 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  showLogin: ->
+    @getMainContainer().getItems().getAt(0).select 1, no, no
+
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
@@ -533,7 +537,7 @@ Ext.define 'Purple.controller.Main',
       return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
-      @getMainContainer().getItems().getAt(0).select 1, no, no
+      @showLogin()
     else
       # send to request gas form, but first get availbility from disptach system
       Ext.Viewport.setMasked
@@ -718,7 +722,6 @@ Ext.define 'Purple.controller.Main',
         util.ctl('Menu').selectOption 0
       
       pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
-        util.ctl('Menu').popOffBackButtonWithoutAction()
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
     else

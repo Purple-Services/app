@@ -255,8 +255,7 @@ Ext.define 'Purple.controller.Account',
     ga_storage._trackEvent 'ui', 'Google Login Pressed'
     window.plugins.googleplus.login(
       {
-        'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
-        # note: there is no API key needed for Android devices
+        'scopes': 'profile email'
       },
       (Ext.bind @googleLoginSuccess, this),
       (->
@@ -269,7 +268,7 @@ Ext.define 'Purple.controller.Account',
     @authorizeUser(
       'google',
       result['userId'],
-      result['oauthToken'],
+      result['accessToken'],
       result['email'] # revelant to Android version only. iOS will get email scope server-side
     )
 
