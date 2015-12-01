@@ -154,10 +154,9 @@ Ext.define 'Purple.controller.PaymentMethods',
                   when 2 then @makeDefault pmid
                   else return
                 ),
-                "#{p.brand} *#{p.last4}",
+                field.getLabel(),
                 ["Delete Card", "Make Default", "Cancel"]
               )
-              #@showEditPaymentMethodForm pmid
 
   askToDeleteCard: (id) ->
     navigator.notification.confirm(
