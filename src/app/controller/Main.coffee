@@ -696,7 +696,6 @@ Ext.define 'Purple.controller.Main',
         util.ctl('Menu').selectOption 0
       
       pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
-        util.ctl('Menu').popOffBackButtonWithoutAction()
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
     else
