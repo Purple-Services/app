@@ -184,22 +184,14 @@ Ext.define 'Purple.controller.Account',
           else
             util.ctl('Menu').adjustForAppLoginState()
             if @isCourier()
-              # a courier account, go to Orders page; may want to go to Tanks in future
+              # a courier account, go to Orders page
+              # may want to go to Tanks page in future when we use that
               util.ctl('Menu').selectOption 3
-              # Courier's get their push notifications set up the first time
-              # they log in as a courier (usually this requires a log out,
-              # db change, then log back in). Customers, on the other hand,
-              # get their push notifications set up the upon creation of their
-              # first order.
-              # We call it every time though because it still needs be initiated
-              if not @hasPushNotificationsSetup()
-                util.ctl('Main').setUpPushNotifications()
+              util.ctl('Main').setUpPushNotifications()
             else
               # a normal user, go to Request Gas page
               util.ctl('Menu').selectOption 0
-              # initiate push notifications if they have them set up
-              if @hasPushNotificationsSetup()
-                util.ctl('Main').setUpPushNotifications()
+              util.ctl('Main').setUpPushNotifications()
             @showLoginForm() # to prepare for next logout, if it comes
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -305,6 +297,7 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserName'] = response.user.name
           util.ctl('Menu').adjustForAppLoginState()
           util.ctl('Menu').selectOption 0
+          util.ctl('Main').setUpPushNotifications()
           @showLoginForm() # to prepare for next logout, if it comes
           ga_storage._trackEvent 'main', 'Account Created'
         else
