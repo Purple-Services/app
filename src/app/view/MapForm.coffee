@@ -105,8 +105,11 @@ Ext.define 'Purple.view.MapForm',
         listeners:
           initialize: (textField) ->
             textField.element.on 'tap', =>
-              textField.setValue ''
-              @fireEvent 'addressInputMode'
+              if util.ctl('Account').isUserLoggedIn()
+                textField.setValue ''
+                @fireEvent 'addressInputMode'
+              else
+                @fireEvent('showLogin')
             true
           keyup: (textField, event) ->
             textField.lastQuery ?= ''
