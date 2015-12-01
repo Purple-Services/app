@@ -104,19 +104,18 @@ Ext.define 'Purple.controller.Main',
     @checkGoogleMaps()
 
   checkGoogleMaps: ->
-    if not (google? and google.maps?)
-      @today = new Date().getMonth() + '/' + new Date().getDate() + '/' + new Date().getFullYear()
-      if localStorage['reloadAttempts'] is undefined or localStorage['reloadAttempts'] > 3
-        localStorage['reloadAttempts'] = 0
-      if localStorage['currentDate'] is undefined or @today isnt localStorage['currentDate']
-        localStorage['currentDate'] = @today
-        localStorage['reloadAttempts'] = 0
+    if not google?.maps?
+      currentDate = new Date()
+      today = "#{currentDate.getMonth()}/#{currentDate.getDate()}/#{currentDate.getFullYear()}"
+      localStorage['reloadAttempts'] ?= '0'
+      if not localStorage['currentDate']? or today isnt localStorage['currentDate']
+        localStorage['currentDate'] = today
+        localStorage['reloadAttempts'] = '0'
       if localStorage['reloadAttempts'] isnt '3'
-        localStorage['reloadAttempts']++
-        navigator.splashscreen.show()
+        localStorage['reloadAttempts'] = (parseInt(localStorage['reloadAttempts']) + 1).toString()
+        navigator.splashscreen?.show()
         window.location.reload()
       else
-        localStorage['reloadAttempts'] = 0
         navigator.notification.confirm 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload']
 
   connectionStatusConfirmation: (index) ->
