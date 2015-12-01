@@ -91,15 +91,19 @@ Ext.define 'Purple.controller.Main',
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
-    # Uncomment this for customer app, but courier doesn't need it
-    # ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    # ga_storage?._setAccount 'UA-61762011-1'
-    # ga_storage?._setDomain 'none'
-    # ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # comment this out for courier app
+    if VERSION is "PROD"
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
     navigator.splashscreen?.hide()
 
     if util.ctl('Account').hasPushNotificationsSetup()
+      # this is just a re-registering locally, not an initial setup
+      # we don't want to do the initial setup because they may not be
+      # logged in
       setTimeout (Ext.bind @setUpPushNotifications, this), 4000
 
   setUpPushNotifications: ->
@@ -748,6 +752,10 @@ Ext.define 'Purple.controller.Main',
             util.ctl('Menu').clearBackButtonStack()
             navigator.notification.alert response.message, (->), (response.message_title ? "Success")
             # set up push notifications if they arent set up
+            # NOTE: This will matter less and less, now that we set up push
+            # notifications when a user creates their account. But it's nice to
+            # keep this here for existing users that have never ordered and
+            # don't logout and login (which would also cause a setup)
             if not util.ctl('Account').hasPushNotificationsSetup()
               @setUpPushNotifications()
           else
