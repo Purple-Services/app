@@ -80,6 +80,7 @@ Ext.define 'Purple.controller.Menu',
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @getMainContainer().getItems().getAt(0).select 1, no, no
+      @unlockMenu()
     else if @getCurrentIndex() is 7
       # already on Free Gas page
       @selectOption (@indexBeforeFreeGas ? 2)

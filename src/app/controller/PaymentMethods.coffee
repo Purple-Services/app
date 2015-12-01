@@ -154,10 +154,9 @@ Ext.define 'Purple.controller.PaymentMethods',
                   when 2 then @makeDefault pmid
                   else return
                 ),
-                "#{p.brand} *#{p.last4}",
+                field.getLabel(),
                 ["Delete Card", "Make Default", "Cancel"]
               )
-              #@showEditPaymentMethodForm pmid
 
   askToDeleteCard: (id) ->
     navigator.notification.confirm(
@@ -233,8 +232,16 @@ Ext.define 'Purple.controller.PaymentMethods',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          @backToAccount()
           @paymentMethods = response.cards
+          delete localStorage['purpleDefaultPaymentMethodId']
+          for c, card of response.cards
+            if card.default
+              localStorage['purpleDefaultPaymentMethodId'] = card.id
+              localStorage['purpleDefaultPaymentMethodDisplayText'] = """
+                #{card.brand} *#{card.last4}
+              """
+          @refreshAccountPaymentMethodField()
+          @backToAccount()
           @renderPaymentMethodsList @paymentMethods
           util.ctl('Menu').popOffBackButtonWithoutAction()
         else
@@ -299,12 +306,14 @@ Ext.define 'Purple.controller.PaymentMethods',
               @refreshAccountPaymentMethodField()
               util.ctl('Vehicles').vehicles = response.vehicles
               util.ctl('Orders').orders = response.orders
-              # TODO if was new card then make default and send to account page
               @backToPaymentMethods()
               @renderPaymentMethodsList @paymentMethods
               util.ctl('Menu').popOffBackButtonWithoutAction()
               if typeof callback is 'function'
                 callback()
+              else
+                util.ctl('Menu').popOffBackButtonWithoutAction()
+                @backToAccount()
             else
               navigator.notification.alert response.message, (->), "Error"
           failure: (response_obj) ->

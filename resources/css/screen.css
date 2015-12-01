@@ -21,6 +21,9 @@ body {
     font-family: 'Source Sans Pro';
     text-shadow: none !important;
 }
+input {
+    text-transform: inherit;
+}
 .x-layout-card-item, .x-scroll-container {
     background: transparent !important;
 }
@@ -101,8 +104,16 @@ body {
     color: #4CABEF;
 }
 
-
-
+.compose-button .x-button-icon{
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-color: transparent !important;
+}
+.compose-button.x-button-pressing {
+    background-color: transparent !important;
+    background-image: none !important;
+    opacity: 0.4 !important;
+}
 .menuButton, .freeGasButton {
     position: relative !important;
     top: 0px !important;
@@ -292,7 +303,6 @@ body {
 }
 
 
-
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
     padding: 8px 20px;
@@ -398,14 +408,12 @@ body {
     font-weight: 900;
 }
 
-
 .loose-text {
     color: #752B90;
     font-size: 18px;
     font-weight: normal;
     padding-bottom: 6px;
 }
-
 
 .x-msgbox {
     border: none;
@@ -426,7 +434,6 @@ body {
 }
 .x-msgbox .x-input-el {
     text-align: left;
-    text-transform: uppercase;
 }
 .x-msgbox .x-button-normal {
     background: #ededed !important;
@@ -600,15 +607,15 @@ body {
     background-color: transparent;
 }
 
-
-#autocompleteList .x-list-item.x-list-item-tpl {
+#homeAddressContainer {
+    border-left: 0;
+}
+#autocompleteList .x-list-item.x-list-item-tpl, #homeAutocomplete .x-list-item.x-list-item-tpl, #workAutocomplete .x-list-item.x-list-item-tpl {
     font-weight: 900;
 }
-#autocompleteList .x-list-item.x-list-item-tpl .locationVicinity {
+#autocompleteList .x-list-item.x-list-item-tpl .locationVicinity, #homeAutocomplete .x-list-item.x-list-item-tpl .locationVicinity, #workAutocomplete .x-list-item.x-list-item-tpl .locationVicinity {
     font-weight: 400;
 }
-
-
 
 /* toolbar panels (like brightness controls) */
 .x-webkit .x-anchor.x-anchor-top {
@@ -819,8 +826,49 @@ body {
     background-position: center !important;
 }
 
-
-
+.current-task-heading .x-input-el {
+    text-align: left;
+    font-family: 'Source Sans Pro';
+    font-size: 24px;
+    color: rgb(186, 28, 141);
+    font-weight: 900 !important;
+    text-transform: uppercase;
+    -webkit-text-fill-color: rgb(186, 28, 141);
+}
+.list-container .compose-button {
+    width: 20%; 
+    background: none; 
+    color: rgb(159, 24, 120);
+}
+.list-container {
+    border-bottom: 1px solid rgb(226, 196, 237);
+}
+.remove-address {
+    padding: 12px 15px;
+    color: rgb(159, 24, 120);
+    font-weight: 900;
+    width: 100%;
+}
+.saved-address-field {
+    padding: 5px 15px 0 15px;
+    line-height: 0.8;
+}
+.saved-address-field .x-form-label span {
+    color: rgb(159, 24, 120);
+}
+.saved-address-field .x-form-label {
+    border: none;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    width: 100% !important;
+}
+.saved-address-field .x-input-el {
+    padding-top: 0px;
+    padding-left: 0px;
+    text-align: left;
+    color: rgb(159, 24, 120) !important;
+    -webkit-text-fill-color: rgb(159, 24, 120) !important;
+}
 .order-list-item .x-form-label {
     padding-top: 0px !important;
     padding-bottom: 0px !important;

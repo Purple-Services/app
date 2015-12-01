@@ -161,6 +161,10 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
           localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up
           localStorage['purpleToken'] = response.token
+          localStorage['purpleUserHomeLocationName'] = response.saved_locations.home.displayText
+          localStorage['purpleUserHomePlaceId'] = response.saved_locations.home.googlePlaceId
+          localStorage['purpleUserWorkLocationName'] = response.saved_locations.work.displayText
+          localStorage['purpleUserWorkPlaceId'] = response.saved_locations.work.googlePlaceId
           delete localStorage['purpleDefaultPaymentMethodId']
           for c, card of response.cards
             if card.default
@@ -251,8 +255,7 @@ Ext.define 'Purple.controller.Account',
     ga_storage._trackEvent 'ui', 'Google Login Pressed'
     window.plugins.googleplus.login(
       {
-        'iOSApiKey': '727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs.apps.googleusercontent.com'
-        # note: there is no API key needed for Android devices
+        'scopes': 'profile email'
       },
       (Ext.bind @googleLoginSuccess, this),
       (->
@@ -265,7 +268,7 @@ Ext.define 'Purple.controller.Account',
     @authorizeUser(
       'google',
       result['userId'],
-      result['oauthToken'],
+      result['accessToken'],
       result['email'] # revelant to Android version only. iOS will get email scope server-side
     )
 
