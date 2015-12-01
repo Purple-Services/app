@@ -52,6 +52,7 @@ Ext.define 'Purple.controller.Main',
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
+        showLogin: 'showLogin'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
@@ -504,6 +505,9 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  showLogin: ->
+    @getMainContainer().getItems().getAt(0).select 1, no, no
+
   initRequestGasForm: ->
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
@@ -511,7 +515,7 @@ Ext.define 'Purple.controller.Main',
       return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
-      @getMainContainer().getItems().getAt(0).select 1, no, no
+      @showLogin()
     else
       # send to request gas form, but first get availbility from disptach system
       Ext.Viewport.setMasked
