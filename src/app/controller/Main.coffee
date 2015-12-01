@@ -106,6 +106,28 @@ Ext.define 'Purple.controller.Main',
       # logged in
       setTimeout (Ext.bind @setUpPushNotifications, this), 4000
 
+    @checkGoogleMaps()
+
+  checkGoogleMaps: ->
+    if not google?.maps?
+      currentDate = new Date()
+      today = "#{currentDate.getMonth()}/#{currentDate.getDate()}/#{currentDate.getFullYear()}"
+      localStorage['reloadAttempts'] ?= '0'
+      if not localStorage['currentDate']? or today isnt localStorage['currentDate']
+        localStorage['currentDate'] = today
+        localStorage['reloadAttempts'] = '0'
+      if localStorage['reloadAttempts'] isnt '3'
+        localStorage['reloadAttempts'] = (parseInt(localStorage['reloadAttempts']) + 1).toString()
+        navigator.splashscreen?.show()
+        window.location.reload()
+      else
+        navigator.notification.confirm 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload']
+
+  connectionStatusConfirmation: (index) ->
+    if index is 2
+      navigator.splashscreen.show()
+      window.location.reload()
+
   setUpPushNotifications: ->
     if Ext.os.name is "iOS"
       window.plugins?.pushNotification?.register(
