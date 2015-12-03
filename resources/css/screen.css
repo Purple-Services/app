@@ -20,6 +20,7 @@ body {
     color: #0073C4;
     font-family: 'Source Sans Pro';
     text-shadow: none !important;
+    position: fixed;
 }
 input {
     text-transform: inherit;

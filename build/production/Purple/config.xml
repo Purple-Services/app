@@ -109,6 +109,9 @@
 
   <preference name="show-splash-screen-spinner" value="false" />
 
+  <!-- Using WKWebView for iOS 8 memory leak issue -->
+  <gap:plugin name="cordova-plugin-wkwebview" version="0.6.7" source="npm" />
+
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
   <!-- <gap:plugin name="org.apache.cordova.statusbar" version="0.1.10" source="plugins.cordova.io" /> -->
   <preference name="StatusBarOverlaysWebView" value="false" />

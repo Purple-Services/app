@@ -380,30 +380,37 @@ Ext.define 'Purple.controller.Main',
       util.ctl('Menu').popOffBackButtonWithoutAction()
 
   generateSuggestions: ->
-    @getRequestGasButton().setDisabled yes
-    query = @getRequestAddressField().getValue()
-    suggestions = new Array()
-    Ext.Ajax.request
-      url: "https://maps.googleapis.com/maps/api/place/autocomplete/json?types=establishment|geocode&radius=100&location=#{@lat},#{@lng}&sensor=true&key=AIzaSyA0p8k_hdb6m-xvAOosuYQnkDwjsn8NjFg"
-      params:
-        'input': query
-      timeout: 30000
-      method: 'GET'
-      scope: this
-      success: (response) ->
-        resp = Ext.JSON.decode response.responseText
-        # console.log resp
-        if resp.status is 'OK'
-          for p in resp.predictions
-            isAddress = p.terms[0].value is ""+parseInt(p.terms[0].value)
-            locationName = if isAddress then p.terms[0].value + " " + p.terms[1]?.value else p.terms[0].value
-            suggestions.push
-              'locationName': locationName
-              'locationVicinity': p.description.replace locationName+', ', ''
-              'locationLat': '0'
-              'locationLng': '0'
-              'placeId': p.place_id
-          @getAutocompleteList().getStore().setData suggestions
+    # @getRequestGasButton().setDisabled yes
+    # query = @getRequestAddressField().getValue()
+    # suggestions = new Array()
+
+    query = Ext.query('.x-input-el')[0]
+
+    new google.maps.places.Autocomplete(query)
+    # console.log locationComplete
+
+    # Ext.Ajax.request
+    #   url: "https://maps.googleapis.com/maps/api/place/autocomplete/json?types=establishment|geocode&radius=100&location=#{@lat},#{@lng}&sensor=true&key=AIzaSyA0p8k_hdb6m-xvAOosuYQnkDwjsn8NjFg"
+    #   params:
+    #     'input': query
+    #   timeout: 30000
+    #   method: 'GET'
+    #   scope: this
+    #   success: (response) ->
+    #     resp = Ext.JSON.decode response.responseText
+    #     # console.log resp
+    #     if resp.status is 'OK'
+    #       for p in resp.predictions
+    #         isAddress = p.terms[0].value is ""+parseInt(p.terms[0].value)
+    #         locationName = if isAddress then p.terms[0].value + " " + p.terms[1]?.value else p.terms[0].value
+    #         suggestions.push
+    #           'locationName': locationName
+    #           'locationVicinity': p.description.replace locationName+', ', ''
+    #           'locationLat': '0'
+    #           'locationLng': '0'
+    #           'placeId': p.place_id
+    #         console.log suggestions
+    #       @getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
     @getRequestAddressField().setValue loc['locationName']
