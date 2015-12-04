@@ -125,7 +125,7 @@ Ext.define 'Purple.controller.Main',
       if not localStorage['currentDate']? or today isnt localStorage['currentDate']
         localStorage['currentDate'] = today
         localStorage['reloadAttempts'] = '0'
-        analytics.track 'Google Map Failed to Load'
+        analytics?.track 'Google Maps Failed to Load'
       if localStorage['reloadAttempts'] isnt '3'
         localStorage['reloadAttempts'] = (parseInt(localStorage['reloadAttempts']) + 1).toString()
         navigator.splashscreen?.show()
