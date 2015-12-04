@@ -247,6 +247,13 @@ Ext.define 'Purple.controller.Main',
             for t in c.types
               if t is "postal_code"
                 @deliveryAddressZipCode = c['short_name']
+                if not localStorage['gps_not_allowed_event_sent'] and not localStorage['first_launch_loc_sent']?
+                  # this means that this is the zip code of the location
+                  # where they first launched the app and they allowed GPS
+                  analytics?.track 'First Launch Location',
+                    street_address: streetAddress
+                    zip_code: @deliveryAddressZipCode
+                  localStorage['first_launch_loc_sent'] = 'yes'
           @busyGettingGasPrice ?= no
           if not @busyGettingGasPrice
             @busyGettingGasPrice = yes
