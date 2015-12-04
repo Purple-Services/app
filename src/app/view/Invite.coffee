@@ -210,7 +210,7 @@ Ext.define 'Purple.view.Invite',
                     "#{util.WEB_SERVICE_BASE_URL}app",
                     "Press \"Paste\" for a sample message."
                     (->),
-                    (-> navigator.notification.alert 'Please ensure Facebook is enabled on your device.', (->), "Not Available")
+                    (->)
                   )
               }
             ]
