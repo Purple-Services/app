@@ -125,13 +125,14 @@ Ext.define 'Purple.controller.Main',
       if not localStorage['currentDate']? or today isnt localStorage['currentDate']
         localStorage['currentDate'] = today
         localStorage['reloadAttempts'] = '0'
+        analytics.track 'Google Map Failed to Load'
       if localStorage['reloadAttempts'] isnt '3'
         localStorage['reloadAttempts'] = (parseInt(localStorage['reloadAttempts']) + 1).toString()
         navigator.splashscreen?.show()
         window.location.reload()
       else
         navigator.notification.confirm 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload']
-
+        
   connectionStatusConfirmation: (index) ->
     if index is 2
       navigator.splashscreen.show()
