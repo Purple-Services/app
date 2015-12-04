@@ -844,6 +844,7 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  # this is legacy code?
   sendInvites: ->
     params =
       version: util.VERSION_NUMBER
