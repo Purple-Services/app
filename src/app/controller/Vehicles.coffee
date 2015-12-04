@@ -551,3 +551,4 @@ Ext.define 'Purple.controller.Vehicles',
       background-image: url('#{dataUrl}') !important;
     """
     @getEditVehicleFormPhoto().setValue dataUrl
+    analytics?.track 'Took Vehicle Photo'
