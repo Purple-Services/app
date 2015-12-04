@@ -75,12 +75,14 @@ Ext.define 'Purple.view.MainContainer',
         #   translationMethod: 'auto'
       items: [
         {
-          xtype: 'component'
-          cls: 'menu-toolbar'
+          xtype: 'button'
+          ctype: 'logoButton'
           docked: 'top'
+          cls: 'menu-toolbar'
           html: """
             <img src="resources/images/logo-light.png" class="slide-menu-logo" />
           """
+          handler: -> @fireEvent 'logoButtonTap'
         }
         {
           xtype: 'container'

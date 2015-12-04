@@ -4,17 +4,20 @@ Ext.define 'Purple.controller.Menu',
     refs:
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
+      logoButton: '[ctype=logoButton]'
       feedbackButton: '[ctype=feedbackButton]'
       helpButton: '[ctype=helpButton]'
       inviteButton: '[ctype=inviteButton]'
       menuButton: '[ctype=menuButton]'
-      requestGasTabContainer: '#requestGasTabContainer'
+      requestGasTabContainer: 'requestGasTabContainer'
       accountTab: '#accountTab'
       accountTabContainer: '#accountTabContainer'
       loginForm: 'loginform'
       mapForm: 'mapform'
       map: '#gmap'
     control:
+      logoButton:
+        logoButtonTap: 'logoButtonTap'
       helpButton:
         helpButtonTap: 'helpButtonTap'
       feedbackButton:
@@ -66,6 +69,9 @@ Ext.define 'Purple.controller.Menu',
     @backButtonStack = []
     @getMainContainer().removeCls 'makeMenuButtonBeBackButton'
     @unlockMenu()
+
+  logoButtonTap: ->
+    @getMainContainer().getItems().getAt(0).select 0
 
   menuButtonTap: ->
     if @backButtonStack.length isnt 0
