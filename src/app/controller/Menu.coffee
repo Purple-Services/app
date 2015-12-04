@@ -72,6 +72,7 @@ Ext.define 'Purple.controller.Menu',
 
   logoButtonTap: ->
     @getMainContainer().getItems().getAt(0).select 0
+    @close()
 
   menuButtonTap: ->
     if @backButtonStack.length isnt 0
@@ -98,9 +99,11 @@ Ext.define 'Purple.controller.Menu',
 
   helpButtonTap: ->
     @selectOption 5
+    @close()
 
   feedbackButtonTap: ->
     @selectOption 6
+    @close()
 
   getCurrentIndex: ->
     @getMainContainer().getActiveItem().data.index
