@@ -9,7 +9,7 @@ Ext.define 'Purple.controller.Menu',
       helpButton: '[ctype=helpButton]'
       inviteButton: '[ctype=inviteButton]'
       menuButton: '[ctype=menuButton]'
-      requestGasTabContainer: 'requestGasTabContainer'
+      requestGasTabContainer: '#requestGasTabContainer'
       accountTab: '#accountTab'
       accountTabContainer: '#accountTabContainer'
       loginForm: 'loginform'

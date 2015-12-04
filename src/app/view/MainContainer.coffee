@@ -78,9 +78,7 @@ Ext.define 'Purple.view.MainContainer',
           xtype: 'button'
           ctype: 'logoButton'
           docked: 'top'
-          cls: [
-            'menu-toolbar' 
-          ]
+          cls: 'menu-toolbar' 
           html: """
             <img src="resources/images/logo-light.png" class="slide-menu-logo" />
           """
