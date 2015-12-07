@@ -15,13 +15,23 @@ window.util =
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    when "PROD" then "https://purpledelivery.com/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
+    when "PROD" then "https://purpledelivery.com/"
 
   STRIPE_PUBLISHABLE_KEY: switch VERSION
     when "LOCAL" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
-    when "PROD" then 'pk_live_r8bUlYTZSxsNzgtjVAIH7bcA'
     when "DEV" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
+    when "PROD" then 'pk_live_r8bUlYTZSxsNzgtjVAIH7bcA'
+
+  SEGMENT_WRITE_KEY: switch VERSION
+    when "LOCAL" then 'egckTdE1OGE9MUdIdQHUC3FvvUDXdLUG'
+    when "DEV" then 'egckTdE1OGE9MUdIdQHUC3FvvUDXdLUG'
+    when "PROD" then 'RLf4HciCdW72A4VSJCZ87WcMQs5Kdoix'
+
+  # SIFT_SCIENCE_SNIPPET_KEY: switch VERSION
+  #   when "LOCAL" then 'a9e732d5be'
+  #   when "DEV" then 'a9e732d5be'
+  #   when "PROD" then '4426d49b93'
 
   GCM_SENDER_ID: "254423398507"  
 

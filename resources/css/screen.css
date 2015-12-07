@@ -653,12 +653,18 @@ input {
 .x-slidenavigation-list .menu-toolbar {
     background: transparent;
     border: none;
+    padding: 0;
+}
+.x-slidenavigation-list .menu-toolbar span {
+    text-align: left;
+}
+.x-slidenavigation-list .x-button.x-button-pressing {
+    background: rgb(76, 30, 95);
 }
 .x-slidenavigation-list .slide-menu-logo {
     height: 107px;
     padding: 20px 0px 13px 19px;
 }
-
 .x-slidenavigation-list .menu-links .x-button {
     color: #F4E9F7;
     font-size: 88%;

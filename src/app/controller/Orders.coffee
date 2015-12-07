@@ -195,6 +195,8 @@ Ext.define 'Purple.controller.Orders',
           width: 100%;
           background-image: url('#{order["vehicle_photo"]}') !important;
         """
+    analytics?.page 'View Order',
+      order_id: order.id
     
 
   backToOrders: ->

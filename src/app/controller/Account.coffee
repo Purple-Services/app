@@ -179,6 +179,7 @@ Ext.define 'Purple.controller.Account',
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = response.orders
           util.ctl('Orders').loadOrdersList()
+          analytics?.identify localStorage['purpleUserId']
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else
@@ -206,6 +207,7 @@ Ext.define 'Purple.controller.Account',
       xtype: 'loadmask'
       message: ''
     ga_storage._trackEvent 'ui', 'Facebook Login Pressed'
+    analytics?.track 'Facebook Login Pressed'
     facebookConnectPlugin.getLoginStatus(
       ((result) =>
         if result['status'] is 'connected'
@@ -245,6 +247,7 @@ Ext.define 'Purple.controller.Account',
       xtype: 'loadmask'
       message: ''
     ga_storage._trackEvent 'ui', 'Google Login Pressed'
+    analytics?.track 'Google Login Pressed'
     window.plugins.googleplus.login(
       {
         'scopes': 'profile email'

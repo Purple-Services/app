@@ -4,6 +4,7 @@ Ext.define 'Purple.controller.Menu',
     refs:
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
+      logoButton: '[ctype=logoButton]'
       feedbackButton: '[ctype=feedbackButton]'
       helpButton: '[ctype=helpButton]'
       inviteButton: '[ctype=inviteButton]'
@@ -15,6 +16,8 @@ Ext.define 'Purple.controller.Menu',
       mapForm: 'mapform'
       map: '#gmap'
     control:
+      logoButton:
+        logoButtonTap: 'logoButtonTap'
       helpButton:
         helpButtonTap: 'helpButtonTap'
       feedbackButton:
@@ -67,6 +70,10 @@ Ext.define 'Purple.controller.Menu',
     @getMainContainer().removeCls 'makeMenuButtonBeBackButton'
     @unlockMenu()
 
+  logoButtonTap: ->
+    @getMainContainer().getItems().getAt(0).select 0
+    @close()
+
   menuButtonTap: ->
     if @backButtonStack.length isnt 0
       @popOffBackButton()
@@ -92,9 +99,11 @@ Ext.define 'Purple.controller.Menu',
 
   helpButtonTap: ->
     @selectOption 5
+    @close()
 
   feedbackButtonTap: ->
     @selectOption 6
+    @close()
 
   getCurrentIndex: ->
     @getMainContainer().getActiveItem().data.index

@@ -517,10 +517,8 @@ Ext.define 'Purple.controller.Vehicles',
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this
 
-
     addImageStep2 Camera.PictureSourceType.CAMERA
     
-
     # not using this intermediary step right now
     # navigator.notification.confirm(
     #   "",
@@ -551,3 +549,4 @@ Ext.define 'Purple.controller.Vehicles',
       background-image: url('#{dataUrl}') !important;
     """
     @getEditVehicleFormPhoto().setValue dataUrl
+    analytics?.track 'Took Vehicle Photo'

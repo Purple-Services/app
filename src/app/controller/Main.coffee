@@ -98,6 +98,15 @@ Ext.define 'Purple.controller.Main',
       ga_storage?._setDomain 'none'
       ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
+
     navigator.splashscreen?.hide()
 
     if util.ctl('Account').hasPushNotificationsSetup()
@@ -116,13 +125,14 @@ Ext.define 'Purple.controller.Main',
       if not localStorage['currentDate']? or today isnt localStorage['currentDate']
         localStorage['currentDate'] = today
         localStorage['reloadAttempts'] = '0'
+        analytics?.track 'Google Maps Failed to Load'
       if localStorage['reloadAttempts'] isnt '3'
         localStorage['reloadAttempts'] = (parseInt(localStorage['reloadAttempts']) + 1).toString()
         navigator.splashscreen?.show()
         window.location.reload()
       else
         navigator.notification.confirm 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload']
-
+        
   connectionStatusConfirmation: (index) ->
     if index is 2
       navigator.splashscreen.show()
@@ -194,6 +204,9 @@ Ext.define 'Purple.controller.Main',
         ),
         (=>
           # console.log "GPS failure callback called."
+          if not localStorage['gps_not_allowed_event_sent']?
+            analytics?.track 'GPS Not Allowed'
+            localStorage['gps_not_allowed_event_sent'] = 'yes'
           @updateLatlngBusy = no),
         {maximumAge: 0, enableHighAccuracy: true}
       )
@@ -234,6 +247,13 @@ Ext.define 'Purple.controller.Main',
             for t in c.types
               if t is "postal_code"
                 @deliveryAddressZipCode = c['short_name']
+                if not localStorage['gps_not_allowed_event_sent'] and not localStorage['first_launch_loc_sent']?
+                  # this means that this is the zip code of the location
+                  # where they first launched the app and they allowed GPS
+                  analytics?.track 'First Launch Location',
+                    street_address: streetAddress
+                    zip_code: @deliveryAddressZipCode
+                  localStorage['first_launch_loc_sent'] = 'yes'
           @busyGettingGasPrice ?= no
           if not @busyGettingGasPrice
             @busyGettingGasPrice = yes
@@ -278,6 +298,7 @@ Ext.define 'Purple.controller.Main',
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
       @getRequestAddressField().setValue("Updating Location...")
+      analytics?.page 'Map'
 
   recenterAtUserLoc: ->
     @getMap().getMap().setCenter(
@@ -300,6 +321,7 @@ Ext.define 'Purple.controller.Main',
         @recenterAtUserLoc()
         @mapMode()
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
+      analytics?.page 'Address Text Input Mode'
 
   editSavedLoc: ->
     @addressInputSubMode = ''
@@ -529,8 +551,13 @@ Ext.define 'Purple.controller.Main',
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
   initRequestGasForm: ->
-    ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
+    ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
+    analytics?.track 'Request Gas Button Pressed',
+      address_street: deliveryLocName
+      lat: @deliveryLocLat
+      lng: @deliveryLocLng
+      zip: @deliveryAddressZipCode
     if deliveryLocName is @getRequestAddressField().getInitialConfig().value
       return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
@@ -583,6 +610,7 @@ Ext.define 'Purple.controller.Main',
                 address_street: deliveryLocName
                 address_zip: @deliveryAddressZipCode
               )
+              analytics?.page 'Order Form'
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -655,6 +683,8 @@ Ext.define 'Purple.controller.Main',
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
     else
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(vals['special_instructions'])
+
+    analytics?.page 'Review Order'
   
   promptForCode: ->
     Ext.Msg.prompt(
@@ -689,6 +719,9 @@ Ext.define 'Purple.controller.Main',
       success: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
+        analytics?.track 'Tried Coupon Code',
+          valid: response.success
+          coupon_code: code.toUpperCase()
         if response.success
           @getDiscountField().setValue(
             "- $" + util.centsToDollars(Math.abs(response.value))
@@ -812,6 +845,7 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  # this is legacy code?
   sendInvites: ->
     params =
       version: util.VERSION_NUMBER
