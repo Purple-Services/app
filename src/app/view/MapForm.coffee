@@ -114,7 +114,7 @@ Ext.define 'Purple.view.MapForm',
           keyup: (textField, event) ->
             textField.lastQuery ?= ''
             query = textField.getValue()
-            if query isnt textField.lastQuery
+            if query isnt textField.lastQuery and query isnt ''
               textField.lastQuery = query
               if textField.genSuggTimeout?
                 clearTimeout textField.genSuggTimeout
