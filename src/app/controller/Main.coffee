@@ -382,8 +382,8 @@ Ext.define 'Purple.controller.Main',
   generateSuggestions: ->
     @getRequestGasButton().setDisabled yes
     request = input: @getRequestAddressField().getValue()
-    service = new google.maps.places.AutocompleteService()
-    service.getPlacePredictions request, @populateAutocompleteList
+    @placesAutocompleteService ?= new google.maps.places.AutocompleteService()
+    @placesAutocompleteService.getPlacePredictions request, @populateAutocompleteList
 
   populateAutocompleteList: (predictions, status) ->
     if status is 'OK'
