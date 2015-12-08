@@ -740,6 +740,16 @@ Ext.define 'Purple.controller.Main',
         console.log response
 
   confirmOrder: ->
+    window.plugins?.pushNotification?.register(
+      (-> alert 'success'), #this is called only if the device allows push notifications
+      (-> alert 'fail'),
+      {
+        "badge": "true"
+        "sound": "true"
+        "alert": "true"
+        "ecb": "onNotificationAPN"
+      }
+    )
     if not util.ctl('Account').hasDefaultPaymentMethod()
       # select the Account view
       @getMainContainer().getItems().getAt(0).select 2, no, no
