@@ -138,13 +138,13 @@ Ext.define 'Purple.controller.Main',
       navigator.splashscreen.show()
       window.location.reload()
 
-  setUpPushNotifications: (checkPushNotification) ->
+  setUpPushNotifications: (alertIfDisabled) ->
     if Ext.os.name is "iOS"
-      if checkPushNotification
+      if alertIfDisabled
         @pushNotificationEnabled = false
         setTimeout (-> 
           if not util.ctl('Main').pushNotificationEnabled
-            navigator.notification.alert 'Your push notifications are turned off. If you want to receive push notifications, you can turn them on in your phone settings.', (->), "Reminder"
+            navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
           ), 1500 
       window.plugins?.pushNotification?.register(
         (->
@@ -161,8 +161,14 @@ Ext.define 'Purple.controller.Main',
       )
     else
       # must be Android
+      if checkPushNotification
+        @pushNotificationEnabled = false
+        setTimeout (-> 
+          if not util.ctl('Main').pushNotificationEnabled
+            navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
+          ), 1500 
       window.plugins?.pushNotification?.register(
-        ((result) ->),
+        ((result) -> util.ctl('Main').pushNotificationEnabled = true),
         ((error) -> alert "error: " + error),
         {
           "senderID": util.GCM_SENDER_ID
