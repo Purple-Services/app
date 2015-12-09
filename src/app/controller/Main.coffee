@@ -138,10 +138,19 @@ Ext.define 'Purple.controller.Main',
       navigator.splashscreen.show()
       window.location.reload()
 
-  setUpPushNotifications: ->
+  setUpPushNotifications: (checkPushNotification) ->
     if Ext.os.name is "iOS"
+      if checkPushNotification
+        @pushNotificationEnabled = false
+        setTimeout (-> 
+          if not util.ctl('Main').pushNotificationEnabled
+            navigator.notification.alert 'Your push notifications are turned off. If you want to receive push notifications, you can turn them on in your phone settings.', (->), "Reminder"
+          ), 1500 
       window.plugins?.pushNotification?.register(
-        (Ext.bind @registerDeviceForPushNotifications, this),
+        (->
+          util.ctl('Main').pushNotificationEnabled = true
+          Ext.bind @registerDeviceForPushNotifications, this
+        ),
         ((error) -> alert "error: " + error),
         {
           "badge": "true"
@@ -740,16 +749,6 @@ Ext.define 'Purple.controller.Main',
         console.log response
 
   confirmOrder: ->
-    window.plugins?.pushNotification?.register(
-      (-> alert 'success'), #this is called only if the device allows push notifications
-      (-> alert 'fail'),
-      {
-        "badge": "true"
-        "sound": "true"
-        "alert": "true"
-        "ecb": "onNotificationAPN"
-      }
-    )
     if not util.ctl('Account').hasDefaultPaymentMethod()
       # select the Account view
       @getMainContainer().getItems().getAt(0).select 2, no, no
@@ -815,8 +814,7 @@ Ext.define 'Purple.controller.Main',
             # notifications when a user creates their account. But it's nice to
             # keep this here for existing users that have never ordered and
             # don't logout and login (which would also cause a setup)
-            if not util.ctl('Account').hasPushNotificationsSetup()
-              @setUpPushNotifications()
+            @setUpPushNotifications(true)
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
