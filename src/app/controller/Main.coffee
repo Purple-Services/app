@@ -117,6 +117,15 @@ Ext.define 'Purple.controller.Main',
 
     @checkGoogleMaps()
 
+    document.addEventListener("resume", @onResume, false)
+
+  onResume: ->
+    if not util.ctl('Main').pushNotificationEnabled
+      localStorage['purpleUserHasPushNotificationsSetUp'] = "false"
+    if util.ctl('Account').isUserLoggedIn() and not util.ctl('Account').hasPushNotificationsSetup()
+      console.log 'setup onresume'
+      util.ctl('Main').setUpPushNotifications()
+
   checkGoogleMaps: ->
     if not google?.maps?
       currentDate = new Date()
@@ -147,10 +156,7 @@ Ext.define 'Purple.controller.Main',
             navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
           ), 1500 
       window.plugins?.pushNotification?.register(
-        (->
-          util.ctl('Main').pushNotificationEnabled = true
-          Ext.bind @registerDeviceForPushNotifications, this
-        ),
+        (Ext.bind @registerDeviceForPushNotifications, this),
         ((error) -> alert "error: " + error),
         {
           "badge": "true"
@@ -180,6 +186,8 @@ Ext.define 'Purple.controller.Main',
   # and logins. Need to look into this later. I want to make sure it is
   # registered but I don't think we need to call add-sns ajax so often.
   registerDeviceForPushNotifications: (cred, pushPlatform = "apns") ->
+    console.log 'register device for notifications'
+    util.ctl('Main').pushNotificationEnabled = true
     # cred for APNS (apple) is the device token
     # for GCM (android) it is regid
     Ext.Ajax.request
