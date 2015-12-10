@@ -22,11 +22,11 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <name>Purple</name>
+ <!--  <name>Purple</name> -->
   <!-- BEGIN CUSTOMER APP ONLY -->
   
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <name>Purple Courier</name> -->
+  <name>Purple Courier</name>
   <!-- END COURIER APP ONLY -->
 
   
@@ -171,10 +171,10 @@
   <feature name="http://api.phonegap.com/1.0/device" />
 
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
-  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
-  <!--   <string>(required for Courier mode)</string> -->
-  <!-- </gap:config-file> -->
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
+    <string>(required for Courier mode)</string>
+  </gap:config-file>
   <!-- END COURIER APP ONLY -->
 
 </widget>
