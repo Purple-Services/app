@@ -123,7 +123,6 @@ Ext.define 'Purple.controller.Main',
     if not util.ctl('Main').pushNotificationEnabled
       localStorage['purpleUserHasPushNotificationsSetUp'] = "false"
     if util.ctl('Account').isUserLoggedIn() and not util.ctl('Account').hasPushNotificationsSetup()
-      console.log 'setup onresume'
       util.ctl('Main').setUpPushNotifications()
 
   checkGoogleMaps: ->
@@ -167,7 +166,7 @@ Ext.define 'Purple.controller.Main',
       )
     else
       # must be Android
-      if checkPushNotification?
+      if alertIfDisabled
         @pushNotificationEnabled = false
         setTimeout (-> 
           if not util.ctl('Main').pushNotificationEnabled
