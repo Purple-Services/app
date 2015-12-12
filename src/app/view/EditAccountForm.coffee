@@ -61,7 +61,7 @@ Ext.define 'Purple.view.EditAccountForm',
             clearIcon: no
           }
           {
-            xtype: 'textfield'
+            xtype: 'phonefield'
             ctype: 'editAccountPhoneNumber'
             name: 'phone_number'
             label: 'Phone'
@@ -71,6 +71,10 @@ Ext.define 'Purple.view.EditAccountForm',
               'bottom-margin'
             ]
             clearIcon: no
+            listeners: {
+              keyup: ->
+                @applyValue @getValue()
+            }
           }
           {
             xtype: 'textfield'
