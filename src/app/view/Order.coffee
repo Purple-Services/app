@@ -242,6 +242,7 @@ Ext.define 'Purple.view.Order',
             label: 'Zip Code'
             labelWidth: 89
             disabled: yes
+            hidden: yes
             cls: [
               'visibly-disabled'
             ]
