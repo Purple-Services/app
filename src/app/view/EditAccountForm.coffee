@@ -73,7 +73,7 @@ Ext.define 'Purple.view.EditAccountForm',
             clearIcon: no
             listeners: {
               keyup: ->
-                @applyValue @getValue()
+                @onKeyup @getValue()
             }
           }
           {
