@@ -253,6 +253,7 @@ Ext.define 'Purple.controller.PaymentMethods',
 
   saveChanges: (callback) ->
     values = @getEditPaymentMethodForm().getValues()
+    values['card_number'] = values['card_number'].replace(/[^\d]/gi, '')
     card =
       number: values['card_number']
       cvc: values['card_cvc']

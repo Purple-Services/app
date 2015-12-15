@@ -334,7 +334,7 @@ Ext.define 'Purple.controller.Account',
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
       @getNameField().setValue localStorage['purpleUserName']
     if localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt ''
-      @getPhoneNumberField().setValue localStorage['purpleUserPhoneNumber']
+      @getPhoneNumberField().setValue localStorage['purpleUserPhoneNumber'].replace(/[^\d]/gi, '')
     
   showRegisterForm: ->
     @getLoginButtonContainer().hide()

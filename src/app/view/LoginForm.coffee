@@ -199,7 +199,7 @@ Ext.define 'Purple.view.LoginForm',
             hidden: yes
           }
           {
-            xtype: 'textfield'
+            xtype: 'phonefield'
             id: 'phoneNumberField'
             flex: 0
             name: 'phone_number'
@@ -208,6 +208,9 @@ Ext.define 'Purple.view.LoginForm',
               type: 'tel'
             value: ''
             hidden: yes
+            listeners:
+              keyup: ->
+                @onKeyup @getValue()
           }
           {
             xtype: 'component'

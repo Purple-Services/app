@@ -70,6 +70,8 @@ Ext.define 'Purple.view.EditAccountForm',
             cls: [
               'bottom-margin'
             ]
+            component:
+              type: 'tel'
             clearIcon: no
             listeners: {
               keyup: ->

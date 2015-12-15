@@ -39,8 +39,5 @@ Ext.define('Ux.field.CreditCardField', {
         return this.setValue(nums);
       }
     }
-  },
-  getNums: function() {
-    return this.getValue().substr(0, 19).replace(/[^\d]/gi, '');
   }
 });

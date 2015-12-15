@@ -32,5 +32,3 @@ Ext.define 'Ux.field.CreditCardField',
       else
         @setValue nums
 
-  getNums: ->
-    @getValue().substr(0, 19).replace(/[^\d]/gi, '')
