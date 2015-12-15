@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
+        id = "com.purple.app"
         versionCode = "18"
         version     = "1.0.8" >
 
   <!--
       For iOS use:
         id = "6NAJA3N74X.com.purple.app"
-      Android cannot start with number, so:
-        id = "com.purple.app"
-
-      !!! ALSO CHANGE phonegap version below!
       
-      When building for prod / dev, be sure to search of PROD or DEV
-      comments to include or exclude relevant elements.
-
+      Android cannot start with number, so just use:
+        id = "com.purple.app"
   -->
-  
-  <!-- versionCode is optional and Android only -->
-
 
   <!-- BEGIN CUSTOMER APP ONLY -->
   <name>Purple</name>
   <!-- BEGIN CUSTOMER APP ONLY -->
-  
+
   <!-- BEGIN COURIER APP ONLY -->
   <!-- <name>Purple Courier</name> -->
+  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
+  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
+  <!--   <string>(required for Courier mode)</string> -->
+  <!-- </gap:config-file> -->
   <!-- END COURIER APP ONLY -->
-
   
   <description>
     Purple mobile app.
@@ -93,8 +88,7 @@
   <!-- <gap:splash src="splash-screens/fr-xhdpi.png" gap:platform="android" gap:qualifier="fr-xhdpi" /> -->
   <!-- <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" /> -->
   <!-- <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" /> -->
-
-
+  
   <access origin="*" launch-external="yes" />
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
@@ -109,11 +103,13 @@
 
   <preference name="show-splash-screen-spinner" value="false" />
 
-  <!-- Using WKWebView for iOS 8 memory leak issue -->
-  <gap:plugin name="cordova-plugin-wkwebview" version="0.6.7" source="npm" />
+  <!-- iOS only
+       Using WKWebView for iOS 8 memory leak issue -->
+  <platform name="ios">
+    <gap:plugin name="cordova-plugin-wkwebview" version="0.6.7" source="npm" />
+  </platform>
 
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
-  <!-- <gap:plugin name="org.apache.cordova.statusbar" version="0.1.10" source="plugins.cordova.io" /> -->
   <preference name="StatusBarOverlaysWebView" value="false" />
   <preference name="StatusBarBackgroundColor" value="#000" />
   <preference name="StatusBarStyle" value="lightcontent" />
@@ -128,29 +124,20 @@
   <preference name="AutoHideSplashScreen" value="false" />
   <preference name="SplashScreen" value="splash-screens/hdpi.png" />
   <preference name="SplashScreenDelay" value="10000" />
+
+  <platform name="android">
+    <preference name="android-minSdkVersion" value="16" />
+    <preference name="android-build-tool" value="gradle" />
+    <!-- this plugin makes access origin config *actually* work in Android -->
+    <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
+  </platform>
   
-  <!-- <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0"> -->
-  <!--   <param name="APP_ID" value="1588773851335820" /> -->
-  <!--   <param name="APP_NAME" value="Purple" /> -->
-  <!-- </gap:plugin> -->
-
-  <!-- main one -->
-  <!-- <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io"> -->
-  <!--   <param name="APP_ID" value="1588773851335820" /> -->
-  <!--   <param name="APP_NAME" value="Purple" /> -->
-  <!-- </gap:plugin> -->
-
-  <!-- <gap:plugin name="phonegap-facebook-plugin" version="0.12.0" source="npm"> -->
-  <!--   <param name="APP_ID" value="1588773851335820" /> -->
-  <!--   <param name="APP_NAME" value="Purple" /> -->
-  <!-- </gap:plugin> -->
-
-  <!-- These might be needed to get facebook plugin to work on Android -->
-  <!-- <preference name="android-build-tool" value="gradle" /> -->
-  <!-- <preference name="android-minSdkVersion" value="15" /> -->
   <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+  <!-- <gap:plugin name="cordova-plugin-facebook" source="npm"> -->
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
+    <!-- <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
+    <!-- <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
   </gap:plugin>
   
   <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
@@ -159,9 +146,25 @@
   
   <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
 
-  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
 
-  <!-- <gap:plugin name="nl.x-services.plugins.socialsharing" source="plugins.cordova.io" /> -->
+
+
+
+
+  
+  <!-- TODO MAKE THIS WORK WITH FB AND GOOGLE ON ANDROID -->
+  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <!-- <gap:plugin name="pushplugin" version="2.5.9" source="npm" /> -->
+  <!-- <gap:plugin name="cordova-plugin-push-notification" version="2.5.2" source="npm" /> -->
+  <gap:plugin name="phonegap-plugin-push" version="1.4.5" source="npm" />
+
+
+
+
+
+
+
+  
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
   <feature name="http://api.phonegap.com/1.0/network" />
@@ -169,12 +172,5 @@
   <feature name="http://api.phonegap.com/1.0/notification" />
   <feature name="http://api.phonegap.com/1.0/geolocation" />
   <feature name="http://api.phonegap.com/1.0/device" />
-
-  <!-- BEGIN COURIER APP ONLY -->
- <!--  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
-  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
-    <string>(required for Courier mode)</string>
-  </gap:config-file> -->
-  <!-- END COURIER APP ONLY -->
-
+  
 </widget>
