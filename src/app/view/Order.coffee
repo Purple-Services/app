@@ -232,7 +232,19 @@ Ext.define 'Purple.view.Order',
             disabled: yes
             cls: [
               'visibly-disabled'
-              'bottom-margin'
+            ]
+          }
+          {
+            xtype: 'textfield'
+            ctype: 'orderAddressZipcode'
+            flex: 0
+            name: 'address_zip'
+            label: 'Zip Code'
+            labelWidth: 89
+            disabled: yes
+            hidden: yes
+            cls: [
+              'visibly-disabled'
             ]
           }
           {
