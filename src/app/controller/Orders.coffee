@@ -14,6 +14,7 @@ Ext.define 'Purple.controller.Orders',
       orderSpecialInstructionsLabel: '[ctype=orderSpecialInstructionsLabel]'
       orderSpecialInstructions: '[ctype=orderSpecialInstructions]'
       orderAddressStreet: '[ctype=orderAddressStreet]'
+      orderAddressZipcode: '[ctype=orderAddressZipcode]'
       orderTimePlaced: '[ctype=orderTimePlaced]'
       orderTimeDeadline: '[ctype=orderTimeDeadline]'
       orderDisplayTime: '[ctype=orderDisplayTime]'
@@ -158,6 +159,7 @@ Ext.define 'Purple.controller.Orders',
       @getOrderCustomerName().show()
       @getOrderCustomerPhone().show()
       @getOrderGasType().show()
+      @getOrderAddressZipcode().show()
 
       switch order['status']
         when "unassigned"
