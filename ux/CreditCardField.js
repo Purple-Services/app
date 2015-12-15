@@ -3,19 +3,44 @@ Ext.define('Ux.field.CreditCardField', {
   extend: 'Ext.field.Text',
   xtype: 'creditcardfield',
   onKeyup: function(value) {
-    var i, nStr, nums, r;
+    var a1, a2, a3, i, nStr, nums, partOne, partThree, partTwo, r;
     nums = value.substr(0, 19).replace(/[^\d]/gi, '');
-    r = nums.match(/(\d){4}/g);
-    if (r) {
-      i = 0;
-      nStr = '';
-      while (i < r.length) {
-        nStr += i !== r.length - 1 ? r[i] + (i < 3 ? '-' : '') : r[i];
-        i++;
+    a1 = nums.match(/^3[47](\d){2}/g);
+    a2 = nums.match(/^3[47](\d){8}/g);
+    a3 = nums.match(/^3[47](\d){13}/g);
+    if (a1 || a2 || a3) {
+      if (a1) {
+        partOne = a1[0];
       }
-      return this.setValue(nums.length % 4 !== 0 ? nStr + '-' + nums.substr(r.length * 4, nums.length) : nStr);
+      if (a2) {
+        partTwo = a2[0].slice(4, 10);
+      }
+      if (a3) {
+        partThree = a3[0].slice(10);
+      }
+      if (partThree) {
+        return this.setValue(partOne + ' ' + partTwo + ' ' + partThree);
+      } else if (partTwo) {
+        return this.setValue(nums.length > 10 ? partOne + ' ' + partTwo + ' ' + nums.substr(10) : partOne + ' ' + partTwo);
+      } else if (partOne) {
+        return this.setValue(nums.length > 3 ? partOne + ' ' + nums.substr(4) : partOne);
+      }
     } else {
-      return this.setValue(nums);
+      r = nums.match(/(\d){4}/g);
+      if (r) {
+        i = 0;
+        nStr = '';
+        while (i < r.length) {
+          nStr += i !== r.length - 1 ? r[i] + (i < 3 ? ' ' : '') : r[i];
+          i++;
+        }
+        return this.setValue(nums.length % 4 !== 0 ? nStr + ' ' + nums.substr(r.length * 4, nums.length) : nStr);
+      } else {
+        return this.setValue(nums);
+      }
     }
+  },
+  getNums: function() {
+    return this.getValue().substr(0, 19).replace(/[^\d]/gi, '');
   }
 });
