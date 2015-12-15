@@ -117,13 +117,11 @@ Ext.define 'Purple.controller.Main',
 
     @checkGoogleMaps()
 
-    document.addEventListener("resume", @onResume, false)
+    document.addEventListener("resume", (Ext.bind @onResume, this), false)
 
   onResume: ->
-    if not util.ctl('Main').pushNotificationEnabled
-      localStorage['purpleUserHasPushNotificationsSetUp'] = "false"
-    if util.ctl('Account').isUserLoggedIn() and not util.ctl('Account').hasPushNotificationsSetup()
-      util.ctl('Main').setUpPushNotifications()
+    if util.ctl('Account').isUserLoggedIn()
+      @setUpPushNotifications()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -150,8 +148,8 @@ Ext.define 'Purple.controller.Main',
     if Ext.os.name is "iOS"
       if alertIfDisabled
         @pushNotificationEnabled = false
-        setTimeout (-> 
-          if not util.ctl('Main').pushNotificationEnabled
+        setTimeout (=> 
+          if not @pushNotificationEnabled
             navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
           ), 1500 
       window.plugins?.pushNotification?.register(
@@ -168,12 +166,12 @@ Ext.define 'Purple.controller.Main',
       # must be Android
       if alertIfDisabled
         @pushNotificationEnabled = false
-        setTimeout (-> 
-          if not util.ctl('Main').pushNotificationEnabled
+        setTimeout (=> 
+          if not @pushNotificationEnabled
             navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
           ), 1500 
       window.plugins?.pushNotification?.register(
-        ((result) -> util.ctl('Main').pushNotificationEnabled = true),
+        ((result) => @pushNotificationEnabled = true),
         ((error) -> alert "error: " + error),
         {
           "senderID": util.GCM_SENDER_ID
@@ -185,7 +183,7 @@ Ext.define 'Purple.controller.Main',
   # and logins. Need to look into this later. I want to make sure it is
   # registered but I don't think we need to call add-sns ajax so often.
   registerDeviceForPushNotifications: (cred, pushPlatform = "apns") ->
-    util.ctl('Main').pushNotificationEnabled = true
+    @pushNotificationEnabled = true
     # cred for APNS (apple) is the device token
     # for GCM (android) it is regid
     Ext.Ajax.request
@@ -826,7 +824,7 @@ Ext.define 'Purple.controller.Main',
             # notifications when a user creates their account. But it's nice to
             # keep this here for existing users that have never ordered and
             # don't logout and login (which would also cause a setup)
-            @setUpPushNotifications(true)
+            @setUpPushNotifications true
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
