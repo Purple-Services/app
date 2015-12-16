@@ -271,9 +271,8 @@ Ext.define 'Purple.controller.Account',
     @showAccountSetupForm()
 
   createAccount: ->
-    # for adding phone and name to account that was just created in db
     name = @getNameField().getValue()
-    phoneNumber = @getPhoneNumberField().getValue()
+    phoneNumber = @getPhoneNumberField().getValue().replace(/[^\d]/gi, '')
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -334,7 +333,7 @@ Ext.define 'Purple.controller.Account',
     if localStorage['purpleUserName']? and localStorage['purpleUserName'] isnt ''
       @getNameField().setValue localStorage['purpleUserName']
     if localStorage['purpleUserPhoneNumber']? and localStorage['purpleUserPhoneNumber'] isnt ''
-      @getPhoneNumberField().setValue localStorage['purpleUserPhoneNumber'].replace(/[^\d]/gi, '')
+      @getPhoneNumberField().setValue localStorage['purpleUserPhoneNumber']
     
   showRegisterForm: ->
     @getLoginButtonContainer().hide()
@@ -472,7 +471,8 @@ Ext.define 'Purple.controller.Account',
       @getAccountNameField()?.setValue localStorage['purpleUserName']
     if localStorage['purpleUserPhoneNumber']? and
     localStorage['purpleUserPhoneNumber'] isnt ''
-      @getAccountPhoneNumberField()?.setValue localStorage['purpleUserPhoneNumber']
+      phone = localStorage['purpleUserPhoneNumber'].slice(0, 3) + '-' + localStorage['purpleUserPhoneNumber'].slice(3, 6) + '-' + localStorage['purpleUserPhoneNumber'].slice(6)
+      @getAccountPhoneNumberField()?.setValue phone
     if localStorage['purpleUserEmail']? and
     localStorage['purpleUserEmail'] isnt ''
       @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
@@ -505,6 +505,9 @@ Ext.define 'Purple.controller.Account',
       )
 
   saveChanges: ->
+    phone = @getEditAccountForm().getValues().phone_number.replace(/[^\d]/gi, '')
+    user = @getEditAccountForm().getValues()
+    user.phone_number = phone
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -514,7 +517,7 @@ Ext.define 'Purple.controller.Account',
         version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
-        user: @getEditAccountForm().getValues()
+        user: user
       headers:
         'Content-Type': 'application/json'
       timeout: 30000

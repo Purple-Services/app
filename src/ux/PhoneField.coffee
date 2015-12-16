@@ -3,16 +3,17 @@ Ext.define 'Ux.field.PhoneField',
   xtype: 'phonefield'
 
   onKeyup: (value) ->
-    nums = value.substr(0, 14).replace(/[^\d]/gi, '')
+    nums = value.substr(0, 12).replace(/[^\d]/gi, '')
     if nums.length <= 3
-      @setValue '(' + nums + ')'
+      @setValue nums
     else if nums.length <= 6
       partOne = nums.slice(0, 3)
       partTwo = nums.slice(3)
-      @setValue '(' + partOne + ')' + ' ' + partTwo
+      @setValue partOne + '-' + partTwo
     else if nums.length <= 10
       partOne = nums.slice(0, 3)
       partTwo = nums.slice(3, 6)
       partThree = nums.slice(6)
-      @setValue '(' + partOne + ')' + ' ' + partTwo + '-' + partThree
+      @setValue partOne + '-' + partTwo + '-' + partThree
 
+    

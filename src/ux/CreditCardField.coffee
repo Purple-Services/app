@@ -18,7 +18,7 @@ Ext.define 'Ux.field.CreditCardField',
       else if partTwo
         @setValue if nums.length > 10 then partOne + ' ' + partTwo + ' ' + nums.substr(10) else partOne + ' ' + partTwo
       else if partOne
-        @setValue if nums.length > 3 then partOne + ' ' + nums.substr(4) else partOne
+        @setValue if nums.length > 4 then partOne + ' ' + nums.substr(4) else partOne
     
     else 
       r = nums.match(/(\d){4}/g)

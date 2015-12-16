@@ -23,7 +23,7 @@ Ext.define('Ux.field.CreditCardField', {
       } else if (partTwo) {
         return this.setValue(nums.length > 10 ? partOne + ' ' + partTwo + ' ' + nums.substr(10) : partOne + ' ' + partTwo);
       } else if (partOne) {
-        return this.setValue(nums.length > 3 ? partOne + ' ' + nums.substr(4) : partOne);
+        return this.setValue(nums.length > 4 ? partOne + ' ' + nums.substr(4) : partOne);
       }
     } else {
       r = nums.match(/(\d){4}/g);
