@@ -3,16 +3,15 @@ Ext.define 'Ux.field.CreditCardField',
   xtype: 'creditcardfield'
 
   onKeyup: (value) ->
-    nums = value.substr(0, 19).replace(/[^\d]/gi, '')
-    a1 = nums.match(/^3[47](\d){2}/g)
-    a2 = nums.match(/^3[47](\d){8}/g)
-    a3 = nums.match(/^3[47](\d){13}/g)
+    nums = value.substr(0, 17).replace(/[^\d]/gi, '')
+    amex = nums.match(/^3[47](\d){2}/g)
 
-    if a1 or a2 or a3
-      if a1 then partOne = a1[0]
-      if a2 then partTwo = a2[0].slice(4, 10)
-      if a3 then partThree = a3[0].slice(10)
-
+    if amex
+      partOne = amex[0]
+      if nums.length >= 10
+        partTwo = nums.slice(4, 10)
+      if nums.length is 15
+        partThree = nums.slice(10)
       if partThree
         @setValue partOne + ' ' + partTwo + ' ' + partThree
       else if partTwo
@@ -20,15 +19,16 @@ Ext.define 'Ux.field.CreditCardField',
       else if partOne
         @setValue if nums.length > 4 then partOne + ' ' + nums.substr(4) else partOne
     
-    else 
+    else
+      nums = value.substr(0, 19).replace(/[^\d]/gi, '') 
       r = nums.match(/(\d){4}/g)
       if r
         i = 0
         nStr = ''
         while i < r.length
-          nStr += if i != r.length - 1 then r[i] + (if i < 3 then ' ' else '') else r[i]
+          nStr += if i isnt r.length - 1 then r[i] + (if i < 3 then ' ' else '') else r[i]
           i++  
-        @setValue if nums.length % 4 != 0 then nStr + ' ' + nums.substr(r.length * 4, nums.length) else nStr
+        @setValue if nums.length % 4 isnt 0 then nStr + ' ' + nums.substr(r.length * 4, nums.length) else nStr
       else
         @setValue nums
 

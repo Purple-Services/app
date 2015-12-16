@@ -271,6 +271,7 @@ Ext.define 'Purple.controller.Account',
     @showAccountSetupForm()
 
   createAccount: ->
+    # for adding phone and name to account that was just created in db
     name = @getNameField().getValue()
     phoneNumber = @getPhoneNumberField().getValue().replace(/[^\d]/gi, '')
     Ext.Viewport.setMasked

@@ -3,20 +3,16 @@ Ext.define('Ux.field.CreditCardField', {
   extend: 'Ext.field.Text',
   xtype: 'creditcardfield',
   onKeyup: function(value) {
-    var a1, a2, a3, i, nStr, nums, partOne, partThree, partTwo, r;
-    nums = value.substr(0, 19).replace(/[^\d]/gi, '');
-    a1 = nums.match(/^3[47](\d){2}/g);
-    a2 = nums.match(/^3[47](\d){8}/g);
-    a3 = nums.match(/^3[47](\d){13}/g);
-    if (a1 || a2 || a3) {
-      if (a1) {
-        partOne = a1[0];
+    var amex, i, nStr, nums, partOne, partThree, partTwo, r;
+    nums = value.substr(0, 17).replace(/[^\d]/gi, '');
+    amex = nums.match(/^3[47](\d){2}/g);
+    if (amex) {
+      partOne = amex[0];
+      if (nums.length >= 10) {
+        partTwo = nums.slice(4, 10);
       }
-      if (a2) {
-        partTwo = a2[0].slice(4, 10);
-      }
-      if (a3) {
-        partThree = a3[0].slice(10);
+      if (nums.length === 15) {
+        partThree = nums.slice(10);
       }
       if (partThree) {
         return this.setValue(partOne + ' ' + partTwo + ' ' + partThree);
@@ -26,6 +22,7 @@ Ext.define('Ux.field.CreditCardField', {
         return this.setValue(nums.length > 4 ? partOne + ' ' + nums.substr(4) : partOne);
       }
     } else {
+      nums = value.substr(0, 19).replace(/[^\d]/gi, '');
       r = nums.match(/(\d){4}/g);
       if (r) {
         i = 0;
