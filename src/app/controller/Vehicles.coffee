@@ -209,15 +209,16 @@ Ext.define 'Purple.controller.Vehicles',
       else
         'Edit Vehicle'
     )
-    
-    @getEditVehicleFormYear().setOptions(
-      options = @getYearList().map (x) ->
-        {
-          text: x
-          value: x
-        }
-      options.unshift '': ''
-    )
+
+    options = @getYearList().map (x) ->
+      {
+        text: x
+        value: x
+      }
+    options.unshift
+      text: ''
+      value: ''
+    @getEditVehicleFormYear().setOptions options
     @getEditVehicleFormYear().setDisabled no
     
     @getEditVehicleFormColor().setOptions(

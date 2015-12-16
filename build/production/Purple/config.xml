@@ -144,7 +144,7 @@
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
   </gap:plugin>
   
-  <gap:plugin name="am.armsoft.plugins.listpicker" version="2.2.0" />
+  <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
 
 
