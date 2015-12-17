@@ -205,10 +205,11 @@ Ext.define 'Purple.controller.Main',
         ),
         (=>
           # console.log "GPS failure callback called"
-          @geolocationAllowed = false
-          @getMap().getMap().setCenter(
-            new google.maps.LatLng 34.0507177, -118.43757779999999
-            )
+          if not @geolocationAllowed? or @geolocationAllowed is true
+            @geolocationAllowed = false
+            @getMap().getMap().setCenter(
+              new google.maps.LatLng 34.0507177, -118.43757779999999
+              )
           if not localStorage['gps_not_allowed_event_sent']?
             analytics?.track 'GPS Not Allowed'
             localStorage['gps_not_allowed_event_sent'] = 'yes'
