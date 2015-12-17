@@ -435,7 +435,7 @@ Ext.define 'Purple.controller.Account',
 
   hasPushNotificationsSetup: ->
     localStorage['purpleUserHasPushNotificationsSetUp']? and localStorage['purpleUserHasPushNotificationsSetUp'] is 'true'
-
+    
   # only for users of type = 'native'
   resetPassword: ->
     vals = @getLoginForm().getValues()
