@@ -215,6 +215,7 @@ Ext.define 'Purple.controller.Main',
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          @geolocationAllowed = true
           @updateLatlngBusy = no
           @lat = position.coords.latitude
           @lng = position.coords.longitude
@@ -223,7 +224,12 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
-          # console.log "GPS failure callback called."
+          # console.log "GPS failure callback called"
+          if not @geolocationAllowed? or @geolocationAllowed is true
+            @geolocationAllowed = false
+            @getMap().getMap().setCenter(
+              new google.maps.LatLng 34.0507177, -118.43757779999999
+              )
           if not localStorage['gps_not_allowed_event_sent']?
             analytics?.track 'GPS Not Allowed'
             localStorage['gps_not_allowed_event_sent'] = 'yes'
@@ -321,9 +327,13 @@ Ext.define 'Purple.controller.Main',
       analytics?.page 'Map'
 
   recenterAtUserLoc: ->
-    @getMap().getMap().setCenter(
-      new google.maps.LatLng @lat, @lng
-    )
+    if @geolocationAllowed?
+      if not @geolocationAllowed
+        navigator.notification.alert 'You must allow Purple to access your location to use this feature.', (->), "Not Available"
+      else
+        @getMap().getMap().setCenter(
+          new google.maps.LatLng @lat, @lng
+        )
 
   addressInputMode: ->
     if not @getMap().isHidden()
