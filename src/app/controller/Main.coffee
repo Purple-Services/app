@@ -91,7 +91,7 @@ Ext.define 'Purple.controller.Main',
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
-    # comment this out for courier app
+    # Customer app only
     if VERSION is "PROD"
       ga_storage?._enableSSL() # doesn't seem to actually use SSL?
       ga_storage?._setAccount 'UA-61762011-1'
@@ -106,6 +106,7 @@ Ext.define 'Purple.controller.Main',
     analytics?.track 'App Launch',
       platform: Ext.os.name
     analytics?.page 'Map'
+    # End of Customer app only
 
     navigator.splashscreen?.hide()
 
