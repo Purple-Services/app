@@ -310,7 +310,7 @@ Ext.define 'Purple.controller.Main',
     if @geolocationAllowed?
       if not @geolocationAllowed
         if showAlertIfUnavailable
-          navigator.notification.alert 'You must allow Purple to access your location to use this feature.', (->), "Not Available"
+          navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
       else
         @getMap().getMap().setCenter(
           new google.maps.LatLng @lat, @lng
