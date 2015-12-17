@@ -249,10 +249,15 @@ Ext.define 'Purple.controller.Account',
     ga_storage._trackEvent 'ui', 'Google Login Pressed'
     analytics?.track 'Google Login Pressed'
     window.plugins.googleplus.login(
-      {
-        'scopes': 'profile email'
-        'offline': true
-      },
+      (if Ext.os.name is "iOS"
+        {
+          'scopes': 'profile email'
+        }
+      else # Android
+        {
+          'scopes': 'profile email'
+          'offline': true
+        }),
       (Ext.bind @googleLoginSuccess, this),
       (->
         Ext.Viewport.setMasked false
@@ -267,7 +272,7 @@ Ext.define 'Purple.controller.Account',
       result['userId'],
       (if Ext.os.name is "iOS"
         result['accessToken']
-      else
+      else # Android
         result['oauthToken']),
       result['email'] # revelant to old Android version only. iOS will get email scope server-side and also newer Android
     )

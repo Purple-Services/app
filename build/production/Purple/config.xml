@@ -94,8 +94,6 @@
   <access origin="geo:*" launch-external="yes" />
 
   <preference name="phonegap-version" value="cli-5.2.0" />
-  <!-- cli-5.1.1 doesn't work for Android, just use 3.7.0 -->
-  <!-- <preference name="phonegap-version" value="3.7.0" /> -->
   <preference name="fullscreen" value="false" />
   <preference name="exit-on-suspend" value="false" />
   <preference name="orientation" value="portrait" />

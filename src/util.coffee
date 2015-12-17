@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "DEV"
+VERSION = "PROD"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
