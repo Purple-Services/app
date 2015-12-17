@@ -251,6 +251,7 @@ Ext.define 'Purple.controller.Account',
     window.plugins.googleplus.login(
       {
         'scopes': 'profile email'
+        'offline': true
       },
       (Ext.bind @googleLoginSuccess, this),
       (->
@@ -259,11 +260,13 @@ Ext.define 'Purple.controller.Account',
     )
 
   googleLoginSuccess: (result) ->
-    console.log JSON.stringify(result)
+    if VERSION isnt "PROD"
+      console.log JSON.stringify(result)
     @authorizeUser(
       'google',
       result['userId'],
-      result['accessToken'],
+      # result['accessToken'], # TODO test if result['oauthToken'] works in iOS (it does in Android)
+      result['oauthToken'],
       result['email'] # revelant to Android version only. iOS will get email scope server-side
     )
 

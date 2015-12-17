@@ -146,24 +146,7 @@
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
-
-
-
-
-
-  
-  <!-- TODO MAKE THIS WORK WITH FB AND GOOGLE ON ANDROID -->
-  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
-  <!-- <gap:plugin name="pushplugin" version="2.5.9" source="npm" /> -->
-  <!-- <gap:plugin name="cordova-plugin-push-notification" version="2.5.2" source="npm" /> -->
-  <gap:plugin name="phonegap-plugin-push" version="1.4.5" source="npm" />
-
-
-
-
-
-
-
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
   
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
