@@ -224,6 +224,17 @@ Ext.define 'Purple.view.Order',
           }
           {
             xtype: 'textfield'
+            ctype: 'orderLicensePlate'
+            flex: 0
+            name: 'license_plate'
+            label: 'Plate #'
+            disabled: yes
+            cls: [
+              'visibly-disabled'
+            ]
+          }
+          {
+            xtype: 'textfield'
             ctype: 'orderAddressStreet'
             flex: 0
             name: 'address_street'

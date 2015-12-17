@@ -19,6 +19,7 @@ Ext.define 'Purple.controller.Orders',
       orderTimeDeadline: '[ctype=orderTimeDeadline]'
       orderDisplayTime: '[ctype=orderDisplayTime]'
       orderVehicle: '[ctype=orderVehicle]'
+      orderLicensePlate: '[ctype=orderLicensePlate]'
       orderGasPrice: '[ctype=orderGasPrice]'
       orderGallons: '[ctype=orderGallons]'
       orderGasType: '[ctype=orderGasType]'
@@ -112,6 +113,7 @@ Ext.define 'Purple.controller.Orders',
     for v in util.ctl('Vehicles').vehicles
       if v['id'] is order['vehicle_id']
         order['vehicle'] = "#{v.year} #{v.make} #{v.model}"
+        order['license_plate'] = v.license_plate.toUpperCase()
         break
 
     if util.ctl('Account').isCourier()

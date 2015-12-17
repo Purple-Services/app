@@ -410,7 +410,7 @@ Ext.define 'Purple.controller.Vehicles',
     if @vehicles?
       opts = @vehicles.map (v) ->
         {
-          text: "#{v.model} (#{v.license_plate})"
+          text: "#{v.model} (#{v.license_plate.toUpperCase()})"
           value: v.id
         }
       opts.push
@@ -443,7 +443,7 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
             opts = @vehicles.map (v) ->
               {
-                text: "#{v.model} (#{v.license_plate})"
+                text: "#{v.model} (#{v.license_plate.toUpperCase()})"
                 value: v.id
               }
             opts.push
