@@ -265,9 +265,11 @@ Ext.define 'Purple.controller.Account',
     @authorizeUser(
       'google',
       result['userId'],
-      # result['accessToken'], # TODO test if result['oauthToken'] works in iOS (it does in Android)
-      result['oauthToken'],
-      result['email'] # revelant to Android version only. iOS will get email scope server-side
+      (if Ext.os.name is "iOS"
+        result['accessToken']
+      else
+        result['oauthToken']),
+      result['email'] # revelant to old Android version only. iOS will get email scope server-side and also newer Android
     )
 
   accountSetup: ->
