@@ -260,59 +260,61 @@ Ext.define 'Purple.controller.Main',
     @deliveryLocLng = center.lng()
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
-  updateDeliveryLocAddressByLatLng: (lat, lng) ->
-    latlng = new google.maps.LatLng lat, lng
-    @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-      if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-        if results[0]?['address_components']?
-          addressComponents = results[0]['address_components']
-          streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
-          @getRequestAddressField().setValue streetAddress
-          # find the address component that contains the zip code
-          for c in addressComponents
-            for t in c.types
-              if t is "postal_code"
-                @deliveryAddressZipCode = c['short_name']
-                if not localStorage['gps_not_allowed_event_sent'] and not localStorage['first_launch_loc_sent']?
-                  # this means that this is the zip code of the location
-                  # where they first launched the app and they allowed GPS
-                  analytics?.track 'First Launch Location',
-                    street_address: streetAddress
-                    zip_code: @deliveryAddressZipCode
-                  localStorage['first_launch_loc_sent'] = 'yes'
-          @busyGettingGasPrice ?= no
-          if not @busyGettingGasPrice
-            @busyGettingGasPrice = yes
-            Ext.Ajax.request
-              url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
-              params: Ext.JSON.encode
-                version: util.VERSION_NUMBER
+  updateMapWithAddressComponents: (address) ->
+    if address[0]?['address_components']?
+      addressComponents = address[0]['address_components']
+      streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
+      @getRequestAddressField().setValue streetAddress
+      # find the address component that contains the zip code
+      for c in addressComponents
+        for t in c.types
+          if t is "postal_code"
+            @deliveryAddressZipCode = c['short_name']
+            if not localStorage['gps_not_allowed_event_sent'] and not localStorage['first_launch_loc_sent']?
+              # this means that this is the zip code of the location
+              # where they first launched the app and they allowed GPS
+              analytics?.track 'First Launch Location',
+                street_address: streetAddress
                 zip_code: @deliveryAddressZipCode
-              headers:
-                'Content-Type': 'application/json'
-              timeout: 30000
-              method: 'POST'
-              scope: this
-              success: (response_obj) ->
-                @getRequestGasButton().setDisabled no
-                response = Ext.JSON.decode response_obj.responseText
-                if response.success
-                  prices = response.gas_prices
-                  Ext.get('gas-price-display-87').setText(
-                    "$#{util.centsToDollars prices["87"]}"
-                  )
-                  Ext.get('gas-price-display-91').setText(
-                    "$#{util.centsToDollars prices["91"]}"
-                  )
-                @busyGettingGasPrice = no
-              failure: (response_obj) ->
-                @busyGettingGasPrice = no
-                console.log response_obj
-        # else
-        #   console.log 'No results found.'
+              localStorage['first_launch_loc_sent'] = 'yes'
+      @busyGettingGasPrice ?= no
+      if not @busyGettingGasPrice
+        @busyGettingGasPrice = yes
+        Ext.Ajax.request
+          url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
+          params: Ext.JSON.encode
+            version: util.VERSION_NUMBER
+            zip_code: @deliveryAddressZipCode
+          headers:
+            'Content-Type': 'application/json'
+          timeout: 30000
+          method: 'POST'
+          scope: this
+          success: (response_obj) ->
+            @getRequestGasButton().setDisabled no
+            response = Ext.JSON.decode response_obj.responseText
+            if response.success
+              prices = response.gas_prices
+              Ext.get('gas-price-display-87').setText(
+                "$#{util.centsToDollars prices["87"]}"
+              )
+              Ext.get('gas-price-display-91').setText(
+                "$#{util.centsToDollars prices["91"]}"
+              )
+            @busyGettingGasPrice = no
+          failure: (response_obj) ->
+            @busyGettingGasPrice = no
+            console.log response_obj
 
-      # else
-      #   console.log 'Geocoder failed due to: ' + status
+  updateDeliveryLocAddressByLatLng: (lat, lng) ->
+    if @bypassUpdateDeliveryLocAddressByLatLng? and @bypassUpdateDeliveryLocAddressByLatLng
+      @bypassUpdateDeliveryLocAddressByLatLng = false
+      return
+    else
+      latlng = new google.maps.LatLng lat, lng
+      @geocoder?.geocode {'latLng': latlng}, (results, status) =>
+        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
+          @updateMapWithAddressComponents(results)
 
   mapMode: ->
     if @getMap().isHidden()
@@ -471,9 +473,12 @@ Ext.define 'Purple.controller.Main',
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
         @getMap().getMap().setCenter latlng
+        @bypassUpdateDeliveryLocAddressByLatLng = true
+        @updateMapWithAddressComponents(place)
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
+      
   handleAutoCompleteListTap: (loc) ->
     @loc = loc
     if @addressInputSubMode
