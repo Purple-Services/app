@@ -736,6 +736,7 @@ Ext.define 'Purple.controller.Main',
   applyCode: (code) ->
     vals = @getRequestConfirmationForm().getValues()
     vehicleId = vals['vehicle_id']
+    code = code.toUpperCase()
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -757,7 +758,7 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         analytics?.track 'Tried Coupon Code',
           valid: response.success
-          coupon_code: code.toUpperCase()
+          coupon_code: code
         if response.success
           @getDiscountField().setValue(
             "- $" + util.centsToDollars(Math.abs(response.value))
