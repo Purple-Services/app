@@ -126,7 +126,7 @@ Ext.define 'Purple.controller.Main',
     if util.ctl('Main').gpsFailedWhileAppClosed
       navigator.notification.alert "gps failed while it was closed", (->), 'hi'
     if util.ctl('Account').isUserLoggedIn()
-      util.ctl('Main').setUpPushNotifications()
+      @setUpPushNotifications()
 
   onPause: ->
     util.ctl('Main').gpsFailedWhileAppClosed = false
