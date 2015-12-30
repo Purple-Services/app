@@ -2,8 +2,8 @@
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "6NAJA3N74X.com.purple.app"
-        versionCode = "19"
-        version     = "1.2.0" >
+        versionCode = "20"
+        version     = "1.2.1" >
 
   <!--
       For iOS use:
@@ -144,7 +144,12 @@
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
-  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
+  <!--
+      the above doesn't seem to work on iOS...
+      in fact, i'm not sure if it even works for Android
+  -->
+  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 

@@ -122,6 +122,8 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isUserLoggedIn()
+      # this is causing it to happen very often, probably want to change that
+      # so it only happens when there is a change in user's settings
       util.ctl('Main').setUpPushNotifications()
 
   checkGoogleMaps: ->
