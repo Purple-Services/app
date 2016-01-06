@@ -89,7 +89,7 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 2000
+    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Customer app only
     # if VERSION is "PROD"
@@ -119,17 +119,20 @@ Ext.define 'Purple.controller.Main',
     @checkGoogleMaps()
 
     document.addEventListener("resume", (Ext.bind @onResume, this), false)
-    document.addEventListener("pause", (Ext.bind @onPause, this), false)
+
+    @courierLocationNotification = 0
 
   onResume: ->
-    navigator.notification.alert "resume", (->), 'hi'
-    if util.ctl('Main').gpsFailedWhileAppClosed
-      navigator.notification.alert "gps failed while it was closed", (->), 'hi'
+    currentTime = new Date().getTime() / 1000
+    if currentTime - 10 > @lastGeolocationAttempt
+      @backgroundGeolocationWorking = false
+      if @courierLocationNotification < 2
+        @courierLocationNotification++
+        navigator.notification.alert "Please make sure that the Purple Location settings on your device is set to 'Always'.", (->), 'Warning'
+    else
+      @backgroundGeolocationWorking = true
     if util.ctl('Account').isUserLoggedIn()
       @setUpPushNotifications()
-
-  onPause: ->
-    util.ctl('Main').gpsFailedWhileAppClosed = false
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -222,6 +225,7 @@ Ext.define 'Purple.controller.Main',
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          @lastGeolocationAttempt = new Date().getTime() / 1000
           @geolocationAllowed = true
           @updateLatlngBusy = no
           @lat = position.coords.latitude
@@ -232,6 +236,7 @@ Ext.define 'Purple.controller.Main',
         ),
         (=>
           # console.log "GPS failure callback called"
+          @lastGeolocationAttempt = new Date().getTime() / 1000
           if not @geolocationAllowed? or @geolocationAllowed is true
             @geolocationAllowed = false
             @getMap().getMap().setCenter(
@@ -943,6 +948,7 @@ Ext.define 'Purple.controller.Main',
           gallons:
             87: localStorage['purpleCourierGallons87']
             91: localStorage['purpleCourierGallons91']
+          backgroundGeolocationWorking: @backgroundGeolocationWorking
         headers:
           'Content-Type': 'application/json'
         timeout: 30000
