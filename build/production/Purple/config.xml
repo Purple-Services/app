@@ -88,7 +88,14 @@
   <!-- <gap:splash src="splash-screens/fr-xhdpi.png" gap:platform="android" gap:qualifier="fr-xhdpi" /> -->
   <!-- <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" /> -->
   <!-- <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" /> -->
-  
+
+  <!-- TRYING -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
+  <allow-navigation href="*" launch-external="yes" />
+  <allow-intent href="*" launch-external="yes" />
+  <access origin="comegooglemaps:*" launch-external="yes" />
+  <!-- TRYING -->
+
   <access origin="*" launch-external="yes" />
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
