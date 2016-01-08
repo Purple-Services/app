@@ -472,7 +472,13 @@ Ext.define 'Purple.controller.Account',
       @getAccountNameField()?.setValue localStorage['purpleUserName']
     if localStorage['purpleUserPhoneNumber']? and
     localStorage['purpleUserPhoneNumber'] isnt ''
-      phone = localStorage['purpleUserPhoneNumber'].slice(0, 3) + '-' + localStorage['purpleUserPhoneNumber'].slice(3, 6) + '-' + localStorage['purpleUserPhoneNumber'].slice(6)
+      if localStorage['purpleUserPhoneNumber'].length < 10
+        phone = localStorage['purpleUserPhoneNumber']
+      else if localStorage['purpleUserPhoneNumber'].length is 10
+        phone = '('+ localStorage['purpleUserPhoneNumber'].slice(0, 3) + ') ' + localStorage['purpleUserPhoneNumber'].slice(3, 6) + '-' + localStorage['purpleUserPhoneNumber'].slice(6)
+      else
+        countryCodeLength = localStorage['purpleUserPhoneNumber'].length - 10
+        phone = '+' + localStorage['purpleUserPhoneNumber'].slice(0, countryCodeLength) + ' (' + localStorage['purpleUserPhoneNumber'].slice(countryCodeLength, countryCodeLength + 3) + ') ' + localStorage['purpleUserPhoneNumber'].slice(countryCodeLength + 3, countryCodeLength + 6) + '-' + localStorage['purpleUserPhoneNumber'].slice(countryCodeLength + 6)
       @getAccountPhoneNumberField()?.setValue phone
     if localStorage['purpleUserEmail']? and
     localStorage['purpleUserEmail'] isnt ''
@@ -506,9 +512,8 @@ Ext.define 'Purple.controller.Account',
       )
 
   saveChanges: ->
-    phone = @getEditAccountForm().getValues().phone_number.replace(/[^\d]/gi, '')
     user = @getEditAccountForm().getValues()
-    user.phone_number = phone
+    user.phone_number = @getEditAccountForm().getValues().phone_number.replace(/[^\d]/gi, '')
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
