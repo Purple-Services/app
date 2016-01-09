@@ -30,5 +30,18 @@ Ext.define 'Ux.field.PhoneField',
         partFour = nums.slice(10)
         @setValue '+' + partOne + ' (' + partTwo + ') ' + partThree + '-' + partFour
 
+    if nums.charAt(0) is '1'
+      if nums.length <= 4
+        @setValue '+' + nums
+      else if nums.length <= 7
+        partOne = nums.slice(1, 4)
+        partTwo = nums.slice(4)
+        @setValue '+1 (' + partOne + ') ' + partTwo
+      else if nums.length <= 11
+        partOne = nums.slice(1, 4)
+        partTwo = nums.slice(4, 7)
+        partThree = nums.slice(7)
+        @setValue '+1 (' + partOne + ') ' + partTwo + '-' + partThree
+
 
     
