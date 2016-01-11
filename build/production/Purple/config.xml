@@ -89,13 +89,6 @@
   <!-- <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" /> -->
   <!-- <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" /> -->
 
-  <!-- TRYING -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
-  <allow-navigation href="*" launch-external="yes" />
-  <allow-intent href="*" launch-external="yes" />
-  <access origin="comegooglemaps:*" launch-external="yes" />
-  <!-- TRYING -->
-
   <access origin="*" launch-external="yes" />
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
@@ -111,7 +104,7 @@
   <!-- iOS only
        Using WKWebView for iOS 8 memory leak issue -->
   <platform name="ios">
-    <gap:plugin name="cordova-plugin-wkwebview" version="0.6.7" source="npm" />
+    <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
   </platform>
 
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
