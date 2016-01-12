@@ -104,7 +104,7 @@
   <!-- iOS only
        Using WKWebView for iOS 8 memory leak issue -->
   <platform name="ios">
-    <gap:plugin name="cordova-plugin-wkwebview" version="0.6.7" source="npm" />
+    <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
   </platform>
 
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />

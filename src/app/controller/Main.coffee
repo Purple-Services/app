@@ -228,10 +228,25 @@ Ext.define 'Purple.controller.Main',
         (=>
           # console.log "GPS failure callback called"
           if not @geolocationAllowed? or @geolocationAllowed is true
+            Ext.Ajax.request
+              url: "http://freegeoip.net/json/"
+              headers:
+                'Content-Type': 'application/json'
+              timeout: 30000
+              method: 'GET'
+              scope: this
+              success: (response_obj) ->
+                navigator.notification.alert 'success', (->), "hi"
+                userInfo = JSON.parse(response_obj.responseText)
+                @getMap().getMap().setCenter(
+                  new google.maps.LatLng userInfo.latitude, userInfo.longitude
+                  )
+              failure: (response_obj) ->
+                navigator.notification.alert 'failure', (->), "hi"
+                @getMap().getMap().setCenter(
+                  new google.maps.LatLng 34.0507177, -118.43757779999999
+                  )
             @geolocationAllowed = false
-            @getMap().getMap().setCenter(
-              new google.maps.LatLng 34.0507177, -118.43757779999999
-              )
           if not localStorage['gps_not_allowed_event_sent']?
             analytics?.track 'GPS Not Allowed'
             localStorage['gps_not_allowed_event_sent'] = 'yes'
