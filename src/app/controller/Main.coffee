@@ -123,12 +123,11 @@ Ext.define 'Purple.controller.Main',
     @courierLocationNotification = 0
 
   onResume: ->
-    currentTime = new Date().getTime() / 1000
-    if currentTime - 10 > @lastGeolocationAttempt
+    if @showWhileUsingNotification is true and @courierLocationNotification < 2
+      navigator.notification.alert "Please make sure that the Purple Location settings on your device is set to 'Always'.", (->), 'Warning'
+      @showWhileUsingNotification = false
       @backgroundGeolocationWorking = false
-      if @courierLocationNotification < 2
-        @courierLocationNotification++
-        navigator.notification.alert "Please make sure that the Purple Location settings on your device is set to 'Always'.", (->), 'Warning'
+      @courierLocationNotification++
     else
       @backgroundGeolocationWorking = true
     if util.ctl('Account').isUserLoggedIn()
@@ -225,6 +224,10 @@ Ext.define 'Purple.controller.Main',
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          currentTime = new Date().getTime() / 1000
+          if @lastGeolocationAttempt
+            if currentTime - @lastGeolocationAttempt > 10
+              @showWhileUsingNotification = true
           @lastGeolocationAttempt = new Date().getTime() / 1000
           @geolocationAllowed = true
           @updateLatlngBusy = no
@@ -235,7 +238,10 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
-          # console.log "GPS failure callback called"
+          currentTime = new Date().getTime() / 1000
+          if @lastGeolocationAttempt
+            if currentTime - @lastGeolocationAttempt > 10
+              @showWhileUsingNotification = true
           @lastGeolocationAttempt = new Date().getTime() / 1000
           if not @geolocationAllowed? or @geolocationAllowed is true
             @geolocationAllowed = false
