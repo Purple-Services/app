@@ -236,13 +236,11 @@ Ext.define 'Purple.controller.Main',
               method: 'GET'
               scope: this
               success: (response_obj) ->
-                navigator.notification.alert 'success', (->), "hi"
                 userInfo = JSON.parse(response_obj.responseText)
                 @getMap().getMap().setCenter(
                   new google.maps.LatLng userInfo.latitude, userInfo.longitude
                   )
               failure: (response_obj) ->
-                navigator.notification.alert 'failure', (->), "hi"
                 @getMap().getMap().setCenter(
                   new google.maps.LatLng 34.0507177, -118.43757779999999
                   )
