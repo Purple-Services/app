@@ -123,13 +123,17 @@ Ext.define 'Purple.controller.Main',
     @courierLocationNotification = 0
 
   onResume: ->
-    if @showWhileUsingNotification is true and @courierLocationNotification < 2
-      navigator.notification.alert "Please make sure that the Purple Location settings on your device is set to 'Always'.", (->), 'Warning'
-      @showWhileUsingNotification = false
-      @backgroundGeolocationWorking = false
-      @courierLocationNotification++
-    else
-      @backgroundGeolocationWorking = true
+    if util.ctl('Account').isCourier()
+      if @showWhileUsingNotification is true and @courierLocationNotification < 2
+        if Ext.os.name is "iOS"
+          navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
+        else
+          navigator.notification.alert "Please make sure that the app is allowed to run in the background and your device's Location Mode is set to 'High Accuracy'.", (->), 'Warning'
+        @showWhileUsingNotification = false
+        @backgroundGeolocationWorking = false
+        @courierLocationNotification++
+      else
+        @backgroundGeolocationWorking = true
     if util.ctl('Account').isUserLoggedIn()
       @setUpPushNotifications()
 
