@@ -226,7 +226,7 @@ Ext.define 'Purple.controller.Main',
         ((position) =>
           currentTime = new Date().getTime() / 1000
           if @lastGeolocationAttempt
-            if currentTime - @lastGeolocationAttempt > 10
+            if currentTime - @lastGeolocationAttempt > 30
               @showWhileUsingNotification = true
           @lastGeolocationAttempt = new Date().getTime() / 1000
           @geolocationAllowed = true
@@ -240,7 +240,7 @@ Ext.define 'Purple.controller.Main',
         (=>
           currentTime = new Date().getTime() / 1000
           if @lastGeolocationAttempt
-            if currentTime - @lastGeolocationAttempt > 10
+            if currentTime - @lastGeolocationAttempt > 30
               @showWhileUsingNotification = true
           @lastGeolocationAttempt = new Date().getTime() / 1000
           if not @geolocationAllowed? or @geolocationAllowed is true
