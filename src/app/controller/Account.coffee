@@ -472,14 +472,13 @@ Ext.define 'Purple.controller.Account',
       @getAccountNameField()?.setValue localStorage['purpleUserName']
     if localStorage['purpleUserPhoneNumber']? and
     localStorage['purpleUserPhoneNumber'] isnt ''
-      if localStorage['purpleUserPhoneNumber'].length < 10
-        phone = localStorage['purpleUserPhoneNumber']
-      else if localStorage['purpleUserPhoneNumber'].length is 10
-        phone = '('+ localStorage['purpleUserPhoneNumber'].slice(0, 3) + ') ' + localStorage['purpleUserPhoneNumber'].slice(3, 6) + '-' + localStorage['purpleUserPhoneNumber'].slice(6)
-      else
-        countryCodeLength = localStorage['purpleUserPhoneNumber'].length - 10
-        phone = '+' + localStorage['purpleUserPhoneNumber'].slice(0, countryCodeLength) + ' (' + localStorage['purpleUserPhoneNumber'].slice(countryCodeLength, countryCodeLength + 3) + ') ' + localStorage['purpleUserPhoneNumber'].slice(countryCodeLength + 3, countryCodeLength + 6) + '-' + localStorage['purpleUserPhoneNumber'].slice(countryCodeLength + 6)
-      @getAccountPhoneNumberField()?.setValue phone
+      phone = localStorage['purpleUserPhoneNumber']
+      @getAccountPhoneNumberField()?.setValue switch
+        when phone.length < 10 then phone
+        when phone.length is 10 then "(#{phone.slice 0, 3}) #{phone.slice 3, 6} #{phone.slice 6}"
+        else
+          countryCodeLength = phone.length - 10
+          "+#{phone.slice 0, countryCodeLength} (#{phone.slice countryCodeLength, (countryCodeLength + 3)}) #{phone.slice (countryCodeLength + 3), (countryCodeLength + 6)}-#{phone.slice (countryCodeLength + 6)}"
     if localStorage['purpleUserEmail']? and
     localStorage['purpleUserEmail'] isnt ''
       @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
@@ -513,7 +512,7 @@ Ext.define 'Purple.controller.Account',
 
   saveChanges: ->
     user = @getEditAccountForm().getValues()
-    user.phone_number = @getEditAccountForm().getValues().phone_number.replace(/[^\d]/gi, '')
+    user.phone_number = user.phone_number.replace /[^\d]/gi, ''
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
