@@ -11,7 +11,8 @@ else
     return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
 window.util =
-  VERSION_NUMBER: "1.2.1"
+  # VERSION_NUMBER: "1.2.1"
+  VERSION_NUMBER: "9.0.0" # courier version number
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
