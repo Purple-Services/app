@@ -124,12 +124,12 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isCourier()
-      if @showWhileUsingNotification is true and @courierLocationNotification < 2
+      if @showAlwaysLocationAlert is true and @courierLocationNotification < 2 or @locationSetToNever is true and @courierLocationNotification < 2
         if Ext.os.name is "iOS"
           navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
         else
           navigator.notification.alert "Please make sure that the app is allowed to run in the background and your device's Location Mode is set to 'High Accuracy'.", (->), 'Warning'
-        @showWhileUsingNotification = false
+        @showAlwaysLocationAlert = false
         @backgroundGeolocationWorking = false
         @courierLocationNotification++
       else
@@ -228,10 +228,11 @@ Ext.define 'Purple.controller.Main',
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          @locationSetToNever = false
           currentTime = new Date().getTime() / 1000
           if @lastGeolocationAttempt
             if currentTime - @lastGeolocationAttempt > 30
-              @showWhileUsingNotification = true
+              @showAlwaysLocationAlert = true
           @lastGeolocationAttempt = new Date().getTime() / 1000
           @geolocationAllowed = true
           @updateLatlngBusy = no
@@ -242,11 +243,7 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
-          currentTime = new Date().getTime() / 1000
-          if @lastGeolocationAttempt
-            if currentTime - @lastGeolocationAttempt > 30
-              @showWhileUsingNotification = true
-          @lastGeolocationAttempt = new Date().getTime() / 1000
+          @locationSetToNever = true
           if not @geolocationAllowed? or @geolocationAllowed is true
             @geolocationAllowed = false
             @getMap().getMap().setCenter(
