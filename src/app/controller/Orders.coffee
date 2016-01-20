@@ -14,10 +14,12 @@ Ext.define 'Purple.controller.Orders',
       orderSpecialInstructionsLabel: '[ctype=orderSpecialInstructionsLabel]'
       orderSpecialInstructions: '[ctype=orderSpecialInstructions]'
       orderAddressStreet: '[ctype=orderAddressStreet]'
+      orderAddressZipcode: '[ctype=orderAddressZipcode]'
       orderTimePlaced: '[ctype=orderTimePlaced]'
       orderTimeDeadline: '[ctype=orderTimeDeadline]'
       orderDisplayTime: '[ctype=orderDisplayTime]'
       orderVehicle: '[ctype=orderVehicle]'
+      orderLicensePlate: '[ctype=orderLicensePlate]'
       orderGasPrice: '[ctype=orderGasPrice]'
       orderGallons: '[ctype=orderGallons]'
       orderGasType: '[ctype=orderGasType]'
@@ -111,6 +113,7 @@ Ext.define 'Purple.controller.Orders',
     for v in util.ctl('Vehicles').vehicles
       if v['id'] is order['vehicle_id']
         order['vehicle'] = "#{v.year} #{v.make} #{v.model}"
+        order['license_plate'] = v.license_plate.toUpperCase()
         break
 
     if util.ctl('Account').isCourier()
@@ -158,6 +161,7 @@ Ext.define 'Purple.controller.Orders',
       @getOrderCustomerName().show()
       @getOrderCustomerPhone().show()
       @getOrderGasType().show()
+      @getOrderAddressZipcode().show()
 
       switch order['status']
         when "unassigned"
@@ -195,6 +199,8 @@ Ext.define 'Purple.controller.Orders',
           width: 100%;
           background-image: url('#{order["vehicle_photo"]}') !important;
         """
+    analytics?.page 'View Order',
+      order_id: order.id
     
 
   backToOrders: ->

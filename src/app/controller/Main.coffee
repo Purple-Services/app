@@ -91,19 +91,70 @@ Ext.define 'Purple.controller.Main',
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
-    # Uncomment this for customer app, but courier doesn't need it
-    # ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    # ga_storage?._setAccount 'UA-61762011-1'
-    # ga_storage?._setDomain 'none'
-    # ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # Customer app only
+    # if VERSION is "PROD"
+    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+    #   ga_storage?._setAccount 'UA-61762011-1'
+    #   ga_storage?._setDomain 'none'
+    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+
+    # analytics?.load util.SEGMENT_WRITE_KEY
+    # if util.ctl('Account').isUserLoggedIn()
+    #   analytics?.identify localStorage['purpleUserId']
+    #   # segment says you 'have' to call analytics.page() at some point
+    #   # it doesn't seem to actually matter though
+    # analytics?.track 'App Launch',
+    #   platform: Ext.os.name
+    # analytics?.page 'Map'
+    # End of Customer app only
 
     navigator.splashscreen?.hide()
 
     if util.ctl('Account').hasPushNotificationsSetup()
+      # this is just a re-registering locally, not an initial setup
+      # we don't want to do the initial setup because they may not be
+      # logged in
       setTimeout (Ext.bind @setUpPushNotifications, this), 4000
 
-  setUpPushNotifications: ->
+    @checkGoogleMaps()
+
+    document.addEventListener("resume", (Ext.bind @onResume, this), false)
+
+  onResume: ->
+    if util.ctl('Account').isUserLoggedIn()
+      # this is causing it to happen very often, probably want to change that
+      # so it only happens when there is a change in user's settings
+      util.ctl('Main').setUpPushNotifications()
+
+  checkGoogleMaps: ->
+    if not google?.maps?
+      currentDate = new Date()
+      today = "#{currentDate.getMonth()}/#{currentDate.getDate()}/#{currentDate.getFullYear()}"
+      localStorage['reloadAttempts'] ?= '0'
+      if not localStorage['currentDate']? or today isnt localStorage['currentDate']
+        localStorage['currentDate'] = today
+        localStorage['reloadAttempts'] = '0'
+        analytics?.track 'Google Maps Failed to Load'
+      if localStorage['reloadAttempts'] isnt '3'
+        localStorage['reloadAttempts'] = (parseInt(localStorage['reloadAttempts']) + 1).toString()
+        navigator.splashscreen?.show()
+        window.location.reload()
+      else
+        navigator.notification.confirm 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload']
+        
+  connectionStatusConfirmation: (index) ->
+    if index is 2
+      navigator.splashscreen.show()
+      window.location.reload()
+
+  setUpPushNotifications: (alertIfDisabled) ->
     if Ext.os.name is "iOS"
+      if alertIfDisabled
+        @pushNotificationEnabled = false
+        setTimeout (=> 
+          if not @pushNotificationEnabled
+            navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
+          ), 1500 
       window.plugins?.pushNotification?.register(
         (Ext.bind @registerDeviceForPushNotifications, this),
         ((error) -> alert "error: " + error),
@@ -116,8 +167,14 @@ Ext.define 'Purple.controller.Main',
       )
     else
       # must be Android
+      if alertIfDisabled
+        @pushNotificationEnabled = false
+        setTimeout (=> 
+          if not @pushNotificationEnabled
+            navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
+          ), 1500 
       window.plugins?.pushNotification?.register(
-        ((result) ->),
+        ((result) => @pushNotificationEnabled = true),
         ((error) -> alert "error: " + error),
         {
           "senderID": util.GCM_SENDER_ID
@@ -129,6 +186,7 @@ Ext.define 'Purple.controller.Main',
   # and logins. Need to look into this later. I want to make sure it is
   # registered but I don't think we need to call add-sns ajax so often.
   registerDeviceForPushNotifications: (cred, pushPlatform = "apns") ->
+    @pushNotificationEnabled = true
     # cred for APNS (apple) is the device token
     # for GCM (android) it is regid
     Ext.Ajax.request
@@ -159,6 +217,7 @@ Ext.define 'Purple.controller.Main',
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          @geolocationAllowed = true
           @updateLatlngBusy = no
           @lat = position.coords.latitude
           @lng = position.coords.longitude
@@ -167,7 +226,15 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
-          # console.log "GPS failure callback called."
+          # console.log "GPS failure callback called"
+          if not @geolocationAllowed? or @geolocationAllowed is true
+            @geolocationAllowed = false
+            @getMap().getMap().setCenter(
+              new google.maps.LatLng 34.0507177, -118.43757779999999
+              )
+          if not localStorage['gps_not_allowed_event_sent']?
+            analytics?.track 'GPS Not Allowed'
+            localStorage['gps_not_allowed_event_sent'] = 'yes'
           @updateLatlngBusy = no),
         {maximumAge: 0, enableHighAccuracy: true}
       )
@@ -195,52 +262,61 @@ Ext.define 'Purple.controller.Main',
     @deliveryLocLng = center.lng()
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
-  updateDeliveryLocAddressByLatLng: (lat, lng) ->
-    latlng = new google.maps.LatLng lat, lng
-    @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-      if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-        if results[0]?['address_components']?
-          addressComponents = results[0]['address_components']
-          streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
-          @getRequestAddressField().setValue streetAddress
-          # find the address component that contains the zip code
-          for c in addressComponents
-            for t in c.types
-              if t is "postal_code"
-                @deliveryAddressZipCode = c['short_name']
-          @busyGettingGasPrice ?= no
-          if not @busyGettingGasPrice
-            @busyGettingGasPrice = yes
-            Ext.Ajax.request
-              url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
-              params: Ext.JSON.encode
-                version: util.VERSION_NUMBER
+  updateMapWithAddressComponents: (address) ->
+    if address[0]?['address_components']?
+      addressComponents = address[0]['address_components']
+      streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
+      @getRequestAddressField().setValue streetAddress
+      # find the address component that contains the zip code
+      for c in addressComponents
+        for t in c.types
+          if t is "postal_code"
+            @deliveryAddressZipCode = c['short_name']
+            if not localStorage['gps_not_allowed_event_sent'] and not localStorage['first_launch_loc_sent']?
+              # this means that this is the zip code of the location
+              # where they first launched the app and they allowed GPS
+              analytics?.track 'First Launch Location',
+                street_address: streetAddress
                 zip_code: @deliveryAddressZipCode
-              headers:
-                'Content-Type': 'application/json'
-              timeout: 30000
-              method: 'POST'
-              scope: this
-              success: (response_obj) ->
-                @getRequestGasButton().setDisabled no
-                response = Ext.JSON.decode response_obj.responseText
-                if response.success
-                  prices = response.gas_prices
-                  Ext.get('gas-price-display-87').setText(
-                    "$#{util.centsToDollars prices["87"]}"
-                  )
-                  Ext.get('gas-price-display-91').setText(
-                    "$#{util.centsToDollars prices["91"]}"
-                  )
-                @busyGettingGasPrice = no
-              failure: (response_obj) ->
-                @busyGettingGasPrice = no
-                console.log response_obj
-        # else
-        #   console.log 'No results found.'
+              localStorage['first_launch_loc_sent'] = 'yes'
+      @busyGettingGasPrice ?= no
+      if not @busyGettingGasPrice
+        @busyGettingGasPrice = yes
+        Ext.Ajax.request
+          url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
+          params: Ext.JSON.encode
+            version: util.VERSION_NUMBER
+            zip_code: @deliveryAddressZipCode
+          headers:
+            'Content-Type': 'application/json'
+          timeout: 30000
+          method: 'POST'
+          scope: this
+          success: (response_obj) ->
+            @getRequestGasButton().setDisabled no
+            response = Ext.JSON.decode response_obj.responseText
+            if response.success
+              prices = response.gas_prices
+              Ext.get('gas-price-display-87').setText(
+                "$#{util.centsToDollars prices["87"]}"
+              )
+              Ext.get('gas-price-display-91').setText(
+                "$#{util.centsToDollars prices["91"]}"
+              )
+            @busyGettingGasPrice = no
+          failure: (response_obj) ->
+            @busyGettingGasPrice = no
+            console.log response_obj
 
-      # else
-      #   console.log 'Geocoder failed due to: ' + status
+  updateDeliveryLocAddressByLatLng: (lat, lng) ->
+    if @bypassUpdateDeliveryLocAddressByLatLng? and @bypassUpdateDeliveryLocAddressByLatLng
+      @bypassUpdateDeliveryLocAddressByLatLng = false
+      return
+    else
+      latlng = new google.maps.LatLng lat, lng
+      @geocoder?.geocode {'latLng': latlng}, (results, status) =>
+        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
+          @updateMapWithAddressComponents(results)
 
   mapMode: ->
     if @getMap().isHidden()
@@ -252,11 +328,17 @@ Ext.define 'Purple.controller.Main',
       @getRequestGasButtonContainer().show()
       @getRequestAddressField().disable()
       @getRequestAddressField().setValue("Updating Location...")
+      analytics?.page 'Map'
 
-  recenterAtUserLoc: ->
-    @getMap().getMap().setCenter(
-      new google.maps.LatLng @lat, @lng
-    )
+  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
+    if @geolocationAllowed?
+      if not @geolocationAllowed
+        if showAlertIfUnavailable
+          navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
+      else
+        @getMap().getMap().setCenter(
+          new google.maps.LatLng @lat, @lng
+        )
 
   addressInputMode: ->
     if not @getMap().isHidden()
@@ -274,6 +356,7 @@ Ext.define 'Purple.controller.Main',
         @recenterAtUserLoc()
         @mapMode()
       ga_storage._trackEvent 'ui', 'Address Text Input Mode'
+      analytics?.page 'Address Text Input Mode'
 
   editSavedLoc: ->
     @addressInputSubMode = ''
@@ -355,29 +438,23 @@ Ext.define 'Purple.controller.Main',
 
   generateSuggestions: ->
     @getRequestGasButton().setDisabled yes
-    query = @getRequestAddressField().getValue()
-    suggestions = new Array()
-    Ext.Ajax.request
-      url: "https://maps.googleapis.com/maps/api/place/autocomplete/json?types=establishment|geocode&radius=100&location=#{@lat},#{@lng}&sensor=true&key=AIzaSyA0p8k_hdb6m-xvAOosuYQnkDwjsn8NjFg"
-      params:
-        'input': query
-      timeout: 30000
-      method: 'GET'
-      scope: this
-      success: (response) ->
-        resp = Ext.JSON.decode response.responseText
-        # console.log resp
-        if resp.status is 'OK'
-          for p in resp.predictions
-            isAddress = p.terms[0].value is ""+parseInt(p.terms[0].value)
-            locationName = if isAddress then p.terms[0].value + " " + p.terms[1]?.value else p.terms[0].value
-            suggestions.push
-              'locationName': locationName
-              'locationVicinity': p.description.replace locationName+', ', ''
-              'locationLat': '0'
-              'locationLng': '0'
-              'placeId': p.place_id
-          @getAutocompleteList().getStore().setData suggestions
+    request = input: @getRequestAddressField().getValue()
+    @placesAutocompleteService ?= new google.maps.places.AutocompleteService()
+    @placesAutocompleteService.getPlacePredictions request, @populateAutocompleteList
+
+  populateAutocompleteList: (predictions, status) ->
+    if status is 'OK'
+      suggestions = new Array()
+      for p in predictions
+        isAddress = p.terms[0].value is ""+parseInt(p.terms[0].value)
+        locationName = if isAddress then p.terms[0].value + " " + p.terms[1]?.value else p.terms[0].value
+        suggestions.push
+          'locationName': locationName
+          'locationVicinity': p.description.replace locationName+', ', ''
+          'locationLat': '0'
+          'locationLng': '0'
+          'placeId': p.place_id
+      util.ctl('Main').getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
     @getRequestAddressField().setValue loc['locationName']
@@ -398,9 +475,12 @@ Ext.define 'Purple.controller.Main',
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
         @getMap().getMap().setCenter latlng
+        @bypassUpdateDeliveryLocAddressByLatLng = true
+        @updateMapWithAddressComponents(place)
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
+      
   handleAutoCompleteListTap: (loc) ->
     @loc = loc
     if @addressInputSubMode
@@ -509,8 +589,13 @@ Ext.define 'Purple.controller.Main',
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
   initRequestGasForm: ->
-    ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     deliveryLocName = @getRequestAddressField().getValue()
+    ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
+    analytics?.track 'Request Gas Button Pressed',
+      address_street: deliveryLocName
+      lat: @deliveryLocLat
+      lng: @deliveryLocLng
+      zip: @deliveryAddressZipCode
     if deliveryLocName is @getRequestAddressField().getInitialConfig().value
       return # just return, it hasn't loaded the location yet
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
@@ -563,6 +648,7 @@ Ext.define 'Purple.controller.Main',
                 address_street: deliveryLocName
                 address_zip: @deliveryAddressZipCode
               )
+              analytics?.page 'Order Form'
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -635,6 +721,8 @@ Ext.define 'Purple.controller.Main',
       Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
     else
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].setHtml(vals['special_instructions'])
+
+    analytics?.page 'Review Order'
   
   promptForCode: ->
     Ext.Msg.prompt(
@@ -669,6 +757,9 @@ Ext.define 'Purple.controller.Main',
       success: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
+        analytics?.track 'Tried Coupon Code',
+          valid: response.success
+          coupon_code: code.toUpperCase()
         if response.success
           @getDiscountField().setValue(
             "- $" + util.centsToDollars(Math.abs(response.value))
@@ -748,8 +839,11 @@ Ext.define 'Purple.controller.Main',
             util.ctl('Menu').clearBackButtonStack()
             navigator.notification.alert response.message, (->), (response.message_title ? "Success")
             # set up push notifications if they arent set up
-            if not util.ctl('Account').hasPushNotificationsSetup()
-              @setUpPushNotifications()
+            # NOTE: This will matter less and less, now that we set up push
+            # notifications when a user creates their account. But it's nice to
+            # keep this here for existing users that have never ordered and
+            # don't logout and login (which would also cause a setup)
+            @setUpPushNotifications true
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -788,6 +882,7 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  # this is legacy code?
   sendInvites: ->
     params =
       version: util.VERSION_NUMBER

@@ -179,27 +179,20 @@ Ext.define 'Purple.controller.Account',
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = response.orders
           util.ctl('Orders').loadOrdersList()
+          analytics?.identify localStorage['purpleUserId']
           if response.account_complete? and not response.account_complete
             @accountSetup()
           else
             util.ctl('Menu').adjustForAppLoginState()
             if @isCourier()
-              # a courier account, go to Orders page; may want to go to Tanks in future
+              # a courier account, go to Orders page
+              # may want to go to Tanks page in future when we use that
               util.ctl('Menu').selectOption 3
-              # Courier's get their push notifications set up the first time
-              # they log in as a courier (usually this requires a log out,
-              # db change, then log back in). Customers, on the other hand,
-              # get their push notifications set up the upon creation of their
-              # first order.
-              # We call it every time though because it still needs be initiated
-              if not @hasPushNotificationsSetup()
-                util.ctl('Main').setUpPushNotifications()
+              util.ctl('Main').setUpPushNotifications()
             else
               # a normal user, go to Request Gas page
               util.ctl('Menu').selectOption 0
-              # initiate push notifications if they have them set up
-              if @hasPushNotificationsSetup()
-                util.ctl('Main').setUpPushNotifications()
+              util.ctl('Main').setUpPushNotifications()
             @showLoginForm() # to prepare for next logout, if it comes
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -214,6 +207,7 @@ Ext.define 'Purple.controller.Account',
       xtype: 'loadmask'
       message: ''
     ga_storage._trackEvent 'ui', 'Facebook Login Pressed'
+    analytics?.track 'Facebook Login Pressed'
     facebookConnectPlugin.getLoginStatus(
       ((result) =>
         if result['status'] is 'connected'
@@ -253,10 +247,17 @@ Ext.define 'Purple.controller.Account',
       xtype: 'loadmask'
       message: ''
     ga_storage._trackEvent 'ui', 'Google Login Pressed'
+    analytics?.track 'Google Login Pressed'
     window.plugins.googleplus.login(
-      {
-        'scopes': 'profile email'
-      },
+      (if Ext.os.name is "iOS"
+        {
+          'scopes': 'profile email'
+        }
+      else # Android
+        {
+          'scopes': 'profile email'
+          'offline': true
+        }),
       (Ext.bind @googleLoginSuccess, this),
       (->
         Ext.Viewport.setMasked false
@@ -264,12 +265,16 @@ Ext.define 'Purple.controller.Account',
     )
 
   googleLoginSuccess: (result) ->
-    console.log JSON.stringify(result)
+    if VERSION isnt "PROD"
+      console.log JSON.stringify(result)
     @authorizeUser(
       'google',
       result['userId'],
-      result['accessToken'],
-      result['email'] # revelant to Android version only. iOS will get email scope server-side
+      (if Ext.os.name is "iOS"
+        result['accessToken']
+      else # Android
+        result['oauthToken']),
+      result['email'] # revelant to old Android version only. iOS will get email scope server-side and also newer Android
     )
 
   accountSetup: ->
@@ -305,6 +310,7 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserName'] = response.user.name
           util.ctl('Menu').adjustForAppLoginState()
           util.ctl('Menu').selectOption 0
+          util.ctl('Main').setUpPushNotifications()
           @showLoginForm() # to prepare for next logout, if it comes
           ga_storage._trackEvent 'main', 'Account Created'
         else
@@ -436,7 +442,7 @@ Ext.define 'Purple.controller.Account',
 
   hasPushNotificationsSetup: ->
     localStorage['purpleUserHasPushNotificationsSetUp']? and localStorage['purpleUserHasPushNotificationsSetUp'] is 'true'
-
+    
   # only for users of type = 'native'
   resetPassword: ->
     vals = @getLoginForm().getValues()

@@ -209,15 +209,16 @@ Ext.define 'Purple.controller.Vehicles',
       else
         'Edit Vehicle'
     )
-    
-    @getEditVehicleFormYear().setOptions(
-      options = @getYearList().map (x) ->
-        {
-          text: x
-          value: x
-        }
-      options.unshift '': ''
-    )
+
+    options = @getYearList().map (x) ->
+      {
+        text: x
+        value: x
+      }
+    options.unshift
+      text: ''
+      value: ''
+    @getEditVehicleFormYear().setOptions options
     @getEditVehicleFormYear().setDisabled no
     
     @getEditVehicleFormColor().setOptions(
@@ -409,7 +410,7 @@ Ext.define 'Purple.controller.Vehicles',
     if @vehicles?
       opts = @vehicles.map (v) ->
         {
-          text: "#{v.year} #{v.make} #{v.model}"
+          text: "#{v.model} (#{v.license_plate.toUpperCase()})"
           value: v.id
         }
       opts.push
@@ -442,7 +443,7 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
             opts = @vehicles.map (v) ->
               {
-                text: "#{v.year} #{v.make} #{v.model}"
+                text: "#{v.model} (#{v.license_plate.toUpperCase()})"
                 value: v.id
               }
             opts.push
@@ -517,10 +518,8 @@ Ext.define 'Purple.controller.Vehicles',
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this
 
-
     addImageStep2 Camera.PictureSourceType.CAMERA
     
-
     # not using this intermediary step right now
     # navigator.notification.confirm(
     #   "",
@@ -551,3 +550,4 @@ Ext.define 'Purple.controller.Vehicles',
       background-image: url('#{dataUrl}') !important;
     """
     @getEditVehicleFormPhoto().setValue dataUrl
+    analytics?.track 'Took Vehicle Photo'
