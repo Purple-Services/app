@@ -46,3 +46,13 @@ To build the app for upload to PhoneGap Build service, you can use:
     2. Comment out customer app only sections and uncomment courier app only sections
     3. Go to Main.coffee
     4. Comment out lines 95-108
+
+### Courier App Over-the-Air Updates
+    1. Make changes
+    2. 'sencha app build' in Terminal
+    3. Go to https://console.aws.amazon.com/s3/home?region=us-west-2#&bucket=purpledelivery&prefix=
+    4. Delete app.js and util.js in the purpledelivery bucket
+    5. Click upload and drag in app/build/production/Purple/app.js and app/build/production/Purple/util.js
+    6. Start Upload
+    7. Check Properties -> Permissions for app.js and util.js and grant Everyone permissions to access
+    8. Close app and restart to see updated changes
