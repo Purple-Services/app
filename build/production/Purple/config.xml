@@ -2,8 +2,8 @@
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "com.purple.app"
-        versionCode = "20"
-        version     = "9.0.0">
+        versionCode = "21"
+        version     = "1.11.0">
 
   <!--
       For iOS use:
@@ -15,7 +15,7 @@
 
   <!-- BEGIN CUSTOMER APP ONLY -->
   <!-- <name>Purple</name> -->
-  <!-- BEGIN CUSTOMER APP ONLY -->
+  <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
   <name>Purple Courier</name>
@@ -129,18 +129,23 @@
     <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
   </platform>
-  
-  <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+
+  <!-- old one -->
   <!-- <gap:plugin name="cordova-plugin-facebook" source="npm"> -->
-    <param name="APP_ID" value="1588773851335820" />
-    <param name="APP_NAME" value="Purple" />
-    <!-- <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
-    <!-- <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
-  </gap:plugin>
-  
-  <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
-    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin>
+  <!--   <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
+
+
+  <!-- BEGIN CUSTOMER APP ONLY -->
+  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
+  <!--   <param name="APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="APP_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
+  <!-- <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm"> -->
+  <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
+  <!-- </gap:plugin> -->
+  <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 

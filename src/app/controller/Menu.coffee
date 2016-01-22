@@ -127,10 +127,8 @@ Ext.define 'Purple.controller.Menu',
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
       if util.ctl('Account').isCourier()
-        # @hideTitles [0, 4, 7]
-        # @showTitles [2, 3, 8, 9]
-        @hideTitles [0, 4, 7, 8] # no Gas Tanks, for now
-        @showTitles [2, 3, 9] # no Gas Tanks, for now
+        @hideTitles [0, 4, 7, 8, 9]
+        @showTitles [2, 3]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         if not util.ctl('Main').courierPingIntervalRef?
