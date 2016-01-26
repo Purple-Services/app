@@ -223,9 +223,10 @@ Ext.define 'Purple.controller.Main',
         console.log response_obj
 
   updateLatlng: ->
-    if Ext.os.name is "Android"
-      if @GPSonly is true
+    if util.ctl('Account').isCourier() and Ext.os.name is "Android"
+      if @GPSonly is true and @courierLocationNotification < 2
         navigator.notification.alert 'Please make sure that location is set to high accuracy mode and geolocation is enabled on your device.', (->), 'Warning'
+        @courierLocationNotification++
       else if @GPSonly is false
         @GPSonly = true
     @updateLatlngBusy ?= no
