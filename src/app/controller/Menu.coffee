@@ -131,8 +131,7 @@ Ext.define 'Purple.controller.Menu',
         @showTitles [2, 3]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
-        if not util.ctl('Main').courierPingIntervalRef?
-          util.ctl('Main').initCourierPing()
+        util.ctl('Main').initCourierPing()
         Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
       else
         @hideTitles [8, 9]

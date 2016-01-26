@@ -916,11 +916,12 @@ Ext.define 'Purple.controller.Main',
 
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
-    @courierPingIntervalRef = setInterval (Ext.bind @courierPing, this), 10000
+    @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
+      @courierPingIntervalRef = null
 
   courierPing: ->
     @errorCount ?= 0
