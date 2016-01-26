@@ -89,7 +89,7 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 8000
 
     # Customer app only
     # if VERSION is "PROD"
@@ -223,11 +223,18 @@ Ext.define 'Purple.controller.Main',
         console.log response_obj
 
   updateLatlng: ->
+    if Ext.os.name is "Android"
+      if @GPSonly is true
+        navigator.notification.alert 'Please make sure that location is set to high accuracy mode and geolocation is enabled on your device.', (->), 'Warning'
+      else if @GPSonly is false
+        @GPSonly = true
     @updateLatlngBusy ?= no
     if not @updateLatlngBusy
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          @GPSonly = false
+          @positionAccuracy = position.coords.accuracy
           @locationSetToNever = false
           currentTime = new Date().getTime() / 1000
           if @lastGeolocationAttempt
@@ -243,6 +250,7 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
+          @GPSonly = false
           @locationSetToNever = true
           if not @geolocationAllowed? or @geolocationAllowed is true
             @geolocationAllowed = false
@@ -956,6 +964,7 @@ Ext.define 'Purple.controller.Main',
             87: localStorage['purpleCourierGallons87']
             91: localStorage['purpleCourierGallons91']
           backgroundGeolocationWorking: @backgroundGeolocationWorking
+          positionAccuracy: @positionAccuracy
         headers:
           'Content-Type': 'application/json'
         timeout: 30000
