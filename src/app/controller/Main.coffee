@@ -236,9 +236,9 @@ Ext.define 'Purple.controller.Main',
               method: 'GET'
               scope: this
               success: (response_obj) ->
-                userInfo = JSON.parse(response_obj.responseText)
+                response = Ext.JSON.decode response_obj.responseText
                 @getMap().getMap().setCenter(
-                  new google.maps.LatLng userInfo.latitude, userInfo.longitude
+                  new google.maps.LatLng response.latitude, response.longitude
                   )
               failure: (response_obj) ->
                 @getMap().getMap().setCenter(
