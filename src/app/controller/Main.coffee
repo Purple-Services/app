@@ -89,6 +89,9 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
+    # Courier app only - Remember to comment/uncomment the setTimeout script in index.html
+    clearTimeout window.courierReloadTimer
+
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Customer app only
