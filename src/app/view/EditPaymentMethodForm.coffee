@@ -115,9 +115,6 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
             clearIcon: no
             component:
               type: 'tel'
-            listeners:
-              keyup: ->
-                @onKeyup @getValue()
           }
           {
             xtype: 'selectfield'

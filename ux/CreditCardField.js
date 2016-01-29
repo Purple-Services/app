@@ -2,8 +2,9 @@
 Ext.define('Ux.field.CreditCardField', {
   extend: 'Ext.field.Text',
   xtype: 'creditcardfield',
-  onKeyup: function(value) {
-    var amex, i, nStr, nums, partOne, partThree, partTwo, r;
+  onKeyUp: function() {
+    var amex, i, nStr, nums, partOne, partThree, partTwo, r, value;
+    value = this.getValue();
     nums = value.substr(0, 17).replace(/[^\d]/gi, '');
     amex = nums.match(/^3[47](\d){2}/g);
     if (amex) {

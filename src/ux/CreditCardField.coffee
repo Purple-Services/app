@@ -2,7 +2,8 @@ Ext.define 'Ux.field.CreditCardField',
   extend: 'Ext.field.Text'
   xtype: 'creditcardfield'
 
-  onKeyup: (value) ->
+  onKeyUp: ->
+    value = @getValue()
     nums = value.substr(0, 17).replace(/[^\d]/gi, '')
     amex = nums.match(/^3[47](\d){2}/g)
 

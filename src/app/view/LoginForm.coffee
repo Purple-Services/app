@@ -208,9 +208,6 @@ Ext.define 'Purple.view.LoginForm',
               type: 'tel'
             value: ''
             hidden: yes
-            listeners:
-              keyup: ->
-                @onKeyup @getValue()
           }
           {
             xtype: 'component'

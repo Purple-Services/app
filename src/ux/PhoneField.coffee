@@ -2,7 +2,8 @@ Ext.define 'Ux.field.PhoneField',
   extend: 'Ext.field.Text'
   xtype: 'phonefield'
 
-  onKeyup: (value) ->
+  onKeyUp: ->
+    value = @getValue()
     nums = value.substr(0, 30).replace(/[^\d]/gi, '')
     if nums.length <= 3
       @setValue nums

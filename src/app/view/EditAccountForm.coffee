@@ -73,10 +73,6 @@ Ext.define 'Purple.view.EditAccountForm',
             clearIcon: no
             component:
               type: 'tel'
-            listeners: {
-              keyup: ->
-                @onKeyup @getValue()
-            }
           }
           {
             xtype: 'textfield'
