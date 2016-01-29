@@ -180,7 +180,10 @@ Ext.define 'Purple.controller.Orders',
       @getOrderAddressStreet().addCls 'click-to-edit'
       @getOrderAddressStreet().element.on 'tap', =>
         # google maps
-        window.location.href = "comgooglemaps://?daddr=#{order.lat},#{order.lng}&directionsmode=driving"
+        if Ext.os.name is "iOS"
+          window.location.href = "comgooglemaps://?daddr=#{order.lat},#{order.lng}&directionsmode=driving"
+        else
+          window.location.href = "http://maps.google.com/maps?daddr=#{order.lat},#{order.lng}&directionsmode=driving"
         # standard maps
         #window.location.href = "maps://?q=#{order.lat},#{order.lng}"
 
