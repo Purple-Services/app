@@ -3,7 +3,7 @@
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "com.purple.app"
         versionCode = "21"
-        version     = "1.11.1">
+        version     = "1.2.2">
 
   <!--
       For iOS use:
@@ -138,22 +138,17 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
-  <!--   <param name="APP_ID" value="1588773851335820" /> -->
-  <!--   <param name="APP_NAME" value="Purple" /> -->
-  <!-- </gap:plugin> -->
-  <!-- <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm"> -->
-  <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
-  <!-- </gap:plugin> -->
+  <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+    <param name="APP_ID" value="1588773851335820" />
+    <param name="APP_NAME" value="Purple" />
+  </gap:plugin>
+  <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
+    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
+  </gap:plugin>
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
-  <!--
-      the above doesn't seem to work on iOS...
-      in fact, i'm not sure if it even works for Android
-  -->
   <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />

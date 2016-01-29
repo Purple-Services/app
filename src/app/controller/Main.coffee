@@ -89,12 +89,16 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
-    # Courier app only - Remember to comment/uncomment the setTimeout script in index.html
-    clearTimeout window.courierReloadTimer
+    # COURIER APP ONLY
+    # Remember to comment/uncomment the setTimeout script in index.html
+    
+    # clearTimeout window.courierReloadTimer
+     
+    # END COURIER APP ONLY
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
-    # Customer app only
+    # CUSTOMER APP ONLY
     if VERSION is "PROD"
       ga_storage?._enableSSL() # doesn't seem to actually use SSL?
       ga_storage?._setAccount 'UA-61762011-1'
@@ -109,7 +113,7 @@ Ext.define 'Purple.controller.Main',
     analytics?.track 'App Launch',
       platform: Ext.os.name
     analytics?.page 'Map'
-    # End of Customer app only
+    # END OF CUSTOMER APP ONLY
 
     navigator.splashscreen?.hide()
 
