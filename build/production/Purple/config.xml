@@ -124,6 +124,8 @@
   <preference name="SplashScreenDelay" value="10000" />
 
   <platform name="android">
+    <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
+    <gap:plugin name="cordova-plugin-request-location-accuracy" source="npm" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="android-build-tool" value="gradle" />
     <!-- this plugin makes access origin config *actually* work in Android -->

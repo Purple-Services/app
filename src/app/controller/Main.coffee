@@ -89,7 +89,7 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 8000
+    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # Customer app only
     # if VERSION is "PROD"
@@ -121,6 +121,8 @@ Ext.define 'Purple.controller.Main',
     document.addEventListener("resume", (Ext.bind @onResume, this), false)
 
     @courierLocationNotification = 0
+
+    @androidHighAccuracyNotificationActive = false
 
   onResume: ->
     if util.ctl('Account').isCourier()
@@ -222,19 +224,34 @@ Ext.define 'Purple.controller.Main',
       failure: (response_obj) ->
         console.log response_obj
 
+  checkAndroidLocationSettings: ->
+    if Ext.os.name is 'Android'
+      if util.ctl('Account').isCourier() or @courierLocationNotification < 1
+        cordova.plugins.diagnostic.getLocationMode(
+          ((locationMode) =>
+            if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
+              @androidHighAccuracyNotificationActive = true
+              cordova.plugins.locationAccuracy.request(
+                (=> @androidHighAccuracyNotificationActive = false), 
+                (=> 
+                  @androidHighAccuracyNotificationActive = false
+                  if not util.ctl('Account').isCourier()
+                    navigator.notification.alert "Certain features of the application may not work properly. Please restart the application and enable high accuracy to use all the features.", (->), "Location Settings"
+                  ), 
+                cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
+              )
+              @courierLocationNotification++
+          ), 
+          (=> console.log 'Diagnostics plugin error')
+        )
+
   updateLatlng: ->
-    if util.ctl('Account').isCourier() and Ext.os.name is "Android"
-      if @GPSonly is true and @courierLocationNotification < 2
-        navigator.notification.alert 'Please make sure that location is set to high accuracy mode and geolocation is enabled on your device.', (->), 'Warning'
-        @courierLocationNotification++
-      else if @GPSonly is false
-        @GPSonly = true
+    @checkAndroidLocationSettings()
     @updateLatlngBusy ?= no
     if not @updateLatlngBusy
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
-          @GPSonly = false
           @positionAccuracy = position.coords.accuracy
           @locationSetToNever = false
           currentTime = new Date().getTime() / 1000
@@ -251,7 +268,6 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
-          @GPSonly = false
           @locationSetToNever = true
           if not @geolocationAllowed? or @geolocationAllowed is true
             @geolocationAllowed = false
