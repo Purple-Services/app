@@ -132,10 +132,7 @@ Ext.define 'Purple.controller.Main',
         else
           navigator.notification.alert "Please make sure that the app is allowed to run in the background and your device's Location Mode is set to 'High Accuracy'.", (->), 'Warning'
         @showAlwaysLocationAlert = false
-        @backgroundGeolocationWorking = false
         @courierLocationNotification++
-      else
-        @backgroundGeolocationWorking = true
     if util.ctl('Account').isUserLoggedIn()
       @setUpPushNotifications()
 
@@ -236,6 +233,7 @@ Ext.define 'Purple.controller.Main',
                 (=> 
                   @androidHighAccuracyNotificationActive = false
                   if not util.ctl('Account').isCourier()
+                    @centerUsingIpAddress()
                     navigator.notification.alert "Certain features of the application may not work properly. Please restart the application and enable high accuracy to use all the features.", (->), "Location Settings"
                   ), 
                 cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
@@ -268,18 +266,35 @@ Ext.define 'Purple.controller.Main',
             @recenterAtUserLoc()
         ),
         (=>
+          # console.log "GPS failure callback called"
           @locationSetToNever = true
           if not @geolocationAllowed? or @geolocationAllowed is true
+            @centerUsingIpAddress()
             @geolocationAllowed = false
-            @getMap().getMap().setCenter(
-              new google.maps.LatLng 34.0507177, -118.43757779999999
-              )
           if not localStorage['gps_not_allowed_event_sent']?
             analytics?.track 'GPS Not Allowed'
             localStorage['gps_not_allowed_event_sent'] = 'yes'
           @updateLatlngBusy = no),
         {maximumAge: 0, enableHighAccuracy: true}
       )
+  
+  centerUsingIpAddress: ->
+    Ext.Ajax.request
+      url: "http://freegeoip.net/json/"
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'GET'
+      scope: this
+      success: (response_obj) ->
+        response = Ext.JSON.decode response_obj.responseText
+        @getMap().getMap().setCenter(
+          new google.maps.LatLng response.latitude, response.longitude
+          )
+      failure: (response_obj) ->
+        @getMap().getMap().setCenter(
+          new google.maps.LatLng 34.0507177, -118.43757779999999
+          )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
@@ -980,8 +995,7 @@ Ext.define 'Purple.controller.Main',
           gallons:
             87: localStorage['purpleCourierGallons87']
             91: localStorage['purpleCourierGallons91']
-          backgroundGeolocationWorking: @backgroundGeolocationWorking
-          positionAccuracy: @positionAccuracy
+          position_accuracy: @positionAccuracy
         headers:
           'Content-Type': 'application/json'
         timeout: 30000
