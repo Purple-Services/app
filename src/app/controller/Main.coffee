@@ -125,12 +125,9 @@ Ext.define 'Purple.controller.Main',
     @androidHighAccuracyNotificationActive = false
 
   onResume: ->
-    if util.ctl('Account').isCourier()
+    if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
       if @showAlwaysLocationAlert is true and @locationNotification < 2 or @locationSetToNever is true and @locationNotification < 2
-        if Ext.os.name is "iOS"
-          navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
-        else
-          navigator.notification.alert "Please make sure that the app is allowed to run in the background and your device's Location Mode is set to 'High Accuracy'.", (->), 'Warning'
+        navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
         @showAlwaysLocationAlert = false
         @locationNotification++
     if util.ctl('Account').isUserLoggedIn()
