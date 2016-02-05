@@ -107,6 +107,7 @@
     <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
   </platform>
 
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
   <preference name="StatusBarOverlaysWebView" value="false" />
   <preference name="StatusBarBackgroundColor" value="#000" />
@@ -124,7 +125,6 @@
   <preference name="SplashScreenDelay" value="10000" />
 
   <platform name="android">
-    <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
     <gap:plugin name="cordova-plugin-request-location-accuracy" source="npm" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="android-build-tool" value="gradle" />

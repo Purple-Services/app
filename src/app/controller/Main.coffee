@@ -126,10 +126,14 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
-      if @showAlwaysLocationAlert is true and @locationNotification < 2 or @locationSetToNever is true and @locationNotification < 2
-        navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
-        @showAlwaysLocationAlert = false
-        @locationNotification++
+      cordova.plugins.diagnostic.getLocationAuthorizationStatus(
+        ((status) =>
+          if status isnt "authorized_always" and @locationNotification < 3
+            navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
+            @locationNotification++
+        ), 
+        (=> console.log "Error getting location authorization status")
+      )
     if util.ctl('Account').isUserLoggedIn()
       @setUpPushNotifications()
 
@@ -248,12 +252,6 @@ Ext.define 'Purple.controller.Main',
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
           @positionAccuracy = position.coords.accuracy
-          @locationSetToNever = false
-          currentTime = new Date().getTime() / 1000
-          if @lastGeolocationAttempt
-            if currentTime - @lastGeolocationAttempt > 30
-              @showAlwaysLocationAlert = true
-          @lastGeolocationAttempt = new Date().getTime() / 1000
           @geolocationAllowed = true
           @updateLatlngBusy = no
           @lat = position.coords.latitude
@@ -264,7 +262,6 @@ Ext.define 'Purple.controller.Main',
         ),
         (=>
           # console.log "GPS failure callback called"
-          @locationSetToNever = true
           if not @geolocationAllowed? or @geolocationAllowed is true
             @centerUsingIpAddress()
             @geolocationAllowed = false
