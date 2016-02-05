@@ -120,19 +120,19 @@ Ext.define 'Purple.controller.Main',
 
     document.addEventListener("resume", (Ext.bind @onResume, this), false)
 
-    @courierLocationNotification = 0
+    @locationNotification = 0
 
     @androidHighAccuracyNotificationActive = false
 
   onResume: ->
     if util.ctl('Account').isCourier()
-      if @showAlwaysLocationAlert is true and @courierLocationNotification < 2 or @locationSetToNever is true and @courierLocationNotification < 2
+      if @showAlwaysLocationAlert is true and @locationNotification < 2 or @locationSetToNever is true and @locationNotification < 2
         if Ext.os.name is "iOS"
           navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
         else
           navigator.notification.alert "Please make sure that the app is allowed to run in the background and your device's Location Mode is set to 'High Accuracy'.", (->), 'Warning'
         @showAlwaysLocationAlert = false
-        @courierLocationNotification++
+        @locationNotification++
     if util.ctl('Account').isUserLoggedIn()
       @setUpPushNotifications()
 
@@ -223,7 +223,7 @@ Ext.define 'Purple.controller.Main',
 
   checkAndroidLocationSettings: ->
     if Ext.os.name is 'Android'
-      if util.ctl('Account').isCourier() or @courierLocationNotification < 1
+      if util.ctl('Account').isCourier() or @locationNotification < 1
         cordova.plugins.diagnostic.getLocationMode(
           ((locationMode) =>
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
@@ -238,7 +238,7 @@ Ext.define 'Purple.controller.Main',
                   ), 
                 cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
               )
-              @courierLocationNotification++
+              @locationNotification++
           ), 
           (=> console.log 'Diagnostics plugin error')
         )
