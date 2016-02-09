@@ -102,7 +102,7 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
           #   clearIcon: no
           # }
           {
-            xtype: 'textfield'
+            xtype: 'creditcardfield'
             ctype: 'editPaymentMethodFormCardNumber'
             name: 'card_number'
             label: 'Card Number'
