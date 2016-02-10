@@ -274,7 +274,7 @@ Ext.define 'Purple.controller.Main',
   
   centerUsingIpAddress: ->
     Ext.Ajax.request
-      url: "http://freegeoip.net/json/"
+      url: "https://freegeoip.net/json/"
       headers:
         'Content-Type': 'application/json'
       timeout: 30000
