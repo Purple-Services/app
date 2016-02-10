@@ -89,24 +89,31 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
+    # COURIER APP ONLY
+    # Remember to comment/uncomment the setTimeout script in index.html
+    
+    # clearTimeout window.courierReloadTimer
+     
+    # END COURIER APP ONLY
+
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
-    # Customer app only
-    # if VERSION is "PROD"
-    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    #   ga_storage?._setAccount 'UA-61762011-1'
-    #   ga_storage?._setDomain 'none'
-    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # CUSTOMER APP ONLY
+    if VERSION is "PROD"
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    # analytics?.load util.SEGMENT_WRITE_KEY
-    # if util.ctl('Account').isUserLoggedIn()
-    #   analytics?.identify localStorage['purpleUserId']
-    #   # segment says you 'have' to call analytics.page() at some point
-    #   # it doesn't seem to actually matter though
-    # analytics?.track 'App Launch',
-    #   platform: Ext.os.name
-    # analytics?.page 'Map'
-    # End of Customer app only
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
+    # END OF CUSTOMER APP ONLY
 
     navigator.splashscreen?.hide()
 
@@ -122,6 +129,8 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isUserLoggedIn()
+      # this is causing it to happen very often, probably want to change that
+      # so it only happens when there is a change in user's settings
       util.ctl('Main').setUpPushNotifications()
 
   checkGoogleMaps: ->
@@ -226,10 +235,23 @@ Ext.define 'Purple.controller.Main',
         (=>
           # console.log "GPS failure callback called"
           if not @geolocationAllowed? or @geolocationAllowed is true
+            Ext.Ajax.request
+              url: "http://freegeoip.net/json/"
+              headers:
+                'Content-Type': 'application/json'
+              timeout: 30000
+              method: 'GET'
+              scope: this
+              success: (response_obj) ->
+                response = Ext.JSON.decode response_obj.responseText
+                @getMap().getMap().setCenter(
+                  new google.maps.LatLng response.latitude, response.longitude
+                  )
+              failure: (response_obj) ->
+                @getMap().getMap().setCenter(
+                  new google.maps.LatLng 34.0507177, -118.43757779999999
+                  )
             @geolocationAllowed = false
-            @getMap().getMap().setCenter(
-              new google.maps.LatLng 34.0507177, -118.43757779999999
-              )
           if not localStorage['gps_not_allowed_event_sent']?
             analytics?.track 'GPS Not Allowed'
             localStorage['gps_not_allowed_event_sent'] = 'yes'
@@ -747,6 +769,7 @@ Ext.define 'Purple.controller.Main',
         token: localStorage['purpleToken']
         vehicle_id: vehicleId
         code: code
+        address_zip: @deliveryAddressZipCode
       headers:
         'Content-Type': 'application/json'
       timeout: 30000
@@ -843,7 +866,7 @@ Ext.define 'Purple.controller.Main',
             # don't logout and login (which would also cause a setup)
             @setUpPushNotifications true
           else
-            navigator.notification.alert response.message, (->), "Error"
+            navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -914,11 +937,12 @@ Ext.define 'Purple.controller.Main',
 
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
-    @courierPingIntervalRef = setInterval (Ext.bind @courierPing, this), 10000
+    @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
+      @courierPingIntervalRef = null
 
   courierPing: ->
     @errorCount ?= 0

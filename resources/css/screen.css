@@ -154,6 +154,11 @@ input {
     display: none !important;
 }
 
+/* no fb or google login for courier app */
+.courier-app .icon-login-button {
+    display: none !important;
+}
+
 
 
 
