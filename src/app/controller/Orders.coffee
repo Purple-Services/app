@@ -167,6 +167,9 @@ Ext.define 'Purple.controller.Orders',
         when "unassigned"
           @getNextStatusButtonContainer().getAt(0).setText "Accept Order"
           @getNextStatusButtonContainer().show()
+        when "assigned"
+          @getNextStatusButtonContainer().getAt(0).setText "Accept Order"
+          @getNextStatusButtonContainer().show()
         when "accepted"
           @getNextStatusButtonContainer().getAt(0).setText "Start Route"
           @getNextStatusButtonContainer().show()
