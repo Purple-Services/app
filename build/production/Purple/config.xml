@@ -105,7 +105,6 @@
        Using WKWebView for iOS 8 memory leak issue -->
   <platform name="ios">
     <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
-    <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   </platform>
 
   <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
@@ -131,9 +130,8 @@
     <preference name="android-build-tool" value="gradle" />
     <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
-    <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
   </platform>
-
+  
   <!-- old one -->
   <!-- <gap:plugin name="cordova-plugin-facebook" source="npm"> -->
   <!--   <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
@@ -152,6 +150,11 @@
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
+
+  <!-- this one for iOS -->
+  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <!-- this one for Android -->
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
