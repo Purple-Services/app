@@ -2,7 +2,7 @@
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "com.purple.app"
-        versionCode = "21"
+        versionCode = "22"
         version     = "1.2.2">
 
   <!--
@@ -105,6 +105,7 @@
        Using WKWebView for iOS 8 memory leak issue -->
   <platform name="ios">
     <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
+    <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   </platform>
 
   <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
@@ -130,6 +131,7 @@
     <preference name="android-build-tool" value="gradle" />
     <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
+    <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
   </platform>
 
   <!-- old one -->
@@ -151,8 +153,6 @@
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
-  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
-  
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
   <feature name="http://api.phonegap.com/1.0/network" />

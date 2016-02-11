@@ -15,8 +15,8 @@ window.util =
   # VERSION_NUMBER: "1.11.1" # courier version number
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    # when "LOCAL" then "http://192.168.0.6:3000/"
+    # when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
+    when "LOCAL" then "http://192.168.0.2:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
 
