@@ -39,7 +39,7 @@ Ext.define 'Purple.view.Help',
         ]
         answers = [
           "Purple provides on-demand filling services. Simply request gas and we will come to your vehicle and fill it up."
-          "Purple is currently available in Los Angeles and San Diego. More cities coming soon!"
+          "Purple is currently available in Los Angeles, Orange County, San Diego, and Seattle. More cities coming soon!"
           "Our prices are competitive with the average fuel cost in your area."
           "No. All you need to do is make sure that the gas tank door is open before the Purple service provider fills your tank. Don't worry, we'll make sure it's tightly shut when we finish!"
           "Deliveries can be scheduled within 1 or 3 hours."

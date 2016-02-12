@@ -89,25 +89,32 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
+    # COURIER APP ONLY
+    # Remember to comment/uncomment the setTimeout script in index.html
+    
+    # clearTimeout window.courierReloadTimer
+     
+    # END COURIER APP ONLY
+
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
-    # Customer app only
-    # if VERSION is "PROD"
-    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    #   ga_storage?._setAccount 'UA-61762011-1'
-    #   ga_storage?._setDomain 'none'
-    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # CUSTOMER APP ONLY
+    if VERSION is "PROD"
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    # analytics?.load util.SEGMENT_WRITE_KEY
-    # if util.ctl('Account').isUserLoggedIn()
-    #   analytics?.identify localStorage['purpleUserId']
-    #   # segment says you 'have' to call analytics.page() at some point
-    #   # it doesn't seem to actually matter though
-    # analytics?.track 'App Launch',
-    #   platform: Ext.os.name
-    # analytics?.page 'Map'
-    # End of Customer app only
-
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
+    # END OF CUSTOMER APP ONLY
+    
     navigator.splashscreen?.hide()
 
     if util.ctl('Account').hasPushNotificationsSetup()
@@ -120,11 +127,24 @@ Ext.define 'Purple.controller.Main',
 
     document.addEventListener("resume", (Ext.bind @onResume, this), false)
 
+    @locationNotification = 0
+
+    @androidHighAccuracyNotificationActive = false
+
   onResume: ->
+    if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
+      cordova.plugins.diagnostic.getLocationAuthorizationStatus(
+        ((status) =>
+          if status isnt "authorized_always" and @locationNotification < 3
+            navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
+            @locationNotification++
+        ), 
+        (=> console.log "Error getting location authorization status")
+      )
     if util.ctl('Account').isUserLoggedIn()
       # this is causing it to happen very often, probably want to change that
       # so it only happens when there is a change in user's settings
-      util.ctl('Main').setUpPushNotifications()
+      @setUpPushNotifications()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -211,12 +231,36 @@ Ext.define 'Purple.controller.Main',
       failure: (response_obj) ->
         console.log response_obj
 
+  checkAndroidLocationSettings: ->
+    if Ext.os.name is 'Android'
+      if util.ctl('Account').isCourier() or @locationNotification < 1
+        cordova.plugins.diagnostic.getLocationMode(
+          ((locationMode) =>
+            if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
+              @androidHighAccuracyNotificationActive = true
+              cordova.plugins.locationAccuracy.request(
+                (=> @androidHighAccuracyNotificationActive = false), 
+                (=> 
+                  @androidHighAccuracyNotificationActive = false
+                  if not util.ctl('Account').isCourier()
+                    @centerUsingIpAddress()
+                    navigator.notification.alert "Certain features of the application may not work properly. Please restart the application and enable high accuracy to use all the features.", (->), "Location Settings"
+                  ), 
+                cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
+              )
+              @locationNotification++
+          ), 
+          (=> console.log 'Diagnostics plugin error')
+        )
+
   updateLatlng: ->
+    @checkAndroidLocationSettings()
     @updateLatlngBusy ?= no
     if not @updateLatlngBusy
       @updateLatlngBusy = yes
       navigator.geolocation?.getCurrentPosition(
         ((position) =>
+          @positionAccuracy = position.coords.accuracy
           @geolocationAllowed = true
           @updateLatlngBusy = no
           @lat = position.coords.latitude
@@ -228,16 +272,32 @@ Ext.define 'Purple.controller.Main',
         (=>
           # console.log "GPS failure callback called"
           if not @geolocationAllowed? or @geolocationAllowed is true
+            @centerUsingIpAddress()
             @geolocationAllowed = false
-            @getMap().getMap().setCenter(
-              new google.maps.LatLng 34.0507177, -118.43757779999999
-              )
           if not localStorage['gps_not_allowed_event_sent']?
             analytics?.track 'GPS Not Allowed'
             localStorage['gps_not_allowed_event_sent'] = 'yes'
           @updateLatlngBusy = no),
         {maximumAge: 0, enableHighAccuracy: true}
       )
+  
+  centerUsingIpAddress: ->
+    Ext.Ajax.request
+      url: "https://freegeoip.net/json/"
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'GET'
+      scope: this
+      success: (response_obj) ->
+        response = Ext.JSON.decode response_obj.responseText
+        @getMap().getMap().setCenter(
+          new google.maps.LatLng response.latitude, response.longitude
+          )
+      failure: (response_obj) ->
+        @getMap().getMap().setCenter(
+          new google.maps.LatLng 34.0507177, -118.43757779999999
+          )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
@@ -749,6 +809,7 @@ Ext.define 'Purple.controller.Main',
         token: localStorage['purpleToken']
         vehicle_id: vehicleId
         code: code
+        address_zip: @deliveryAddressZipCode
       headers:
         'Content-Type': 'application/json'
       timeout: 30000
@@ -845,7 +906,7 @@ Ext.define 'Purple.controller.Main',
             # don't logout and login (which would also cause a setup)
             @setUpPushNotifications true
           else
-            navigator.notification.alert response.message, (->), "Error"
+            navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -916,11 +977,12 @@ Ext.define 'Purple.controller.Main',
 
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
-    @courierPingIntervalRef = setInterval (Ext.bind @courierPing, this), 10000
+    @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
+      @courierPingIntervalRef = null
 
   courierPing: ->
     @errorCount ?= 0
@@ -938,6 +1000,7 @@ Ext.define 'Purple.controller.Main',
           gallons:
             87: localStorage['purpleCourierGallons87']
             91: localStorage['purpleCourierGallons91']
+          position_accuracy: @positionAccuracy
         headers:
           'Content-Type': 'application/json'
         timeout: 30000
