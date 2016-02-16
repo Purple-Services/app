@@ -8,13 +8,16 @@ Ext.define 'Purple.controller.PaymentMethods',
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       accountTabContainer: '#accountTabContainer'
+      requestGasTabContainer: '#requestGasTabContainer'
       accountForm: 'accountform'
+      requestConfirmationForm: 'requestconfirmationform'
       paymentMethods: 'paymentmethods' # the PaymentMethods *page*
       paymentMethodsList: '[ctype=paymentMethodsList]'
       editPaymentMethodForm: 'editpaymentmethodform'
       editPaymentMethodFormHeading: '[ctype=editPaymentMethodFormHeading]'
       backToPaymentMethodsButton: '[ctype=backToPaymentMethodsButton]'
       accountPaymentMethodField: '#accountPaymentMethodField'
+      paymentMethodConfirmationField: '#paymentMethodConfirmationField'
     control:
       paymentMethods:
         editPaymentMethod: 'showEditPaymentMethodForm'
@@ -28,8 +31,6 @@ Ext.define 'Purple.controller.PaymentMethods',
         change: 'yearChanged'
       editPaymentMethodFormMake:
         change: 'makeChanged'
-      accountPaymentMethodField:
-        initialize: 'initAccountPaymentMethodField'
 
   # will be null until they log in
   paymentMethods: null
@@ -46,10 +47,16 @@ Ext.define 'Purple.controller.PaymentMethods',
 
   showEditPaymentMethodForm: (paymentMethodId = 'new', suppressBackButtonBehavior = no) ->
     # the way we have things set up, paymentMethodId is always 'new'
-    @getAccountTabContainer().setActiveItem(
-      Ext.create 'Purple.view.EditPaymentMethodForm',
-        paymentMethodId: paymentMethodId
-    )
+    if @requestGasTabActive
+      @getRequestGasTabContainer().setActiveItem(
+        Ext.create 'Purple.view.EditPaymentMethodForm',
+          paymentMethodId: paymentMethodId
+      )
+    else
+      @getAccountTabContainer().setActiveItem(
+        Ext.create 'Purple.view.EditPaymentMethodForm',
+          paymentMethodId: paymentMethodId
+      )
     if not suppressBackButtonBehavior
       util.ctl('Menu').pushOntoBackButton =>
         @backToPaymentMethods()
@@ -62,11 +69,30 @@ Ext.define 'Purple.controller.PaymentMethods',
     )
 
   backToPaymentMethods: ->
-    @getAccountTabContainer().setActiveItem @getPaymentMethods()
-    @getAccountTabContainer().remove(
-      @getEditPaymentMethodForm(),
+    if @requestGasTabActive
+      @getRequestGasTabContainer().setActiveItem @getPaymentMethods()
+      @getRequestGasTabContainer().remove(
+        @getEditPaymentMethodForm(),
+        yes
+      )
+    else
+      @getAccountTabContainer().setActiveItem @getPaymentMethods()
+      @getAccountTabContainer().remove(
+        @getEditPaymentMethodForm(),
+        yes
+      )
+
+  backToReviewOrder: ->
+    @getRequestGasTabContainer().setActiveItem @getRequestConfirmationForm()
+    @getRequestGasTabContainer().remove(
+      @getPaymentMethods(),
       yes
     )
+    if @getEditPaymentMethodForm()?
+      @getRequestGasTabContainer().remove(
+        @getEditPaymentMethodForm(),
+        yes
+      )
 
   backToAccount: ->
     @getAccountTabContainer().setActiveItem @getAccountForm()
@@ -241,9 +267,12 @@ Ext.define 'Purple.controller.PaymentMethods',
                 #{card.brand} *#{card.last4}
               """
           @refreshAccountPaymentMethodField()
-          @backToAccount()
           @renderPaymentMethodsList @paymentMethods
           util.ctl('Menu').popOffBackButtonWithoutAction()
+          if @requestGasTabActive
+            @backToReviewOrder()
+          else
+            @backToAccount()
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
@@ -307,9 +336,12 @@ Ext.define 'Purple.controller.PaymentMethods',
               @refreshAccountPaymentMethodField()
               util.ctl('Vehicles').vehicles = response.vehicles
               util.ctl('Orders').orders = response.orders
-              @backToPaymentMethods()
               @renderPaymentMethodsList @paymentMethods
               util.ctl('Menu').popOffBackButtonWithoutAction()
+              if @requestGasTabActive
+                @backToReviewOrder()
+              else
+                @backToPaymentMethods()
               if typeof callback is 'function'
                 callback()
               else
@@ -324,7 +356,7 @@ Ext.define 'Purple.controller.PaymentMethods',
 
   refreshAccountPaymentMethodField: ->
     @getAccountPaymentMethodField()?.setValue "Add a Card"
-    
+
     if localStorage['purpleDefaultPaymentMethodId']? and
     localStorage['purpleDefaultPaymentMethodId'] isnt ''
       if @paymentMethods?
@@ -339,22 +371,34 @@ Ext.define 'Purple.controller.PaymentMethods',
             @getAccountPaymentMethodField()?.setValue(
               localStorage['purpleDefaultPaymentMethodDisplayText']
             )
+            @getPaymentMethodConfirmationField()?.setValue(
+              localStorage['purpleDefaultPaymentMethodDisplayText']
+            )
             break
       else if localStorage['purpleDefaultPaymentMethodDisplayText']? and
       localStorage['purpleDefaultPaymentMethodDisplayText'] isnt ''  
         @getAccountPaymentMethodField()?.setValue(
           localStorage['purpleDefaultPaymentMethodDisplayText']
         )
+        @getPaymentMethodConfirmationField()?.setValue(
+          localStorage['purpleDefaultPaymentMethodDisplayText']
+        )
 
-  initAccountPaymentMethodField: (field) ->
-    @refreshAccountPaymentMethodField()
-    field.element.on 'tap', =>
-      @accountPaymentMethodFieldTap()
+  accountPaymentMethodFieldTap: (suppressBackButtonBehavior = no, requestGasTabActive = no) ->
+    @requestGasTabActive = requestGasTabActive
 
-  accountPaymentMethodFieldTap: (suppressBackButtonBehavior = no) ->
-    @getAccountTabContainer().setActiveItem(
-      Ext.create 'Purple.view.PaymentMethods'
-    )
-    if not suppressBackButtonBehavior
-      util.ctl('Menu').pushOntoBackButton =>
-        @backToAccount()
+    if @requestGasTabActive
+      @getRequestGasTabContainer().setActiveItem(
+        Ext.create 'Purple.view.PaymentMethods'
+      )
+      if not suppressBackButtonBehavior
+        util.ctl('Menu').pushOntoBackButton =>
+          @backToReviewOrder()
+    else 
+      @getAccountTabContainer().setActiveItem(
+        Ext.create 'Purple.view.PaymentMethods'
+      )
+      if not suppressBackButtonBehavior
+        util.ctl('Menu').pushOntoBackButton =>
+          @backToAccount()
+
