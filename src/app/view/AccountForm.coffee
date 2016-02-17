@@ -128,11 +128,6 @@ Ext.define 'Purple.view.AccountForm',
               'click-to-edit'
             ]
             disabled: yes
-            listeners:
-              initialize: (field) ->
-                util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
-                field.element.on 'tap', ->
-                  util.ctl('PaymentMethods').accountPaymentMethodFieldTap()
           }
         ]
       }

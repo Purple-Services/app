@@ -174,7 +174,7 @@ Ext.define 'Purple.controller.Account',
               """
           util.ctl('PaymentMethods').paymentMethods = response.cards
           util.ctl('PaymentMethods').loadPaymentMethodsList()
-          util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
+          util.ctl('PaymentMethods').refreshPaymentMethodField()
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = response.orders

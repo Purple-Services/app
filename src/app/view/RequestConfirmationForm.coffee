@@ -94,7 +94,6 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             xtype: 'textfield'
             id: 'paymentMethodConfirmationField'
             flex: 0
-            name: 'payment_method'
             label: 'Payment'
             labelWidth: 105
             cls: [
@@ -104,9 +103,9 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             disabled: yes
             listeners:
               initialize: (field) ->
-                util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
+                util.ctl('PaymentMethods').refreshPaymentMethodField()
                 field.element.on 'tap', ->
-                  util.ctl('PaymentMethods').accountPaymentMethodFieldTap no, yes
+                  util.ctl('PaymentMethods').paymentMethodFieldTap no, yes
           }
           {
             xtype: 'component'
@@ -236,7 +235,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           }
           {
             xtype: 'container'
-            id: 'cofirmOrderButtonContainer'
+            id: 'confirmOrderButtonContainer'
             flex: 0
             height: 110
             width: '100%'
