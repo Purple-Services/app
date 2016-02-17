@@ -844,7 +844,7 @@ Ext.define 'Purple.controller.Main',
       @getMainContainer().getItems().getAt(0).select 2, no, no
       pmCtl = util.ctl('PaymentMethods')
       if not pmCtl.getPaymentMethods()?
-        pmCtl.accountPaymentMethodFieldTap yes
+        pmCtl.paymentMethodFieldTap yes
         
       pmCtl.showEditPaymentMethodForm 'new', yes
       util.ctl('Menu').pushOntoBackButton ->
