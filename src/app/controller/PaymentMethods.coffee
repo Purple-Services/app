@@ -8,8 +8,8 @@ Ext.define 'Purple.controller.PaymentMethods',
       mainContainer: 'maincontainer'
       topToolbar: 'toptoolbar'
       accountTabContainer: '#accountTabContainer'
-      requestGasTabContainer: '#requestGasTabContainer'
       accountForm: 'accountform'
+      requestGasTabContainer: '#requestGasTabContainer'
       requestConfirmationForm: 'requestconfirmationform'
       paymentMethods: 'paymentmethods' # the PaymentMethods *page*
       paymentMethodsList: '[ctype=paymentMethodsList]'
@@ -31,6 +31,8 @@ Ext.define 'Purple.controller.PaymentMethods',
         change: 'yearChanged'
       editPaymentMethodFormMake:
         change: 'makeChanged'
+      accountPaymentMethodField:
+        initialize: 'initAccountPaymentMethodField'
 
   # will be null until they log in
   paymentMethods: null
@@ -137,7 +139,7 @@ Ext.define 'Purple.controller.PaymentMethods',
                 localStorage['purpleDefaultPaymentMethodDisplayText'] = """
                   #{card.brand} *#{card.last4}
                 """
-            @refreshAccountPaymentMethodField()
+            @refreshPaymentMethodField()
             util.ctl('Orders').orders = response.orders
             util.ctl('Orders').loadOrdersList()
             util.ctl('Vehicles').vehicles = response.vehicles
@@ -225,7 +227,7 @@ Ext.define 'Purple.controller.PaymentMethods',
               localStorage['purpleDefaultPaymentMethodDisplayText'] = """
                 #{card.brand} *#{card.last4}
               """
-          @refreshAccountPaymentMethodField()
+          @refreshPaymentMethodField()
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Orders').orders = response.orders
           @renderPaymentMethodsList @paymentMethods
@@ -266,7 +268,7 @@ Ext.define 'Purple.controller.PaymentMethods',
               localStorage['purpleDefaultPaymentMethodDisplayText'] = """
                 #{card.brand} *#{card.last4}
               """
-          @refreshAccountPaymentMethodField()
+          @refreshPaymentMethodField()
           @renderPaymentMethodsList @paymentMethods
           util.ctl('Menu').popOffBackButtonWithoutAction()
           if @requestGasTabActive
@@ -333,7 +335,7 @@ Ext.define 'Purple.controller.PaymentMethods',
                   localStorage['purpleDefaultPaymentMethodDisplayText'] = """
                     #{card.brand} *#{card.last4}
                   """
-              @refreshAccountPaymentMethodField()
+              @refreshPaymentMethodField()
               util.ctl('Vehicles').vehicles = response.vehicles
               util.ctl('Orders').orders = response.orders
               @renderPaymentMethodsList @paymentMethods
@@ -354,8 +356,14 @@ Ext.define 'Purple.controller.PaymentMethods',
             response = Ext.JSON.decode response_obj.responseText
             console.log response
 
-  refreshAccountPaymentMethodField: ->
+  initAccountPaymentMethodField: (field) ->
+    @refreshPaymentMethodField()
+    field.element.on 'tap', =>
+      @paymentMethodFieldTap()
+
+  refreshPaymentMethodField: ->
     @getAccountPaymentMethodField()?.setValue "Add a Card"
+    @getPaymentMethodConfirmationField()?.setValue "Add a Card"
 
     if localStorage['purpleDefaultPaymentMethodId']? and
     localStorage['purpleDefaultPaymentMethodId'] isnt ''
@@ -376,7 +384,7 @@ Ext.define 'Purple.controller.PaymentMethods',
             )
             break
       else if localStorage['purpleDefaultPaymentMethodDisplayText']? and
-      localStorage['purpleDefaultPaymentMethodDisplayText'] isnt ''  
+      localStorage['purpleDefaultPaymentMethodDisplayText'] isnt '' 
         @getAccountPaymentMethodField()?.setValue(
           localStorage['purpleDefaultPaymentMethodDisplayText']
         )
@@ -384,7 +392,7 @@ Ext.define 'Purple.controller.PaymentMethods',
           localStorage['purpleDefaultPaymentMethodDisplayText']
         )
 
-  accountPaymentMethodFieldTap: (suppressBackButtonBehavior = no, requestGasTabActive = no) ->
+  paymentMethodFieldTap: (suppressBackButtonBehavior = no, requestGasTabActive = no) ->
     @requestGasTabActive = requestGasTabActive
 
     if @requestGasTabActive
