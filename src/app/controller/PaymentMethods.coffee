@@ -22,7 +22,7 @@ Ext.define 'Purple.controller.PaymentMethods',
       paymentMethods:
         editPaymentMethod: 'showEditPaymentMethodForm'
         loadPaymentMethodsList: 'loadPaymentMethodsList'
-        backToAccount: 'backToAccount'
+        backToPreviousPage: 'backToPreviousPage'
       editPaymentMethodForm:
         backToPaymentMethods: 'backToPaymentMethods'
         saveChanges: 'saveChanges'
@@ -84,29 +84,29 @@ Ext.define 'Purple.controller.PaymentMethods',
         yes
       )
 
-  backToReviewOrder: ->
-    @getRequestGasTabContainer().setActiveItem @getRequestConfirmationForm()
-    @getRequestGasTabContainer().remove(
-      @getPaymentMethods(),
-      yes
-    )
-    if @getEditPaymentMethodForm()?
+  backToPreviousPage: ->
+    if @requestGasTabActive
+      @getRequestGasTabContainer().setActiveItem @getRequestConfirmationForm()
       @getRequestGasTabContainer().remove(
-        @getEditPaymentMethodForm(),
+        @getPaymentMethods(),
         yes
       )
-
-  backToAccount: ->
-    @getAccountTabContainer().setActiveItem @getAccountForm()
-    @getAccountTabContainer().remove(
-      @getPaymentMethods(),
-      yes
-    )
-    if @getEditPaymentMethodForm()?
+      if @getEditPaymentMethodForm()?
+        @getRequestGasTabContainer().remove(
+          @getEditPaymentMethodForm(),
+          yes
+        )
+    else
+      @getAccountTabContainer().setActiveItem @getAccountForm()
       @getAccountTabContainer().remove(
-        @getEditPaymentMethodForm(),
+        @getPaymentMethods(),
         yes
       )
+      if @getEditPaymentMethodForm()?
+        @getAccountTabContainer().remove(
+          @getEditPaymentMethodForm(),
+          yes
+        )
 
   loadPaymentMethodsList: ->
     if @paymentMethods?
@@ -271,10 +271,7 @@ Ext.define 'Purple.controller.PaymentMethods',
           @refreshPaymentMethodField()
           @renderPaymentMethodsList @paymentMethods
           util.ctl('Menu').popOffBackButtonWithoutAction()
-          if @requestGasTabActive
-            @backToReviewOrder()
-          else
-            @backToAccount()
+          @backToPreviousPage()
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
@@ -340,15 +337,12 @@ Ext.define 'Purple.controller.PaymentMethods',
               util.ctl('Orders').orders = response.orders
               @renderPaymentMethodsList @paymentMethods
               util.ctl('Menu').popOffBackButtonWithoutAction()
-              if @requestGasTabActive
-                @backToReviewOrder()
-              else
-                @backToPaymentMethods()
+              @backToPaymentMethods()
               if typeof callback is 'function'
                 callback()
               else
                 util.ctl('Menu').popOffBackButtonWithoutAction()
-                @backToAccount()
+                @backToPreviousPage()
             else
               navigator.notification.alert response.message, (->), "Error"
           failure: (response_obj) ->
@@ -401,12 +395,12 @@ Ext.define 'Purple.controller.PaymentMethods',
       )
       if not suppressBackButtonBehavior
         util.ctl('Menu').pushOntoBackButton =>
-          @backToReviewOrder()
+          @backToPreviousPage()
     else 
       @getAccountTabContainer().setActiveItem(
         Ext.create 'Purple.view.PaymentMethods'
       )
       if not suppressBackButtonBehavior
         util.ctl('Menu').pushOntoBackButton =>
-          @backToAccount()
+          @backToPreviousPage()
 
