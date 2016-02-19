@@ -674,6 +674,7 @@ Ext.define 'Purple.controller.Main',
         message: ''
       Ext.Ajax.request
         # use the gitignored availabilities.json file for testing
+        # url: "availabilities.json"
         url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
         params: Ext.JSON.encode
           version: util.VERSION_NUMBER
@@ -697,7 +698,7 @@ Ext.define 'Purple.controller.Main',
             # and, are there any time options available
             totalNumOfTimeOptions = availabilities.reduce (a, b) ->
               Object.keys(a.times).length + Object.keys(b.times).length
-            if @isEmpty availabilities[0].gallons or totalNumOfTimeOptions is 0
+            if @isEmpty(availabilities[0].gallons) and @isEmpty(availabilities[1].gallons) or totalNumOfTimeOptions is 0
               navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
             else
               util.ctl('Menu').pushOntoBackButton =>
