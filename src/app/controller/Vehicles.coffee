@@ -457,6 +457,12 @@ Ext.define 'Purple.controller.Vehicles',
           response = Ext.JSON.decode response_obj.responseText
           console.log response
 
+  isEmpty: (obj) ->
+    for key of obj
+      if obj.hasOwnProperty key
+        return false
+    true
+
   requestFormVehicleSelectChange: (field, value) ->
     if value is 'new'
       util.ctl('Menu').selectOption 4

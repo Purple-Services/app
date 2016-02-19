@@ -667,7 +667,7 @@ Ext.define 'Purple.controller.Main',
         xtype: 'loadmask'
         message: ''
       Ext.Ajax.request
-        url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
+        url: "availabilities.json"
         params: Ext.JSON.encode
           version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
@@ -687,9 +687,11 @@ Ext.define 'Purple.controller.Main',
             localStorage['purpleUserReferralCode'] = response.user.referral_code
             localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
             availabilities = response.availabilities
+            console.log availabilities
             # first, see if there are any gallons available at all
             totalGallons = availabilities.reduce (a, b) ->
               a.gallons + b.gallons
+            console.log totalGallons
             # and, are there any time options available
             totalNumOfTimeOptions = availabilities.reduce (a, b) ->
               Object.keys(a.times).length + Object.keys(b.times).length
@@ -736,6 +738,7 @@ Ext.define 'Purple.controller.Main',
       @backToRequestForm()
     vals = @getRequestForm().getValues()
     availabilities = @getRequestForm().config.availabilities
+    console.log availabilities
     gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type
     for a in availabilities
       if a['octane'] is gasType
