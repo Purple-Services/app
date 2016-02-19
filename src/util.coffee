@@ -37,10 +37,6 @@ window.util =
 
   GCM_SENDER_ID: "254423398507"  
 
-  MINIMUM_GALLONS: 10
-  GALLONS_INCREMENT: 5
-  GALLONS_PER_TANK: 5
-
   STATUSES: [
     "unassigned"
     "assigned"

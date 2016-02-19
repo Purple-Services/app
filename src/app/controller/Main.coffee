@@ -648,6 +648,12 @@ Ext.define 'Purple.controller.Main',
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
+  isEmpty: (obj) ->
+    for key of obj
+      if obj.hasOwnProperty key
+        return false
+    true
+
   initRequestGasForm: ->
     deliveryLocName = @getRequestAddressField().getValue()
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
@@ -667,7 +673,8 @@ Ext.define 'Purple.controller.Main',
         xtype: 'loadmask'
         message: ''
       Ext.Ajax.request
-        url: "availabilities.json"
+        # use the gitignored availabilities.json file for testing
+        url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
         params: Ext.JSON.encode
           version: util.VERSION_NUMBER
           user_id: localStorage['purpleUserId']
@@ -687,15 +694,10 @@ Ext.define 'Purple.controller.Main',
             localStorage['purpleUserReferralCode'] = response.user.referral_code
             localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
             availabilities = response.availabilities
-            console.log availabilities
-            # first, see if there are any gallons available at all
-            totalGallons = availabilities.reduce (a, b) ->
-              a.gallons + b.gallons
-            console.log totalGallons
             # and, are there any time options available
             totalNumOfTimeOptions = availabilities.reduce (a, b) ->
               Object.keys(a.times).length + Object.keys(b.times).length
-            if totalGallons < util.MINIMUM_GALLONS or totalNumOfTimeOptions is 0
+            if @isEmpty availabilities[0].gallons or totalNumOfTimeOptions is 0
               navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
             else
               util.ctl('Menu').pushOntoBackButton =>
@@ -738,7 +740,6 @@ Ext.define 'Purple.controller.Main',
       @backToRequestForm()
     vals = @getRequestForm().getValues()
     availabilities = @getRequestForm().config.availabilities
-    console.log availabilities
     gasType = util.ctl('Vehicles').getVehicleById(vals['vehicle']).gas_type
     for a in availabilities
       if a['octane'] is gasType
