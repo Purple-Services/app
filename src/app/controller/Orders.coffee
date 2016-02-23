@@ -56,6 +56,8 @@ Ext.define 'Purple.controller.Orders',
   launch: ->
     @callParent arguments
 
+    (Ext.bind @callback, this)
+
   getOrderById: (id) ->
     for o in @orders
       if o['id'] is orderId
@@ -68,7 +70,7 @@ Ext.define 'Purple.controller.Orders',
       if o['id'] is orderId
         order = o
         break
-        
+
     @getOrdersTabContainer().setActiveItem(
       Ext.create 'Purple.view.Order',
         orderId: orderId
@@ -207,15 +209,23 @@ Ext.define 'Purple.controller.Orders',
         """
     analytics?.page 'View Order',
       order_id: order.id
-    
 
   backToOrders: ->
+    if @moreThanThirtySecondsElapsed() is true
+      @loadOrdersList yes
     @getOrdersTabContainer()?.remove(
       @getOrder(),
       yes
     )
 
-  loadOrdersList: (forceUpdate = no, callback = null) ->
+  moreThanThirtySecondsElapsed: ->
+    if @getMainContainer().getActiveItem().data.index is 3 and @hasActiveOrder() is true
+      currentTime = new Date().getTime() / 1000
+      if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
+        return true
+    false
+
+  loadOrdersList: (forceUpdate = no, callback = null, refreshOrder = no) ->
     if @orders? and not forceUpdate
       @renderOrdersList @orders
     else
@@ -243,6 +253,9 @@ Ext.define 'Purple.controller.Orders',
             util.ctl('Vehicles').loadVehiclesList()
             @renderOrdersList @orders
             callback?()
+            if refreshOrder is true
+              @viewOrder @oid
+            @lastLoadOrdersList = new Date().getTime() / 1000
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -252,6 +265,16 @@ Ext.define 'Purple.controller.Orders',
           response = Ext.JSON.decode response_obj.responseText
           console.log response
   
+  hasActiveOrder: ->
+    for o in @orders
+      if o.status is 'unassigned' or
+      o.status is 'assigned' or
+      o.status is 'accepted' or
+      o.status is 'enroute' or
+      o.status is 'servicing'
+        return true
+    false
+
   renderOrdersList: (orders) ->
     list =  @getOrdersList()
     if not list?
@@ -325,8 +348,11 @@ Ext.define 'Purple.controller.Orders',
             field.addCls "status-#{o.status}"))(o)
           initialize: (field) =>
             field.element.on 'tap', =>
-              oid = field.getId().split('_')[1]
-              @viewOrder oid
+              @oid = field.getId().split('_')[1]
+              if @moreThanThirtySecondsElapsed() is true
+                @loadOrdersList yes, null, yes
+              else
+                @viewOrder @oid
 
   askToCancelOrder: (id) ->
     navigator.notification.confirm(
