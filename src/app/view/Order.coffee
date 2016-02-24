@@ -92,6 +92,7 @@ Ext.define 'Purple.view.Order',
           {
             xtype: 'textfield'
             flex: 0
+            ctype: 'orderStatusDisplay'
             name: 'display_status'
             label: 'Status'
             disabled: yes

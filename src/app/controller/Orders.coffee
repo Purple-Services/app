@@ -36,6 +36,7 @@ Ext.define 'Purple.controller.Orders',
       orderTotalPrice: '[ctype=orderTotalPrice]'
       orderHorizontalRuleAboveCustomerInfo: '[ctype=orderHorizontalRuleAboveCustomerInfo]'
       orderRating: '[ctype=orderRating]'
+      orderStatusDisplay: '[ctype=orderStatusDisplay]'
       textRating: '[ctype=textRating]'
       sendRatingButtonContainer: '[ctype=sendRatingButtonContainer]'
       nextStatusButtonContainer: '[ctype=nextStatusButtonContainer]'
@@ -56,7 +57,7 @@ Ext.define 'Purple.controller.Orders',
   launch: ->
     @callParent arguments
 
-    (Ext.bind @callback, this)
+    @orderListPageActive = true
 
   getOrderById: (id) ->
     for o in @orders
@@ -66,6 +67,7 @@ Ext.define 'Purple.controller.Orders',
     return order
 
   viewOrder: (orderId) ->
+    @orderListPageActive = false
     for o in @orders
       if o['id'] is orderId
         order = o
@@ -211,21 +213,20 @@ Ext.define 'Purple.controller.Orders',
       order_id: order.id
 
   backToOrders: ->
-    if @moreThanThirtySecondsElapsed() is true
-      @loadOrdersList yes
+    @orderListPageActive = true
+    @refreshOrdersAndOrdersList()
     @getOrdersTabContainer()?.remove(
       @getOrder(),
       yes
     )
 
   moreThanThirtySecondsElapsed: ->
-    if @getMainContainer().getActiveItem().data.index is 3 and @hasActiveOrder() is true
-      currentTime = new Date().getTime() / 1000
-      if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
-        return true
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
+      return true
     false
 
-  loadOrdersList: (forceUpdate = no, callback = null, refreshOrder = no) ->
+  loadOrdersList: (forceUpdate = no, callback = null) ->
     if @orders? and not forceUpdate
       @renderOrdersList @orders
     else
@@ -253,8 +254,6 @@ Ext.define 'Purple.controller.Orders',
             util.ctl('Vehicles').loadVehiclesList()
             @renderOrdersList @orders
             callback?()
-            if refreshOrder is true
-              @viewOrder @oid
             @lastLoadOrdersList = new Date().getTime() / 1000
           else
             navigator.notification.alert response.message, (->), "Error"
@@ -349,10 +348,31 @@ Ext.define 'Purple.controller.Orders',
           initialize: (field) =>
             field.element.on 'tap', =>
               @oid = field.getId().split('_')[1]
-              if @moreThanThirtySecondsElapsed() is true
-                @loadOrdersList yes, null, yes
-              else
-                @viewOrder @oid
+              @viewOrder @oid
+              @refreshOrdersAndOrdersList()
+
+  refreshOrdersAndOrdersList: ->
+    if @moreThanThirtySecondsElapsed() is true and @hasActiveOrder() is true and @getMainContainer().getActiveItem().data.index is 3 
+      if @orderListPageActive is true
+        @loadOrdersList yes
+      else
+        @loadOrdersList yes, (Ext.bind @refreshOrder, this)
+
+  refreshOrder: ->
+    for o in @orders
+      if o['id'] is @oid
+        order = o
+        break
+
+    if order['status'] is 'unassigned' 
+      @getOrderStatusDisplay().setValue 'Accepted'
+    else 
+      @getOrderStatusDisplay().setValue order['status']
+
+    @getOrder().addCls "status-#{order['status']}"
+
+    if order['status'] is 'complete'
+      @getOrderRating().show()
 
   askToCancelOrder: (id) ->
     navigator.notification.confirm(
