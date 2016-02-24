@@ -220,12 +220,6 @@ Ext.define 'Purple.controller.Orders',
       yes
     )
 
-  moreThanThirtySecondsElapsed: ->
-    currentTime = new Date().getTime() / 1000
-    if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
-      return true
-    false
-
   loadOrdersList: (forceUpdate = no, callback = null) ->
     if @orders? and not forceUpdate
       @renderOrdersList @orders
@@ -352,11 +346,13 @@ Ext.define 'Purple.controller.Orders',
               @refreshOrdersAndOrdersList()
 
   refreshOrdersAndOrdersList: ->
-    if @moreThanThirtySecondsElapsed() is true and @hasActiveOrder() is true and @getMainContainer().getActiveItem().data.index is 3 
-      if @orderListPageActive is true
-        @loadOrdersList yes
-      else
-        @loadOrdersList yes, (Ext.bind @refreshOrder, this)
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
+      if @hasActiveOrder() is true and @getMainContainer().getActiveItem().data.index is 3 
+        if @orderListPageActive is true
+          @loadOrdersList yes
+        else #order page is active
+          @loadOrdersList yes, (Ext.bind @refreshOrder, this)
 
   refreshOrder: ->
     for o in @orders
