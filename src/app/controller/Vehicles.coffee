@@ -519,7 +519,7 @@ Ext.define 'Purple.controller.Vehicles',
       ), (if ready then 5 else 500)
   
   focusRequestFormSpecialInstructions: ->
-    if localStorage['specialInstructions'] and not @specialInstructionsAutoFillPrompted?
+    if localStorage['specialInstructions'] and not @specialInstructionsAutoFillPrompted
       @specialInstructionsAutoFillPrompted = true
       navigator.notification.confirm 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
 

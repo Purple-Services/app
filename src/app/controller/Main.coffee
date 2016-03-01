@@ -855,6 +855,8 @@ Ext.define 'Purple.controller.Main',
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
     else
+      util.ctl('Vehicles').specialInstructionsAutoFillPrompted = false
+
       vals = @getRequestConfirmationForm().getValues()
       # prices are finally given in cents
       vals['gas_price'] = parseInt(
