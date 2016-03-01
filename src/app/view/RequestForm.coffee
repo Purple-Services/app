@@ -151,6 +151,7 @@ Ext.define 'Purple.view.RequestForm',
           }
           {
             xtype: 'textareafield'
+            ctype: 'requestFormSpecialInstructions'
             name: 'special_instructions'
             maxRows: 3
           }

@@ -883,6 +883,7 @@ Ext.define 'Purple.controller.Main',
         method: 'POST'
         scope: this
         success: (response_obj) ->
+          localStorage['specialInstructions'] = vals['special_instructions']
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
