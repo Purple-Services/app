@@ -855,8 +855,6 @@ Ext.define 'Purple.controller.Main',
         pmCtl.backToAccount()
         util.ctl('Menu').selectOption 0
     else
-      util.ctl('Vehicles').specialInstructionsAutoFillPrompted = false
-
       vals = @getRequestConfirmationForm().getValues()
       # prices are finally given in cents
       vals['gas_price'] = parseInt(
@@ -885,10 +883,11 @@ Ext.define 'Purple.controller.Main',
         method: 'POST'
         scope: this
         success: (response_obj) ->
-          localStorage['specialInstructions'] = vals['special_instructions']
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
+            localStorage['specialInstructions'] = vals['special_instructions']
+            util.ctl('Vehicles').specialInstructionsAutoFillPrompted = false
             util.ctl('Menu').selectOption 3 # Orders tab
             util.ctl('Orders').loadOrdersList yes
             @getRequestGasTabContainer().setActiveItem @getMapForm()
