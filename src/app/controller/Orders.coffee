@@ -53,11 +53,10 @@ Ext.define 'Purple.controller.Orders',
         change: 'orderRatingChange'
 
   orders: null
+  orderListPageActive: yes
 
   launch: ->
     @callParent arguments
-
-    @orderListPageActive = true
 
   getOrderById: (id) ->
     for o in @orders
@@ -341,22 +340,22 @@ Ext.define 'Purple.controller.Orders',
             field.addCls "status-#{o.status}"))(o)
           initialize: (field) =>
             field.element.on 'tap', =>
-              @oid = field.getId().split('_')[1]
-              @viewOrder @oid
+              oid = field.getId().split('_')[1]
+              @viewOrder oid
               @refreshOrdersAndOrdersList()
 
   refreshOrdersAndOrdersList: ->
     currentTime = new Date().getTime() / 1000
     if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
-      if @hasActiveOrder() is true and @getMainContainer().getActiveItem().data.index is 3 
-        if @orderListPageActive is true
+      if @hasActiveOrder() and @getMainContainer().getActiveItem().data.index is 3 
+        if @orderListPageActive
           @loadOrdersList yes
         else #order page is active
           @loadOrdersList yes, (Ext.bind @refreshOrder, this)
 
   refreshOrder: ->
     for o in @orders
-      if o['id'] is @oid
+      if o['id'] is @getOrder().config.orderId
         order = o
         break
 
