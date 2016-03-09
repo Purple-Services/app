@@ -81,6 +81,7 @@ Ext.define 'Purple.controller.Orders',
       @backToOrders()
 
     @getOrder().addCls "status-#{order['status']}"
+    @currentOrderClass = "status-#{order['status']}"
 
     if order['status'] is 'complete'
       @getOrderRating().show()
@@ -364,7 +365,10 @@ Ext.define 'Purple.controller.Orders',
     else 
       @getOrderStatusDisplay().setValue order['status']
 
+    @getOrder().removeCls @currentOrderClass
     @getOrder().addCls "status-#{order['status']}"
+    
+    @currentOrderClass = "status-#{order['status']}"
 
     if order['status'] is 'complete'
       @getOrderRating().show()
