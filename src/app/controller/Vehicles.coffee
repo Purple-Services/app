@@ -524,6 +524,7 @@ Ext.define 'Purple.controller.Vehicles',
       navigator.notification.confirm 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
 
   specialInstructionsAutoFill: (index) ->
+    @getRequestFormSpecialInstructions().blur()
     if index is 1
       @getRequestFormSpecialInstructions().setValue localStorage['specialInstructions']
 
