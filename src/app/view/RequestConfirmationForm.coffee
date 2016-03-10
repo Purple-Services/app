@@ -117,6 +117,17 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           {
             xtype: 'textfield'
             flex: 0
+            name: 'gas_type_display'
+            label: 'Gas Type'
+            labelWidth: 115
+            disabled: yes
+            cls: [
+              'visibly-disabled'
+            ]
+          }
+          {
+            xtype: 'textfield'
+            flex: 0
             name: 'gas_price_display'
             label: 'Gas Price'
             labelWidth: 115
