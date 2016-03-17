@@ -47,7 +47,10 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'hiddenfield'
@@ -72,6 +75,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'vehicle'
             label: 'Vehicle'
+            labelWidth: 87
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -83,7 +87,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'address_street'
             label: 'Location'
-            labelWidth: 89
+            labelWidth: 105
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -130,7 +134,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'service_fee'
             label: 'Service Fee'
-            labelWidth: 115
+            labelWidth: 120
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -157,7 +161,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'discount'
             label: 'Coupon Code'
-            labelWidth: 125
+            labelWidth: 145
             disabled: yes
             value: 'Enter'
             cls: [

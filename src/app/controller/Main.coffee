@@ -133,7 +133,7 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
-      cordova.plugins.diagnostic.getLocationAuthorizationStatus(
+      cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
         ((status) =>
           if status isnt "authorized_always" and @locationNotification < 3
             navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
@@ -234,7 +234,7 @@ Ext.define 'Purple.controller.Main',
   checkAndroidLocationSettings: ->
     if Ext.os.name is 'Android'
       if util.ctl('Account').isCourier() or @locationNotification < 1
-        cordova.plugins.diagnostic.getLocationMode(
+        cordova.plugins.diagnostic?.getLocationMode(
           ((locationMode) =>
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
               @androidHighAccuracyNotificationActive = true

@@ -83,7 +83,10 @@ Ext.define 'Purple.view.Orders',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'container'

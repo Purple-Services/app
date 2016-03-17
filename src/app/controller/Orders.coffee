@@ -276,11 +276,7 @@ Ext.define 'Purple.controller.Orders',
         'bottom-margin'
         'order-list-item'
       ]
-      if o.status is 'unassigned' or
-      o.status is 'assigned' or
-      o.status is 'accepted' or
-      o.status is 'enroute' or
-      o.status is 'servicing'
+      if o.status is 'complete'
         cls.push 'highlighted'
       if util.ctl('Account').isCourier()
         isLate = o.status isnt "complete" and

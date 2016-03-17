@@ -46,7 +46,10 @@ Ext.define 'Purple.view.EditAccountForm',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'textfield'
@@ -65,7 +68,7 @@ Ext.define 'Purple.view.EditAccountForm',
             ctype: 'editAccountPhoneNumber'
             name: 'phone_number'
             label: 'Phone'
-            labelWidth: 70
+            labelWidth: 82
             flex: 0
             cls: [
               'bottom-margin'

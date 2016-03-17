@@ -83,7 +83,10 @@ Ext.define 'Purple.view.Order',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'hiddenfield'
@@ -96,7 +99,8 @@ Ext.define 'Purple.view.Order',
             label: 'Status'
             disabled: yes
             cls: [
-              'big-and-bold'
+              'order-status'
+              'highlighted'
             ]
           }
           {
@@ -132,7 +136,8 @@ Ext.define 'Purple.view.Order',
             label: 'Rating'
             labelWidth: 75
             cls: [
-              'big-and-bold'
+              'highlighted'
+              'order-status'
               'no-background'
             ]
           }
@@ -171,10 +176,7 @@ Ext.define 'Purple.view.Order',
           {
             xtype: 'component'
             flex: 0
-            cls: [
-              'horizontal-rule'
-              'no-top-margin'
-            ]
+            height: 15
           }
           {
             xtype: 'textfield'
@@ -217,6 +219,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'vehicle'
             label: 'Vehicle'
+            labelWidth: 87
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -239,7 +242,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'address_street'
             label: 'Location'
-            labelWidth: 89
+            labelWidth: 105
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -251,7 +254,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'address_zip'
             label: 'Zip Code'
-            labelWidth: 89
+            labelWidth: 105
             disabled: yes
             hidden: yes
             cls: [
@@ -263,6 +266,7 @@ Ext.define 'Purple.view.Order',
             ctype: 'orderSpecialInstructionsLabel'
             flex: 0
             html: 'Special Instructions'
+            padding: '12 0 0 0'
             cls: [
               'visibly-disabled'
               'field-label-text'
@@ -299,6 +303,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'gallons'
             label: 'Gallons'
+            labelWidth: 100
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -323,7 +328,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'service_fee_display'
             label: 'Service Fee'
-            labelWidth: 115
+            labelWidth: 130
             disabled: yes
             cls: [
               'visibly-disabled'
