@@ -19,8 +19,8 @@
 
   <!-- BEGIN COURIER APP ONLY -->
   <!-- <name>Purple Courier</name> -->
-  <!--   <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
-  <!--   <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
+  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
+  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
   <!--   <string>(required for Courier mode)</string> -->
   <!-- </gap:config-file> -->
   <!-- <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" /> -->
@@ -140,21 +140,22 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-<!--   <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+  <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
   </gap:plugin>
   <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin> -->
+  </gap:plugin>
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
   <!-- this one for iOS -->
-  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
+  
   <!-- this one for Android -->
-  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
