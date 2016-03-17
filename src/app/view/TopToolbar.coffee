@@ -6,7 +6,7 @@ Ext.define 'Purple.view.TopToolbar',
     ui: 'top-toolbar'
     height: 60
     title: """
-      <img src="resources/images/logo-word.png" style="height: 42px; padding-top: 14px;" />
+      <img src="resources/images/logo.png" style="height: 44px; padding-top: 10px;" />
     """
     items: [
       {

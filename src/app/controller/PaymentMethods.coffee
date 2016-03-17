@@ -15,6 +15,8 @@ Ext.define 'Purple.controller.PaymentMethods',
       editPaymentMethodFormHeading: '[ctype=editPaymentMethodFormHeading]'
       backToPaymentMethodsButton: '[ctype=backToPaymentMethodsButton]'
       accountPaymentMethodField: '#accountPaymentMethodField'
+      editPaymentMethodFormMonth: '[ctype=editPaymentMethodFormMonth]'
+      editPaymentMethodFormYear: '[ctype=editPaymentMethodFormYear]'
     control:
       paymentMethods:
         editPaymentMethod: 'showEditPaymentMethodForm'
@@ -24,8 +26,10 @@ Ext.define 'Purple.controller.PaymentMethods',
         backToPaymentMethods: 'backToPaymentMethods'
         saveChanges: 'saveChanges'
         deletePaymentMethod: 'deletePaymentMethod'
+      editPaymentMethodFormMonth:
+        initialize: 'initEditPaymentMethodFormMonth'
       editPaymentMethodFormYear:
-        change: 'yearChanged'
+        initialize: 'initEditPaymentMethodFormYear'
       editPaymentMethodFormMake:
         change: 'makeChanged'
       accountPaymentMethodField:
@@ -350,6 +354,14 @@ Ext.define 'Purple.controller.PaymentMethods',
     @refreshAccountPaymentMethodField()
     field.element.on 'tap', =>
       @accountPaymentMethodFieldTap()
+
+  initEditPaymentMethodFormMonth: ->
+    month = (new Date().getMonth() + 1).toString()
+    @getEditPaymentMethodFormMonth().setValue month
+
+  initEditPaymentMethodFormYear: ->
+    year = (new Date().getFullYear()).toString()
+    @getEditPaymentMethodFormYear().setValue year
 
   accountPaymentMethodFieldTap: (suppressBackButtonBehavior = no) ->
     @getAccountTabContainer().setActiveItem(

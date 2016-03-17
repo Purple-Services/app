@@ -46,7 +46,10 @@ Ext.define 'Purple.view.RequestForm',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'selectfield'
@@ -54,6 +57,7 @@ Ext.define 'Purple.view.RequestForm',
             flex: 0
             name: 'vehicle'
             label: 'Vehicle'
+            labelWidth: 87
             listPicker:
               title: 'Select a Vehicle'
             cls: [
@@ -69,6 +73,7 @@ Ext.define 'Purple.view.RequestForm',
             flex: 0
             name: 'gallons'
             label: 'Gallons'
+            labelWidth: 100
             listPicker:
               title: 'Number of Gallons'
             cls: [
@@ -151,6 +156,7 @@ Ext.define 'Purple.view.RequestForm',
           }
           {
             xtype: 'textareafield'
+            ctype: 'requestFormSpecialInstructions'
             name: 'special_instructions'
             maxRows: 3
           }

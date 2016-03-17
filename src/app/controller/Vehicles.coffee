@@ -26,6 +26,7 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]'
       requestFormTimeSelect: '[ctype=requestFormTimeSelect]'
       sendRequestButton: '[ctype=sendRequestButton]'
+      requestFormSpecialInstructions: '[ctype=requestFormSpecialInstructions]'
     control:
       vehicles:
         editVehicle: 'showEditVehicleForm'
@@ -47,6 +48,8 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormVehicleSelect:
         initialize: 'initRequestFormVehicleSelect'
         change: 'requestFormVehicleSelectChange'
+      requestFormSpecialInstructions:
+        focus: 'focusRequestFormSpecialInstructions'
 
   # will be null until they log in
   vehicles: null
@@ -514,6 +517,16 @@ Ext.define 'Purple.controller.Vehicles',
         
         @getSendRequestButton().setDisabled no
       ), (if ready then 5 else 500)
+  
+  focusRequestFormSpecialInstructions: ->
+    if localStorage['specialInstructions'] and not @specialInstructionsAutoFillPrompted
+      @specialInstructionsAutoFillPrompted = true
+      navigator.notification.confirm 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
+
+  specialInstructionsAutoFill: (index) ->
+    @getRequestFormSpecialInstructions().blur()
+    if index is 1
+      @getRequestFormSpecialInstructions().setValue localStorage['specialInstructions']
 
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this

@@ -36,6 +36,7 @@ Ext.define 'Purple.controller.Orders',
       orderTotalPrice: '[ctype=orderTotalPrice]'
       orderHorizontalRuleAboveCustomerInfo: '[ctype=orderHorizontalRuleAboveCustomerInfo]'
       orderRating: '[ctype=orderRating]'
+      orderStatusDisplay: '[ctype=orderStatusDisplay]'
       textRating: '[ctype=textRating]'
       sendRatingButtonContainer: '[ctype=sendRatingButtonContainer]'
       nextStatusButtonContainer: '[ctype=nextStatusButtonContainer]'
@@ -52,6 +53,7 @@ Ext.define 'Purple.controller.Orders',
         change: 'orderRatingChange'
 
   orders: null
+  orderListPageActive: yes
 
   launch: ->
     @callParent arguments
@@ -64,11 +66,12 @@ Ext.define 'Purple.controller.Orders',
     return order
 
   viewOrder: (orderId) ->
+    @orderListPageActive = false
     for o in @orders
       if o['id'] is orderId
         order = o
         break
-        
+
     @getOrdersTabContainer().setActiveItem(
       Ext.create 'Purple.view.Order',
         orderId: orderId
@@ -78,6 +81,7 @@ Ext.define 'Purple.controller.Orders',
       @backToOrders()
 
     @getOrder().addCls "status-#{order['status']}"
+    @currentOrderClass = "status-#{order['status']}"
 
     if order['status'] is 'complete'
       @getOrderRating().show()
@@ -207,9 +211,10 @@ Ext.define 'Purple.controller.Orders',
         """
     analytics?.page 'View Order',
       order_id: order.id
-    
 
   backToOrders: ->
+    @orderListPageActive = true
+    @refreshOrdersAndOrdersList()
     @getOrdersTabContainer()?.remove(
       @getOrder(),
       yes
@@ -243,6 +248,7 @@ Ext.define 'Purple.controller.Orders',
             util.ctl('Vehicles').loadVehiclesList()
             @renderOrdersList @orders
             callback?()
+            @lastLoadOrdersList = new Date().getTime() / 1000
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -252,6 +258,16 @@ Ext.define 'Purple.controller.Orders',
           response = Ext.JSON.decode response_obj.responseText
           console.log response
   
+  hasActiveOrder: ->
+    for o in @orders
+      if o.status is 'unassigned' or
+      o.status is 'assigned' or
+      o.status is 'accepted' or
+      o.status is 'enroute' or
+      o.status is 'servicing'
+        return true
+    false
+
   renderOrdersList: (orders) ->
     list =  @getOrdersList()
     if not list?
@@ -276,11 +292,7 @@ Ext.define 'Purple.controller.Orders',
         'bottom-margin'
         'order-list-item'
       ]
-      if o.status is 'unassigned' or
-      o.status is 'assigned' or
-      o.status is 'accepted' or
-      o.status is 'enroute' or
-      o.status is 'servicing'
+      if o.status is 'complete'
         cls.push 'highlighted'
       if util.ctl('Account').isCourier()
         isLate = o.status isnt "complete" and
@@ -327,6 +339,35 @@ Ext.define 'Purple.controller.Orders',
             field.element.on 'tap', =>
               oid = field.getId().split('_')[1]
               @viewOrder oid
+              @refreshOrdersAndOrdersList()
+
+  refreshOrdersAndOrdersList: ->
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
+      if @hasActiveOrder() and @getMainContainer().getActiveItem().data.index is 3 
+        if @orderListPageActive
+          @loadOrdersList yes
+        else #order page is active
+          @loadOrdersList yes, (Ext.bind @refreshOrder, this)
+
+  refreshOrder: ->
+    for o in @orders
+      if o['id'] is @getOrder().config.orderId
+        order = o
+        break
+
+    if order['status'] is 'unassigned' 
+      @getOrderStatusDisplay().setValue 'Accepted'
+    else 
+      @getOrderStatusDisplay().setValue order['status']
+
+    @getOrder().removeCls @currentOrderClass
+    @getOrder().addCls "status-#{order['status']}"
+    
+    @currentOrderClass = "status-#{order['status']}"
+
+    if order['status'] is 'complete'
+      @getOrderRating().show()
 
   askToCancelOrder: (id) ->
     navigator.notification.confirm(

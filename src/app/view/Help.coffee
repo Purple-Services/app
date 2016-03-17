@@ -107,7 +107,10 @@ Ext.define 'Purple.view.Help',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
         ]
       }

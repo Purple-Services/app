@@ -133,7 +133,7 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
-      cordova.plugins.diagnostic.getLocationAuthorizationStatus(
+      cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
         ((status) =>
           if status isnt "authorized_always" and @locationNotification < 3
             navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
@@ -145,6 +145,7 @@ Ext.define 'Purple.controller.Main',
       # this is causing it to happen very often, probably want to change that
       # so it only happens when there is a change in user's settings
       @setUpPushNotifications()
+    util.ctl('Orders').refreshOrdersAndOrdersList()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -234,7 +235,7 @@ Ext.define 'Purple.controller.Main',
   checkAndroidLocationSettings: ->
     if Ext.os.name is 'Android'
       if util.ctl('Account').isCourier() or @locationNotification < 1
-        cordova.plugins.diagnostic.getLocationMode(
+        cordova.plugins.diagnostic?.getLocationMode(
           ((locationMode) =>
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
               @androidHighAccuracyNotificationActive = true
@@ -748,6 +749,7 @@ Ext.define 'Purple.controller.Main',
         break
 
     vals['gas_type'] = "" + availability.octane # should already be string though
+    vals['gas_type_display'] = "Unleaded #{vals['gas_type']} Octane"
     gasPrice = availability.price_per_gallon
     serviceFee = availability.times[vals['time']]['service_fee']
     vals['gas_price'] = "" + util.centsToDollars(
@@ -891,6 +893,8 @@ Ext.define 'Purple.controller.Main',
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
+            localStorage['specialInstructions'] = vals['special_instructions']
+            util.ctl('Vehicles').specialInstructionsAutoFillPrompted = false
             util.ctl('Menu').selectOption 3 # Orders tab
             util.ctl('Orders').loadOrdersList yes
             @getRequestGasTabContainer().setActiveItem @getMapForm()

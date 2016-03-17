@@ -97,7 +97,10 @@ Ext.define 'Purple.view.EditVehicleForm',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'selectfield'
@@ -210,7 +213,7 @@ Ext.define 'Purple.view.EditVehicleForm',
             ctype: 'editVehicleFormLicensePlate'
             name: 'license_plate'
             label: 'License Plate'
-            labelWidth: 125
+            labelWidth: 140
             flex: 0
             cls: [
               'bottom-margin'

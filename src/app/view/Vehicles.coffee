@@ -48,7 +48,10 @@ Ext.define 'Purple.view.Vehicles',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'container'

@@ -138,6 +138,7 @@ Ext.define 'Purple.view.MapForm',
             id: 'addHomeAddress'
             flex: 0
             label: 'Add Home'
+            labelWidth: 100
             cls: 'saved-address-field'
             disabled: yes
           }
@@ -226,6 +227,7 @@ Ext.define 'Purple.view.MapForm',
             id: 'addWorkAddress'
             flex: 0
             label: 'Add Work'
+            labelWidth: 100
             cls: 'saved-address-field'
             disabled: yes
           }

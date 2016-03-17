@@ -55,7 +55,7 @@ Ext.define 'Purple.view.MainContainer',
     ###
     itemMask: true
 
-    shadowStyle: '0px 0px 0px 6px rgba(0,0,0,0.1)'
+    shadowStyle: '0px 0px 0px 3px rgba(0,0,0,1)'
     
     ###*
     Define the default slide button config.  Any item that has
@@ -80,7 +80,7 @@ Ext.define 'Purple.view.MainContainer',
           docked: 'top'
           cls: 'menu-toolbar' 
           html: """
-            <img src="resources/images/logo-light.png" class="slide-menu-logo" />
+            <img src="resources/images/logo.png" class="slide-menu-logo" />
           """
           handler: -> @fireEvent 'logoButtonTap'
         }
@@ -259,7 +259,7 @@ Ext.define 'Purple.view.MainContainer',
       }
       {
         title: """
-          <img src="resources/images/present-icon-white.png" style="height: 22px; padding-right: 4px; position: relative; top: 1px;" />
+          <img src="resources/images/present-icon-purple.png" style="height: 22px; padding-right: 4px; position: relative; top: 1px;" />
           Get Free Gas!
         """
         items: [
