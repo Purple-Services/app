@@ -145,6 +145,7 @@ Ext.define 'Purple.controller.Main',
       # this is causing it to happen very often, probably want to change that
       # so it only happens when there is a change in user's settings
       @setUpPushNotifications()
+    util.ctl('Orders').refreshOrdersAndOrdersList()
 
   checkGoogleMaps: ->
     if not google?.maps?
