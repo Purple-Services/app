@@ -887,6 +887,8 @@ Ext.define 'Purple.controller.Main',
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
+            localStorage['specialInstructions'] = vals['special_instructions']
+            util.ctl('Vehicles').specialInstructionsAutoFillPrompted = false
             util.ctl('Menu').selectOption 3 # Orders tab
             util.ctl('Orders').loadOrdersList yes
             @getRequestGasTabContainer().setActiveItem @getMapForm()
