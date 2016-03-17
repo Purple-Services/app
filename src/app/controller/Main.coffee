@@ -743,6 +743,7 @@ Ext.define 'Purple.controller.Main',
         break
 
     vals['gas_type'] = "" + availability.octane # should already be string though
+    vals['gas_type_display'] = "Unleaded #{vals['gas_type']} Octane"
     gasPrice = availability.price_per_gallon
     serviceFee = availability.times[vals['time']]['service_fee']
     vals['gas_price'] = "" + util.centsToDollars(

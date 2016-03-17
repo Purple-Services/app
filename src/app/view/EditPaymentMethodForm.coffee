@@ -123,6 +123,7 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
             xtype: 'selectfield'
             flex: 0
             name: 'card_exp_month'
+            ctype: 'editPaymentMethodFormMonth'
             label: 'Exp. Month'
             labelWidth: 125
             listPicker:
@@ -186,6 +187,7 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
             xtype: 'selectfield'
             flex: 0
             name: 'card_exp_year'
+            ctype: 'editPaymentMethodFormYear'
             label: 'Exp. Year'
             labelWidth: 125
             listPicker:
@@ -194,7 +196,6 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '2015'
             options: [
               {
                 text: '2015'
