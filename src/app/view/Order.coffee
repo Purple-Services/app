@@ -196,7 +196,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'time_deadline'
             label: 'Deadline'
-            labelWidth: 95
+            labelWidth: 100
             disabled: yes
             hidden: yes
             cls: [
@@ -361,7 +361,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'vehicle_make'
             label: 'Vehicle Make'
-            labelWidth: 124
+            labelWidth: 139
             disabled: yes
             hidden: yes
             cls: [
@@ -413,7 +413,7 @@ Ext.define 'Purple.view.Order',
             flex: 0
             name: 'vehicle_license_plate'
             label: 'License Plate'
-            labelWidth: 124
+            labelWidth: 139
             disabled: yes
             hidden: yes
             cls: [

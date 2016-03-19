@@ -488,7 +488,7 @@ Ext.define 'Purple.controller.Vehicles',
             break
             
         # do we have any gas available in that octane?
-        if util.ctl('Main').isEmpty availability.gallons
+        if util.ctl('Main').isEmpty availability.gallon_choices
           navigator.notification.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
           @getRequestFormGallonsSelect().setDisabled yes
           @getRequestFormTimeSelect().setDisabled yes
@@ -497,7 +497,7 @@ Ext.define 'Purple.controller.Vehicles',
 
         # populate options for number of gallons
         gallonsOpts = []
-        for f,g of availability.gallons
+        for f,g of availability.gallon_choices
           gallonsOpts.push
             text: "#{g}"
             value: "#{g}"

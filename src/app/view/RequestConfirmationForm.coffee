@@ -158,7 +158,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'discount'
             label: 'Free Gallons'
-            labelWidth: 125
+            labelWidth: 140
             disabled: yes
             value: ''
             cls: [
