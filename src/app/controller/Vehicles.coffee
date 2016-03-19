@@ -248,6 +248,7 @@ Ext.define 'Purple.controller.Vehicles',
       @getEditVehicleFormGasType().setValue vehicle['gas_type']
       @getEditVehicleFormLicensePlate().setValue vehicle['license_plate']
       if vehicle['photo']? and vehicle['photo'] isnt ''
+        @getEditVehicleFormTakePhotoButton().show()
         @setVehiclePhoto vehicle['photo']
 
   backToVehicles: ->

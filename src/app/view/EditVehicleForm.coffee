@@ -228,6 +228,7 @@ Ext.define 'Purple.view.EditVehicleForm',
           }
           {
             xtype: 'button'
+            hidden: true
             ctype: 'editVehicleFormTakePhotoButton'
             ui: 'plain'
             cls: [
