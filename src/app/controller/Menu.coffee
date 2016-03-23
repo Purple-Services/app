@@ -25,6 +25,7 @@ Ext.define 'Purple.controller.Menu',
       inviteButton:
         inviteButtonTap: 'inviteButtonTap'
       topToolbar:
+        findGasButtonTap: 'findGasButtonTap'
         freeGasButtonTap: 'freeGasButtonTap'
         menuButtonTap: 'menuButtonTap'
 
@@ -97,6 +98,12 @@ Ext.define 'Purple.controller.Menu',
       @pushOntoBackButton => @selectOption @indexBeforeFreeGas
       @selectOption 7
 
+  findGasButtonTap: ->
+    if @getCurrentIndex() isnt 9
+      @indexBeforeFindGas = @getCurrentIndex()
+      @pushOntoBackButton => @selectOption @indexBeforeFindGas
+      @selectOption 9
+
   helpButtonTap: ->
     @selectOption 5
     @close()
@@ -127,16 +134,18 @@ Ext.define 'Purple.controller.Menu',
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
       if util.ctl('Account').isCourier()
-        @hideTitles [0, 4, 7, 8, 9]
-        @showTitles [2, 3]
+        @hideTitles [0, 4, 7, 8]
+        @showTitles [2, 3, 9]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         util.ctl('Main').initCourierPing()
         Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
+        Ext.get(document.getElementsByTagName('body')[0]).removeCls 'user-app'
       else
         @hideTitles [8, 9]
         @showTitles [2, 3, 4, 7]
         Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
+        Ext.get(document.getElementsByTagName('body')[0]).addCls 'user-app'
       util.ctl('Account').populateAccountForm()
     else
       @hideTitles [2, 3, 4, 7, 8, 9]

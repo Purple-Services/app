@@ -29,6 +29,7 @@ Ext.application
     'Orders'
     'PaymentMethods'
     'GasTanks'
+    'GasStations'
   ]
   views: [
     'MainContainer'

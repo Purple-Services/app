@@ -25,4 +25,10 @@ Ext.define 'Purple.view.TopToolbar',
         ui: 'plain'
         handler: -> @up().fireEvent 'freeGasButtonTap'
       }
+      {
+        xtype: 'button'
+        cls: 'findGasButton'
+        ui: 'plain'
+        handler: -> @up().fireEvent 'findGasButtonTap'
+      }
     ]
