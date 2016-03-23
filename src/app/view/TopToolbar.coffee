@@ -27,8 +27,8 @@ Ext.define 'Purple.view.TopToolbar',
       }
       {
         xtype: 'button'
-        cls: 'findGasButton'
+        cls: 'courierOnDutyToggle'
         ui: 'plain'
-        handler: -> @up().fireEvent 'findGasButtonTap'
+        handler: -> @up().fireEvent 'courierOnDutyToggle'
       }
     ]

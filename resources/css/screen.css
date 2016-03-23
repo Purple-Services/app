@@ -140,7 +140,7 @@ input {
     background-image: none !important;
     opacity: 0.4 !important;
 }
-.menuButton, .freeGasButton, .findGasButton {
+.menuButton, .freeGasButton, .courierOnDutyToggle {
     position: relative !important;
     top: 1px !important;
     left: 0px !important;
@@ -155,7 +155,6 @@ input {
 }
 .menuButton.x-button-pressing,
 .freeGasButton.x-button-pressing,
-.findGasButton.x-button-pressing,
 #centerMapButton.x-button-pressing {
     opacity: 0.4 !important;
 }
@@ -175,12 +174,6 @@ input {
     margin-top: -2px !important;
 }
 
-.findGasButton {
-    background-image: url('../images/gas-tank.png') !important;
-    background-size: 27px !important;
-    margin-top: -2px !important;
-}
-
 .courier-app .freeGasButton, 
 .hide-free-gas-button .freeGasButton {
     display: none !important;
@@ -191,7 +184,7 @@ input {
     display: none !important;
 }
 
-.user-app .findGasButton {
+.user-app .courierOnDutyToggle {
     display: none !important;
 }
 
