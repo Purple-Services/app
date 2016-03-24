@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Menu',
       loginForm: 'loginform'
       mapForm: 'mapform'
       map: '#gmap'
+      onDutyToggle: '[ctype=onDutyToggle]'
     control:
       logoButton:
         logoButtonTap: 'logoButtonTap'
@@ -25,9 +26,10 @@ Ext.define 'Purple.controller.Menu',
       inviteButton:
         inviteButtonTap: 'inviteButtonTap'
       topToolbar:
-        courierOnDutyToggle: 'courierOnDutyToggle'
         freeGasButtonTap: 'freeGasButtonTap'
         menuButtonTap: 'menuButtonTap'
+      onDutyToggle:
+        change: 'changeOnDutyToggle'
 
   backButtonStack: []
 
@@ -97,9 +99,9 @@ Ext.define 'Purple.controller.Menu',
       @indexBeforeFreeGas = @getCurrentIndex()
       @pushOntoBackButton => @selectOption @indexBeforeFreeGas
       @selectOption 7
-
-  courierOnDutyToggle: ->
-    console.log 'hi'
+    
+  changeOnDutyToggle: ->
+    console.log 'hi' #this is working
 
   helpButtonTap: ->
     @selectOption 5

@@ -27,9 +27,8 @@ Ext.define 'Purple.view.TopToolbar',
       }
       {
         xtype: 'togglefield'
-        cls: 'courierOnDutyToggle'
+        ctype: 'onDutyToggle'
+        cls: 'onDutyToggle'
         ui: 'plain'
-        listeners:
-          change: -> console.log 'hi'
       }
     ]
