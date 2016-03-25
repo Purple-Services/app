@@ -143,8 +143,11 @@ Ext.define 'Purple.controller.Menu',
   onDutyToggled: (field, newValue, oldValue) -> 
     if newValue is 1
       localStorage['courierOnDuty'] = 'yes'
+      util.ctl('Main').initCourierPing()
     else
       localStorage['courierOnDuty'] = 'no'
+      util.ctl('Main').killCourierPing()
+    @updateOnDutyToggle()
 
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()
