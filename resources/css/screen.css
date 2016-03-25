@@ -387,6 +387,8 @@ input {
 .login-logo {
     width: 100%;
     padding-bottom: 30px;
+    position: relative;
+    top: -25px;
 }
 
 
@@ -794,10 +796,10 @@ input {
     content: '';
     position: absolute;
     width: 70px;
-    height: 80px;
+    height: 88px;
     left: 0px;
     margin-left: 5px;
-    margin-top: -76px;
+    margin-top: -88px;
     z-index: 1001;
     background-image: url('../images/center-map-icon.png');
     background-repeat: no-repeat;
@@ -1106,7 +1108,7 @@ input {
     font-weight: normal;
     font-family: Hind;
     text-transform: none;
-    line-height: 24px;
+    line-height: 27px;
     display: block;
     font-size: 17px;
 }
