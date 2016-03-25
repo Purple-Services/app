@@ -29,9 +29,11 @@ Ext.define 'Purple.controller.Menu',
         freeGasButtonTap: 'freeGasButtonTap'
         menuButtonTap: 'menuButtonTap'
       onDutyToggle:
-        change: 'changeOnDutyToggle'
+        initialize: 'initOnDutyToggle'
+        change: 'onDutyToggled'
 
   backButtonStack: []
+  toggleFields: []
 
   launch: ->
     @callParent arguments
@@ -99,9 +101,6 @@ Ext.define 'Purple.controller.Menu',
       @indexBeforeFreeGas = @getCurrentIndex()
       @pushOntoBackButton => @selectOption @indexBeforeFreeGas
       @selectOption 7
-    
-  changeOnDutyToggle: ->
-    console.log 'hi' #this is working
 
   helpButtonTap: ->
     @selectOption 5
@@ -129,6 +128,24 @@ Ext.define 'Purple.controller.Menu',
     for i in indicies
       @getMainContainer().getAt(0).getAt(2).getAt(i).hide()
 
+  initOnDutyToggle: (field) ->
+    @toggleFields.push field
+    @updateOnDutyToggle()
+
+  updateOnDutyToggle: ->
+    if localStorage['courierOnDuty'] is 'yes'
+      for field in @toggleFields
+        field.setValue true
+    else
+      for field in @toggleFields
+        field.setValue false
+
+  onDutyToggled: (field, newValue, oldValue) -> 
+    if newValue is 1
+      localStorage['courierOnDuty'] = 'yes'
+    else
+      localStorage['courierOnDuty'] = 'no'
+
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
@@ -137,9 +154,10 @@ Ext.define 'Purple.controller.Menu',
         @showTitles [2, 3]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
-        util.ctl('Main').initCourierPing()
         Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
         Ext.get(document.getElementsByTagName('body')[0]).removeCls 'user-app'
+        if localStorage['courierOnDuty'] is 'yes'
+          util.ctl('Main').initCourierPing()
       else
         @hideTitles [8]
         @showTitles [2, 3, 4, 7]

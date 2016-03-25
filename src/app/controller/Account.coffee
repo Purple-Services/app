@@ -421,7 +421,7 @@ Ext.define 'Purple.controller.Account',
 
     Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
     Ext.get(document.getElementsByTagName('body')[0]).removeCls 'user-app'
-    
+
     ga_storage._trackEvent 'main', 'Logged Out'
     
   isUserLoggedIn: ->
