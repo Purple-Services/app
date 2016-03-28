@@ -62,51 +62,38 @@ Ext.define 'Purple.view.GasStations',
             ]
           }
           {
-            xtype: 'textfield'
+            xtype: 'container'
+            ctype: 'recommendedGasStation'
+            width: '100%'
             flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '7901 Sunset Blvd., Los Angeles, CA 90046'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'component'
-            flex: 0
-            html: """
-              Tap on a gas station to open in Google Maps.
-            """
+            layout: 'vbox'
           }
           {
             xtype: 'container'
             ctype: 'blacklistGasStationButtonContainer'
-            flex: 0
-            height: 110
-            width: '100%'
-            padding: '0 0 5 0'
             layout:
               type: 'vbox'
-              pack: 'center'
-              align: 'center'
+              pack: 'start'
+              align: 'start'
+            cls: 'blacklist-button'
+            hidden: yes
             items: [
-              {
-                xtype: 'button'
-                ui: 'action'
-                cls: 'button-pop'
-                text: 'Blacklist Gas Station'
-                flex: 0
-                handler: ->
-                  @up().fireEvent 'blacklistGasStation'
-              }
+              xtype: 'button'
+              ui: 'plain'
+              text: 'Report a problem with this gas station?'
+              handler: -> 
+                @up().fireEvent 'blacklistGasStation'
             ]
+          }
+          {
+            xtype: 'component'
+            ctype: 'gasStationTip'
+            flex: 0
+            padding: '100 0 0 0'
+            hidden: yes
+            html: """
+              Tap on a gas station to open in Google Maps.
+            """
           }
         ]
       }

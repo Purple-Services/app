@@ -98,7 +98,9 @@ input {
     font-size: 23px;
     pointer-events: none;
 }
-
+.courier-app .menu-links {
+    display: none;
+}
 
 .x-button-back-special {
     position: absolute;
@@ -742,6 +744,10 @@ input {
     background: none;
 }
 
+.blacklist-button .x-button-label {
+    color: red;
+    font-size: 88%;
+}
 
 /* Holds "Back to Map" button, or others */
 .links-container .x-button {
@@ -869,11 +875,11 @@ input {
 
 
 
-.vehicle-list-item .x-form-label {
+.vehicle-list-item .x-form-label, .gas-station-item .x-form-label {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
 }
-.vehicle-list-item .x-form-label > span {
+.vehicle-list-item .x-form-label > span, .gas-station-item .x-form-label > span {
     position: relative;
     width:  100%;
     display: block;
@@ -883,7 +889,7 @@ input {
     line-height: 21px;
     font-weight: 900;
 }
-.vehicle-list-item .x-form-label span .maintext {
+.vehicle-list-item .x-form-label span .maintext, .gas-station-item .x-form-label span .maintext {
     /* font-size: 18px; */
     /* line-height: 21px; */
     /* font-weight: 900; */
@@ -893,7 +899,7 @@ input {
     /* width: 70%; */
     /* display: inline-block; */
 }
-.vehicle-list-item .x-form-label span .subtext {
+.vehicle-list-item .x-form-label span .subtext, .gas-station-item .x-form-label span .subtext {
     font-size: 17px;
     line-height: 21px;
     font-weight: 400;
