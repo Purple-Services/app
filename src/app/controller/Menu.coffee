@@ -134,20 +134,25 @@ Ext.define 'Purple.controller.Menu',
 
   updateOnDutyToggle: ->
     if localStorage['courierOnDuty'] is 'yes'
+      util.ctl('Main').initCourierPing()
       for field in @toggleFields
         field.setValue true
     else
+      util.ctl('Main').killCourierPing()
       for field in @toggleFields
         field.setValue false
 
   onDutyToggled: (field, newValue, oldValue) -> 
-    if newValue is 1
-      localStorage['courierOnDuty'] = 'yes'
-      util.ctl('Main').initCourierPing()
-    else
-      localStorage['courierOnDuty'] = 'no'
-      util.ctl('Main').killCourierPing()
-    @updateOnDutyToggle()
+    if newValue is 0
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      util.ctl('Main').courierPing(yes, (-> Ext.Viewport.setMasked false), 
+        (=> 
+          @updateOnDutyToggle() 
+          Ext.Viewport.setMasked false
+        )
+      )
 
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()

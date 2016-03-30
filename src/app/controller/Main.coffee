@@ -91,7 +91,9 @@ Ext.define 'Purple.controller.Main',
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    
+    if not localStorage['courierOnDuty']?
+      localStorage['courierOnDuty'] = 'no'
+
     clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
@@ -993,7 +995,7 @@ Ext.define 'Purple.controller.Main',
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
 
-  courierPing: ->
+  courierPing: (forceOffDuty, successCallback, failureCallback) ->
     @errorCount ?= 0
     @courierPingBusy ?= no
     if not @courierPingBusy
@@ -1010,9 +1012,10 @@ Ext.define 'Purple.controller.Main',
             87: localStorage['purpleCourierGallons87']
             91: localStorage['purpleCourierGallons91']
           position_accuracy: @positionAccuracy
+          on_duty: if forceOffDuty then no else (localStorage['courierOnDuty'] is 'yes')
         headers:
           'Content-Type': 'application/json'
-        timeout: 30000
+        timeout: 10000
         method: 'POST'
         scope: this
         success: (response_obj) ->
@@ -1023,10 +1026,16 @@ Ext.define 'Purple.controller.Main',
               clearTimeout @disconnectedMessage
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
             @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
+            if (response.on_duty and localStorage['courierOnDuty'] is 'no') or (not response.on_duty and localStorage['courierOnDuty'] is 'yes')
+              localStorage['courierOnDuty'] = if response.on_duty then 'yes' else 'no'
+              util.ctl('Menu').updateOnDutyToggle()
+            successCallback?()
           else
             @errorCount++
             if @errorCount > 10
               @errorCount = 0
               navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+            failureCallback?()
         failure: (response_obj) ->
           @courierPingBusy = no
+          failureCallback?()
