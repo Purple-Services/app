@@ -34,6 +34,7 @@ Ext.define 'Purple.controller.Menu',
 
   backButtonStack: []
   toggleFields: []
+  bypassOnDutyToggledEvent: false
 
   launch: ->
     @callParent arguments
@@ -132,27 +133,41 @@ Ext.define 'Purple.controller.Menu',
     @toggleFields.push field
     @updateOnDutyToggle()
 
+  manuallySetToggleValue: (value) ->
+    @bypassOnDutyToggledEvent = true
+    for field in @toggleFields
+      field.setValue value
+    @bypassOnDutyToggledEvent = false
+
+  # Be advised this is being called for every toolbar instance's toggle element that gets inited on app launch
   updateOnDutyToggle: ->
+    console.log 'update'
     if localStorage['courierOnDuty'] is 'yes'
       util.ctl('Main').initCourierPing()
-      for field in @toggleFields
-        field.setValue true
+      @manuallySetToggleValue true
     else
       util.ctl('Main').killCourierPing()
-      for field in @toggleFields
-        field.setValue false
+      @manuallySetToggleValue false
 
-  onDutyToggled: (field, newValue, oldValue) -> 
-    if newValue is 0
+  onDutyToggled: (field, newValue, oldValue) ->
+    if not @bypassOnDutyToggledEvent
       Ext.Viewport.setMasked
         xtype: 'loadmask'
         message: ''
-      util.ctl('Main').courierPing(yes, (-> Ext.Viewport.setMasked false), 
-        (=> 
-          @updateOnDutyToggle() 
-          Ext.Viewport.setMasked false
+      if newValue is 0
+        util.ctl('Main').courierPing(no, (=> Ext.Viewport.setMasked false),
+          (=>
+            @updateOnDutyToggle()
+            Ext.Viewport.setMasked false
+          )
         )
-      )
+      else
+        util.ctl('Main').courierPing(yes, (=> Ext.Viewport.setMasked false),
+          (=>
+            @updateOnDutyToggle()
+            Ext.Viewport.setMasked false
+          )
+        )
 
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()

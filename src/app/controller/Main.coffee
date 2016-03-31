@@ -995,24 +995,26 @@ Ext.define 'Purple.controller.Main',
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
 
-  courierPing: (forceOffDuty, successCallback, failureCallback) ->
+  courierPing: (setOnDuty, successCallback, failureCallback) ->
     @errorCount ?= 0
     @courierPingBusy ?= no
     if not @courierPingBusy
       @courierPingBusy = yes
+      params = 
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @lat
+        lng: @lng
+        gallons:
+          87: localStorage['purpleCourierGallons87']
+          91: localStorage['purpleCourierGallons91']
+        position_accuracy: @positionAccuracy
+      if setOnDuty?
+        params.set_on_duty = setOnDuty
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @lat
-          lng: @lng
-          gallons:
-            87: localStorage['purpleCourierGallons87']
-            91: localStorage['purpleCourierGallons91']
-          position_accuracy: @positionAccuracy
-          on_duty: if forceOffDuty then no else (localStorage['courierOnDuty'] is 'yes')
+        params: Ext.JSON.encode params
         headers:
           'Content-Type': 'application/json'
         timeout: 10000
@@ -1025,7 +1027,10 @@ Ext.define 'Purple.controller.Main',
             if @disconnectedMessage?
               clearTimeout @disconnectedMessage
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
-            @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
+            @disconnectedMessage = setTimeout (->
+              if localStorage['courierOnDuty'] is 'yes'
+                Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'
+              ), (2 * 60 * 1000)
             if (response.on_duty and localStorage['courierOnDuty'] is 'no') or (not response.on_duty and localStorage['courierOnDuty'] is 'yes')
               localStorage['courierOnDuty'] = if response.on_duty then 'yes' else 'no'
               util.ctl('Menu').updateOnDutyToggle()
