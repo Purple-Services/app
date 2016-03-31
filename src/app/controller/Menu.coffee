@@ -141,7 +141,6 @@ Ext.define 'Purple.controller.Menu',
 
   # Be advised this is being called for every toolbar instance's toggle element that gets inited on app launch
   updateOnDutyToggle: ->
-    console.log 'update'
     if localStorage['courierOnDuty'] is 'yes'
       util.ctl('Main').initCourierPing()
       @manuallySetToggleValue true
@@ -155,19 +154,17 @@ Ext.define 'Purple.controller.Menu',
         xtype: 'loadmask'
         message: ''
       if newValue is 0
-        util.ctl('Main').courierPing(no, (=> Ext.Viewport.setMasked false),
-          (=>
-            @updateOnDutyToggle()
-            Ext.Viewport.setMasked false
-          )
-        )
+        @callCourierPing no
       else
-        util.ctl('Main').courierPing(yes, (=> Ext.Viewport.setMasked false),
-          (=>
-            @updateOnDutyToggle()
-            Ext.Viewport.setMasked false
-          )
-        )
+        @callCourierPing yes
+
+  callCourierPing: (setOnDuty) ->
+    util.ctl('Main').courierPing(setOnDuty, (=> Ext.Viewport.setMasked false),
+      (=>
+        @updateOnDutyToggle()
+        Ext.Viewport.setMasked false
+      )
+    )
 
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()

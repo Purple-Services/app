@@ -998,9 +998,13 @@ Ext.define 'Purple.controller.Main',
   courierPing: (setOnDuty, successCallback, failureCallback) ->
     @errorCount ?= 0
     @courierPingBusy ?= no
-    if not @courierPingBusy
+    if @courierPingBusy and setOnDuty?
+      setTimeout (=>
+        @courierPing setOnDuty, successCallback, failureCallback
+        ), 11000
+    else
       @courierPingBusy = yes
-      params = 
+      params =
         version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
