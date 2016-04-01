@@ -518,15 +518,14 @@ Ext.define 'Purple.controller.Main',
       util.ctl('Main').getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
-    @getRequestAddressField().setValue loc['locationName']
     @mapMode()
+    @getRequestAddressField().setValue loc['locationName']
     util.ctl('Menu').clearBackButtonStack()
     # set latlng to zero just in case they press request gas before this func is
     # done. we don't want an old latlng to be in there that doesn't match address
     @deliveryLocLat = 0
     @deliveryLocLng = 0
     @placesService.getDetails {placeId: loc['placeId']}, (place, status) =>
-      console.log google.maps.places.PlacesServiceStatus
       if status is google.maps.places.PlacesServiceStatus.OK
         latlng = place.geometry.location
         # find the address component that contains the zip code
