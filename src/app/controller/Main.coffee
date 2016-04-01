@@ -537,7 +537,7 @@ Ext.define 'Purple.controller.Main',
         @deliveryLocLng = latlng.lng()
         @getMap().getMap().setCenter latlng
         @bypassUpdateDeliveryLocAddressByLatLng = true
-        @updateMapWithAddressComponents(place)
+        @updateMapWithAddressComponents([place])
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status

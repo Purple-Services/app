@@ -18,7 +18,7 @@
   <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
-  <name>Purple Courier</name>
+  <!-- <name>Purple Courier</name> -->
  <!--  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
   <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
     <string>(required for Courier mode)</string>
