@@ -535,8 +535,8 @@ Ext.define 'Purple.controller.Main',
               @deliveryAddressZipCode = c['short_name']
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
-        @getMap().getMap().setCenter latlng
         @bypassUpdateDeliveryLocAddressByLatLng = true
+        @getMap().getMap().setCenter latlng
         @updateMapWithAddressComponents([place])
         @getMap().getMap().setZoom 17
       # else
