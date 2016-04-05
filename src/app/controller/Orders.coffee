@@ -258,6 +258,7 @@ Ext.define 'Purple.controller.Orders',
           response = Ext.JSON.decode response_obj.responseText
           console.log response
   
+  # only call this after orders have been loaded
   hasActiveOrder: ->
     for o in @orders
       if o.status is 'unassigned' or
@@ -344,7 +345,7 @@ Ext.define 'Purple.controller.Orders',
   refreshOrdersAndOrdersList: ->
     currentTime = new Date().getTime() / 1000
     if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
-      if @hasActiveOrder() and @getMainContainer().getActiveItem().data.index is 3 
+      if @orders? and @hasActiveOrder() and @getMainContainer().getActiveItem().data.index is 3 
         if @orderListPageActive
           @loadOrdersList yes
         else #order page is active

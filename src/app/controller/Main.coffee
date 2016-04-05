@@ -376,8 +376,16 @@ Ext.define 'Purple.controller.Main',
     else
       latlng = new google.maps.LatLng lat, lng
       @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-          @updateMapWithAddressComponents(results)
+        if @geocodeTimeout?
+          clearTimeout @geocodeTimeout
+          @geocodeTimeout = null
+        if status is google.maps.GeocoderStatus.OK
+          if not @getMap().isHidden()
+            @updateMapWithAddressComponents(results)
+        else
+          @geocodeTimeout = setTimeout (=>
+            @updateDeliveryLocAddressByLatLng lat, lng
+            ), 1000
 
   mapMode: ->
     if @getMap().isHidden()
