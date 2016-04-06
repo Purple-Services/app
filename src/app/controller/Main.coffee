@@ -1024,9 +1024,11 @@ Ext.define 'Purple.controller.Main',
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
             @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
           else
-            @errorCount++
-            if @errorCount > 10
-              @errorCount = 0
-              navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+            navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
+          @errorCount++
+          if @errorCount > 10
+            @errorCount = 0
+            navigator.notification.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
           @courierPingBusy = no
+          
