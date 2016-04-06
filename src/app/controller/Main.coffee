@@ -47,6 +47,7 @@ Ext.define 'Purple.controller.Main',
       map:
         dragstart: 'dragStart'
         boundchange: 'boundChanged'
+        idle: 'idle'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
@@ -311,10 +312,21 @@ Ext.define 'Purple.controller.Main',
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   dragStart: ->
+    @mapDragging = true
+    @lastDragStart = new Date().getTime() / 1000
     @getRequestGasButton().setDisabled yes
 
   boundChanged: ->
     @getRequestGasButton().setDisabled yes
+
+  idle: ->
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastDragStart > 1
+      @mapDragging = false
+      if @recenterAtUserLocCalled
+        @recenterAtUserLoc()
+        Ext.Viewport.setMasked false
+        @recenterAtUserLocCalled = false
 
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
@@ -399,15 +411,21 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->
     if @geolocationAllowed?
       if not @geolocationAllowed
         if showAlertIfUnavailable
           navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
       else
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng @lat, @lng
-        )
+        if @mapDragging and centerMapButtonPressed
+          Ext.Viewport.setMasked
+            xtype: 'loadmask'
+            message: ''
+          @recenterAtUserLocCalled = true
+        else
+          @getMap().getMap().setCenter(
+            new google.maps.LatLng @lat, @lng
+          )
 
   addressInputMode: ->
     if not @getMap().isHidden()
