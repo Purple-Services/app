@@ -70,7 +70,7 @@ Ext.define 'Purple.view.MapForm',
         id: 'centerMapButton'
         flex: 0
         ui: 'plain'
-        handler: -> @up().fireEvent 'recenterAtUserLoc', true, true
+        handler: -> @up().fireEvent 'recenterAtUserLoc', true
       }
       {
         xtype: 'component'
