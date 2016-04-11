@@ -47,6 +47,7 @@ Ext.define 'Purple.controller.Main',
       map:
         dragstart: 'dragStart'
         boundchange: 'boundChanged'
+        idle: 'idle'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
@@ -92,27 +93,27 @@ Ext.define 'Purple.controller.Main',
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
     
-    clearTimeout window.courierReloadTimer
+    # clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # CUSTOMER APP ONLY
-    # if VERSION is "PROD"
-    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    #   ga_storage?._setAccount 'UA-61762011-1'
-    #   ga_storage?._setDomain 'none'
-    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    if VERSION is "PROD"
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    # analytics?.load util.SEGMENT_WRITE_KEY
-    # if util.ctl('Account').isUserLoggedIn()
-    #   analytics?.identify localStorage['purpleUserId']
-    #   # segment says you 'have' to call analytics.page() at some point
-    #   # it doesn't seem to actually matter though
-    # analytics?.track 'App Launch',
-    #   platform: Ext.os.name
-    # analytics?.page 'Map'
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
     # END OF CUSTOMER APP ONLY
     
     navigator.splashscreen?.hide()
@@ -311,10 +312,17 @@ Ext.define 'Purple.controller.Main',
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   dragStart: ->
+    @lastDragStart = new Date().getTime() / 1000
     @getRequestGasButton().setDisabled yes
+    @getCenterMapButton().hide()
 
   boundChanged: ->
     @getRequestGasButton().setDisabled yes
+
+  idle: ->
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastDragStart > 0.3
+      @getCenterMapButton().show()
 
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
@@ -376,8 +384,16 @@ Ext.define 'Purple.controller.Main',
     else
       latlng = new google.maps.LatLng lat, lng
       @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-          @updateMapWithAddressComponents(results)
+        if @geocodeTimeout?
+          clearTimeout @geocodeTimeout
+          @geocodeTimeout = null
+        if status is google.maps.GeocoderStatus.OK
+          if not @getMap().isHidden()
+            @updateMapWithAddressComponents(results)
+        else
+          @geocodeTimeout = setTimeout (=>
+            @updateDeliveryLocAddressByLatLng lat, lng
+            ), 1000
 
   mapMode: ->
     if @getMap().isHidden()
@@ -518,8 +534,8 @@ Ext.define 'Purple.controller.Main',
       util.ctl('Main').getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
-    @getRequestAddressField().setValue loc['locationName']
     @mapMode()
+    @getRequestAddressField().setValue loc['locationName']
     util.ctl('Menu').clearBackButtonStack()
     # set latlng to zero just in case they press request gas before this func is
     # done. we don't want an old latlng to be in there that doesn't match address
@@ -535,9 +551,9 @@ Ext.define 'Purple.controller.Main',
               @deliveryAddressZipCode = c['short_name']
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
-        @getMap().getMap().setCenter latlng
         @bypassUpdateDeliveryLocAddressByLatLng = true
-        @updateMapWithAddressComponents(place)
+        @getMap().getMap().setCenter latlng
+        @updateMapWithAddressComponents([place])
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status

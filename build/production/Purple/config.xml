@@ -14,16 +14,16 @@
   -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <name>Purple</name> -->
+  <name>Purple</name>
   <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
-  <name>Purple Courier</name>
-  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <!-- <name>Purple Courier</name> -->
+ <!--  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
   <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
     <string>(required for Courier mode)</string>
   </gap:config-file>
-  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" /> -->
   <!-- END COURIER APP ONLY -->
   
   <description>
