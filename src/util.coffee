@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "LOCAL"
+VERSION = "DEV"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -12,7 +12,7 @@ else
 
 window.util =
   # VERSION_NUMBER: "1.3.0"
-  VERSION_NUMBER: "1.11.2" # courier version number
+  VERSION_NUMBER: "1.3.1" # courier version number
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
