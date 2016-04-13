@@ -867,15 +867,15 @@ Ext.define 'Purple.controller.Main',
       @getMainContainer().getItems().getAt(0).select 2, no, no
       pmCtl = util.ctl('PaymentMethods')
       if not pmCtl.getPaymentMethods()?
-        pmCtl.accountPaymentMethodFieldTap yes
+        pmCtl.paymentMethodFieldTap yes
         
       pmCtl.showEditPaymentMethodForm 'new', yes
       util.ctl('Menu').pushOntoBackButton ->
-        pmCtl.backToAccount()
+        pmCtl.backToPreviousPage()
         util.ctl('Menu').selectOption 0
       
       pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
-        pmCtl.backToAccount()
+        pmCtl.backToPreviousPage()
         util.ctl('Menu').selectOption 0
     else
       vals = @getRequestConfirmationForm().getValues()
