@@ -26,6 +26,7 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]'
       requestFormTimeSelect: '[ctype=requestFormTimeSelect]'
       sendRequestButton: '[ctype=sendRequestButton]'
+      requestFormSpecialInstructions: '[ctype=requestFormSpecialInstructions]'
     control:
       vehicles:
         editVehicle: 'showEditVehicleForm'
@@ -47,6 +48,8 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormVehicleSelect:
         initialize: 'initRequestFormVehicleSelect'
         change: 'requestFormVehicleSelectChange'
+      requestFormSpecialInstructions:
+        focus: 'focusRequestFormSpecialInstructions'
 
   # will be null until they log in
   vehicles: null
@@ -245,6 +248,7 @@ Ext.define 'Purple.controller.Vehicles',
       @getEditVehicleFormGasType().setValue vehicle['gas_type']
       @getEditVehicleFormLicensePlate().setValue vehicle['license_plate']
       if vehicle['photo']? and vehicle['photo'] isnt ''
+        @getEditVehicleFormTakePhotoButton().show()
         @setVehiclePhoto vehicle['photo']
 
   backToVehicles: ->
@@ -485,7 +489,7 @@ Ext.define 'Purple.controller.Vehicles',
             break
             
         # do we have any gas available in that octane?
-        if availability.gallons < util.MINIMUM_GALLONS
+        if util.ctl('Main').isEmpty availability.gallon_choices
           navigator.notification.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
           @getRequestFormGallonsSelect().setDisabled yes
           @getRequestFormTimeSelect().setDisabled yes
@@ -494,7 +498,7 @@ Ext.define 'Purple.controller.Vehicles',
 
         # populate options for number of gallons
         gallonsOpts = []
-        for g in [util.MINIMUM_GALLONS..availability.gallons] by util.GALLONS_INCREMENT
+        for f,g of availability.gallon_choices
           gallonsOpts.push
             text: "#{g}"
             value: "#{g}"
@@ -514,6 +518,16 @@ Ext.define 'Purple.controller.Vehicles',
         
         @getSendRequestButton().setDisabled no
       ), (if ready then 5 else 500)
+  
+  focusRequestFormSpecialInstructions: ->
+    if localStorage['specialInstructions'] and not @specialInstructionsAutoFillPrompted
+      @specialInstructionsAutoFillPrompted = true
+      navigator.notification.confirm 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
+
+  specialInstructionsAutoFill: (index) ->
+    @getRequestFormSpecialInstructions().blur()
+    if index is 1
+      @getRequestFormSpecialInstructions().setValue localStorage['specialInstructions']
 
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this

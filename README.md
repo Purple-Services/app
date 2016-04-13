@@ -11,6 +11,8 @@ To build the app for upload to PhoneGap Build service, you can use:
 
     sencha app build
 
+Be sure to use Sencha Cmd v5.1.3.61 (not the latest version).
+
 ### Build Process:
 
     1. Make changes

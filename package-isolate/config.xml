@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+        xmlns:gap   = "http://phonegap.com/ns/1.0"
+        id = "com.purple.app"
+        versionCode = "80"
+        version     = "1.11.2">
+
+  <!--
+      For iOS use:
+        id = "6NAJA3N74X.com.purple.app"
+      
+      Android cannot start with number, so just use:
+        id = "com.purple.app"
+  -->
+
+  <!-- BEGIN CUSTOMER APP ONLY -->
+  <!-- <name>Purple</name> -->
+  <!-- END CUSTOMER APP ONLY -->
+
+  <!-- BEGIN COURIER APP ONLY -->
+  <name>Purple Courier</name>
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
+    <string>(required for Courier mode)</string>
+  </gap:config-file>
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
+  <!-- END COURIER APP ONLY -->
+  
+  <description>
+    Purple mobile app.
+  </description>
+
+  <content src="index.html" />
+
+  <icon src="icon.png" />
+  <icon src="icon.png" gap:platform="ios" /> 
+  <icon src="icon-57.png" width="57" height="57" gap:platform="ios" />
+  <icon src="icon-57@2x.png" width="114" height="114" gap:platform="ios" />
+  <icon src="icon-72.png" width="72" height="72" gap:platform="ios" />
+  <icon src="icon-72@2x.png" width="152" height="152" gap:platform="ios" />
+  <icon src="icon-76.png" width="76" height="76" gap:platform="ios" />
+  <icon src="icon-76@2x.png" width="152" height="152" gap:platform="ios" />
+  <icon src="icon-120.png" width="120" height="120" gap:platform="ios" />
+  <icon src="icon-152.png" width="152" height="152" gap:platform="ios" />
+
+  <!-- 36px -->
+  <icon src="ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+  <!-- 48px -->
+  <icon src="mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+  <!-- 72px -->
+  <icon src="hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+  <!-- 96px -->
+  <icon src="xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+  <!-- 144px -->
+  <icon src="xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+  <!-- 192px -->
+  <icon src="xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+
+  <!-- Splash Screen Images -->
+
+  <!-- Default -->
+  <gap:splash src="splash-screens/splash.png" />
+
+  <!-- iPhone and iPod touch -->
+  <gap:splash src="splash-screens/Default.png" gap:platform="ios" width="320" height="480" />
+  <gap:splash src="splash-screens/Default@2x.png" gap:platform="ios" width="640" height="960" />
+
+  <!-- iPhone 5 / iPod Touch (5th Generation) -->
+  <gap:splash src="splash-screens/Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+
+  <!-- iPhone 6 -->
+  <gap:splash src="splash-screens/Default-667h@2x.png" gap:platform="ios" width="750" height="1334" />
+  <gap:splash src="splash-screens/Default-Portrait-736h@3x.png" gap:platform="ios" width="1242" height="2208" />
+  <!-- <gap:splash src="splash-screens/Default-Landscape-736h@3x.png" gap:platform="ios" width="2208" height="1242" /> -->
+
+  <!-- iPad -->
+  <!-- <gap:splash src="splash-screens/Default-Portrait.png" gap:platform="ios" width="768" height="1024" /> -->
+  <!-- <gap:splash src="splash-screens/Default-Landscape.png" gap:platform="ios" width="1024" height="768" /> -->
+
+  <!-- Retina iPad -->
+  <!-- <gap:splash src="splash-screens/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" /> -->
+  <!-- <gap:splash src="splash-screens/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" /> -->
+
+  <!-- Android -->
+  <gap:splash src="splash-screens/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+  <gap:splash src="splash-screens/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+  <gap:splash src="splash-screens/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+  <gap:splash src="splash-screens/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+  <!-- <gap:splash src="splash-screens/fr-xhdpi.png" gap:platform="android" gap:qualifier="fr-xhdpi" /> -->
+  <!-- <gap:splash src="splash-screens/portrait-xxhdpi.png" gap:platform="android" gap:qualifier="port-xxhdpi" /> -->
+  <!-- <gap:splash src="splash-screens/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" /> -->
+
+  <access origin="*" launch-external="yes" />
+  <access origin="tel:*" launch-external="yes" />
+  <access origin="geo:*" launch-external="yes" />
+
+  <preference name="phonegap-version" value="cli-5.2.0" />
+  <preference name="fullscreen" value="false" />
+  <preference name="exit-on-suspend" value="false" />
+  <preference name="orientation" value="portrait" />
+  <preference name="prerendered-icon" value="true" />
+
+  <preference name="show-splash-screen-spinner" value="false" />
+
+  <!-- iOS only
+       Using WKWebView for iOS 8 memory leak issue -->
+  <platform name="ios">
+    <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
+  </platform>
+
+  <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+  <preference name="StatusBarOverlaysWebView" value="false" />
+  <preference name="StatusBarBackgroundColor" value="#000" />
+  <preference name="StatusBarStyle" value="lightcontent" />
+  
+  <gap:plugin name="org.apache.cordova.device" version="0.3.0" />
+  <gap:plugin name="org.apache.cordova.geolocation" version="0.3.12" />
+  <gap:plugin name="org.apache.cordova.camera" version="0.3.6" />
+  <gap:plugin name="org.apache.cordova.dialogs" version="0.3.0" />
+  <gap:plugin name="cordova-plugin-inappbrowser" version="1.0.1" source="npm" />
+  
+  <gap:plugin name="cordova-plugin-splashscreen" version="2.1.0" source="npm" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="SplashScreen" value="splash-screens/hdpi.png" />
+  <preference name="SplashScreenDelay" value="10000" />
+
+  <platform name="android">
+    <gap:plugin name="cordova-plugin-request-location-accuracy" source="npm" />
+    <preference name="android-minSdkVersion" value="16" />
+    <preference name="android-build-tool" value="gradle" />
+    <!-- this plugin makes access origin config *actually* work in Android -->
+    <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
+  </platform>
+  
+  <!-- old one -->
+  <!-- <gap:plugin name="cordova-plugin-facebook" source="npm"> -->
+  <!--   <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
+
+
+  <!-- BEGIN CUSTOMER APP ONLY -->
+  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
+  <!--   <param name="APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="APP_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
+  <!-- <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm"> -->
+  <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
+  <!-- </gap:plugin> -->
+  <!-- END CUSTOMER APP ONLY -->
+  
+  <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
+
+  <!-- this one for iOS -->
+  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  
+  <!-- this one for Android -->
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+
+  <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
+
+  <feature name="http://api.phonegap.com/1.0/network" />
+  <feature name="http://api.phonegap.com/1.0/camera" />
+  <feature name="http://api.phonegap.com/1.0/notification" />
+  <feature name="http://api.phonegap.com/1.0/geolocation" />
+  <feature name="http://api.phonegap.com/1.0/device" />
+  
+</widget>

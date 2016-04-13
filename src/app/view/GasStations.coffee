@@ -46,7 +46,10 @@ Ext.define 'Purple.view.GasStations',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'textfield'

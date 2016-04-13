@@ -25,14 +25,14 @@ Ext.define 'Purple.controller.GasTanks',
 
   setInitialValueFromLocalStorage: ->
     @getGasTanks().setValues
-      gas_tanks_87: localStorage['purpleCourierGallons87'] / util.GALLONS_PER_TANK
-      gas_tanks_91: localStorage['purpleCourierGallons91'] / util.GALLONS_PER_TANK
+      gas_tanks_87: localStorage['purpleCourierGallons87'] / 5
+      gas_tanks_91: localStorage['purpleCourierGallons91'] / 5
 
   gasTanksChanged: ->
     @getGasTanksSaveButton().setDisabled no
 
   saveChanges: ->
     values = @getGasTanks().getValues()
-    localStorage['purpleCourierGallons87'] = values['gas_tanks_87'] * util.GALLONS_PER_TANK
-    localStorage['purpleCourierGallons91'] = values['gas_tanks_91'] * util.GALLONS_PER_TANK
+    localStorage['purpleCourierGallons87'] = values['gas_tanks_87'] * 5
+    localStorage['purpleCourierGallons91'] = values['gas_tanks_91'] * 5
     @getGasTanksSaveButton().setDisabled yes

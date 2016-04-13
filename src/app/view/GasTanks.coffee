@@ -49,7 +49,10 @@ Ext.define 'Purple.view.GasTanks',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'ratingfield'

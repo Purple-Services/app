@@ -47,6 +47,7 @@ Ext.define 'Purple.controller.Main',
       map:
         dragstart: 'dragStart'
         boundchange: 'boundChanged'
+        idle: 'idle'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
@@ -93,7 +94,7 @@ Ext.define 'Purple.controller.Main',
     # Remember to comment/uncomment the setTimeout script in index.html
     
     # clearTimeout window.courierReloadTimer
-     
+    
     # END COURIER APP ONLY
 
     @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
@@ -133,7 +134,7 @@ Ext.define 'Purple.controller.Main',
 
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
-      cordova.plugins.diagnostic.getLocationAuthorizationStatus(
+      cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
         ((status) =>
           if status isnt "authorized_always" and @locationNotification < 3
             navigator.notification.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
@@ -145,6 +146,7 @@ Ext.define 'Purple.controller.Main',
       # this is causing it to happen very often, probably want to change that
       # so it only happens when there is a change in user's settings
       @setUpPushNotifications()
+      util.ctl('Orders').refreshOrdersAndOrdersList()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -234,7 +236,7 @@ Ext.define 'Purple.controller.Main',
   checkAndroidLocationSettings: ->
     if Ext.os.name is 'Android'
       if util.ctl('Account').isCourier() or @locationNotification < 1
-        cordova.plugins.diagnostic.getLocationMode(
+        cordova.plugins.diagnostic?.getLocationMode(
           ((locationMode) =>
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
               @androidHighAccuracyNotificationActive = true
@@ -310,10 +312,17 @@ Ext.define 'Purple.controller.Main',
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   dragStart: ->
+    @lastDragStart = new Date().getTime() / 1000
     @getRequestGasButton().setDisabled yes
+    @getCenterMapButton().hide()
 
   boundChanged: ->
     @getRequestGasButton().setDisabled yes
+
+  idle: ->
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastDragStart > 0.3
+      @getCenterMapButton().show()
 
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
@@ -375,8 +384,16 @@ Ext.define 'Purple.controller.Main',
     else
       latlng = new google.maps.LatLng lat, lng
       @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-          @updateMapWithAddressComponents(results)
+        if @geocodeTimeout?
+          clearTimeout @geocodeTimeout
+          @geocodeTimeout = null
+        if status is google.maps.GeocoderStatus.OK
+          if not @getMap().isHidden()
+            @updateMapWithAddressComponents(results)
+        else
+          @geocodeTimeout = setTimeout (=>
+            @updateDeliveryLocAddressByLatLng lat, lng
+            ), 1000
 
   mapMode: ->
     if @getMap().isHidden()
@@ -517,8 +534,8 @@ Ext.define 'Purple.controller.Main',
       util.ctl('Main').getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
-    @getRequestAddressField().setValue loc['locationName']
     @mapMode()
+    @getRequestAddressField().setValue loc['locationName']
     util.ctl('Menu').clearBackButtonStack()
     # set latlng to zero just in case they press request gas before this func is
     # done. we don't want an old latlng to be in there that doesn't match address
@@ -534,9 +551,9 @@ Ext.define 'Purple.controller.Main',
               @deliveryAddressZipCode = c['short_name']
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
-        @getMap().getMap().setCenter latlng
         @bypassUpdateDeliveryLocAddressByLatLng = true
-        @updateMapWithAddressComponents(place)
+        @getMap().getMap().setCenter latlng
+        @updateMapWithAddressComponents([place])
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
@@ -648,6 +665,12 @@ Ext.define 'Purple.controller.Main',
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
+  isEmpty: (obj) ->
+    for key of obj
+      if obj.hasOwnProperty key
+        return false
+    true
+
   initRequestGasForm: ->
     deliveryLocName = @getRequestAddressField().getValue()
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
@@ -667,6 +690,8 @@ Ext.define 'Purple.controller.Main',
         xtype: 'loadmask'
         message: ''
       Ext.Ajax.request
+        # use the gitignored availabilities.json file for testing
+        # url: "availabilities.json"
         url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
         params: Ext.JSON.encode
           version: util.VERSION_NUMBER
@@ -687,13 +712,10 @@ Ext.define 'Purple.controller.Main',
             localStorage['purpleUserReferralCode'] = response.user.referral_code
             localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
             availabilities = response.availabilities
-            # first, see if there are any gallons available at all
-            totalGallons = availabilities.reduce (a, b) ->
-              a.gallons + b.gallons
             # and, are there any time options available
             totalNumOfTimeOptions = availabilities.reduce (a, b) ->
               Object.keys(a.times).length + Object.keys(b.times).length
-            if totalGallons < util.MINIMUM_GALLONS or totalNumOfTimeOptions is 0
+            if @isEmpty(availabilities[0].gallon_choices) and @isEmpty(availabilities[1].gallon_choices) or totalNumOfTimeOptions is 0
               navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
             else
               util.ctl('Menu').pushOntoBackButton =>
@@ -743,6 +765,7 @@ Ext.define 'Purple.controller.Main',
         break
 
     vals['gas_type'] = "" + availability.octane # should already be string though
+    vals['gas_type_display'] = "Unleaded #{vals['gas_type']} Octane"
     gasPrice = availability.price_per_gallon
     serviceFee = availability.times[vals['time']]['service_fee']
     vals['gas_price'] = "" + util.centsToDollars(
@@ -753,7 +776,7 @@ Ext.define 'Purple.controller.Main',
       serviceFee
     )
 
-    freeGallonsAvailable = parseInt localStorage['purpleUserReferralGallons']
+    freeGallonsAvailable = parseFloat localStorage['purpleUserReferralGallons']
     gallonsToSubtract = 0
     if freeGallonsAvailable is 0
       @getFreeGasField().hide()
@@ -886,6 +909,8 @@ Ext.define 'Purple.controller.Main',
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
+            localStorage['specialInstructions'] = vals['special_instructions']
+            util.ctl('Vehicles').specialInstructionsAutoFillPrompted = false
             util.ctl('Menu').selectOption 3 # Orders tab
             util.ctl('Orders').loadOrdersList yes
             @getRequestGasTabContainer().setActiveItem @getMapForm()
@@ -1015,9 +1040,11 @@ Ext.define 'Purple.controller.Main',
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
             @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
           else
-            @errorCount++
-            if @errorCount > 10
-              @errorCount = 0
-              navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+            navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
+          @errorCount++
+          if @errorCount > 10
+            @errorCount = 0
+            navigator.notification.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
           @courierPingBusy = no
+          

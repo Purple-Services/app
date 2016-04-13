@@ -1,24 +1,49 @@
 /*
-  FONT - Source Sans Pro
+  FONT - Museo Sans Rounded
 */
 @font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('../fonts/source-sans-pro/ODelI1aHBYDBqgeIAH2zlNHq-FFgoDNV3GTKpHwuvtI.woff') format('woff');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
+  font-family: 'Museo Sans Rounded';
   font-style: normal;
   font-weight: 900;
-  src: local('Source Sans Pro Black'), local('SourceSansPro-Black'), url('../fonts/source-sans-pro/toadOcfmlt9b38dHJxOBGC7eGk4PJkA83J1AXCmgUfc.woff') format('woff');
+  src: local('Museo Sans Rounded'), local('MuseoSansRounded-900'), url('../fonts/museo-sans-rounded/museo-sans-rounded-900.woff') format('woff');
 }
 
-
+/*
+  FONT - Hind
+*/
+@font-face {
+  font-family: 'Hind';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Hind Light'), local('Hind-Light'), url('../fonts/hind/hind-light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Hind';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Hind Regular'), local('Hind-Regular'), url('../fonts/hind/hind-regular.woff') format('woff');
+}
+/* @font-face { */
+/*   font-family: 'Hind'; */
+/*   font-style: normal; */
+/*   font-weight: 500; */
+/*   src: local('Hind Medium'), local('Hind-Medium'), url(https://fonts.gstatic.com/s/hind/v5/-qTvGPyujbksoDAyFHG-WgLUuEpTyoUstqEm5AMlJo4.woff) format('woff'); */
+/* } */
+/* @font-face { */
+/*   font-family: 'Hind'; */
+/*   font-style: normal; */
+/*   font-weight: 600; */
+/*   src: local('Hind Semibold'), local('Hind-Semibold'), url(https://fonts.gstatic.com/s/hind/v5/H5ZRvR26a6Cs1DtBSeVD3gLUuEpTyoUstqEm5AMlJo4.woff) format('woff'); */
+/* } */
+/* @font-face { */
+/*   font-family: 'Hind'; */
+/*   font-style: normal; */
+/*   font-weight: 700; */
+/*   src: local('Hind Bold'), local('Hind-Bold'), url(https://fonts.gstatic.com/s/hind/v5/fgyCwvtQA2Wvp7VnffftUwLUuEpTyoUstqEm5AMlJo4.woff) format('woff'); }  */
 
 body {
     color: #0073C4;
-    font-family: 'Source Sans Pro';
+    font-family: 'Hind';
     text-shadow: none !important;
     position: fixed;
 }
@@ -33,7 +58,7 @@ input {
     border-radius: 0px !important;
 }
 .x-button-label {
-    font-family: 'Source Sans Pro';
+    font-family: 'Hind';
     font-weight: normal;
     line-height: 1.4em;
 }
@@ -55,7 +80,7 @@ input {
     box-shadow: 0px 0px 0px 6px rgba(0,0,0,0.1);
 }
 .x-toolbar-top-toolbar.bordered {
-    border-bottom: 6px solid #BA1C8B !important;
+    border-bottom: 6px solid #69618E !important;
 }
 
 .courier-app.disconnected .x-toolbar-top-toolbar .x-title {
@@ -99,7 +124,7 @@ input {
     font-size: 1.7em;
 }
 .x-toolbar-top-toolbar .x-button {
-    color: #BA1C8D;
+    color: #423972;
 }
 .x-toolbar-top-toolbar .x-button.light {
     color: #4CABEF;
@@ -117,14 +142,14 @@ input {
 }
 .menuButton, .freeGasButton {
     position: relative !important;
-    top: 0px !important;
+    top: 1px !important;
     left: 0px !important;
     height: 100% !important;
     width: 52px !important;
     padding: 0px !important;
     margin: 0px !important;
     background-repeat: no-repeat !important;
-    background-size: 22px !important;
+    background-size: 20px !important;
     background-position: center !important;
     background-color: transparent !important;
 }
@@ -166,7 +191,7 @@ input {
 .x-field {
     width: 100%;
     min-height: 0px;
-    background: #EDEDED;
+    background: #EEEDF0;
 }
 
 .invalid-field .x-form-field {
@@ -174,24 +199,26 @@ input {
 }
 
 .x-form-label {
-    padding: 10px 0px 12px 5px;
+    padding: 10px 0px 7px 5px;
     background: transparent;
-    border-left: 10px solid #DCD2DA;
+    border-left: 10px solid #D9D9D9;
     border-radius: 0px !important;
     text-shadow: none !important;
     white-space: normal !important;
 }
 .x-field-textarea {
-    border-left: 10px solid #DCD2DA;
+    border-left: 10px solid #D9D9D9;
 }
 .x-field-textarea textarea {
   min-height: 0em !important;
 }
 .field-label-text,
 .x-form-label span {
-    color: #752B90;
-    font-size: 18px;
+    color: #69618E;
+    font-size: 17px;
     font-weight: 900;
+    text-transform: uppercase;
+    font-family: 'Museo Sans Rounded';
 }
 .field-label-text {
     padding-bottom: 9px;
@@ -204,24 +231,25 @@ input {
 }
 .x-input-el {
     text-align: right;
-    -webkit-text-fill-color: #742C90 !important;
-    color: #742C90 !important;
+    -webkit-text-fill-color: #69618E !important;
+    color: #69618E !important;
     opacity: 1 !important;
     font-weight: 400 !important;
     font-size: 17px;
     border-radius: 0px;
     background: transparent;
+    padding-top: 11px;
 }
 .x-field-textarea .x-input-el {
     text-align: left;
 }
 
 .special-instructions-confirmation {
-    border-left: 10px solid #DCD2DA; 
+    border-left: 10px solid #D9D9D9; 
     padding: 10px 0 12px 5px;  
     color: rgb(85, 85, 85); 
     width: 100%; 
-    background-color: rgb(237, 237, 237); 
+    background-color: #EEEDF0; 
     font-size: 17px; 
     font-weight: normal;
     resize: none;
@@ -234,7 +262,7 @@ input {
     margin-bottom: 10px;
 }
 .x-field.click-to-edit .x-input-el {
-    padding-right: 22px;
+    padding-right: 20px;
 }
 .x-field.click-to-edit .x-component-outer:after {
     content: '';
@@ -262,24 +290,24 @@ input {
 
 
 .special-input .x-field-input {
-    background-color: #762B90;
+    background-color: #423972;
 }
 .special-input input {
     color: #FFFFFF !important;
     -webkit-text-fill-color: #FFFFFF !important;
     text-align: center !important;
-    font-size: 22px !important;
-    font-weight: 900 !important;
-    padding: 7px 35px 10px 35px !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    padding: 9px 35px 7px 35px !important;
     min-height: 0px !important;
 }
 .special-input.x-item-disabled .x-input-el {
     -webkit-text-fill-color: #FFFFFF !important;
     color: #FFFFFF !important;
-    opacity: 1 !important;
+    opacity: 0.8 !important;
     text-overflow: ellipsis !important;
-    background: url('../images/search.png') no-repeat right 6px center;
-    background-size: 22px;
+    background: url('../images/search.png') no-repeat right 8px center;
+    background-size: 21px;
 }
 
 
@@ -299,12 +327,12 @@ input {
     background: transparent;
 }
 .login-form input {
-    color: #FFFFFF !important;
-    -webkit-text-fill-color: #FFFFFF !important;
+    color: #423772 !important;
+    -webkit-text-fill-color: #423772 !important;
     text-align: left;
     font-size: 18px;
     font-weight: 400;
-    padding: 7px 0px 5px 0px;
+    padding: 2px 0px 2px 0px;
     min-height: 0px;
 }
 
@@ -312,13 +340,14 @@ input {
 .button-pop {
     box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
     padding: 8px 20px;
-    background: #ba1c8d !important;
+    background: #423774 !important;
 }
 .button-pop .x-button-label {
     font-weight: 900;
-    line-height: 1.4em;
-    font-size: 154%;
-    font-family: 'Source Sans Pro' !important;
+    line-height: 43px;
+    font-size: 23px;
+    font-family: 'Museo Sans Rounded' !important;
+    text-transform: uppercase;
 }
 .button-pop.x-button-pressing {
     box-shadow: none;
@@ -332,12 +361,12 @@ input {
     padding: 8px 12px 9px 12px;
 }
 .smaller-button-pop .button-pop .x-button-label {
-    line-height: 27px;
-    font-size: 22px;
+    line-height: 32px;
+    font-size: 18px;
 }
 
 .button-pop-dark {
-    background-color: #752B90 !important;
+    background-color: #696190 !important;
 }
 .button-pop-facebook {
     background-color: #425F9C !important;
@@ -347,16 +376,19 @@ input {
 }
 
 .login-form .button-pop {
-    background: #FFF !important;
-    color: #B91B8C;
+    background: #F18653 !important;
+    color: #ffffff;
 }
 .login-form .button-pop.x-button-pressing {
-    background: #FFF !important;
+     /* background: #FFF !important; */
 }
 
 
 .login-logo {
     width: 100%;
+    padding-bottom: 30px;
+    position: relative;
+    top: -25px;
 }
 
 
@@ -366,15 +398,15 @@ input {
 
 
 .special-label {
-    border-top: 2px solid #FFF;
-    font-weight: 900;
-    color: #FFF;
+    border-top: 3px solid #D9D9D9;
+    font-weight: normal;
+    color: #69618E;
     font-size: 16px;
     width: 100%
 }
 
 .login-form .links-container .x-button {
-    color: #FFF;
+    color: #69618E;
 }
 .account-form .links-container .x-button,
 .vehicle-form .links-container .x-button {
@@ -385,7 +417,7 @@ input {
     background: none;
 }
 #backToMapButton .x-button.x-button-pressing {
-    color: #BA1C8D !important;
+    color: #423972 !important;
 }
 
 .link {
@@ -396,29 +428,31 @@ input {
     margin: 0px;
 }
 .link.x-button.x-button-pressing {
-    color: #BA1C8D !important;
+    color: #423972 !important;
     background: none;
 }
 
 
 .heading {
+    font-family: 'Museo Sans Rounded';
     position: relative;
     width: 100%;
     padding: 0px;
     margin: 20px 0px 0px 0px;
     /* text-align: right; */
-    color: #BA1C8B;
+    color: #69618E;
     text-transform: uppercase;
-    font-size: 24px;
+    font-size: 21px;
     line-height: 18px;
     font-weight: 900;
 }
 
 .loose-text {
-    color: #752B90;
-    font-size: 18px;
-    font-weight: normal;
-    padding-bottom: 6px;
+    color: #696190;
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 300;
+    padding-bottom: 13px;
 }
 
 .x-msgbox {
@@ -430,16 +464,26 @@ input {
     color: #444;
     text-shadow: none;
     text-transform: uppercase;
-    font-size: 20px;
+    font-size: 18px;
+    padding-top: 5px;
 }
 .x-msgbox .x-field {
     background: #EDEDED;
     border-radius: 0px;
     width: 95%;
     margin: 0px auto;
+    height: 45px;
 }
 .x-msgbox .x-input-el {
     text-align: left;
+    font-size: 19px;
+    padding-top: 9px;
+}
+.x-msgbox .x-button {
+    font-size: 24px;
+    text-transform: uppercase;
+    padding-top: 3px;
+    margin-top: 10px;
 }
 .x-msgbox .x-button-normal {
     background: #ededed !important;
@@ -463,11 +507,14 @@ input {
 /* } */
 
 .horizontal-rule {
-    background: #EDEDED;
-    height: 2px;
+    background: #D9D9D9;
+    height: 3px;
     width: 100%;
-    margin: 15px 0px;
+    margin: 13px 0px 15px 0px;
     padding: 0px;
+}
+.horizontal-rule.purple-rule {
+    background: #696190;
 }
 .no-top-margin.horizontal-rule {
     margin-top: 0px !important;
@@ -485,7 +532,7 @@ input {
 }
 .x-slider-field .x-thumb:after {
     border: none;
-    background: #BA1C8B;
+    background: #423972;
     z-index: 20;
 }
 .x-slider-field .x-slider:before {
@@ -559,12 +606,22 @@ input {
 .status-complete .big-and-bold .x-input-el {
     background: #93E785 !important;
 }
-.no-background.big-and-bold,
-.no-background.big-and-bold .x-form-label span,
-.no-background.big-and-bold .x-input-el {
+
+.order-status .x-input-el {
+    text-transform: capitalize;
+}
+.order-status .x-form-label {
+    border-left: none;
+}
+.order-status .x-form-label span {
+    padding-left: 7px;
+}
+
+
+.no-background,
+.no-background .x-form-label span,
+.no-background .x-input-el {
     background: transparent !important;
-    color: #762B90 !important;
-    -webkit-text-fill-color: #762B90 !important;
 }
 .big-and-bold .x-form-label span {
     font-size: 19px;
@@ -580,8 +637,10 @@ input {
 
 
 
-.highlighted .x-form-label {
-    border-color: #752B90 !important;
+.highlighted .x-form-label span,
+.highlighted .x-input-el {
+    color: #F18653 !important;
+    -webkit-text-fill-color: #F18653 !important;
 }
 
 
@@ -606,8 +665,8 @@ input {
 }
 .x-list-normal .x-list-item.x-list-item-tpl,
 .x-list-normal .x-list-item .x-dock-horizontal {
-    border-color: #e2c4ed !important;
-    color: #9f1878;
+    border-color: #D9D9D9 !important;
+    color: #423974;
 }
 .x-panel.x-floating .x-toolbar-dark {
     background-color: transparent;
@@ -618,9 +677,11 @@ input {
 }
 #autocompleteList .x-list-item.x-list-item-tpl, #homeAutocomplete .x-list-item.x-list-item-tpl, #workAutocomplete .x-list-item.x-list-item-tpl {
     font-weight: 900;
+    line-height: 25px;
+    font-size: 17px;
 }
 #autocompleteList .x-list-item.x-list-item-tpl .locationVicinity, #homeAutocomplete .x-list-item.x-list-item-tpl .locationVicinity, #workAutocomplete .x-list-item.x-list-item-tpl .locationVicinity {
-    font-weight: 400;
+    font-weight: 300;
 }
 
 /* toolbar panels (like brightness controls) */
@@ -634,20 +695,22 @@ input {
 
 
 .x-slidenavigation-list {
-    background: #230F2B;
+    background: #ffffff;
 }
 .x-slidenavigation-list .x-list-item.x-list-item-tpl {
-    color: #ffffff !important;
-    border-color: #4C1E5F !important;
+    color: #423872 !important;
+    border-color: #D9D9D9 !important;
     font-weight: 900;
-    font-size: 135%;
+    font-family: "Museo Sans Rounded";
+    font-size: 22px;
+    text-transform: uppercase;
 }
 .x-slidenavigation-list .x-list-item.x-list-item-tpl.x-list-item-first {
-    border-top: 1px solid #4C1E5F !important;
+    border-top: 1px solid #423874 !important;
 }
 .x-slidenavigation-list .x-list-item.x-item-selected.x-list-item-tpl,
 .x-slidenavigation-list .x-list-item.x-item-pressed.x-list-item-tpl {
-    background: #4C1E5F;
+    background: #EEEDF0;
     
 }
 .x-slidenavigation-list  .x-list-item.x-list-item-tpl .x-innerhtml {
@@ -656,7 +719,7 @@ input {
 
 
 .x-slidenavigation-list .menu-toolbar {
-    background: transparent;
+    background: #423872;
     border: none;
     padding: 0;
 }
@@ -664,20 +727,20 @@ input {
     text-align: left;
 }
 .x-slidenavigation-list .x-button.x-button-pressing {
-    background: rgb(76, 30, 95);
+    background: #696190;
 }
 .x-slidenavigation-list .slide-menu-logo {
-    height: 107px;
+    height: 103px;
     padding: 20px 0px 13px 19px;
 }
 .x-slidenavigation-list .menu-links .x-button {
-    color: #F4E9F7;
+    color: #F18653;
     font-size: 88%;
     padding: 0px 0px 0px 0px;
     height: inherit;
 }
 .x-slidenavigation-list .menu-links .x-button.x-button-pressing {
-    color: #BA1C8D;
+    color: #423972;
     background: none;
 }
 
@@ -690,7 +753,7 @@ input {
     height: inherit;
 }
 .links-container .x-button.x-button-pressing {
-    color: #BA1C8D;
+    color: #423972;
     background: none;
 }
 
@@ -707,7 +770,7 @@ input {
     height: 50px;
     /* left position is set with css; top has to be done in js */
     left: 50%;
-    margin-left: -15px;
+    margin-left: -25px;
     margin-top: -50px;
     z-index: 1000;
     background-image: url('../images/map-pin.png');
@@ -733,10 +796,10 @@ input {
     content: '';
     position: absolute;
     width: 70px;
-    height: 60px;
+    height: 88px;
     left: 0px;
     margin-left: 5px;
-    margin-top: -47px;
+    margin-top: -88px;
     z-index: 1001;
     background-image: url('../images/center-map-icon.png');
     background-repeat: no-repeat;
@@ -750,15 +813,14 @@ input {
     right: 0px;
     top: 5px;
     margin-right: 5px;
-    padding: 2px 0px 2px 4px;
+    padding: 4px 2px 2px 5px;
     z-index: 1001;
-    background: #BB1E8D;
+    background: #423972;
     color: white;
-    line-height: 16px;
-    font-size: 14px;
-    font-family: Helvetica;
-    border-radius: 3px;
-    font-weight: bold;
+    line-height: 15px;
+    font-size: 15px;
+    font-family: 'Hind';
+    font-weight: 300;
 }
 #gasPriceMapDisplay .gas-price-octane {
     opacity: 0.8;
@@ -770,14 +832,18 @@ input {
 #gasPriceMapDisplay .gas-price-price {
     position: absolute;
     right: 4px;
+    color: #F18653;
 }
 
 
 
 /* Request Form */
 .accent-bg {
+    /*
     background: linear-gradient(-45deg, #FFFFFF 57%, #FCF5FC 57%) !important;
     background: -webkit-linear-gradient(-45deg, #FFFFFF 57%, #FCF5FC 57%) !important;
+    */
+    background: #FFFFFF !important;
 }
 
 
@@ -785,12 +851,19 @@ input {
     /* background: #762B90; */
 }
 .strong-accent-bg {
+    /*
     background: linear-gradient(-45deg,#762B90 59%,#B91B8C 59%) !important;
     background: -webkit-linear-gradient(-45deg,#762B90 59%,#B91B8C 59%) !important;
+    */
+    background: #FFFFFF !important;
+}
+.login-form-bg {
+    background: linear-gradient(90deg, #fff 65%, #423772 35%) !important;
+    background: -webkit-linear-gradient(90deg, #fff 65%, #423772 35%) !important;
 }
 
 
-
+/* is this being used (or only overriden by importants?) */
 .offwhite-bg {
     background: #EDEDED !important;
 }
@@ -808,19 +881,26 @@ input {
     display: block;
     padding: 9px 0px;
     height:  60px;
-}
-.vehicle-list-item .x-form-label span .maintext {
     font-size: 18px;
     line-height: 21px;
     font-weight: 900;
+}
+.vehicle-list-item .x-form-label span .maintext {
+    /* font-size: 18px; */
+    /* line-height: 21px; */
+    /* font-weight: 900; */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    /* width: 70%; */
+    /* display: inline-block; */
 }
 .vehicle-list-item .x-form-label span .subtext {
-    font-size: 16px;
+    font-size: 17px;
     line-height: 21px;
     font-weight: 400;
+    font-family: 'Hind';
+    text-transform: none;
 }
 .vehicle-list-item .x-form-label span .subtext .license-plate {
     text-transform: uppercase;
@@ -840,7 +920,7 @@ input {
 
 .current-task-heading .x-input-el {
     text-align: left;
-    font-family: 'Source Sans Pro';
+    font-family: 'Hind';
     font-size: 24px;
     color: rgb(186, 28, 141);
     font-weight: 900 !important;
@@ -850,23 +930,26 @@ input {
 .list-container .compose-button {
     width: 20%; 
     background: none; 
-    color: rgb(159, 24, 120);
+    color: #696190;
 }
 .list-container {
-    border-bottom: 1px solid rgb(226, 196, 237);
+    border-bottom: 1px solid #D9D9D9;
 }
 .remove-address {
-    padding: 12px 15px;
-    color: rgb(159, 24, 120);
-    font-weight: 900;
+    padding: 15px 15px 15px 15px;
+    color: #423974;
     width: 100%;
+    font-size: 17px;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-family: 'Museo Sans Rounded';
 }
 .saved-address-field {
-    padding: 5px 15px 0 15px;
+    padding: 10px 15px 0 15px;
     line-height: 0.8;
 }
 .saved-address-field .x-form-label span {
-    color: rgb(159, 24, 120);
+    color: #423974;
 }
 .saved-address-field .x-form-label {
     border: none;
@@ -878,8 +961,8 @@ input {
     padding-top: 0px;
     padding-left: 0px;
     text-align: left;
-    color: rgb(159, 24, 120) !important;
-    -webkit-text-fill-color: rgb(159, 24, 120) !important;
+    color: #696190 !important;
+    -webkit-text-fill-color: #696190 !important;
 }
 .order-list-item .x-form-label {
     padding-top: 0px !important;
@@ -889,16 +972,18 @@ input {
     position: relative;
     width:  100%;
     display: block;
-    padding: 8px 0px;
+    padding: 9px 0px;
     height:  60px;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 21px;
     font-weight: 900;
 }
 .order-list-item .x-form-label span .subtext {
-    font-size: 18px;
+    font-size: 17px;
     line-height: 21px;
     font-weight: 400;
+    font-family: 'Hind';
+    text-transform: none;
 }
 
 .order-list-item .x-form-label span .status-square {
@@ -921,8 +1006,8 @@ input {
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-duration: .8s;
-    width:60px;
-    fill: #762B90;
+    width: 60px;
+    fill: #696190;
 }
 .courier-app #waveShape {
     -webkit-animation-name: none;
@@ -958,7 +1043,7 @@ input {
     height: 60px;
 }
 .status-complete.order-list-item .x-form-label span #waveShape {
-    fill: #93E785;
+    fill: #F18653;
 }
 .status-cancelled.order-list-item .x-form-label span {
     color: #999;
@@ -996,7 +1081,7 @@ input {
     background: transparent !important;
     font-size: 20px !important;
     text-transform: uppercase !important;
-    font-family: 'Source Sans Pro' !important;
+    font-family: 'Hind' !important;
     color: #bbb !important;
     border: 2px dashed #bbb !important;
 }
@@ -1021,13 +1106,18 @@ input {
 }
 .faq-question .x-form-label span {
     font-weight: normal;
+    font-family: Hind;
+    text-transform: none;
+    line-height: 27px;
+    display: block;
+    font-size: 17px;
 }
 .accordion-text {
-    color: #333;
+    color: #69618E;
     padding: 0px 18px 15px 18px;
-    text-align: justify;
     font-size: 17px;
     line-height: 22px;
+    font-weight: 300;
 }
 
 
@@ -1035,12 +1125,14 @@ input {
 
 
 .terms-message {
-    color: white;
+    color: #696190;
     font-size: 14px;
+    font-weight: 300;
     text-align: center;
 }
 .terms-message a {
-    color: #00DBFF;
+    color: #423774;
+    font-weight: 400;
 }
 
 

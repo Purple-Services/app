@@ -14,7 +14,7 @@ Ext.define 'Purple.view.LoginForm',
     height: '100%'
     cls: [
       'login-form'
-      'strong-accent-bg'
+      'login-form-bg'
       'slideable'
     ]
     scrollable:
@@ -134,16 +134,15 @@ Ext.define 'Purple.view.LoginForm',
             xtype: 'component'
             id: 'purpleLoginLogo'
             flex: 0
-            padding: '0 0 30px 0'
             html: """
-              <img src="resources/images/logo-light.png" class="login-logo" />
+              <img src="resources/images/logo.png" class="login-logo" />
             """
           }
           {
             xtype: 'component'
             id: 'finalStepText'
             flex: 0
-            padding: '0 0 30px 0'
+            padding: '30px 0 60px 0'
             hidden: yes
             html: """
               <span style="color: white; font-weight: 900; font-size: 22px;">
@@ -221,8 +220,7 @@ Ext.define 'Purple.view.LoginForm',
             xtype: 'container'
             id: 'loginButtonContainer'
             flex: 0
-            height: 110
-            padding: '27 0 10 0'
+            height: 90
             layout:
               type: 'vbox'
               pack: 'center'
@@ -244,8 +242,7 @@ Ext.define 'Purple.view.LoginForm',
             xtype: 'container'
             id: 'registerButtonContainer'
             flex: 0
-            height: 110
-            padding: '27 0 10 0'
+            height: 90
             hidden: yes
             layout:
               type: 'vbox'
@@ -268,8 +265,7 @@ Ext.define 'Purple.view.LoginForm',
             xtype: 'container'
             id: 'forgotPasswordButtonContainer'
             flex: 0
-            height: 110
-            padding: '27 0 10 0'
+            height: 152
             hidden: yes
             layout:
               type: 'vbox'
@@ -324,7 +320,7 @@ Ext.define 'Purple.view.LoginForm',
             id: 'alternativeLoginOptionsText'
             flex: 0
             html: 'or log in with'
-            style: 'color: #ffffff;'
+            style: 'color: #69618E;'
           }
           {
             xtype: 'container'

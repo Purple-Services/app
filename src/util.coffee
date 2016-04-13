@@ -11,12 +11,12 @@ else
     return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
 window.util =
-  VERSION_NUMBER: "1.2.2"
-  # VERSION_NUMBER: "1.11.1" # courier version number
+  # VERSION_NUMBER: "1.3.0"
+  VERSION_NUMBER: "1.3.1" # courier version number
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    # when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    when "LOCAL" then "http://192.168.0.2:3000/"
+    #when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
+    when "LOCAL" then "http://192.168.0.23:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
 
@@ -36,10 +36,6 @@ window.util =
   #   when "PROD" then '4426d49b93'
 
   GCM_SENDER_ID: "254423398507"  
-
-  MINIMUM_GALLONS: 10
-  GALLONS_INCREMENT: 5
-  GALLONS_PER_TANK: 5
 
   STATUSES: [
     "unassigned"
@@ -78,4 +74,5 @@ window.util =
     setTimeout (=> c.hide()), t
 
   centsToDollars: (x) ->
-    (x / 100).toFixed 2
+    # ceil, here, matches how prices are handled on app-service
+    (Math.ceil(x) / 100).toFixed 2
