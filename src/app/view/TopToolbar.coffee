@@ -30,11 +30,5 @@ Ext.define 'Purple.view.TopToolbar',
         ctype: 'onDutyToggle'
         cls: 'onDutyToggle'
         ui: 'plain'
-        # listeners:
-        #   change: (me, newValue, oldValue) -> 
-        #     if newValue is 1
-        #       localStorage['courierOnDuty'] = 'yes'
-        #     else
-        #       localStorage['courierOnDuty'] = 'no'
       }
     ]
