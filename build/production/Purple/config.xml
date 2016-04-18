@@ -108,6 +108,7 @@
     <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
   </platform>
 
+  <gap:plugin name="cordova-plugin-cache" source="npm" />
   <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
   <preference name="StatusBarOverlaysWebView" value="false" />
   <preference name="StatusBarBackgroundColor" value="#000" />
@@ -140,13 +141,13 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+<!--   <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
   </gap:plugin>
   <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin>
+  </gap:plugin> -->
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
