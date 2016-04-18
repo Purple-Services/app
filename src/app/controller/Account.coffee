@@ -420,7 +420,6 @@ Ext.define 'Purple.controller.Account',
     util.ctl('Menu').selectOption 1
 
     Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
-    Ext.get(document.getElementsByTagName('body')[0]).removeCls 'user-app'
 
     ga_storage._trackEvent 'main', 'Logged Out'
     

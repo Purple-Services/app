@@ -175,14 +175,12 @@ Ext.define 'Purple.controller.Menu',
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
-        Ext.get(document.getElementsByTagName('body')[0]).removeCls 'user-app'
         if localStorage['courierOnDuty'] is 'yes'
           util.ctl('Main').initCourierPing()
       else
         @hideTitles [8]
         @showTitles [2, 3, 4, 7]
         Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
-        Ext.get(document.getElementsByTagName('body')[0]).addCls 'user-app'
       util.ctl('Account').populateAccountForm()
     else
       @hideTitles [2, 3, 4, 7, 8]
