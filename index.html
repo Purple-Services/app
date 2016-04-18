@@ -25,6 +25,10 @@
         <!-- END OF COURIER APP ONLY -->
 
         <script>
+         if (localStorage['lastCacheVersionNumber'] !== "1.3.1" && localStorage['lastCacheVersionNumber'] !== "1.3.0"){
+            window.cache.clear(function(){}, function(){console.log("Failed to clear cache")});
+            window.cache.cleartemp();
+         }
          // iOS
          function onNotificationAPN (event) {
              if (event.alert) {
