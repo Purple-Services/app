@@ -81,12 +81,12 @@
      */
     "css": [
         {
-            "path": "resources/css/app.css",
-            "update": "delta"
+            "path": "resources/css/app.css"
+            //,"update": "delta"
         },
         {
-            "path": "resources/css/screen.css",
-            "update": "delta"
+            "path": "resources/css/screen.css"
+            //,"update": "delta"
         }
     ],
 

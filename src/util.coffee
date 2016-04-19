@@ -11,14 +11,15 @@ else
     return false # let the default handler run as well (yes this is inverse to the more logical 'true')
 
 window.util =
-  # VERSION_NUMBER: "1.3.0"
-  VERSION_NUMBER: "1.3.1" # courier version number
+  VERSION_NUMBER: "1.3.2"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    #when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    when "LOCAL" then "http://192.168.0.23:3000/"
+    when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
+    #when "LOCAL" then "http://192.168.0.23:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
+
+  APP_DOWNLOAD_LINK: "http://purpleapp.com/app"
 
   STRIPE_PUBLISHABLE_KEY: switch VERSION
     when "LOCAL" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'

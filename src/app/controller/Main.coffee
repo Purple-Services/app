@@ -90,6 +90,8 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
+    localStorage['lastCacheVersionNumber'] = util.VERSION_NUMBER
+
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
     
