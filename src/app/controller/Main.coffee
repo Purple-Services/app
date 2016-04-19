@@ -80,6 +80,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
+        
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no

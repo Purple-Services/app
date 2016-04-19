@@ -19,11 +19,10 @@
 
   <!-- BEGIN COURIER APP ONLY -->
   <!-- <name>Purple Courier</name> -->
- <!--  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
-  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
-    <string>(required for Courier mode)</string>
-  </gap:config-file>
-  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" /> -->
+  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
+  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
+  <!--   <string>(required for Courier mode)</string> -->
+  <!-- </gap:config-file> -->
   <!-- END COURIER APP ONLY -->
   
   <description>
@@ -125,7 +124,7 @@
   <preference name="SplashScreenDelay" value="10000" />
 
   <platform name="android">
-    <gap:plugin name="cordova-plugin-request-location-accuracy" source="npm" />
+    <gap:plugin name="cordova-plugin-request-location-accuracy" version="1.0.1" source="npm" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="android-build-tool" value="gradle" />
     <!-- this plugin makes access origin config *actually* work in Android -->
@@ -137,7 +136,6 @@
   <!--   <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
   <!--   <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
   <!-- </gap:plugin> -->
-
 
   <!-- BEGIN CUSTOMER APP ONLY -->
   <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
@@ -160,6 +158,8 @@
   <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
+
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
 
   <feature name="http://api.phonegap.com/1.0/network" />
   <feature name="http://api.phonegap.com/1.0/camera" />
