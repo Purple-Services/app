@@ -2,8 +2,8 @@
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "com.purple.app"
-        versionCode = "229"
-        version     = "1.3.1">
+        versionCode = "230"
+        version     = "1.3.2">
 
   <!--
       For iOS use:
@@ -141,13 +141,15 @@
 
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-<!--   <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
+  <plugin spec="https://github.com/jeduan/cordova-plugin-facebook4#aff9a08a86cc6c6a18019f7adc2896ddf97c11cd" source="git">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
-  </gap:plugin>
+    <!-- </gap:plugin> -->
+  </plugin>
   <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin> -->
+  </gap:plugin>
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
