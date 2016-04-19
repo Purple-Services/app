@@ -284,22 +284,22 @@ Ext.define 'Purple.controller.Main',
       )
   
   centerUsingIpAddress: ->
-    Ext.Ajax.request
-      url: "http://ip-api.com/json"
-      headers:
-        'Content-Type': 'application/json'
-      timeout: 5000
-      method: 'GET'
-      scope: this
-      success: (response_obj) ->
-        response = Ext.JSON.decode response_obj.responseText
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng response.lat, response.lon
-          )
-      failure: (response_obj) ->
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng 34.0507177, -118.43757779999999
-          )
+    # Ext.Ajax.request
+    #   url: "http://ip-api.com/json"
+    #   headers:
+    #     'Content-Type': 'application/json'
+    #   timeout: 5000
+    #   method: 'GET'
+    #   scope: this
+    #   success: (response_obj) ->
+    #     response = Ext.JSON.decode response_obj.responseText
+    #     @getMap().getMap().setCenter(
+    #       new google.maps.LatLng response.lat, response.lon
+    #       )
+    #   failure: (response_obj) ->
+    @getMap().getMap().setCenter(
+      new google.maps.LatLng 34.0507177, -118.43757779999999
+      )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
