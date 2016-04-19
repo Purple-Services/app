@@ -25,15 +25,17 @@
         <!-- END OF COURIER APP ONLY -->
 
         <script>
+         // if version outdated, clear all sencha localStorage caches
          if (localStorage['lastCacheVersionNumber'] !== "1.3.2") {
-             window.cache.clear(
-                 function() {},
-                 function() {
-                     console.log("Failed to clear cache");
+             for (key in localStorage) {
+                 // all of them start with a guid
+                 if (key.length > 37 &&
+                     (key.substring(0, 38).match(/-/g) || []).length === 5) {
+                         localStorage.removeItem(key);
                  }
-             );
-             window.cache.cleartemp();
+             }
          }
+         
          // iOS
          function onNotificationAPN (event) {
              if (event.alert) {

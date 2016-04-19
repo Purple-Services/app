@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "DEV"
+VERSION = "PROD"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -8,9 +8,12 @@ if VERSION is "LOCAL" or VERSION is "DEV"
 else
   window.onerror = (message, url, lineNumber) ->
     ga_storage?._trackEvent 'error', 'App Error', "#{message} #{lineNumber}"
-    return false # let the default handler run as well (yes this is inverse to the more logical 'true')
+    # let the default handler run as well
+    # (yes this is inverse to the more logical 'true', but I think it's needed)
+    return false
 
 window.util =
+  # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
   VERSION_NUMBER: "1.3.2"
   
   WEB_SERVICE_BASE_URL: switch VERSION
