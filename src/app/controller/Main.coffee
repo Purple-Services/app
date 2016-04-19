@@ -284,6 +284,7 @@ Ext.define 'Purple.controller.Main',
       )
   
   centerUsingIpAddress: ->
+    # This works but cannot be used for commercial purposes unless we pay for it. Currently exploring other options.
     # Ext.Ajax.request
     #   url: "http://ip-api.com/json"
     #   headers:
