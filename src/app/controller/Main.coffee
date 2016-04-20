@@ -244,7 +244,9 @@ Ext.define 'Purple.controller.Main',
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
               @androidHighAccuracyNotificationActive = true
               cordova.plugins.locationAccuracy.request(
-                (=> @androidHighAccuracyNotificationActive = false), 
+                (=>
+                  @androidHighAccuracyNotificationActive = false
+                  window.location.reload()), 
                 (=> 
                   @androidHighAccuracyNotificationActive = false
                   if not util.ctl('Account').isCourier()
@@ -267,12 +269,12 @@ Ext.define 'Purple.controller.Main',
         ((position) =>
           @positionAccuracy = position.coords.accuracy
           @geolocationAllowed = true
-          @updateLatlngBusy = no
           @lat = position.coords.latitude
           @lng = position.coords.longitude
           if not @mapInitiallyCenteredYet and @mapInited
             @mapInitiallyCenteredYet = true
             @recenterAtUserLoc()
+          @updateLatlngBusy = no
         ),
         (=>
           # console.log "GPS failure callback called"

@@ -52,7 +52,11 @@
              }
 
              if (event.badge) {
-                 window.plugins.pushNotification.setApplicationIconBadgeNumber(function(){alert("badge success")}, function(){alert("badge error")}, event.badge);
+                 window.plugins.pushNotification.setApplicationIconBadgeNumber(
+                     function() {console.log("badge success");},
+                     function() {console.log("badge error");},
+                     event.badge
+                 );
              }
 
              // update/reload orders list view
