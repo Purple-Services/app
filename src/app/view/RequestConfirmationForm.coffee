@@ -47,7 +47,10 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'hiddenfield'
@@ -72,6 +75,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'vehicle'
             label: 'Vehicle'
+            labelWidth: 87
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -83,12 +87,29 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'address_street'
             label: 'Location'
-            labelWidth: 89
+            labelWidth: 105
             disabled: yes
             cls: [
               'visibly-disabled'
               'bottom-margin'
             ]
+          }
+          {
+            xtype: 'textfield'
+            id: 'paymentMethodConfirmationField'
+            flex: 0
+            label: 'Payment'
+            labelWidth: 105
+            cls: [
+              'click-to-edit'
+              'visibly-disabled'
+            ]
+            disabled: yes
+            listeners:
+              initialize: (field) ->
+                util.ctl('PaymentMethods').refreshPaymentMethodField()
+                field.element.on 'tap', ->
+                  util.ctl('PaymentMethods').paymentMethodFieldTap no, yes
           }
           {
             xtype: 'component'
@@ -117,6 +138,17 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           {
             xtype: 'textfield'
             flex: 0
+            name: 'gas_type_display'
+            label: 'Gas Type'
+            labelWidth: 115
+            disabled: yes
+            cls: [
+              'visibly-disabled'
+            ]
+          }
+          {
+            xtype: 'textfield'
+            flex: 0
             name: 'gas_price_display'
             label: 'Gas Price'
             labelWidth: 115
@@ -130,7 +162,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'service_fee'
             label: 'Service Fee'
-            labelWidth: 115
+            labelWidth: 120
             disabled: yes
             cls: [
               'visibly-disabled'
@@ -143,7 +175,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'discount'
             label: 'Free Gallons'
-            labelWidth: 125
+            labelWidth: 140
             disabled: yes
             value: ''
             cls: [
@@ -157,7 +189,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             flex: 0
             name: 'discount'
             label: 'Coupon Code'
-            labelWidth: 125
+            labelWidth: 145
             disabled: yes
             value: 'Enter'
             cls: [
@@ -218,7 +250,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
           }
           {
             xtype: 'container'
-            id: 'cofirmOrderButtonContainer'
+            id: 'confirmOrderButtonContainer'
             flex: 0
             height: 110
             width: '100%'

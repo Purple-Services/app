@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
-        versionCode = "20"
-        version     = "1.2.1" >
+        id = "com.purple.app"
+        versionCode = "231"
+        version     = "1.3.2">
 
   <!--
       For iOS use:
@@ -14,15 +14,15 @@
   -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <name>Purple</name> -->
-  <!-- BEGIN CUSTOMER APP ONLY -->
+  <name>Purple</name>
+  <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
-  <name>Purple Courier</name>
-  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
-  <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
-    <string>(required for Courier mode)</string>
-  </gap:config-file>
+  <!-- <name>Purple Courier</name> -->
+  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
+  <!-- <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true"> -->
+  <!--   <string>(required for Courier mode)</string> -->
+  <!-- </gap:config-file> -->
   <!-- END COURIER APP ONLY -->
   
   <description>
@@ -124,34 +124,42 @@
   <preference name="SplashScreenDelay" value="10000" />
 
   <platform name="android">
+    <gap:plugin name="cordova-plugin-request-location-accuracy" version="1.0.1" source="npm" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="android-build-tool" value="gradle" />
     <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
   </platform>
   
-  <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+  <!-- old one -->
   <!-- <gap:plugin name="cordova-plugin-facebook" source="npm"> -->
+  <!--   <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
+  <!--   <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
+  <!-- </gap:plugin> -->
+
+  <!-- BEGIN CUSTOMER APP ONLY -->
+  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
+  <plugin spec="https://github.com/jeduan/cordova-plugin-facebook4#aff9a08a86cc6c6a18019f7adc2896ddf97c11cd" source="git">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
-    <!-- <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
-    <!-- <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
-  </gap:plugin>
-  
+    <!-- </gap:plugin> -->
+  </plugin>
   <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
   </gap:plugin>
+  <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
-  <!--
-      the above doesn't seem to work on iOS...
-      in fact, i'm not sure if it even works for Android
-  -->
-  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
+  <!-- this one for iOS -->
+  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
   
+  <!-- this one for Android -->
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
+
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
 
   <feature name="http://api.phonegap.com/1.0/network" />
   <feature name="http://api.phonegap.com/1.0/camera" />

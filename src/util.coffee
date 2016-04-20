@@ -8,16 +8,21 @@ if VERSION is "LOCAL" or VERSION is "DEV"
 else
   window.onerror = (message, url, lineNumber) ->
     ga_storage?._trackEvent 'error', 'App Error', "#{message} #{lineNumber}"
-    return false # let the default handler run as well (yes this is inverse to the more logical 'true')
+    # let the default handler run as well
+    # (yes this is inverse to the more logical 'true', but I think it's needed)
+    return false
 
 window.util =
-  VERSION_NUMBER: "1.2.1"
+  # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
+  VERSION_NUMBER: "1.3.2"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    # when "LOCAL" then "http://192.168.0.6:3000/"
+    #when "LOCAL" then "http://192.168.0.23:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
+
+  APP_DOWNLOAD_LINK: "http://purpleapp.com/app"
 
   STRIPE_PUBLISHABLE_KEY: switch VERSION
     when "LOCAL" then 'pk_test_HMdwupxgr2PUwzdFPLsSMJoJ'
@@ -35,10 +40,6 @@ window.util =
   #   when "PROD" then '4426d49b93'
 
   GCM_SENDER_ID: "254423398507"  
-
-  MINIMUM_GALLONS: 10
-  GALLONS_INCREMENT: 5
-  GALLONS_PER_TANK: 5
 
   STATUSES: [
     "unassigned"
@@ -77,4 +78,5 @@ window.util =
     setTimeout (=> c.hide()), t
 
   centsToDollars: (x) ->
-    (x / 100).toFixed 2
+    # ceil, here, matches how prices are handled on app-service
+    (Math.ceil(x) / 100).toFixed 2

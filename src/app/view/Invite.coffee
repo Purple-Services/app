@@ -121,7 +121,7 @@ Ext.define 'Purple.view.Invite',
 
   populate: ->
     inviteMessage = """
-      Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app, to fuel your car wherever you are: #{util.WEB_SERVICE_BASE_URL}app
+      Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app, to fuel your car wherever you are: #{util.APP_DOWNLOAD_LINK}
     """
     inviteMessageTwitter = """
       Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app for iPhone or Android.
@@ -136,20 +136,23 @@ Ext.define 'Purple.view.Invite',
       {
         xtype: 'component'
         flex: 0
-        cls: 'horizontal-rule'
+        cls: [
+          'horizontal-rule'
+          'purple-rule'
+        ]
       }
       {
         xtype: 'component'
         flex: 0
         html: """
-          Get <span style="font-weight: 900">#{@referralReferrerGallons} gallons free</span> for each of your friends that use your coupon code on their first order. They get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} off!
+          Get <span style="font-weight: 900; color: #423774;">#{@referralReferrerGallons} gallons free</span> for each of your friends that use your coupon code on their first order. They get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} off!
 
-          <div style="text-align: center; padding: 35px 0px 0px 0px; color: #ba1c8d">
-            You have <span style="font-weight: 900">#{localStorage['purpleUserReferralGallons']} free gallons</span>
+          <div style="text-align: center; padding: 35px 0px 0px 0px;">
+            You have <span style="font-weight: 900; color: #423774;">#{localStorage['purpleUserReferralGallons']} free gallons</span>
           </div>
 
-          <div style="text-align: center; padding: 30px 0px 0px 0px; color: #ba1c8d">
-            Share Your Coupon Code: <span style="font-weight: 900">#{localStorage['purpleUserReferralCode']}</span>
+          <div style="text-align: center; padding: 30px 0px 0px 0px;">
+            Share Your Coupon Code: <span style="font-weight: 900; color: #FB8454; font-family: 'Museo Sans Rounded'">#{localStorage['purpleUserReferralCode']}</span>
           </div>
         """
         cls: 'loose-text'
@@ -207,7 +210,7 @@ Ext.define 'Purple.view.Invite',
                   plugins?.socialsharing?.shareViaFacebookWithPasteMessageHint(
                     inviteMessage,
                     null, # img
-                    "#{util.WEB_SERVICE_BASE_URL}app",
+                    "#{util.APP_DOWNLOAD_LINK}",
                     "Press \"Paste\" for a sample message."
                     (->),
                     (->)
@@ -254,7 +257,7 @@ Ext.define 'Purple.view.Invite',
                   plugins?.socialsharing?.shareViaTwitter(
                     inviteMessageTwitter,
                     null, # img
-                    "#{util.WEB_SERVICE_BASE_URL}app"
+                    util.APP_DOWNLOAD_LINK
                   )
               }
             ]

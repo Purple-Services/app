@@ -62,6 +62,11 @@ Ext.define 'Purple.view.MapForm',
       }
       {
         xtype: 'component'
+        id: 'googleLinkBlocker'
+        flex: 0
+      }
+      {
+        xtype: 'component'
         id: 'googleMapLinkBlocker'
         flex: 0
       }
@@ -138,6 +143,7 @@ Ext.define 'Purple.view.MapForm',
             id: 'addHomeAddress'
             flex: 0
             label: 'Add Home'
+            labelWidth: 100
             cls: 'saved-address-field'
             disabled: yes
           }
@@ -226,6 +232,7 @@ Ext.define 'Purple.view.MapForm',
             id: 'addWorkAddress'
             flex: 0
             label: 'Add Work'
+            labelWidth: 100
             cls: 'saved-address-field'
             disabled: yes
           }

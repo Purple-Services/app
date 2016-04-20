@@ -174,7 +174,7 @@ Ext.define 'Purple.controller.Account',
               """
           util.ctl('PaymentMethods').paymentMethods = response.cards
           util.ctl('PaymentMethods').loadPaymentMethodsList()
-          util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
+          util.ctl('PaymentMethods').refreshPaymentMethodField()
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = response.orders
@@ -283,7 +283,7 @@ Ext.define 'Purple.controller.Account',
   createAccount: ->
     # for adding phone and name to account that was just created in db
     name = @getNameField().getValue()
-    phoneNumber = @getPhoneNumberField().getValue()
+    phoneNumber = @getPhoneNumberField().getValue().replace(/[^\d]/gi, '')
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -405,6 +405,7 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleUserReferralGallons']
     delete localStorage['purpleReferralReferredValue']
     delete localStorage['purpleReferralReferrerGallons']
+    delete localStorage['specialInstructions']
 
     # clear out some lists from any old logins
     util.ctl('Vehicles').vehicles = []
@@ -482,7 +483,13 @@ Ext.define 'Purple.controller.Account',
       @getAccountNameField()?.setValue localStorage['purpleUserName']
     if localStorage['purpleUserPhoneNumber']? and
     localStorage['purpleUserPhoneNumber'] isnt ''
-      @getAccountPhoneNumberField()?.setValue localStorage['purpleUserPhoneNumber']
+      phone = localStorage['purpleUserPhoneNumber']
+      @getAccountPhoneNumberField()?.setValue switch
+        when phone.length < 10 then phone
+        when phone.length is 10 then "(#{phone.slice 0, 3}) #{phone.slice 3, 6} #{phone.slice 6}"
+        else
+          countryCodeLength = phone.length - 10
+          "+#{phone.slice 0, countryCodeLength} (#{phone.slice countryCodeLength, (countryCodeLength + 3)}) #{phone.slice (countryCodeLength + 3), (countryCodeLength + 6)}-#{phone.slice (countryCodeLength + 6)}"
     if localStorage['purpleUserEmail']? and
     localStorage['purpleUserEmail'] isnt ''
       @getAccountEmailField()?.setValue localStorage['purpleUserEmail']
@@ -515,6 +522,8 @@ Ext.define 'Purple.controller.Account',
       )
 
   saveChanges: ->
+    user = @getEditAccountForm().getValues()
+    user.phone_number = user.phone_number.replace /[^\d]/gi, ''
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
@@ -524,7 +533,7 @@ Ext.define 'Purple.controller.Account',
         version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
-        user: @getEditAccountForm().getValues()
+        user: user
       headers:
         'Content-Type': 'application/json'
       timeout: 30000

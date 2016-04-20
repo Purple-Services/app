@@ -45,7 +45,10 @@ Ext.define 'Purple.view.Feedback',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           {
             xtype: 'component'
@@ -53,7 +56,7 @@ Ext.define 'Purple.view.Feedback',
             showAnimation: 'fadeIn'
             hideAnimation: 'fadeOut'
             flex: 0
-            html: '<span style="color: #BA1C8D;">Thank you for your message.</span>'
+            html: '<span style="color: #423774;">Thank you for your message.</span>'
             cls: 'field-label-text'
             hidden: yes
             style: """

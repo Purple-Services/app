@@ -11,6 +11,8 @@ To build the app for upload to PhoneGap Build service, you can use:
 
     sencha app build
 
+Be sure to use Sencha Cmd v5.1.3.61 (not the latest version).
+
 ### Build Process:
 
     1. Make changes
@@ -46,3 +48,14 @@ To build the app for upload to PhoneGap Build service, you can use:
     2. Comment out customer app only sections and uncomment courier app only sections
     3. Go to Main.coffee
     4. Comment out lines 95-108
+
+### Courier App Over-the-Air Updates
+    1. Make changes
+    2. 'sencha app build' in Terminal
+    3. Go to https://console.aws.amazon.com/s3/home?region=us-west-2#&bucket=purpledelivery&prefix=
+    4. Delete app.js and util.js in the purpledelivery bucket
+    5. Click upload and drag in app/build/production/Purple/app.js and app/build/production/Purple/util.js
+    6. Start Upload
+    7. Check Properties -> Permissions for app.js and util.js and grant Everyone permissions to access
+    8. Make sure the app.json in the Courier App PG build has the right endpoints: {"id":"7544df46-a391-4dd6-a064-0b829a6e1d5a","js":[{"path":"https://s3-us-west-1.amazonaws.com/purpledelivery/util.js","remote":"true","update":"full","version":"8a1715a1a45b1610d660ed12344772c23fcf7220"},{"path":"GALocalStorage.js","version":"0b406d13e1464ec49688da13ede3b00939cc561a"},{"path":"resources/json/vehicleList.js","version":"aae196b6f6c38d1c9859083db7e26e4d87fbfd27"},{"path":"https://s3-us-west-1.amazonaws.com/purpledelivery/app.js","remote":"true","update":"full","version":"768717d8c34536350aaea190c41e2bf1a4d9249d"}],"css":[{"path":"resources/css/app.css","update":"delta","version":"6d8e82258aacf301359cac0f3b7db6b6eff904f1"},{"path":"resources/css/screen.css","update":"delta","version":"a9b5c5a0e20f0540d73854244fe74cdb247ecfa6"}]}
+    9. Close app and restart to see updated changes

@@ -86,7 +86,10 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
           {
             xtype: 'component'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
+            ]
           }
           # {
           #   xtype: 'textfield'
@@ -102,11 +105,11 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
           #   clearIcon: no
           # }
           {
-            xtype: 'textfield'
+            xtype: 'creditcardfield'
             ctype: 'editPaymentMethodFormCardNumber'
             name: 'card_number'
             label: 'Card Number'
-            labelWidth: 125
+            labelWidth: 145
             flex: 0
             cls: [
               'bottom-margin'
@@ -120,8 +123,9 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
             xtype: 'selectfield'
             flex: 0
             name: 'card_exp_month'
+            ctype: 'editPaymentMethodFormMonth'
             label: 'Exp. Month'
-            labelWidth: 110
+            labelWidth: 125
             listPicker:
               title: 'Expiration Month'
             cls: [
@@ -183,15 +187,15 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
             xtype: 'selectfield'
             flex: 0
             name: 'card_exp_year'
+            ctype: 'editPaymentMethodFormYear'
             label: 'Exp. Year'
-            labelWidth: 110
+            labelWidth: 125
             listPicker:
               title: 'Expiration Year'
             cls: [
               'click-to-edit'
               'bottom-margin'
             ]
-            value: '2015'
             options: [
               {
                 text: '2015'
@@ -291,7 +295,7 @@ Ext.define 'Purple.view.EditPaymentMethodForm',
             ctype: 'editPaymentMethodFormBillingZip'
             name: 'card_billing_zip'
             label: 'Billing ZIP Code'
-            labelWidth: 155
+            labelWidth: 175
             flex: 0
             cls: [
               'bottom-margin'

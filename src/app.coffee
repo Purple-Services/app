@@ -13,6 +13,8 @@ Ext.application
     'Override.field.Select'
     'Override.ux.Map'
     'Ux.field.SelectOtherField'
+    'Ux.field.PhoneField'
+    'Ux.field.CreditCardField'
     'Ux.field.MoneyField'
     'Ux.field.RatingField'
     'Purple.plugin.NonListPullRefresh'

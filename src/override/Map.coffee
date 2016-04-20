@@ -28,6 +28,7 @@ Ext.define 'Override.ux.Map',
       event.addListener map, 'center_changed', Ext.bind(me.onCenterChange, me)
       event.addListenerOnce map, 'tilesloaded', Ext.bind(me.onTilesLoaded, me)
       event.addListener map, 'dragstart', Ext.bind(me.onDragStart, me)
+      event.addListener map, 'idle', Ext.bind(me.onIdle, me)
       event.addListener map, 'bounds_changed', Ext.bind(me.onBoundChange, me)
       @addMapListeners()
     @getMap()
@@ -37,3 +38,6 @@ Ext.define 'Override.ux.Map',
 
   onBoundChange: ->
     @fireEvent 'boundchange'
+
+  onIdle: ->
+    @fireEvent 'idle'
