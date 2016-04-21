@@ -80,7 +80,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
-        
+
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -99,8 +99,8 @@ Ext.define 'Purple.controller.Main',
     # clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
-
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    if not util.ctl('Account').isCourier()
+      @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
 
     # CUSTOMER APP ONLY
     if VERSION is "PROD"
