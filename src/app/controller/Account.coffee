@@ -113,6 +113,7 @@ Ext.define 'Purple.controller.Account',
           util.ctl('Orders').loadOrdersList()
           util.ctl('PaymentMethods').paymentMethods = []
           util.ctl('PaymentMethods').loadPaymentMethodsList()
+          util.ctl('PaymentMethods').refreshPaymentMethodField()
           @accountSetup()
         else
           navigator.notification.alert response.message, (->), "Error"
