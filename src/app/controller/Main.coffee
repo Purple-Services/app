@@ -99,8 +99,8 @@ Ext.define 'Purple.controller.Main',
     # clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
-    if not util.ctl('Account').isCourier()
-      @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    if util.ctl('Account').isCourier()
+      @setGpsInterval()
 
     # CUSTOMER APP ONLY
     if VERSION is "PROD"
@@ -419,6 +419,7 @@ Ext.define 'Purple.controller.Main',
         if showAlertIfUnavailable
           navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
       else
+        @updateLatlng()
         @getMap().getMap().setCenter(
           new google.maps.LatLng @lat, @lng
         )
@@ -1006,6 +1007,15 @@ Ext.define 'Purple.controller.Main',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  setGpsInterval: ->
+    if not @gpsIntervalRef?
+      @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+
+  killGpsInterval: ->
+    if @gpsIntervalRef?
+      clearInterval @gpsIntervalRef
+      @gpsIntervalRef = null
+      
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
     @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
