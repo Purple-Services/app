@@ -189,7 +189,6 @@ Ext.define 'Purple.controller.Account',
               # may want to go to Tanks page in future when we use that
               util.ctl('Menu').selectOption 3
               util.ctl('Main').setUpPushNotifications()
-              util.ctl('Main').setGpsInterval()
             else
               # a normal user, go to Request Gas page
               util.ctl('Menu').selectOption 0
@@ -416,7 +415,6 @@ Ext.define 'Purple.controller.Account',
     util.ctl('PaymentMethods').paymentMethods = []
     util.ctl('PaymentMethods').loadPaymentMethodsList()
 
-    util.ctl('Main').killGpsInterval()
     util.ctl('Main').killCourierPing()
     
     util.ctl('Menu').adjustForAppLoginState()

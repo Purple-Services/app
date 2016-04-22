@@ -100,7 +100,7 @@ Ext.define 'Purple.controller.Main',
     
     # END COURIER APP ONLY
     if util.ctl('Account').isCourier()
-      @setGpsInterval()
+      @initCourierPing()
 
     # CUSTOMER APP ONLY
     if VERSION is "PROD"
@@ -1006,21 +1006,16 @@ Ext.define 'Purple.controller.Main',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
-
-  setGpsInterval: ->
-    if not @gpsIntervalRef?
-      @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
-
-  killGpsInterval: ->
-    if @gpsIntervalRef?
-      clearInterval @gpsIntervalRef
-      @gpsIntervalRef = null
       
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
+    @gpsIntervalRef ?= setInterval (Ext.bind @updateLatlng, this), 5000
     @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
+    if @gpsIntervalRef?
+      clearInterval @gpsIntervalRef
+      @gpsIntervalRef = null
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
