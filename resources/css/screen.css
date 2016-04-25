@@ -467,6 +467,23 @@ input {
     font-size: 18px;
     padding-top: 5px;
 }
+.x-msgbox-dark .x-msgbox-text {
+    text-shadow: none;
+    color: #423974;
+    font-weight: 300;
+    font-size: 16px;
+}
+.x-msgbox-dark .x-msgbox-text .fake-title {
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 30px;
+    display: block;
+    margin-bottom: -8px;
+}
+.subscription-ad {
+    padding-bottom: 20px;
+}
 .x-msgbox .x-field {
     background: #EDEDED;
     border-radius: 0px;
