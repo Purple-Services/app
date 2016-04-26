@@ -696,11 +696,8 @@ Ext.define 'Purple.controller.Main',
           @initRequestGasForm deliveryLocName
         )
         (=> # active callback
-          @getAccountTabContainer().setActiveItem(
-            Ext.create 'Purple.view.Subscriptions'
-          )
-          util.ctl('Menu').pushOntoBackButton =>
-            @backToAccount()
+          @getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
         )
       )
     else

@@ -278,6 +278,18 @@ input {
     background-repeat: no-repeat;
     margin-top: -6px;
     -webkit-mask-image: none;
+    transition: all 0.2s linear;
+    -webkit-transform-origin: center;
+}
+.x-field.click-to-edit.point-down .x-component-outer:after {
+    -webkit-transform: rotate(90deg);
+    margin-top: 0px;
+    margin-right: 7px;
+}
+.x-field.click-to-edit.point-up .x-component-outer:after {
+    -webkit-transform: rotate(-90deg);
+    margin-top: -8px;
+    margin-right: 7px;
 }
 
 
