@@ -407,6 +407,7 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleReferralReferredValue']
     delete localStorage['purpleReferralReferrerGallons']
     delete localStorage['specialInstructions']
+    delete localStorage['courierOnDuty']
 
     # clear out some lists from any old logins
     util.ctl('Vehicles').vehicles = []
