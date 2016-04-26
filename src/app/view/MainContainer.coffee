@@ -9,6 +9,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Orders'
     'Purple.view.Vehicles'
     'Purple.view.PaymentMethods'
+    'Purple.view.Subscriptions'
     'Purple.view.Help'
     'Purple.view.Feedback'
     'Purple.view.Invite'

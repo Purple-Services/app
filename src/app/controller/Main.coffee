@@ -57,7 +57,7 @@ Ext.define 'Purple.controller.Main',
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
-        initRequestGasForm: 'initRequestGasForm'
+        initRequestGasForm: 'requestGasButtonPressed'
       requestForm:
         backToMap: 'backToMapFromRequestForm'
         sendRequest: 'sendRequest'
@@ -677,7 +677,7 @@ Ext.define 'Purple.controller.Main',
         return false
     true
 
-  initRequestGasForm: ->
+  requestGasButtonPressed: ->
     deliveryLocName = @getRequestAddressField().getValue()
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     analytics?.track 'Request Gas Button Pressed',
@@ -690,58 +690,75 @@ Ext.define 'Purple.controller.Main',
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @showLogin()
+    else if true
+      util.ctl('Subscriptions').showAd(
+        (=> # pass-thru callback
+          @initRequestGasForm deliveryLocName
+        )
+        (=> # active callback
+          @getAccountTabContainer().setActiveItem(
+            Ext.create 'Purple.view.Subscriptions'
+          )
+          util.ctl('Menu').pushOntoBackButton =>
+            @backToAccount()
+        )
+      )
     else
-      # send to request gas form, but first get availbility from disptach system
-      Ext.Viewport.setMasked
-        xtype: 'loadmask'
-        message: ''
-      Ext.Ajax.request
-        # use the gitignored availabilities.json file for testing
-        # url: "availabilities.json"
-        url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @deliveryLocLat
-          lng: @deliveryLocLng
-          zip_code: @deliveryAddressZipCode
-        headers:
-          'Content-Type': 'application/json'
-        timeout: 30000
-        method: 'POST'
-        scope: this
-        success: (response_obj) ->
-          Ext.Viewport.setMasked false
-          response = Ext.JSON.decode response_obj.responseText
-          if response.success
-            localStorage['purpleUserReferralCode'] = response.user.referral_code
-            localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
-            availabilities = response.availabilities
-            # and, are there any time options available
-            totalNumOfTimeOptions = availabilities.reduce (a, b) ->
-              Object.keys(a.times).length + Object.keys(b.times).length
-            if @isEmpty(availabilities[0].gallon_choices) and @isEmpty(availabilities[1].gallon_choices) or totalNumOfTimeOptions is 0
-              navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
-            else
-              util.ctl('Menu').pushOntoBackButton =>
-                @backToMapFromRequestForm()
-              @getRequestGasTabContainer().setActiveItem(
-                Ext.create 'Purple.view.RequestForm',
-                  availabilities: availabilities
-              )
-              @getRequestForm().setValues(
-                lat: @deliveryLocLat
-                lng: @deliveryLocLng
-                address_street: deliveryLocName
-                address_zip: @deliveryAddressZipCode
-              )
-              analytics?.page 'Order Form'
+      @initRequestGasForm deliveryLocName
+      
+  initRequestGasForm: (deliveryLocName) ->
+    # send to request gas form
+    # but first get availbility from disptach system
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      # use the gitignored availabilities.json file for testing
+      # url: "availabilities.json"
+      url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
+      params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @deliveryLocLat
+        lng: @deliveryLocLng
+        zip_code: @deliveryAddressZipCode
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          localStorage['purpleUserReferralCode'] = response.user.referral_code
+          localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          availabilities = response.availabilities
+          # and, are there any time options available
+          totalNumOfTimeOptions = availabilities.reduce (a, b) ->
+            Object.keys(a.times).length + Object.keys(b.times).length
+          if @isEmpty(availabilities[0].gallon_choices) and @isEmpty(availabilities[1].gallon_choices) or totalNumOfTimeOptions is 0
+            navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
           else
-            navigator.notification.alert response.message, (->), "Error"
-        failure: (response_obj) ->
-          Ext.Viewport.setMasked false
-          console.log response_obj
+            util.ctl('Menu').pushOntoBackButton =>
+              @backToMapFromRequestForm()
+            @getRequestGasTabContainer().setActiveItem(
+              Ext.create 'Purple.view.RequestForm',
+                availabilities: availabilities
+            )
+            @getRequestForm().setValues(
+              lat: @deliveryLocLat
+              lng: @deliveryLocLng
+              address_street: deliveryLocName
+              address_zip: @deliveryAddressZipCode
+            )
+            analytics?.page 'Order Form'
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        console.log response_obj
 
   backToMapFromRequestForm: ->
     @getRequestGasTabContainer().remove(
