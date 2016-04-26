@@ -134,7 +134,6 @@ Ext.define 'Purple.view.LoginForm',
             xtype: 'component'
             id: 'purpleLoginLogo'
             flex: 0
-            padding: '0 0 30px 0'
             html: """
               <img src="resources/images/logo.png" class="login-logo" />
             """
@@ -143,7 +142,7 @@ Ext.define 'Purple.view.LoginForm',
             xtype: 'component'
             id: 'finalStepText'
             flex: 0
-            padding: '0 0 30px 0'
+            padding: '30px 0 60px 0'
             hidden: yes
             html: """
               <span style="color: white; font-weight: 900; font-size: 22px;">

@@ -121,7 +121,7 @@ Ext.define 'Purple.view.Invite',
 
   populate: ->
     inviteMessage = """
-      Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app, to fuel your car wherever you are: #{util.WEB_SERVICE_BASE_URL}app
+      Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app, to fuel your car wherever you are: #{util.APP_DOWNLOAD_LINK}
     """
     inviteMessageTwitter = """
       Get $#{Math.floor(util.centsToDollars(Math.abs(@referralReferredValue)))} of gas for free when you use my coupon code, #{localStorage['purpleUserReferralCode']}. Download the Purple app for iPhone or Android.
@@ -210,7 +210,7 @@ Ext.define 'Purple.view.Invite',
                   plugins?.socialsharing?.shareViaFacebookWithPasteMessageHint(
                     inviteMessage,
                     null, # img
-                    "#{util.WEB_SERVICE_BASE_URL}app",
+                    "#{util.APP_DOWNLOAD_LINK}",
                     "Press \"Paste\" for a sample message."
                     (->),
                     (->)
@@ -257,7 +257,7 @@ Ext.define 'Purple.view.Invite',
                   plugins?.socialsharing?.shareViaTwitter(
                     inviteMessageTwitter,
                     null, # img
-                    "#{util.WEB_SERVICE_BASE_URL}app"
+                    util.APP_DOWNLOAD_LINK
                   )
               }
             ]

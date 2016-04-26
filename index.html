@@ -9,22 +9,33 @@
         
         <script src="cordova.js"></script>
 
-        <!-- Courier App Only -->
+        <!-- COURIER APP ONLY -->
         <script type="text/javascript">
          
-            function askUserToReload () {
-                var windowReload = confirm("Your internet connection is unstable. Reload?");
-                if (windowReload === true) {
-                    window.location.reload();
-                }
-            }
+         function askUserToReload () {
+             var windowReload = confirm("Your internet connection is unstable. Reload?");
+             if (windowReload === true) {
+                 window.location.reload();
+             }
+         }
 
          var courierReloadTimer = setTimeout(function(){askUserToReload()}, 12000);
          
         </script>
-        <!-- End of Courier App Only -->
+        <!-- END OF COURIER APP ONLY -->
 
         <script>
+         // if version outdated, clear all sencha localStorage caches
+         if (localStorage['lastCacheVersionNumber'] !== "1.3.3") {
+             for (key in localStorage) {
+                 // all of them start with a guid
+                 if (key.length > 37 &&
+                     (key.substring(0, 38).match(/-/g) || []).length === 5) {
+                         localStorage.removeItem(key);
+                 }
+             }
+         }
+         
          // iOS
          function onNotificationAPN (event) {
              if (event.alert) {
@@ -41,7 +52,11 @@
              }
 
              if (event.badge) {
-                 window.plugins.pushNotification.setApplicationIconBadgeNumber(function(){alert("badge success")}, function(){alert("badge error")}, event.badge);
+                 window.plugins.pushNotification.setApplicationIconBadgeNumber(
+                     function() {console.log("badge success");},
+                     function() {console.log("badge error");},
+                     event.badge
+                 );
              }
 
              // update/reload orders list view
@@ -118,7 +133,7 @@
          }}();
         </script>
     </head>
-    <body style="background-color: #EDEDED;">
-      
+    <body style="background-color: #423970;">
+        
     </body>
 </html>

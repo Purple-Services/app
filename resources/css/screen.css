@@ -396,6 +396,8 @@ input {
 .login-logo {
     width: 100%;
     padding-bottom: 30px;
+    position: relative;
+    top: -25px;
 }
 
 
@@ -787,6 +789,18 @@ input {
     pointer-events: none;
 }
 
+#googleLinkBlocker {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 40px;
+    left: 0px;
+    margin-left: 0px;
+    margin-top: -35px;
+    z-index: 1001;
+    background: transparent;
+}
+
 #googleMapLinkBlocker {
     content: '';
     position: absolute;
@@ -803,10 +817,10 @@ input {
     content: '';
     position: absolute;
     width: 70px;
-    height: 80px;
+    height: 50px;
     left: 0px;
     margin-left: 5px;
-    margin-top: -76px;
+    margin-top: -68px;
     z-index: 1001;
     background-image: url('../images/center-map-icon.png');
     background-repeat: no-repeat;
@@ -1115,7 +1129,7 @@ input {
     font-weight: normal;
     font-family: Hind;
     text-transform: none;
-    line-height: 24px;
+    line-height: 27px;
     display: block;
     font-size: 17px;
 }

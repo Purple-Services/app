@@ -62,6 +62,11 @@ Ext.define 'Purple.view.MapForm',
       }
       {
         xtype: 'component'
+        id: 'googleLinkBlocker'
+        flex: 0
+      }
+      {
+        xtype: 'component'
         id: 'googleMapLinkBlocker'
         flex: 0
       }

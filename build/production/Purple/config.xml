@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
-        versionCode = "30"
-        version     = "1.3.0">
+        id = "com.purplecourier.app"
+        versionCode = "233"
+        version     = "1.11.3">
 
   <!--
       For iOS use:
@@ -12,6 +12,11 @@
       Android cannot start with number, so just use:
         id = "com.purple.app"
   -->
+
+  <!-- iOS -->
+  <preference name="phonegap-version" value="cli-5.2.0" />
+  <!-- Android -->
+  <!-- <preference name="phonegap-version" value="cli-6.0.0" /> -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
   <!-- <name>Purple</name> -->
@@ -93,8 +98,7 @@
   <access origin="*" launch-external="yes" />
   <access origin="tel:*" launch-external="yes" />
   <access origin="geo:*" launch-external="yes" />
-
-  <preference name="phonegap-version" value="cli-5.2.0" />
+  
   <preference name="fullscreen" value="false" />
   <preference name="exit-on-suspend" value="false" />
   <preference name="orientation" value="portrait" />
@@ -113,19 +117,24 @@
   <preference name="StatusBarBackgroundColor" value="#000" />
   <preference name="StatusBarStyle" value="lightcontent" />
   
-  <gap:plugin name="org.apache.cordova.device" version="0.3.0" />
-  <gap:plugin name="org.apache.cordova.geolocation" version="0.3.12" />
-  <gap:plugin name="org.apache.cordova.camera" version="0.3.6" />
-  <gap:plugin name="org.apache.cordova.dialogs" version="0.3.0" />
+  <gap:plugin name="cordova-plugin-device" version="1.1.2" source="npm" />
+  <!-- <gap:plugin name="org.apache.cordova.geolocation" version="0.3.12" /> -->
+  <gap:plugin name="cordova-plugin-geolocation" version="2.2.0" source="npm" />
+  <!-- Don't need this anymore -->
+  <!-- <gap:plugin name="org.apache.cordova.camera" version="0.3.6" /> -->
+  <gap:plugin name="cordova-plugin-dialogs" version="1.2.1" source="npm" />
+  <!-- <gap:plugin name="org.apache.cordova.dialogs" version="0.3.0" /> -->
   <gap:plugin name="cordova-plugin-inappbrowser" version="1.0.1" source="npm" />
   
-  <gap:plugin name="cordova-plugin-splashscreen" version="2.1.0" source="npm" />
+  <gap:plugin name="cordova-plugin-splashscreen" version="3.2.2" source="npm" />
   <preference name="AutoHideSplashScreen" value="false" />
   <preference name="SplashScreen" value="splash-screens/hdpi.png" />
   <preference name="SplashScreenDelay" value="10000" />
+  <preference name="FadeSplashScreenDuration" value="1800" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
 
   <platform name="android">
-    <gap:plugin name="cordova-plugin-request-location-accuracy" source="npm" />
+    <gap:plugin name="cordova-plugin-request-location-accuracy" version="1.0.1" source="npm" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="android-build-tool" value="gradle" />
     <!-- this plugin makes access origin config *actually* work in Android -->
@@ -138,26 +147,29 @@
   <!--   <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
   <!-- </gap:plugin> -->
 
-
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0">
+  <!-- <gap:plugin name="cordova-plugin-facebook4" source="npm" version="1.4.0"> -->
+ <!--  <plugin spec="https://github.com/jeduan/cordova-plugin-facebook4#aff9a08a86cc6c6a18019f7adc2896ddf97c11cd" source="git">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
-  </gap:plugin>
-  <gap:plugin name="cordova-plugin-googleplus" version="4.0.6" source="npm">
+    </gap:plugin>
+  </plugin>
+  <gap:plugin name="cordova-plugin-googleplus" version="4.0.8" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin> -->
+  </gap:plugin>  -->
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
   <!-- this one for iOS -->
-  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
+  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
   
   <!-- this one for Android -->
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
+
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
 
   <feature name="http://api.phonegap.com/1.0/network" />
   <feature name="http://api.phonegap.com/1.0/camera" />

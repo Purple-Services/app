@@ -113,6 +113,7 @@ Ext.define 'Purple.controller.Account',
           util.ctl('Orders').loadOrdersList()
           util.ctl('PaymentMethods').paymentMethods = []
           util.ctl('PaymentMethods').loadPaymentMethodsList()
+          util.ctl('PaymentMethods').refreshPaymentMethodField()
           @accountSetup()
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -174,7 +175,7 @@ Ext.define 'Purple.controller.Account',
               """
           util.ctl('PaymentMethods').paymentMethods = response.cards
           util.ctl('PaymentMethods').loadPaymentMethodsList()
-          util.ctl('PaymentMethods').refreshAccountPaymentMethodField()
+          util.ctl('PaymentMethods').refreshPaymentMethodField()
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = response.orders
@@ -405,6 +406,7 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleUserReferralGallons']
     delete localStorage['purpleReferralReferredValue']
     delete localStorage['purpleReferralReferrerGallons']
+    delete localStorage['specialInstructions']
 
     # clear out some lists from any old logins
     util.ctl('Vehicles').vehicles = []

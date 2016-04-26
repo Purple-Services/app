@@ -47,6 +47,7 @@ Ext.define 'Purple.controller.Main',
       map:
         dragstart: 'dragStart'
         boundchange: 'boundChanged'
+        idle: 'idle'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
@@ -79,6 +80,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
+        
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -88,6 +90,8 @@ Ext.define 'Purple.controller.Main',
 
   launch: ->
     @callParent arguments
+
+    localStorage['lastCacheVersionNumber'] = util.VERSION_NUMBER
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
@@ -242,7 +246,9 @@ Ext.define 'Purple.controller.Main',
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
               @androidHighAccuracyNotificationActive = true
               cordova.plugins.locationAccuracy.request(
-                (=> @androidHighAccuracyNotificationActive = false), 
+                (=>
+                  @androidHighAccuracyNotificationActive = false
+                  window.location.reload()), 
                 (=> 
                   @androidHighAccuracyNotificationActive = false
                   if not util.ctl('Account').isCourier()
@@ -265,12 +271,12 @@ Ext.define 'Purple.controller.Main',
         ((position) =>
           @positionAccuracy = position.coords.accuracy
           @geolocationAllowed = true
-          @updateLatlngBusy = no
           @lat = position.coords.latitude
           @lng = position.coords.longitude
           if not @mapInitiallyCenteredYet and @mapInited
             @mapInitiallyCenteredYet = true
             @recenterAtUserLoc()
+          @updateLatlngBusy = no
         ),
         (=>
           # console.log "GPS failure callback called"
@@ -285,22 +291,23 @@ Ext.define 'Purple.controller.Main',
       )
   
   centerUsingIpAddress: ->
-    Ext.Ajax.request
-      url: "https://freegeoip.net/json/"
-      headers:
-        'Content-Type': 'application/json'
-      timeout: 30000
-      method: 'GET'
-      scope: this
-      success: (response_obj) ->
-        response = Ext.JSON.decode response_obj.responseText
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng response.latitude, response.longitude
-          )
-      failure: (response_obj) ->
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng 34.0507177, -118.43757779999999
-          )
+    # This works but cannot be used for commercial purposes unless we pay for it. Currently exploring other options.
+    # Ext.Ajax.request
+    #   url: "http://ip-api.com/json"
+    #   headers:
+    #     'Content-Type': 'application/json'
+    #   timeout: 5000
+    #   method: 'GET'
+    #   scope: this
+    #   success: (response_obj) ->
+    #     response = Ext.JSON.decode response_obj.responseText
+    #     @getMap().getMap().setCenter(
+    #       new google.maps.LatLng response.lat, response.lon
+    #       )
+    #   failure: (response_obj) ->
+    @getMap().getMap().setCenter(
+      new google.maps.LatLng 34.0507177, -118.43757779999999
+      )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
@@ -313,10 +320,17 @@ Ext.define 'Purple.controller.Main',
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   dragStart: ->
+    @lastDragStart = new Date().getTime() / 1000
     @getRequestGasButton().setDisabled yes
+    @getCenterMapButton().hide()
 
   boundChanged: ->
     @getRequestGasButton().setDisabled yes
+
+  idle: ->
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastDragStart > 0.3
+      @getCenterMapButton().show()
 
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
@@ -378,8 +392,16 @@ Ext.define 'Purple.controller.Main',
     else
       latlng = new google.maps.LatLng lat, lng
       @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-          @updateMapWithAddressComponents(results)
+        if @geocodeTimeout?
+          clearTimeout @geocodeTimeout
+          @geocodeTimeout = null
+        if status is google.maps.GeocoderStatus.OK
+          if not @getMap().isHidden()
+            @updateMapWithAddressComponents(results)
+        else
+          @geocodeTimeout = setTimeout (=>
+            @updateDeliveryLocAddressByLatLng lat, lng
+            ), 1000
 
   mapMode: ->
     if @getMap().isHidden()
@@ -520,8 +542,8 @@ Ext.define 'Purple.controller.Main',
       util.ctl('Main').getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
-    @getRequestAddressField().setValue loc['locationName']
     @mapMode()
+    @getRequestAddressField().setValue loc['locationName']
     util.ctl('Menu').clearBackButtonStack()
     # set latlng to zero just in case they press request gas before this func is
     # done. we don't want an old latlng to be in there that doesn't match address
@@ -537,9 +559,9 @@ Ext.define 'Purple.controller.Main',
               @deliveryAddressZipCode = c['short_name']
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
-        @getMap().getMap().setCenter latlng
         @bypassUpdateDeliveryLocAddressByLatLng = true
-        @updateMapWithAddressComponents(place)
+        @getMap().getMap().setCenter latlng
+        @updateMapWithAddressComponents([place])
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
@@ -853,15 +875,15 @@ Ext.define 'Purple.controller.Main',
       @getMainContainer().getItems().getAt(0).select 2, no, no
       pmCtl = util.ctl('PaymentMethods')
       if not pmCtl.getPaymentMethods()?
-        pmCtl.accountPaymentMethodFieldTap yes
+        pmCtl.paymentMethodFieldTap yes
         
       pmCtl.showEditPaymentMethodForm 'new', yes
       util.ctl('Menu').pushOntoBackButton ->
-        pmCtl.backToAccount()
+        pmCtl.backToPreviousPage()
         util.ctl('Menu').selectOption 0
       
       pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
-        pmCtl.backToAccount()
+        pmCtl.backToPreviousPage()
         util.ctl('Menu').selectOption 0
     else
       vals = @getRequestConfirmationForm().getValues()
@@ -1045,6 +1067,11 @@ Ext.define 'Purple.controller.Main',
               @errorCount = 0
               navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
             failureCallback?()
+            navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
+          @errorCount++
+          if @errorCount > 10
+            @errorCount = 0
+            navigator.notification.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
           @courierPingBusy = no
           failureCallback?()

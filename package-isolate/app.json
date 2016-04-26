@@ -1,0 +1,37 @@
+{
+    "id":"7544df46-a391-4dd6-a064-0b829a6e1d5a",
+    "js":[
+        {
+            "path":"https://s3-us-west-1.amazonaws.com/purple-services/courier-app/android/util.js",
+            "remote": "true",
+            "update": "full",
+            "version":"4e2c196a1700e2a9ad439b0992e1649cf2530c8e"
+        },
+        {
+            "path":"GALocalStorage.js",
+            "version":"0b406d13e1464ec49688da13ede3b00939cc561a"
+        },
+        {
+            "path":"resources/json/vehicleList.js",
+            "version":"aae196b6f6c38d1c9859083db7e26e4d87fbfd27"
+        },
+        {
+            "path":"https://s3-us-west-1.amazonaws.com/purple-services/courier-app/android/app.js",
+            "remote": "true",
+            "update": "full",
+            "version":"3d197c868374b9948192d14f48bb8b9f839f13b2"
+        }
+    ],
+    "css":[
+        {
+            "path":"resources/css/app.css",
+            "update":"delta",
+            "version":"13bd93c8e94ece0a3ed81bd141d56332b03c11df"
+        },
+        {
+	    "path":"resources/css/screen.css",
+            "update":"delta",
+            "version":"678157e4f93e3dc588fdc78cd04baafa37a948e7"
+        }
+    ]
+}
