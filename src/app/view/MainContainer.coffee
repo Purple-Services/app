@@ -291,21 +291,6 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
-      {
-        title: "Gas Stations"
-        items: [
-          {
-            xtype: "toptoolbar"
-            cls: [
-              'slideable'
-              'bordered'
-            ]
-          }
-          {
-            xtype: 'gasstations'
-          }
-        ]
-      }
     ]
 
     listeners:
