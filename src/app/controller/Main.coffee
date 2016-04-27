@@ -1059,7 +1059,7 @@ Ext.define 'Purple.controller.Main',
               ), (2 * 60 * 1000)
             if (response.on_duty and localStorage['courierOnDuty'] is 'no') or (not response.on_duty and localStorage['courierOnDuty'] is 'yes')
               localStorage['courierOnDuty'] = if response.on_duty then 'yes' else 'no'
-              util.ctl('Menu').updateOnDutyToggle()
+            util.ctl('Menu').updateOnDutyToggle()
             successCallback?()
           else
             @errorCount++
