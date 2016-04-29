@@ -287,7 +287,7 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value
             localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
           else
-            navigator.notification.alert response.message, (->), "Error"
+            util.alertDialog response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -359,22 +359,20 @@ Ext.define 'Purple.controller.Vehicles',
           else
             util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alertDialog response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
   askToDeleteVehicle: (id) ->
-    navigator.notification.confirm(
-      "",
+    util.confirmDialog "",
       ((index) => switch index
         when 1 then @deleteVehicle id
         else return
       ),
       "Are you sure you want to delete this vehicle?",
       ["Delete Vehicle", "Cancel"]
-    )
 
   deleteVehicle: (vehicleId) ->
     Ext.Viewport.setMasked
@@ -404,7 +402,7 @@ Ext.define 'Purple.controller.Vehicles',
           @renderVehiclesList @vehicles
           util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alertDialog response.message, (->), "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -455,7 +453,7 @@ Ext.define 'Purple.controller.Vehicles',
               value: 'new'
             @getRequestFormVehicleSelect().setOptions opts
           else
-            navigator.notification.alert response.message, (->), "Error"
+            util.alertDialog response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -490,7 +488,7 @@ Ext.define 'Purple.controller.Vehicles',
             
         # do we have any gas available in that octane?
         if util.ctl('Main').isEmpty availability.gallon_choices
-          navigator.notification.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
+          util.alertDialog "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
           @getRequestFormGallonsSelect().setDisabled yes
           @getRequestFormTimeSelect().setDisabled yes
           @getSendRequestButton().setDisabled yes
@@ -522,7 +520,7 @@ Ext.define 'Purple.controller.Vehicles',
   focusRequestFormSpecialInstructions: ->
     if localStorage['specialInstructions'] and not @specialInstructionsAutoFillPrompted
       @specialInstructionsAutoFillPrompted = true
-      navigator.notification.confirm 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
+      util.confirmDialog 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
 
   specialInstructionsAutoFill: (index) ->
     @getRequestFormSpecialInstructions().blur()

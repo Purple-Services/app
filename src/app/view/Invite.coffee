@@ -112,7 +112,7 @@ Ext.define 'Purple.view.Invite',
           @populate()
           callback?()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alertDialog response.message, (->), "Error"
         Ext.Viewport.setMasked false
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
@@ -195,7 +195,7 @@ Ext.define 'Purple.view.Invite',
                     null,
                     null,
                     (->), # success, first arg either true or false
-                    (-> navigator.notification.alert 'Please ensure Mail is enabled on your device.', (->), "Not Available")  # fatal error
+                    (-> util.alertDialog 'Please ensure Mail is enabled on your device.', (->), "Not Available")  # fatal error
                   )
               }
               {

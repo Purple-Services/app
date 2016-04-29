@@ -80,3 +80,22 @@ window.util =
   centsToDollars: (x) ->
     # ceil, here, matches how prices are handled on app-service
     (Math.ceil(x) / 100).toFixed 2
+
+  confirmDialog: (message, indexFunction, title, buttons) ->
+    if not Ext.os.is.Android and not Ext.os.is.iOS
+      if confirm title + '\n' + message
+        indexFunction 1
+      else
+        indexFunction 2
+    else
+      navigator.notification.confirm message, indexFunction, title, buttons
+
+  alertDialog: (message, callback, title) ->
+    if not Ext.os.is.Android and not Ext.os.is.iOS
+      alert title + '\n' + message
+      callback()
+    else
+      if(title)
+        navigator.notification.alert message, callback, title
+      else
+        navigator.notification.alert message, callback
