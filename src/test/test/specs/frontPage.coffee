@@ -96,7 +96,6 @@ describe 'webdriver.io page', ->
     waitUntil 'visible', 'span=2016 Acura MDX'
     return
 
-
   it 'should delete the newest car', ->
     console.log 'should delete the new car'
     getMenu 'div=Vehicles'
