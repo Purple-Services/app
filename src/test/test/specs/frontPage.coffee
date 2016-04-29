@@ -33,6 +33,47 @@ describe 'webdriver.io page', ->
     assert.equal phone[1], '(714) 864 9041'
     return
 
+  it 'should register a credit card', ->
+    this.timeout(30000)
+    console.log 'should register a credit card'
+    getMenu 'div=Account'
+    console.log 'go to account'
+    browser.click 'div=Payment'
+    console.log 'click on credit card'
+    browser.waitUntil 'visible', 'span=Add Card'
+    browser.click 'span=Add Card'
+    console.log 'click add card'
+    browser.setValue '[name="card_number"]', '4242424242424242'
+    browser.setValue '[name="card_cvc"]', '123'
+    browser.setValue '[name="card_billing_zip"]', '90024'
+    console.log 'fill in text'
+    browser.click 'div=Exp. Month'
+    browser.click 'span=6 (June)'
+    console.log 'month set to 6 (June)'
+    waitUntil 'value', '[name="card_exp_month"]'
+    browser.click 'div=Exp. Year'
+    browser.click 'span=2020'
+    console.log 'year set to 2020'
+    waitUntil 'value', '[name="card_exp_year"]'
+    browser.click 'span=Save Changes'
+    waitUntil 'visible', '[name="payment_method"]', 30000
+    return
+
+  it 'should delete a credit card', ->
+    console.log 'should delete a credit card'
+    getMenu 'div=Account'
+    console.log 'go to account'
+    browser.click 'div=Payment'
+    console.log 'click on credit card'
+    browser.waitUntil 'visible', 'div=Visa*4242'
+    browser.click 'div=Visa *4242'
+    waitForAlert(true)
+    waitForAlert(true)
+    console.log 'alerts clicked'
+    hitBack()
+    console.log 'back clicked'
+    return
+
   it 'should make an order', ->
     browser.pause 250
     console.log 'should make an order'
@@ -49,9 +90,7 @@ describe 'webdriver.io page', ->
     console.log 'review order button'
     browser.click '#confirmOrderButtonContainer'
     console.log 'confirm order'
-    waitForAlert()
-    console.log browser.alertText()
-    browser.alertAccept()
+    waitForAlert(true)
     console.log 'clicked alert'
     waitUntil 'visible', 'div=Orders'
     return
@@ -62,9 +101,7 @@ describe 'webdriver.io page', ->
     getList '.order-list-item'
     console.log 'order clicked'
     browser.click 'span=Cancel Order'
-    waitForAlert()
-    console.log browser.alertText()
-    browser.alertAccept()
+    waitForAlert(true)
     console.log 'deleted'
     waitUntil 'visible', 'div=Orders'
     return
@@ -103,9 +140,7 @@ describe 'webdriver.io page', ->
     getList '.vehicle-list-item'
     console.log 'car clicked'
     browser.click 'span=Delete Vehicle'
-    waitForAlert()
-    console.log browser.alertText()
-    browser.alertAccept()
+    waitForAlert(true)
     console.log 'deleted'
     waitUntil 'visible', 'span=Add Vehicle'
     return
@@ -113,12 +148,22 @@ describe 'webdriver.io page', ->
   return
 
 getMenu = (divName) ->
+  browser.pause 500
   menus = browser.elements '.menuButton'
   returnMenu = menus.value[menus.value.length - 1].ELEMENT
   browser.elementIdClick returnMenu
   browser.pause 250 #wait for menu to stop moving
   browser.click divName
   console.log 'menu click'
+  browser.pause 250
+  return
+
+hitBack = () ->
+  browser.pause 500
+  menus = browser.elements '.menuButton'
+  returnMenu = menus.value[menus.value.length - 1].ELEMENT
+  browser.elementIdClick returnMenu
+  browser.pause 500
   return
 
 getList = (className) ->
@@ -129,22 +174,33 @@ getList = (className) ->
   browser.pause 250 #wait for menu to stop moving
   return
 
-waitUntil = (func, selector) ->
+waitUntil = (func, selector, timeout) ->
+  if !timeout
+    timeout = 10000
+
   switch func
-    when 'visible' then browser.waitForVisible selector
-    when 'value' then browser.waitForValue selector
-    when 'enabled' then browser.waitForEnabled selector
-  browser.pause 250
+    when 'visible' then browser.waitForVisible selector, timeout
+    when 'value' then browser.waitForValue selector, timeout
+    when 'enabled' then browser.waitForEnabled selector, timeout
+  browser.pause 500
   return
 
-waitForAlert = () ->
-   i = 0
-   while i < 25
+waitForAlert = (click) ->
+  i = 0
+  while i < 25
     try
         browser.alertText()
         break;
     catch err
       i++;
-      browser.pause 250
+      browser.pause 500
       continue;
- 
+  console.log browser.alertText()
+  browser.pause 250
+  if click == true
+    browser.alertAccept()
+    console.log 'alert accepted'
+  else
+    browser.alertDismiss()
+    console.log 'alert dismissed'
+  browser.pause 500
