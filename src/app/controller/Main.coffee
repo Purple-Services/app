@@ -413,16 +413,33 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->
     if @geolocationAllowed?
       if not @geolocationAllowed
         if showAlertIfUnavailable
           navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
       else
-        @updateLatlng()
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng @lat, @lng
-        )
+        if centerMapButtonPressed
+          Ext.Viewport.setMasked
+            xtype: 'loadmask'
+            message: ''
+          navigator.geolocation?.getCurrentPosition(
+            ((position) =>
+              @lat = position.coords.latitude
+              @lng = position.coords.longitude
+              @getMap().getMap().setCenter(
+                new google.maps.LatLng @lat, @lng
+              )
+              Ext.Viewport.setMasked false
+            ),
+            (=>
+              ),
+            {maximumAge: 0, enableHighAccuracy: true}
+          )
+        else
+          @getMap().getMap().setCenter(
+            new google.maps.LatLng @lat, @lng
+          )
 
   addressInputMode: ->
     if not @getMap().isHidden()
