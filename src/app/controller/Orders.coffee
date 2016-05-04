@@ -154,7 +154,8 @@ Ext.define 'Purple.controller.Orders',
       @getOrderTotalPrice().hide()
       @getOrderRating().hide()
       
-      @getOrderTimeDeadline().show()
+      # hiding this from courier app for now
+      # @getOrderTimeDeadline().show()
       @getOrderHorizontalRuleAboveVehicle().show()
       @getOrderVehicleMake().show()
       @getOrderVehicleModel().show()
@@ -296,16 +297,11 @@ Ext.define 'Purple.controller.Orders',
       if o.status is 'complete'
         cls.push 'highlighted'
       if util.ctl('Account').isCourier()
-        isLate = o.status isnt "complete" and
-          o.status isnt "cancelled" and
-          (new Date(o.target_time_end * 1000)) < (new Date())
         dateDisplay = """
-          <span style="#{if isLate then "color: #f00;" else ""}">
             #{Ext.util.Format.date(
-              new Date(o.target_time_end * 1000),
+              new Date(o.target_time_start * 1000),
               "n/j g:i a"
             )}
-          </span>
         """
       else
         dateDisplay = Ext.util.Format.date(
