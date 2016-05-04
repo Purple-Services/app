@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "com.purplecourier.app"
-        versionCode = "233"
-        version     = "1.11.3">
+        id = "6NAJA3N74X.purplecourier.app"
+        versionCode = "1114"
+        version     = "1.11.4">
 
   <!--
       For iOS use:
