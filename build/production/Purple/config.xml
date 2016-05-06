@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "com.purplecourier.app"
-        versionCode = "233"
+        id = "6NAJA3N74X.com.purple.app"
+        versionCode = "1113"
         version     = "1.11.3">
 
   <!--
@@ -10,13 +10,14 @@
         id = "6NAJA3N74X.com.purple.app"
       
       Android cannot start with number, so just use:
-        id = "com.purple.app"
+        Customer id = "com.purple.app"
+        Courier id  = "com.purplecourier.app"
   -->
 
   <!-- iOS -->
-  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
+  <preference name="phonegap-version" value="cli-5.2.0" />
   <!-- Android -->
-  <preference name="phonegap-version" value="cli-6.0.0" />
+  <!-- <preference name="phonegap-version" value="cli-6.0.0" /> -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
   <!-- <name>Purple</name> -->
@@ -162,10 +163,10 @@
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
   <!-- this one for iOS -->
-  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   
   <!-- this one for Android -->
-  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
