@@ -50,7 +50,7 @@ Ext.define 'Purple.controller.Subscriptions',
         }
         {
           ui: 'normal'
-          text: "No Thanks"
+          text: "Not Now"
           itemId: "hide"
         }
       ]

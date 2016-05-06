@@ -671,12 +671,6 @@ Ext.define 'Purple.controller.Main',
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
-  isEmpty: (obj) ->
-    for key of obj
-      if obj.hasOwnProperty key
-        return false
-    true
-
   requestGasButtonPressed: ->
     deliveryLocName = @getRequestAddressField().getValue()
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
@@ -710,8 +704,8 @@ Ext.define 'Purple.controller.Main',
       xtype: 'loadmask'
       message: ''
     Ext.Ajax.request
-      # use the gitignored availabilities.json file for testing
-      # url: "availabilities.json"
+      # you can use the gitignored availabilities.json file for testing:
+      #   url: "availabilities.json"
       url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
       params: Ext.JSON.encode
         version: util.VERSION_NUMBER
@@ -732,10 +726,11 @@ Ext.define 'Purple.controller.Main',
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
           availabilities = response.availabilities
-          # and, are there any time options available
           totalNumOfTimeOptions = availabilities.reduce (a, b) ->
             Object.keys(a.times).length + Object.keys(b.times).length
-          if @isEmpty(availabilities[0].gallon_choices) and @isEmpty(availabilities[1].gallon_choices) or totalNumOfTimeOptions is 0
+          if util.isEmpty(availabilities[0].gallon_choices) and
+          util.isEmpty(availabilities[1].gallon_choices) or
+          totalNumOfTimeOptions is 0
             navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
           else
             util.ctl('Menu').pushOntoBackButton =>
@@ -744,12 +739,11 @@ Ext.define 'Purple.controller.Main',
               Ext.create 'Purple.view.RequestForm',
                 availabilities: availabilities
             )
-            @getRequestForm().setValues(
+            @getRequestForm().setValues
               lat: @deliveryLocLat
               lng: @deliveryLocLng
               address_street: deliveryLocName
               address_zip: @deliveryAddressZipCode
-            )
             analytics?.page 'Order Form'
         else
           navigator.notification.alert response.message, (->), "Error"

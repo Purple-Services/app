@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "DEV"
+VERSION = "LOCAL"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -80,3 +80,9 @@ window.util =
   centsToDollars: (x) ->
     # ceil, here, matches how prices are handled on app-service
     (Math.ceil(x) / 100).toFixed 2
+
+  isEmpty: (obj) ->
+    for key of obj
+      if obj.hasOwnProperty key
+        return false
+    true
