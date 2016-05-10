@@ -14,9 +14,9 @@
   -->
 
   <!-- iOS -->
-  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
+  <preference name="phonegap-version" value="cli-5.2.0" />
   <!-- Android -->
-  <preference name="phonegap-version" value="cli-6.0.0" />
+  <!-- <preference name="phonegap-version" value="cli-6.0.0" /> -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
   <!-- <name>Purple</name> -->
