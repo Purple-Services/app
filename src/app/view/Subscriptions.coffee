@@ -105,7 +105,7 @@ Ext.define 'Purple.view.Subscriptions',
                 flex: 0
                 margin: '0 0 15 0'
                 handler: ->
-                  console.log 'sub'
+                  @up().up().up().fireEvent 'subscribe', 1
               }
             ]
           }
@@ -160,7 +160,7 @@ Ext.define 'Purple.view.Subscriptions',
                 flex: 0
                 margin: '0 0 15 0'
                 handler: ->
-                  console.log 'sub premium'
+                  @up().up().up().fireEvent 'subscribe', 2
               }
             ]
           }

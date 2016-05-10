@@ -503,6 +503,9 @@ Ext.define 'Purple.controller.Vehicles',
             text: "#{g}"
             value: "#{g}"
         @getRequestFormGallonsSelect().setOptions gallonsOpts
+        @getRequestFormGallonsSelect().setValue(
+          availability.gallon_choices[availability.default_gallon_choice]
+        )
         @getRequestFormGallonsSelect().setDisabled no
 
         # populate the time options

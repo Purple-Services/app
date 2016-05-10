@@ -16,6 +16,8 @@ Ext.define 'Purple.controller.Subscriptions',
     control:
       accountSubscriptionsField:
         initialize: 'initAccountSubscriptionsField'
+      subscriptions:
+        subscribe: 'subscribe'
 
   launch: ->
     @callParent arguments
@@ -33,6 +35,9 @@ Ext.define 'Purple.controller.Subscriptions',
       @getAccountSubscriptionsField()?.setValue(
         localStorage['purpleSubscriptionLevel']
       )
+
+  subscribe: (subscriptionId) ->
+    console.log 'hey ', subscriptionId
     
   showAd: (passThruCallbackFn, actionCallbackFn) ->
     Ext.Msg.show
