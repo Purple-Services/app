@@ -684,7 +684,7 @@ Ext.define 'Purple.controller.Main',
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @showLogin()
-    else if true
+    else if not localStorage['purpleSubscriptionId']? or localStorage['purpleSubscriptionId'] is '0'
       util.ctl('Subscriptions').showAd(
         (=> # pass-thru callback
           @initRequestGasForm deliveryLocName

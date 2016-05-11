@@ -105,6 +105,11 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserIsCourier'] = response.user.is_courier
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          localStorage['purpleSubscriptionId'] = response.user.subscription_id
+          localStorage['purpleSubscriptionExpirationTime'] = response.user.subscription_expiration_time
+          localStorage['purpleSubscriptionAutoRenew'] = response.user.subscription_auto_renew
+          localStorage['purpleSubscriptionPeriodStartTime'] = response.user.subscription_period_start_time
+          localStorage['purpleSubscriptionName'] = if response.user.subscription_id then response.system.subscriptions[response.user.subscription_id].name else "None"
           localStorage['purpleToken'] = response.token
           # they don't have any vehicles or orders yet.
           util.ctl('Vehicles').vehicles = []
@@ -114,6 +119,8 @@ Ext.define 'Purple.controller.Account',
           util.ctl('PaymentMethods').paymentMethods = []
           util.ctl('PaymentMethods').loadPaymentMethodsList()
           util.ctl('PaymentMethods').refreshPaymentMethodField()
+          util.ctl('Subscriptions').subscriptions = response.system.subscriptions
+          util.ctl('Subscriptions').loadSubscriptions()
           @accountSetup()
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -160,6 +167,11 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserIsCourier'] = response.user.is_courier
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          localStorage['purpleSubscriptionId'] = response.user.subscription_id
+          localStorage['purpleSubscriptionExpirationTime'] = response.user.subscription_expiration_time
+          localStorage['purpleSubscriptionAutoRenew'] = response.user.subscription_auto_renew
+          localStorage['purpleSubscriptionPeriodStartTime'] = response.user.subscription_period_start_time
+          localStorage['purpleSubscriptionName'] = if response.user.subscription_id then response.system.subscriptions[response.user.subscription_id].name else "None"
           localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up
           localStorage['purpleToken'] = response.token
           localStorage['purpleUserHomeLocationName'] = response.saved_locations.home.displayText
@@ -176,6 +188,8 @@ Ext.define 'Purple.controller.Account',
           util.ctl('PaymentMethods').paymentMethods = response.cards
           util.ctl('PaymentMethods').loadPaymentMethodsList()
           util.ctl('PaymentMethods').refreshPaymentMethodField()
+          util.ctl('Subscriptions').subscriptions = response.system.subscriptions
+          util.ctl('Subscriptions').loadSubscriptions()
           util.ctl('Vehicles').vehicles = response.vehicles
           util.ctl('Vehicles').loadVehiclesList()
           util.ctl('Orders').orders = response.orders

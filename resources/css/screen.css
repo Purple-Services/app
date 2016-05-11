@@ -361,12 +361,6 @@ input {
     font-family: 'Museo Sans Rounded' !important;
     text-transform: uppercase;
 }
-.button-pop.x-button-pressing {
-    box-shadow: none;
-    position: relative;
-    top: 1px;
-    left: 1px;
-}
 
 .smaller-button-pop .button-pop {
     box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.15);
@@ -375,6 +369,13 @@ input {
 .smaller-button-pop .button-pop .x-button-label {
     line-height: 32px;
     font-size: 18px;
+}
+
+.button-pop.x-button-pressing {
+    box-shadow: none;
+    position: relative;
+    top: 1px;
+    left: 1px;
 }
 
 .button-pop-dark {
@@ -601,6 +602,13 @@ input {
 /*     z-index: 19; */
 /* } */
 
+
+
+.auto-renew-toggle .x-toggle {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+}
 
 
 
