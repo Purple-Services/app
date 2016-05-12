@@ -23,7 +23,7 @@ Ext.define 'Purple.view.Subscriptions',
       directionLock: yes
     listeners:
       initialize: ->
-        @fireEvent 'loadSubscriptions', no, null
+        @fireEvent 'loadSubscriptions', yes, null
     items: [
       {
         xtype: 'spacer'

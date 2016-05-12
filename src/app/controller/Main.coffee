@@ -370,13 +370,22 @@ Ext.define 'Purple.controller.Main',
           success: (response_obj) ->
             @getRequestGasButton().setDisabled no
             response = Ext.JSON.decode response_obj.responseText
+            
             if response.success
               prices = response.gas_prices
+              Ext.get('gas-price-unavailable').setStyle {display: 'none'}
+              Ext.get('gas-price-display').setStyle {display: 'block'}
               Ext.get('gas-price-display-87').setText(
                 "$#{util.centsToDollars prices["87"]}"
               )
               Ext.get('gas-price-display-91').setText(
                 "$#{util.centsToDollars prices["91"]}"
+              )
+            else
+              Ext.get('gas-price-display').setStyle {display: 'none'}
+              Ext.get('gas-price-unavailable').setStyle {display: 'block'}
+              Ext.get('gas-price-unavailable').setText(
+                response.message
               )
             @busyGettingGasPrice = no
           failure: (response_obj) ->

@@ -14,12 +14,15 @@ Ext.define 'Purple.controller.Subscriptions',
       subscriptions: 'subscriptions' # the Subscriptions page
       subscriptionChoicesContainer: '#subscriptionChoicesContainer'
       accountSubscriptionsField: '#accountSubscriptionsField'
+      autoRenewField: '[ctype=autoRenewField]'
     control:
-      accountSubscriptionsField:
-        initialize: 'initAccountSubscriptionsField'
       subscriptions:
         loadSubscriptions: 'loadSubscriptions'
         subscribe: 'subscribe'
+      accountSubscriptionsField:
+        initialize: 'initAccountSubscriptionsField'
+      autoRenewField:
+        change: 'setAutoRenew'
 
   subscriptions: null
 
@@ -39,6 +42,17 @@ Ext.define 'Purple.controller.Subscriptions',
       @getAccountSubscriptionsField()?.setValue(
         localStorage['purpleSubscriptionName']
       )
+
+  # give it a user/details response (or similar format)
+  updateSubscriptionRelatedData: (response) ->
+    localStorage['purpleSubscriptionId'] = response.user.subscription_id
+    localStorage['purpleSubscriptionExpirationTime'] = response.user.subscription_expiration_time
+    localStorage['purpleSubscriptionAutoRenew'] = response.user.subscription_auto_renew
+    localStorage['purpleSubscriptionPeriodStartTime'] = response.user.subscription_period_start_time
+    localStorage['purpleSubscriptionName'] = if response.user.subscription_id then response.system.subscriptions[response.user.subscription_id].name else "None"
+    @refreshSubscriptionsField()
+    @subscriptions = response.system.subscriptions
+    @renderSubscriptions @subscriptions
     
   showAd: (passThruCallbackFn, actionCallbackFn) ->
     Ext.Msg.show
@@ -67,7 +81,7 @@ Ext.define 'Purple.controller.Subscriptions',
       hideOnMaskTap: no
 
   loadSubscriptions: (forceUpdate = no, callback = null) ->
-    if @subscriptions? and not forceUpdate
+    if not forceUpdate and @subscriptions?
       @renderSubscriptions @subscriptions
     else
       Ext.Viewport.setMasked
@@ -89,8 +103,7 @@ Ext.define 'Purple.controller.Subscriptions',
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
           if response.success
-            @subscriptions = response.system.subscriptions
-            @renderSubscriptions @subscriptions
+            @updateSubscriptionRelatedData response
             callback?()
           else
             navigator.notification.alert response.message, (->), "Error"
@@ -116,7 +129,7 @@ Ext.define 'Purple.controller.Subscriptions',
       """
       cls: 'loose-text'
     for s in Object.keys(subscriptions).sort(
-      (a, b) -> a isnt localStorage['purpleSubscriptionId']
+      (a, b) -> localStorage['purpleSubscriptionId'] isnt "" + a
     ) # get the current subscription on top
       sub = subscriptions[s]
       cls = [
@@ -135,12 +148,12 @@ Ext.define 'Purple.controller.Subscriptions',
       if localStorage['purpleSubscriptionId'] is "" + sub.id
         items.push
           xtype: 'togglefield'
-          id: 'autoRenewField'
+          ctype: 'autoRenewField'
           ui: 'plain'
           flex: 0
           name: 'auto_renew'
           value: localStorage['purpleSubscriptionAutoRenew'] is 'true'
-          label: 'Auto-renew'
+          label: 'Auto-renew?'
           labelWidth: 140
           cls: [
             'bottom-margin'
@@ -239,18 +252,18 @@ Ext.define 'Purple.controller.Subscriptions',
       util.ctl('Menu').pushOntoBackButton =>
         @backToPreviousPage()
 
-  subscribe: (subscriptionId, callback) ->
+  subscribe: (id, callback) ->
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
     Ext.Ajax.request
-      url: "#{util.WEB_SERVICE_BASE_URL}user/subscribe"
+      url: "#{util.WEB_SERVICE_BASE_URL}user/subscriptions/subscribe"
       params: Ext.JSON.encode
         version: util.VERSION_NUMBER
         user_id: localStorage['purpleUserId']
         token: localStorage['purpleToken']
         os: Ext.os.name
-        subscription_id: subscriptionId
+        subscription_id: id
       headers:
         'Content-Type': 'application/json'
       timeout: 30000
@@ -260,14 +273,7 @@ Ext.define 'Purple.controller.Subscriptions',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          localStorage['purpleSubscriptionId'] = response.user.subscription_id
-          localStorage['purpleSubscriptionExpirationTime'] = response.user.subscription_expiration_time
-          localStorage['purpleSubscriptionAutoRenew'] = response.user.subscription_auto_renew
-          localStorage['purpleSubscriptionPeriodStartTime'] = response.user.subscription_period_start_time
-          localStorage['purpleSubscriptionName'] = if response.user.subscription_id then response.system.subscriptions[response.user.subscription_id].name else "None"
-          @refreshSubscriptionsField()
-          @subscriptions = response.system.subscriptions
-          @renderSubscriptions @subscriptions
+          @updateSubscriptionRelatedData response
           callback?()
         else
           navigator.notification.alert response.message, (->), "Error"
@@ -277,3 +283,39 @@ Ext.define 'Purple.controller.Subscriptions',
           navigator.notification.alert "Slow or no internet connection.", (->), "Error"
         response = Ext.JSON.decode response_obj.responseText
         console.log response
+
+  setAutoRenew: (_, value) ->
+    currAutoRenewVal = switch localStorage['purpleSubscriptionAutoRenew']
+      when 'true' then 1
+      when 'false' then 0
+      else 0
+    if currAutoRenewVal isnt value
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}user/subscriptions/set-auto-renew"
+        params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+          os: Ext.os.name
+          subscription_auto_renew: not not value
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            @updateSubscriptionRelatedData response
+          else
+            navigator.notification.alert response.message, (->), "Error"
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          if util.ctl('Account').isCourier()
+            navigator.notification.alert "Slow or no internet connection.", (->), "Error"
+          response = Ext.JSON.decode response_obj.responseText
+          console.log response

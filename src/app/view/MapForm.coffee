@@ -82,15 +82,18 @@ Ext.define 'Purple.view.MapForm',
         id: 'gasPriceMapDisplay'
         flex: 0
         html: """
-          <span class="gas-price-title">Current Price</span>
-          <br />
-          <span class="gas-price-octane">87 Reg.</span>
-          <span class="gas-price-price" id="gas-price-display-87"></span>
-          <br />
-          <span class="gas-price-octane">91 Pre.</span>
-          <span class="gas-price-price" id="gas-price-display-91"></span>
+          <span id="gas-price-unavailable" style="display: none">
+          </span>
+          <span id="gas-price-display">
+            <span class="gas-price-title">Current Price</span>
+            <br />
+            <span class="gas-price-octane">87 Reg.</span>
+            <span class="gas-price-price" id="gas-price-display-87"></span>
+            <br />
+            <span class="gas-price-octane">91 Pre.</span>
+            <span class="gas-price-price" id="gas-price-display-91"></span>
+          </span>
         """
-        #   navigator.notification.alert "Our gas price is based on the average price in the area.", (->), "Info"
       }
       {
         xtype: 'component'
