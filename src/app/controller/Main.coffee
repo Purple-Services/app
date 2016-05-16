@@ -54,6 +54,8 @@ Ext.define 'Purple.controller.Main',
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
         showLogin: 'showLogin'
+        initialize: 'initRequestAddressField'
+        keyup: 'keyupRequestAddressField'
         focus: 'focusRequestAddressField'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
@@ -673,6 +675,28 @@ Ext.define 'Purple.controller.Main',
 
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
+
+  initRequestAddressField: (textField) ->
+    textField.element.on 'tap', =>
+      if util.ctl('Account').isUserLoggedIn()
+        textField.setValue ''
+        @addressInputMode()
+      else
+        @showLogin()
+    true
+
+  keyupRequestAddressField: (textField, event) ->
+    textField.lastQuery ?= ''
+    query = textField.getValue()
+    if query isnt textField.lastQuery and query isnt ''
+      textField.lastQuery = query
+      if textField.genSuggTimeout?
+        clearTimeout textField.genSuggTimeout
+      textField.genSuggTimeout = setTimeout(
+        @generateSuggestions(),
+        500
+      )
+    true
 
   focusRequestAddressField: ->
     @getRequestAddressField().setValue ''
