@@ -116,8 +116,6 @@ Ext.define 'Purple.view.MapForm',
               else
                 @fireEvent('showLogin')
             true
-          focus: ->
-            util.ctl('Main').getRequestAddressField().setValue ''
           keyup: (textField, event) ->
             textField.lastQuery ?= ''
             query = textField.getValue()

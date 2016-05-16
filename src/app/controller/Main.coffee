@@ -54,6 +54,7 @@ Ext.define 'Purple.controller.Main',
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
         showLogin: 'showLogin'
+        focus: 'focusRequestAddressField'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
@@ -672,6 +673,9 @@ Ext.define 'Purple.controller.Main',
 
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
+
+  focusRequestAddressField: ->
+    @getRequestAddressField().setValue ''
 
   isEmpty: (obj) ->
     for key of obj
