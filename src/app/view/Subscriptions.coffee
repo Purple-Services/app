@@ -42,7 +42,7 @@ Ext.define 'Purple.view.Subscriptions',
             xtype: 'component'
             flex: 0
             cls: 'heading'
-            html: 'Subscriptions'
+            html: 'Monthly Membership'
           }
           {
             xtype: 'component'

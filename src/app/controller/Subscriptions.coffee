@@ -59,7 +59,7 @@ Ext.define 'Purple.controller.Subscriptions',
       cls: 'subscription-ad'
       title: ''
       message: """
-        <span class="fake-title">Try our monthly<br />membership!</span>
+        <span class="fake-title">Try our Monthly<br />Membership</span>
         <br />Get deliveries free when you join!
         """
       buttons: [
@@ -114,6 +114,12 @@ Ext.define 'Purple.controller.Subscriptions',
           response = Ext.JSON.decode response_obj.responseText
           console.log response
 
+  isSubscribed: ->
+    localStorage['purpleSubscriptionId']? and localStorage['purpleSubscriptionId'] isnt "0"
+
+  hasAutoRenewOn: ->
+    localStorage['purpleSubscriptionAutoRenew']? and localStorage['purpleSubscriptionAutoRenew'] is "true"
+
   renderSubscriptions: (subscriptions) ->
     subChoicesContainer = @getSubscriptionChoicesContainer()
     if not subChoicesContainer?
@@ -123,14 +129,31 @@ Ext.define 'Purple.controller.Subscriptions',
     items.push
       xtype: 'component'
       flex: 0
-      html: """
-        Select one of the plans to get more information.
-        You can cancel at any time.
-      """
+      html: if @isSubscribed()
+        if @hasAutoRenewOn()
+          """
+            You're subscribed! You can cancel at any time.
+          """
+        else
+          """
+            You have unsubscribed, your membership ends #{
+            Ext.util.Format.date(
+              new Date(localStorage['purpleSubscriptionExpirationTime'] * 1000),
+              "F j, Y"
+            )}.
+          """
+      else
+        """
+          Select a plan. You can cancel at any time.
+        """
       cls: 'loose-text'
     for s in Object.keys(subscriptions).sort(
-      (a, b) -> localStorage['purpleSubscriptionId'] isnt "" + a
-    ) # get the current subscription on top
+      (a, b) -> # always list a currently subscribed option first
+        switch localStorage['purpleSubscriptionId']
+          when a then -1
+          when b then 1
+          else parseInt(a) - parseInt(b) # otherwise, order by subscription id
+    )
       sub = subscriptions[s]
       cls = [
         'bottom-margin'
@@ -145,24 +168,10 @@ Ext.define 'Purple.controller.Subscriptions',
         cls = cls.concat [
           'highlighted'
         ]
-      if localStorage['purpleSubscriptionId'] is "" + sub.id
-        items.push
-          xtype: 'togglefield'
-          ctype: 'autoRenewField'
-          ui: 'plain'
-          flex: 0
-          name: 'auto_renew'
-          value: localStorage['purpleSubscriptionAutoRenew'] is 'true'
-          label: 'Auto-renew?'
-          labelWidth: 140
-          cls: [
-            'bottom-margin'
-            'auto-renew-toggle'
-          ]
       items.push
         xtype: 'textfield'
         flex: 0
-        label: "#{sub.name} - $#{util.centsToDollars(sub.price)} / month"
+        label: "#{sub.name} - $#{util.centsToDollars(sub.price)}"
         labelWidth: '100%'
         cls: cls
         disabled: yes
@@ -177,6 +186,64 @@ Ext.define 'Purple.controller.Subscriptions',
                 else
                   text.hide()
                   field.removeCls 'point-up')(sub.id)
+      innerItems = [
+        {
+          xtype: 'component'
+          margin: '5 0 10 0'
+          width: '100%'
+          style: "text-align: center;"
+          html: """
+            <ul style="list-style: bullet;">
+              <li #{if sub.num_free_one_hour then '' else 'style="display: none;"'}>
+                #{sub.num_free_one_hour} one-hour deliveries per month
+              </li>
+              <li #{if sub.num_free_three_hour then '' else 'style="display: none;"'}>
+                #{sub.num_free_three_hour} three-hour deliveries per month
+              </li>
+              <li #{if sub.discount_one_hour then '' else 'style="display: none;"'}>
+                $4 for additional orders
+              </li>
+              <li #{if sub.discount_three_hour then '' else 'style="display: none;"'}>
+                $2.50 for additional orders
+              </li>
+              <li #{if sub.num_free_tire_pressure_check then '' else 'style="display: none;"'}>
+                #{sub.num_free_tire_pressure_check} tire pressure fill-up per month
+              </li>
+            </ul>
+          """
+        }
+      ]
+      if localStorage['purpleSubscriptionId'] is "" + sub.id
+        if @hasAutoRenewOn()
+          innerItems.push
+            xtype: 'button'
+            ui: 'action'
+            cls: 'button-pop'
+            text: "Unsubscribe"
+            flex: 0
+            margin: '0 0 15 0'
+            handler: => @unsubscribe()
+        else
+          innerItems.push
+            xtype: 'button'
+            ui: 'action'
+            cls: 'button-pop'
+            text: "Restore Subscription"
+            flex: 0
+            margin: '0 0 15 0'
+            handler: => @restoreSubscription()
+      else
+        innerItems.push
+          xtype: 'button'
+          ui: 'action'
+          cls: 'button-pop'
+          text: "Subscribe to #{sub.name}"
+          flex: 0
+          margin: '0 0 15 0'
+          handler: ((subId) => =>
+            @subscribe subId, util.ctl('Menu').popOffBackButton
+          )(sub.id)
+        
       items.push
         xtype: 'container'
         flex: 0
@@ -188,29 +255,8 @@ Ext.define 'Purple.controller.Subscriptions',
         ]
         showAnimation: 'fadeIn'
         hidden: localStorage['purpleSubscriptionId'] isnt "" + sub.id
-        items: [
-          {
-            xtype: 'component'
-            margin: '5 0 10 0'
-            width: '100%'
-            style: "text-align: center;"
-            html: """
-              3 x 3 hour orders
-            """
-          }
-          {
-            xtype: 'button'
-            ui: 'action'
-            cls: 'button-pop'
-            hidden: localStorage['purpleSubscriptionId'] is "" + sub.id
-            text: "Subscribe to #{sub.name}"
-            flex: 0
-            margin: '0 0 15 0'
-            handler: ((subId) -> ->
-              @up().up().up().up().fireEvent 'subscribe', subId, ->
-                util.ctl('Menu').popOffBackButton())(sub.id)
-          }
-        ]
+        items: innerItems    
+          
     subChoicesContainer.add items
 
   backToPreviousPage: ->
@@ -284,6 +330,28 @@ Ext.define 'Purple.controller.Subscriptions',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
+  unsubscribe: ->
+    navigator.notification.confirm(
+      """
+        Your monthly membership will expire #{
+        Ext.util.Format.date(
+          new Date(localStorage['purpleSubscriptionExpirationTime'] * 1000),
+          "F j, Y"
+        )}.
+      """,
+      ((index) => if index is 2 then @setAutoRenew null, 0),
+      'Unsubscribe?',
+      ['No', 'Yes']
+    )
+
+  # unlikely, but possible, bug: what if their subscription has just expired
+  # while they were on this page, and then they hit Restore Subscription
+  # or, how about if they hit Unsubscribe
+  restoreSubscription: ->
+    @setAutoRenew null, 1
+
+  # the signature of this funciton is such that it could be the 'change' event
+  # for a toggle field
   setAutoRenew: (_, value) ->
     currAutoRenewVal = switch localStorage['purpleSubscriptionAutoRenew']
       when 'true' then 1
