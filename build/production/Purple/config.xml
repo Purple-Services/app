@@ -10,7 +10,7 @@
         id = "6NAJA3N74X.com.purple.app"
       
       Android cannot start with number, so just use:
-        id = "com.purplecourier.app"
+        id = "com.purple.app"
   -->
 
   <!-- iOS -->
@@ -23,8 +23,8 @@
   <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
-  <!-- <name>Purple Courier</name> -->
- <!--  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+<!--   <name>Purple Courier</name>
+  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
   <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
     <string>(required for Courier mode)</string>
   </gap:config-file>
@@ -140,21 +140,33 @@
     <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
   </platform>
-  
-  <!-- old one -->
-  <!-- <gap:plugin name="cordova-plugin-facebook" source="npm"> -->
-  <!--   <param name="FACEBOOK_APP_ID" value="1588773851335820" /> -->
-  <!--   <param name="FACEBOOK_DISPLAY_NAME" value="Purple" /> -->
-  <!-- </gap:plugin> -->
 
+  <!-- Config for native Facebook login -->
+  <gap:config-file platform="ios" parent="LSApplicationQueriesSchemes" overwrite="true">
+    <array>
+      <string>fbapi</string>
+      <string>fbapi20130214</string>
+      <string>fbapi20130410</string>
+      <string>fbapi20130702</string>
+      <string>fbapi20131010</string>
+      <string>fbapi20131219</string>
+      <string>fbapi20140410</string>
+      <string>fbapi20140116</string>
+      <string>fbapi20150313</string>
+      <string>fbapi20150629</string>
+      <string>fbauth</string>
+      <string>fbauth2</string>
+      <string>fb-messenger-api20140430</string>
+    </array>
+  </gap:config-file>
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <plugin spec="https://github.com/jeduan/cordova-plugin-facebook4#aff9a08a86cc6c6a18019f7adc2896ddf97c11cd" source="git">
+ <!--  <gap:plugin name="cordova-plugin-googleplus" version="4.0.8" source="npm">
+    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
+  </gap:plugin> -->
+<!--   <gap:plugin name="com.phonegap.plugins.facebookconnect">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
-  </plugin>
-  <gap:plugin name="cordova-plugin-googleplus" version="4.0.8" source="npm">
-    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin>
+  </gap:plugin> -->
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
@@ -163,7 +175,7 @@
   <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
   
   <!-- this one for Android -->
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
