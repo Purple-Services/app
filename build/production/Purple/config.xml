@@ -160,22 +160,28 @@
     </array>
   </gap:config-file>
   <!-- BEGIN CUSTOMER APP ONLY -->
- <!--  <gap:plugin name="cordova-plugin-googleplus" version="4.0.8" source="npm">
+  <gap:plugin name="cordova-plugin-googleplus" version="4.0.8" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin> -->
-<!--   <gap:plugin name="com.phonegap.plugins.facebookconnect">
-    <param name="APP_ID" value="1588773851335820" />
-    <param name="APP_NAME" value="Purple" />
-  </gap:plugin> -->
+  </gap:plugin>
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
-  <!-- this one for iOS -->
-  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <!-- iOS only -->
+  <gap:plugin name="com.phonegap.plugins.facebookconnect">
+      <param name="APP_ID" value="1588773851335820" />
+      <param name="APP_NAME" value="Purple" />
+    </gap:plugin>
+  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
+  <!-- End of iOS only -->
   
-  <!-- this one for Android -->
-  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+  <!-- Android only -->
+<!--   <plugin spec="https://github.com/jeduan/cordova-plugin-facebook4#aff9a08a86cc6c6a18019f7adc2896ddf97c11cd" source="git">
+    <param name="APP_ID" value="1588773851335820" />
+    <param name="APP_NAME" value="Purple" />
+  </plugin>
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
+  <!-- End of Android Only -->
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
