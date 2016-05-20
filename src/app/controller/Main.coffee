@@ -95,8 +95,10 @@ Ext.define 'Purple.controller.Main',
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    
-    clearTimeout window.courierReloadTimer
+    # if not localStorage['courierOnDuty']?
+    #   localStorage['courierOnDuty'] = 'no'
+
+    # clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
     if util.ctl('Account').isCourier()
@@ -1037,26 +1039,33 @@ Ext.define 'Purple.controller.Main',
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
 
-  courierPing: ->
+  courierPing: (setOnDuty, successCallback, failureCallback) ->
     @errorCount ?= 0
     @courierPingBusy ?= no
-    if not @courierPingBusy
+    if @courierPingBusy and setOnDuty?
+      setTimeout (=>
+        @courierPing setOnDuty, successCallback, failureCallback
+        ), 11000
+    else
       @courierPingBusy = yes
+      params =
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @lat
+        lng: @lng
+        gallons:
+          87: localStorage['purpleCourierGallons87']
+          91: localStorage['purpleCourierGallons91']
+        position_accuracy: @positionAccuracy
+      if setOnDuty?
+        params.set_on_duty = setOnDuty
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @lat
-          lng: @lng
-          gallons:
-            87: localStorage['purpleCourierGallons87']
-            91: localStorage['purpleCourierGallons91']
-          position_accuracy: @positionAccuracy
+        params: Ext.JSON.encode params
         headers:
           'Content-Type': 'application/json'
-        timeout: 30000
+        timeout: 10000
         method: 'POST'
         scope: this
         success: (response_obj) ->
@@ -1066,8 +1075,20 @@ Ext.define 'Purple.controller.Main',
             if @disconnectedMessage?
               clearTimeout @disconnectedMessage
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
-            @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
+            @disconnectedMessage = setTimeout (->
+              if localStorage['courierOnDuty'] is 'yes'
+                Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'
+              ), (2 * 60 * 1000)
+            if (response.on_duty and localStorage['courierOnDuty'] is 'no') or (not response.on_duty and localStorage['courierOnDuty'] is 'yes')
+              localStorage['courierOnDuty'] = if response.on_duty then 'yes' else 'no'
+            util.ctl('Menu').updateOnDutyToggle()
+            successCallback?()
           else
+            @errorCount++
+            if @errorCount > 10
+              @errorCount = 0
+              navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+            failureCallback?()
             navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
           @errorCount++
@@ -1075,4 +1096,4 @@ Ext.define 'Purple.controller.Main',
             @errorCount = 0
             navigator.notification.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
           @courierPingBusy = no
-          
+          failureCallback?()

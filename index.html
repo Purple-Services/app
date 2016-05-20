@@ -12,21 +12,21 @@
         <!-- COURIER APP ONLY -->
         <script type="text/javascript">
          
-         function askUserToReload () {
-             var windowReload = confirm("Your internet connection is unstable. Reload?");
-             if (windowReload === true) {
-                 window.location.reload();
-             }
-         }
+         // function askUserToReload () {
+         //     var windowReload = confirm("Your internet connection is unstable. Reload?");
+         //     if (windowReload === true) {
+         //         window.location.reload();
+         //     }
+         // }
 
-         var courierReloadTimer = setTimeout(function(){askUserToReload()}, 12000);
+         // var courierReloadTimer = setTimeout(function(){askUserToReload()}, 12000);
          
         </script>
         <!-- END OF COURIER APP ONLY -->
 
         <script>
          // if version outdated, clear all sencha localStorage caches
-         if (localStorage['lastCacheVersionNumber'] !== "1.3.2") {
+         if (localStorage['lastCacheVersionNumber'] !== "1.11.3") {
              for (key in localStorage) {
                  // all of them start with a guid
                  if (key.length > 37 &&
@@ -133,7 +133,7 @@
          }}();
         </script>
     </head>
-    <body style="background-color: #EDEDED;">
+    <body style="background-color: #423970;">
         
     </body>
 </html>

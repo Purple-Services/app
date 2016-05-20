@@ -25,4 +25,10 @@ Ext.define 'Purple.view.TopToolbar',
         ui: 'plain'
         handler: -> @up().fireEvent 'freeGasButtonTap'
       }
+      {
+        xtype: 'togglefield'
+        ctype: 'onDutyToggle'
+        cls: 'onDutyToggle'
+        ui: 'plain'
+      }
     ]
