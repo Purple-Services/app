@@ -80,7 +80,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
-        
+
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -101,8 +101,8 @@ Ext.define 'Purple.controller.Main',
     # clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
-
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    if util.ctl('Account').isCourier()
+      @initCourierPing()
 
     # CUSTOMER APP ONLY
     # if VERSION is "PROD"
@@ -415,15 +415,33 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->
     if @geolocationAllowed?
       if not @geolocationAllowed
         if showAlertIfUnavailable
           navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
       else
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng @lat, @lng
-        )
+        if centerMapButtonPressed
+          Ext.Viewport.setMasked
+            xtype: 'loadmask'
+            message: ''
+          navigator.geolocation?.getCurrentPosition(
+            ((position) =>
+              @lat = position.coords.latitude
+              @lng = position.coords.longitude
+              @getMap().getMap().setCenter(
+                new google.maps.LatLng @lat, @lng
+              )
+              Ext.Viewport.setMasked false
+            ),
+            (=>
+              ),
+            {maximumAge: 0, enableHighAccuracy: true}
+          )
+        else
+          @getMap().getMap().setCenter(
+            new google.maps.LatLng @lat, @lng
+          )
 
   addressInputMode: ->
     if not @getMap().isHidden()
@@ -1007,12 +1025,16 @@ Ext.define 'Purple.controller.Main',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
-
+      
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
+    @gpsIntervalRef ?= setInterval (Ext.bind @updateLatlng, this), 5000
     @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
+    if @gpsIntervalRef?
+      clearInterval @gpsIntervalRef
+      @gpsIntervalRef = null
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
