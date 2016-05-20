@@ -25,6 +25,9 @@ Ext.define 'Purple.controller.Subscriptions',
         change: 'setAutoRenew'
 
   subscriptions: null
+  # not guaranteed to be up-to-date; but it is a holding place for this info
+  # every time the dispatch/availability endpoint is hit
+  subscriptionUsage: null
 
   launch: ->
     @callParent arguments
@@ -241,7 +244,10 @@ Ext.define 'Purple.controller.Subscriptions',
           flex: 0
           margin: '0 0 15 0'
           handler: ((subId) => =>
-            @subscribe subId, util.ctl('Menu').popOffBackButton
+            @askSubscribe subId, (=>
+              util.ctl('Menu').popOffBackButton()
+              @getMainContainer().getItems().getAt(0).select 0, no, no
+            )
           )(sub.id)
         
       items.push
@@ -298,6 +304,16 @@ Ext.define 'Purple.controller.Subscriptions',
       util.ctl('Menu').pushOntoBackButton =>
         @backToPreviousPage()
 
+  askSubscribe: (id, callback) ->
+    util.confirm(
+      "",
+      "Subscribe to the #{@subscriptions[id].name} plan?",
+      (=> @subscribe id, callback),
+      null,
+      'Yes',
+      'No'
+    )
+
   subscribe: (id, callback) ->
     Ext.Viewport.setMasked
       xtype: 'loadmask'
@@ -321,17 +337,25 @@ Ext.define 'Purple.controller.Subscriptions',
         if response.success
           @updateSubscriptionRelatedData response
           callback?()
+          util.alert(
+            """
+              Your subscription will automatically renew on #{
+              Ext.util.Format.date(
+                new Date(localStorage['purpleSubscriptionExpirationTime'] * 1000),
+                "F j, Y"
+              )}.
+            """,
+            "Welcome to the #{@subscriptions[localStorage['purpleSubscriptionId']].name} Plan!"
+          )
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error"
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
-        if util.ctl('Account').isCourier()
-          navigator.notification.alert "Slow or no internet connection.", (->), "Error"
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
   unsubscribe: ->
-    navigator.notification.confirm(
+    util.confirm(
       """
         Your monthly membership will expire #{
         Ext.util.Format.date(
@@ -339,9 +363,11 @@ Ext.define 'Purple.controller.Subscriptions',
           "F j, Y"
         )}.
       """,
-      ((index) => if index is 2 then @setAutoRenew null, 0),
       'Unsubscribe?',
-      ['No', 'Yes']
+      (=> @setAutoRenew null, 0),
+      null,
+      'Yes',
+      'No'
     )
 
   # unlikely, but possible, bug: what if their subscription has just expired

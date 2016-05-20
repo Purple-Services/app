@@ -17,6 +17,7 @@ Ext.define 'Purple.view.Subscriptions',
       'request-form'
       'accent-bg'
       'slideable'
+      'subscriptions'
     ]
     scrollable:
       direction: 'vertical'

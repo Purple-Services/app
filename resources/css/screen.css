@@ -261,6 +261,10 @@ input {
 .x-field.bottom-margin {
     margin-bottom: 10px;
 }
+/* not .x-field.top-margin because needs to work on labels */
+.top-margin {
+    margin-top: 10px;
+}
 .x-field.click-to-edit .x-input-el {
     padding-right: 20px;
 }
@@ -369,6 +373,10 @@ input {
 .smaller-button-pop .button-pop .x-button-label {
     line-height: 32px;
     font-size: 18px;
+}
+.subscriptions .smaller-button-pop .button-pop .x-button-label {
+    line-height: 30px;
+    font-size: 17px;
 }
 
 .button-pop.x-button-pressing {
@@ -621,6 +629,11 @@ input {
 .visibly-disabled.x-item-disabled .x-input-el {
     color: #999 !important;
     -webkit-text-fill-color: #999 !important;
+}
+
+.visibly-disabled.x-item-disabled.x-field-checkbox .x-input-checkbox:checked + .x-field-mask::after {
+    color: #555 !important;
+    -webkit-text-fill-color: #555 !important;
 }
 
 .view-order .visibly-disabled.x-item-disabled .x-form-label span,

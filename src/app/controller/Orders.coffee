@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Orders',
       orderSpecialInstructions: '[ctype=orderSpecialInstructions]'
       orderAddressStreet: '[ctype=orderAddressStreet]'
       orderAddressZipcode: '[ctype=orderAddressZipcode]'
+      orderTirePressureCheck: '[ctype=orderTirePressureCheck]'
       orderTimePlaced: '[ctype=orderTimePlaced]'
       orderTimeDeadline: '[ctype=orderTimeDeadline]'
       orderDisplayTime: '[ctype=orderDisplayTime]'
@@ -139,12 +140,17 @@ Ext.define 'Purple.controller.Orders',
     order['total_price_display'] = util.centsToDollars order['total_price']
 
     @getOrder().setValues order
+
+    if order['tire_pressure_check']
+      @getOrderTirePressureCheck().show()
+    
     if order['special_instructions'] is ''
       @getOrderSpecialInstructionsLabel().hide()
       @getOrderSpecialInstructions().hide()
       @getOrderAddressStreet().removeCls 'bottom-margin'
     else 
       @getOrderSpecialInstructions().setHtml(order['special_instructions'])
+      
     if util.ctl('Account').isCourier()
       @getOrderTimePlaced().hide()
       @getOrderDisplayTime().hide()
@@ -371,14 +377,15 @@ Ext.define 'Purple.controller.Orders',
       @getOrderRating().show()
 
   askToCancelOrder: (id) ->
-    navigator.notification.confirm(
-      "",
-      ((index) => switch index
-        when 1 then @cancelOrder id
-        else return
-      ),
-      "Are you sure you want to cancel this order?",
-      ["Yes", "No"]
+    util.confirm(
+      '',
+      """
+        Are you sure you want to cancel this order?
+      """,
+      (=> @cancelOrder id),
+      null,
+      'Yes',
+      'No'
     )
 
   cancelOrder: (id) ->
@@ -456,20 +463,19 @@ Ext.define 'Purple.controller.Orders',
     values = @getOrder().getValues()
     currentStatus = values['status']
     nextStatus = util.NEXT_STATUS_MAP[currentStatus]
-    navigator.notification.confirm(
-      "",
-      ((index) => switch index
-        when 1 then @nextStatus()
-        else return
-      ),
+    util.confirm(
+      '',
       (switch nextStatus
         when "assigned", "accepted"
           "Are you sure you want to accept this order? (cannot be undone)"
         else "Are you sure you want to mark this order as #{nextStatus}? (cannot be undone)"
       ),
-      ["Yes", "No"]
+      (Ext.bind @nextStatus, this)
+      null,
+      'Yes',
+      'No'
     )
-
+    
   nextStatus: ->
     values = @getOrder().getValues()
     currentStatus = values['status']

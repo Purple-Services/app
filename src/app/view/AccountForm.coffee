@@ -126,7 +126,7 @@ Ext.define 'Purple.view.AccountForm',
             flex: 0
             name: 'subscriptions'
             label: 'Membership'
-            labelWidth: 140
+            labelWidth: 130
             cls: [
               'click-to-edit'
               'bottom-margin'

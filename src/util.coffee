@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "LOCAL"
+VERSION = "DEV"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -17,8 +17,8 @@ window.util =
   VERSION_NUMBER: "1.4.0"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    #when "LOCAL" then "http://192.168.0.23:3000/"
+    # when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
+    when "LOCAL" then "http://192.168.0.24:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
 
@@ -86,3 +86,24 @@ window.util =
       if obj.hasOwnProperty key
         return false
     true
+
+  confirm: (message, title, yesCallback, noCallback, yesButtonText = "Yes", noButtonText = "No") ->
+    if not (Ext.os.is.Android or Ext.os.is.iOS)
+      if confirm "#{title}\n#{message}"
+        yesCallback?()
+      else
+        noCallback?()
+    else
+      navigator.notification.confirm(
+        message,
+        ((index) -> if index is 2 then yesCallback?() else noCallback?()),
+        title,
+        [noButtonText, yesButtonText]
+      )
+
+  alert: (message, title, callback) ->
+    if not (Ext.os.is.Android or Ext.os.is.iOS)
+      alert "#{title}\n#{message}"
+      callback?()
+    else
+      navigator.notification.alert message, callback, title
