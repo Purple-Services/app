@@ -408,6 +408,11 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleUserReferralGallons']
     delete localStorage['purpleReferralReferredValue']
     delete localStorage['purpleReferralReferrerGallons']
+    delete localStorage['purpleSubscriptionId']
+    delete localStorage['purpleSubscriptionExpirationTime']
+    delete localStorage['purpleSubscriptionAutoRenew']
+    delete localStorage['purpleSubscriptionPeriodStartTime']
+    delete localStorage['purpleSubscriptionName']
     delete localStorage['specialInstructions']
 
     # clear out some lists from any old logins
