@@ -91,25 +91,19 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             disabled: yes
             cls: [
               'visibly-disabled'
-              'bottom-margin'
             ]
           }
           {
-            xtype: 'textfield'
-            id: 'paymentMethodConfirmationField'
+            xtype: 'checkboxfield'
+            id: 'tirePressureCheckField'
             flex: 0
-            label: 'Payment'
-            labelWidth: 105
+            name: 'tire_pressure_check'
+            label: 'Tire Fill-up?'
+            labelWidth: 150
+            disabled: yes
             cls: [
-              'click-to-edit'
               'visibly-disabled'
             ]
-            disabled: yes
-            listeners:
-              initialize: (field) ->
-                util.ctl('PaymentMethods').refreshPaymentMethodField()
-                field.element.on 'tap', ->
-                  util.ctl('PaymentMethods').paymentMethodFieldTap no, yes
           }
           {
             xtype: 'component'
@@ -119,6 +113,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
             cls: [
               'visibly-disabled'
               'field-label-text'
+              'top-margin'
             ]
           }
           {
@@ -182,6 +177,24 @@ Ext.define 'Purple.view.RequestConfirmationForm',
               'bottom-margin'
               'visibly-disabled'
             ]
+          }
+          {
+            xtype: 'textfield'
+            id: 'paymentMethodConfirmationField'
+            flex: 0
+            label: 'Payment'
+            labelWidth: 105
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+              'visibly-disabled'
+            ]
+            disabled: yes
+            listeners:
+              initialize: (field) ->
+                util.ctl('PaymentMethods').refreshPaymentMethodField()
+                field.element.on 'tap', ->
+                  util.ctl('PaymentMethods').paymentMethodFieldTap no, yes
           }
           {
             xtype: 'textfield'

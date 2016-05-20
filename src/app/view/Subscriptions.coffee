@@ -1,6 +1,6 @@
-Ext.define 'Purple.view.PaymentMethods',
+Ext.define 'Purple.view.Subscriptions',
   extend: 'Ext.Container'
-  xtype: 'paymentmethods'
+  xtype: 'subscriptions'
   requires: [
     'Ext.form.*'
     'Ext.field.*'
@@ -17,13 +17,14 @@ Ext.define 'Purple.view.PaymentMethods',
       'request-form'
       'accent-bg'
       'slideable'
+      'subscriptions'
     ]
     scrollable:
       direction: 'vertical'
       directionLock: yes
     listeners:
       initialize: ->
-        @fireEvent 'loadPaymentMethodsList'
+        @fireEvent 'loadSubscriptions', yes, null
     items: [
       {
         xtype: 'spacer'
@@ -42,7 +43,7 @@ Ext.define 'Purple.view.PaymentMethods',
             xtype: 'component'
             flex: 0
             cls: 'heading'
-            html: 'Payment Methods'
+            html: 'Monthly Membership'
           }
           {
             xtype: 'component'
@@ -54,32 +55,12 @@ Ext.define 'Purple.view.PaymentMethods',
           }
           {
             xtype: 'container'
-            ctype: 'paymentMethodsList'
-            width: '100%'
+            id: 'subscriptionChoicesContainer'
             flex: 0
-            layout: 'vbox'
-          }
-          {
-            xtype: 'container'
-            flex: 0
-            height: 110
-            width: '100%'
-            padding: '0 0 5 0'
             layout:
               type: 'vbox'
-              pack: 'center'
-              align: 'center'
-            items: [
-              {
-                xtype: 'button'
-                ui: 'action'
-                cls: 'button-pop'
-                text: 'Add Card'
-                flex: 0
-                handler: ->
-                  @up().up().up().fireEvent 'editPaymentMethod', 'new', no
-              }
-            ]
+              pack: 'start'
+              align: 'start'
           }
         ]
       }

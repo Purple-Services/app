@@ -28,6 +28,7 @@ Ext.application
     'Vehicles'
     'Orders'
     'PaymentMethods'
+    'Subscriptions'
     'GasTanks'
   ]
   views: [
