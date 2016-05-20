@@ -265,30 +265,6 @@ Ext.define 'Purple.controller.Subscriptions',
           
     subChoicesContainer.add items
 
-  backToPreviousPage: ->
-    if @requestGasTabActive
-      @getRequestGasTabContainer().setActiveItem @getRequestConfirmationForm()
-      @getRequestGasTabContainer().remove(
-        @getSubscriptions(),
-        yes
-      )
-      # if @getEditPaymentMethodForm()?
-      #   @getRequestGasTabContainer().remove(
-      #     @getEditPaymentMethodForm(),
-      #     yes
-      #   )
-    else
-      @getAccountTabContainer().setActiveItem @getAccountForm()
-      @getAccountTabContainer().remove(
-        @getSubscriptions(),
-        yes
-      )
-      # if @getEditPaymentMethodForm()?
-      #   @getAccountTabContainer().remove(
-      #     @getEditPaymentMethodForm(),
-      #     yes
-      #   )
-
   subscriptionsFieldTap: (suppressBackButtonBehavior = no, requestGasTabActive = no) ->
     @requestGasTabActive = requestGasTabActive
 
@@ -302,7 +278,11 @@ Ext.define 'Purple.controller.Subscriptions',
       )
     if not suppressBackButtonBehavior
       util.ctl('Menu').pushOntoBackButton =>
-        @backToPreviousPage()
+        @getAccountTabContainer().setActiveItem @getAccountForm()
+        @getAccountTabContainer().remove(
+          @getSubscriptions(),
+          yes
+        )
 
   askSubscribe: (id, callback) ->
     util.confirm(
