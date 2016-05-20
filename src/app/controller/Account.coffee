@@ -414,6 +414,7 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleSubscriptionPeriodStartTime']
     delete localStorage['purpleSubscriptionName']
     delete localStorage['specialInstructions']
+    delete localStorage['courierOnDuty']
 
     # clear out some lists from any old logins
     util.ctl('Vehicles').vehicles = []
@@ -427,6 +428,8 @@ Ext.define 'Purple.controller.Account',
     
     util.ctl('Menu').adjustForAppLoginState()
     util.ctl('Menu').selectOption 1
+
+    Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
 
     ga_storage._trackEvent 'main', 'Logged Out'
     

@@ -75,7 +75,7 @@ Ext.define 'Purple.view.MapForm',
         id: 'centerMapButton'
         flex: 0
         ui: 'plain'
-        handler: -> @up().fireEvent 'recenterAtUserLoc', true
+        handler: -> @up().fireEvent 'recenterAtUserLoc', true, true
       }
       {
         xtype: 'component'
@@ -110,27 +110,6 @@ Ext.define 'Purple.view.MapForm',
         clearIcon: no
         value: 'Updating location...'
         disabled: yes
-        listeners:
-          initialize: (textField) ->
-            textField.element.on 'tap', =>
-              if util.ctl('Account').isUserLoggedIn()
-                textField.setValue ''
-                @fireEvent 'addressInputMode'
-              else
-                @fireEvent('showLogin')
-            true
-          keyup: (textField, event) ->
-            textField.lastQuery ?= ''
-            query = textField.getValue()
-            if query isnt textField.lastQuery and query isnt ''
-              textField.lastQuery = query
-              if textField.genSuggTimeout?
-                clearTimeout textField.genSuggTimeout
-              textField.genSuggTimeout = setTimeout(
-                @fireEvent('generateSuggestions'),
-                500
-              )
-            true
       }
       {
         xtype: 'container'

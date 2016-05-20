@@ -153,6 +153,7 @@ input {
     background-position: center !important;
     background-color: transparent !important;
 }
+
 .menuButton.x-button-pressing,
 .freeGasButton.x-button-pressing,
 #centerMapButton.x-button-pressing {
@@ -174,7 +175,7 @@ input {
     margin-top: -2px !important;
 }
 
-.courier-app .freeGasButton,
+.courier-app .freeGasButton, 
 .hide-free-gas-button .freeGasButton {
     display: none !important;
 }
@@ -184,6 +185,14 @@ input {
     display: none !important;
 }
 
+.x-container.onDutyToggle {
+    display: none !important;
+}
+
+.courier-app .onDutyToggle {
+    display: block !important;
+    width: 100px !important;
+}
 
 
 

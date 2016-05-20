@@ -55,6 +55,9 @@ Ext.define 'Purple.controller.Main',
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
         showLogin: 'showLogin'
+        initialize: 'initRequestAddressField'
+        keyup: 'keyupRequestAddressField'
+        focus: 'focusRequestAddressField'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
@@ -83,7 +86,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
-        
+
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -98,28 +101,30 @@ Ext.define 'Purple.controller.Main',
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    
+    # if not localStorage['courierOnDuty']?
+    #   localStorage['courierOnDuty'] = 'no'
+
     # clearTimeout window.courierReloadTimer
     
     # END COURIER APP ONLY
-
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    if util.ctl('Account').isCourier()
+      @initCourierPing()
 
     # CUSTOMER APP ONLY
-    if VERSION is "PROD"
-      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-      ga_storage?._setAccount 'UA-61762011-1'
-      ga_storage?._setDomain 'none'
-      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    # if VERSION is "PROD"
+    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+    #   ga_storage?._setAccount 'UA-61762011-1'
+    #   ga_storage?._setDomain 'none'
+    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    analytics?.load util.SEGMENT_WRITE_KEY
-    if util.ctl('Account').isUserLoggedIn()
-      analytics?.identify localStorage['purpleUserId']
-      # segment says you 'have' to call analytics.page() at some point
-      # it doesn't seem to actually matter though
-    analytics?.track 'App Launch',
-      platform: Ext.os.name
-    analytics?.page 'Map'
+    # analytics?.load util.SEGMENT_WRITE_KEY
+    # if util.ctl('Account').isUserLoggedIn()
+    #   analytics?.identify localStorage['purpleUserId']
+    #   # segment says you 'have' to call analytics.page() at some point
+    #   # it doesn't seem to actually matter though
+    # analytics?.track 'App Launch',
+    #   platform: Ext.os.name
+    # analytics?.page 'Map'
     # END OF CUSTOMER APP ONLY
     
     navigator.splashscreen?.hide()
@@ -432,15 +437,33 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->
     if @geolocationAllowed?
       if not @geolocationAllowed
         if showAlertIfUnavailable
           navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
       else
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng @lat, @lng
-        )
+        if centerMapButtonPressed
+          Ext.Viewport.setMasked
+            xtype: 'loadmask'
+            message: ''
+          navigator.geolocation?.getCurrentPosition(
+            ((position) =>
+              @lat = position.coords.latitude
+              @lng = position.coords.longitude
+              @getMap().getMap().setCenter(
+                new google.maps.LatLng @lat, @lng
+              )
+              Ext.Viewport.setMasked false
+            ),
+            (=>
+              ),
+            {maximumAge: 0, enableHighAccuracy: true}
+          )
+        else
+          @getMap().getMap().setCenter(
+            new google.maps.LatLng @lat, @lng
+          )
 
   addressInputMode: ->
     if not @getMap().isHidden()
@@ -689,6 +712,31 @@ Ext.define 'Purple.controller.Main',
 
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
+
+  initRequestAddressField: (textField) ->
+    textField.element.on 'tap', =>
+      if util.ctl('Account').isUserLoggedIn()
+        textField.setValue ''
+        @addressInputMode()
+      else
+        @showLogin()
+    true
+
+  keyupRequestAddressField: (textField, event) ->
+    textField.lastQuery ?= ''
+    query = textField.getValue()
+    if query isnt textField.lastQuery and query isnt ''
+      textField.lastQuery = query
+      if textField.genSuggTimeout?
+        clearTimeout textField.genSuggTimeout
+      textField.genSuggTimeout = setTimeout(
+        @generateSuggestions(),
+        500
+      )
+    true
+
+  focusRequestAddressField: ->
+    @getRequestAddressField().setValue ''
 
   requestGasButtonPressed: ->
     deliveryLocName = @getRequestAddressField().getValue()
@@ -1066,36 +1114,47 @@ Ext.define 'Purple.controller.Main',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
-
+      
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
+    @gpsIntervalRef ?= setInterval (Ext.bind @updateLatlng, this), 5000
     @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
+    if @gpsIntervalRef?
+      clearInterval @gpsIntervalRef
+      @gpsIntervalRef = null
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
 
-  courierPing: ->
+  courierPing: (setOnDuty, successCallback, failureCallback) ->
     @errorCount ?= 0
     @courierPingBusy ?= no
-    if not @courierPingBusy
+    if @courierPingBusy and setOnDuty?
+      setTimeout (=>
+        @courierPing setOnDuty, successCallback, failureCallback
+        ), 11000
+    else
       @courierPingBusy = yes
+      params =
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @lat
+        lng: @lng
+        gallons:
+          87: localStorage['purpleCourierGallons87']
+          91: localStorage['purpleCourierGallons91']
+        position_accuracy: @positionAccuracy
+      if setOnDuty?
+        params.set_on_duty = setOnDuty
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @lat
-          lng: @lng
-          gallons:
-            87: localStorage['purpleCourierGallons87']
-            91: localStorage['purpleCourierGallons91']
-          position_accuracy: @positionAccuracy
+        params: Ext.JSON.encode params
         headers:
           'Content-Type': 'application/json'
-        timeout: 30000
+        timeout: 10000
         method: 'POST'
         scope: this
         success: (response_obj) ->
@@ -1105,8 +1164,20 @@ Ext.define 'Purple.controller.Main',
             if @disconnectedMessage?
               clearTimeout @disconnectedMessage
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
-            @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
+            @disconnectedMessage = setTimeout (->
+              if localStorage['courierOnDuty'] is 'yes'
+                Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'
+              ), (2 * 60 * 1000)
+            if (response.on_duty and localStorage['courierOnDuty'] is 'no') or (not response.on_duty and localStorage['courierOnDuty'] is 'yes')
+              localStorage['courierOnDuty'] = if response.on_duty then 'yes' else 'no'
+            util.ctl('Menu').updateOnDutyToggle()
+            successCallback?()
           else
+            @errorCount++
+            if @errorCount > 10
+              @errorCount = 0
+              navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+            failureCallback?()
             navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
           @errorCount++
@@ -1114,4 +1185,4 @@ Ext.define 'Purple.controller.Main',
             @errorCount = 0
             navigator.notification.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
           @courierPingBusy = no
-          
+          failureCallback?()
