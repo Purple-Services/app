@@ -185,6 +185,12 @@ input {
     display: none !important;
 }
 
+.courier-app .view-order .visibly-disabled.x-item-disabled.tire-pressure-field span, 
+.courier-app .visibly-disabled.x-item-disabled.tire-pressure-field .x-input-checkbox:checked + .x-field-mask::after {
+    color: red !important;
+    -webkit-text-fill-color: red !important;
+}
+
 .x-container.onDutyToggle {
     display: none !important;
 }
