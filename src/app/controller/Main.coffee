@@ -104,27 +104,27 @@ Ext.define 'Purple.controller.Main',
     # if not localStorage['courierOnDuty']?
     #   localStorage['courierOnDuty'] = 'no'
 
-    # clearTimeout window.courierReloadTimer
-    
+    # clearTimeout window.courierReloadTimer    
     # END COURIER APP ONLY
+
     if util.ctl('Account').isCourier()
       @initCourierPing()
 
     # CUSTOMER APP ONLY
-    # if VERSION is "PROD"
-    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    #   ga_storage?._setAccount 'UA-61762011-1'
-    #   ga_storage?._setDomain 'none'
-    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    if VERSION is "PROD"
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    # analytics?.load util.SEGMENT_WRITE_KEY
-    # if util.ctl('Account').isUserLoggedIn()
-    #   analytics?.identify localStorage['purpleUserId']
-    #   # segment says you 'have' to call analytics.page() at some point
-    #   # it doesn't seem to actually matter though
-    # analytics?.track 'App Launch',
-    #   platform: Ext.os.name
-    # analytics?.page 'Map'
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
     # END OF CUSTOMER APP ONLY
     
     navigator.splashscreen?.hide()
@@ -158,6 +158,7 @@ Ext.define 'Purple.controller.Main',
       # so it only happens when there is a change in user's settings
       @setUpPushNotifications()
       util.ctl('Orders').refreshOrdersAndOrdersList()
+    @updateLatlng()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -320,7 +321,7 @@ Ext.define 'Purple.controller.Main',
     #   failure: (response_obj) ->
     @getMap().getMap().setCenter(
       new google.maps.LatLng 34.0507177, -118.43757779999999
-      )
+    )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
@@ -437,33 +438,31 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->
-    if @geolocationAllowed?
-      if not @geolocationAllowed
-        if showAlertIfUnavailable
-          navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
-      else
-        if centerMapButtonPressed
-          Ext.Viewport.setMasked
-            xtype: 'loadmask'
-            message: ''
-          navigator.geolocation?.getCurrentPosition(
-            ((position) =>
-              @lat = position.coords.latitude
-              @lng = position.coords.longitude
-              @getMap().getMap().setCenter(
-                new google.maps.LatLng @lat, @lng
-              )
-              Ext.Viewport.setMasked false
-            ),
-            (=>
-              ),
-            {maximumAge: 0, enableHighAccuracy: true}
-          )
-        else
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->    
+    if centerMapButtonPressed
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      navigator.geolocation?.getCurrentPosition(
+        ((position) =>
+          @lat = position.coords.latitude
+          @lng = position.coords.longitude
           @getMap().getMap().setCenter(
             new google.maps.LatLng @lat, @lng
           )
+          Ext.Viewport.setMasked false
+        ),
+        (=>
+          Ext.Viewport.setMasked false
+          if showAlertIfUnavailable
+            navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
+        ),
+        {maximumAge: 0, enableHighAccuracy: true}
+      )
+    else
+      @getMap().getMap().setCenter(
+        new google.maps.LatLng @lat, @lng
+      )
 
   addressInputMode: ->
     if not @getMap().isHidden()

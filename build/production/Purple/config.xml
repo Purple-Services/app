@@ -19,7 +19,7 @@
   <!-- <preference name="phonegap-version" value="cli-6.0.0" /> -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <name>Purple</name> -->
+  <name>Purple</name>
   <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
