@@ -60,12 +60,12 @@
              }
 
              // update/reload orders list view
-             util.ctl('Orders').loadOrdersList(true);
+             util.ctl('Orders').loadOrdersList(true, util.ctl('Orders').refreshOrder);
              // if on a specific order page, just go back to the orders list
              // because it gets complicated to update the particular order page
-             if (util.ctl('Orders').getOrder() !== null) {
-                 util.ctl('Orders').backToOrders();
-             }
+             // if (util.ctl('Orders').getOrder() !== null) {
+             //     util.ctl('Orders').backToOrders();
+             // }
          }
 
          // Android
@@ -101,12 +101,12 @@
                              "Notification"
                          );
                          // update/reload orders list view
-                         util.ctl('Orders').loadOrdersList(true);
+                         util.ctl('Orders').loadOrdersList(true, util.ctl('Orders').refreshOrder);
                          // if on a specific order page, just go back to the orders list
                          // because it gets complicated to update the particular order page
-                         if (util.ctl('Orders').getOrder() !== null) {
-                             util.ctl('Orders').backToOrders();
-                         }
+                         // if (util.ctl('Orders').getOrder() !== null) {
+                         //     util.ctl('Orders').backToOrders();
+                         // }
                      }
                      
                      break;
