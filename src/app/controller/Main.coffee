@@ -354,6 +354,7 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
   updateMapWithAddressComponents: (address) ->
+    zipCodeUpdated = false
     if address[0]?['address_components']?
       addressComponents = address[0]['address_components']
       streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
@@ -362,6 +363,7 @@ Ext.define 'Purple.controller.Main',
       for c in addressComponents
         for t in c.types
           if t is "postal_code"
+            zipCodeUpdated = true
             @deliveryAddressZipCode = c['short_name']
             if not localStorage['gps_not_allowed_event_sent'] and not localStorage['first_launch_loc_sent']?
               # this means that this is the zip code of the location
@@ -370,6 +372,8 @@ Ext.define 'Purple.controller.Main',
                 street_address: streetAddress
                 zip_code: @deliveryAddressZipCode
               localStorage['first_launch_loc_sent'] = 'yes'
+      if not zipCodeUpdated
+        @deliveryAddressZipCode = null
       @busyGettingGasPrice ?= no
       if not @busyGettingGasPrice
         @busyGettingGasPrice = yes
