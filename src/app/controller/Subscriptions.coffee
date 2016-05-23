@@ -47,13 +47,17 @@ Ext.define 'Purple.controller.Subscriptions',
       )
 
   # give it a user/details response (or similar format)
-  updateSubscriptionRelatedData: (response) ->
+  updateSubscriptionLocalStorageData: (response) ->
     localStorage['purpleSubscriptionId'] = response.user.subscription_id
     localStorage['purpleSubscriptionExpirationTime'] = response.user.subscription_expiration_time
     localStorage['purpleSubscriptionAutoRenew'] = response.user.subscription_auto_renew
     localStorage['purpleSubscriptionPeriodStartTime'] = response.user.subscription_period_start_time
     localStorage['purpleSubscriptionName'] = if response.user.subscription_id then response.system.subscriptions[response.user.subscription_id].name else "None"
     @refreshSubscriptionsField()
+
+  # give it a user/details response (or similar format)
+  updateSubscriptionRelatedData: (response) ->
+    @updateSubscriptionLocalStorageData response
     @subscriptions = response.system.subscriptions
     @renderSubscriptions @subscriptions
     

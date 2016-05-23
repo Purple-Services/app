@@ -801,6 +801,7 @@ Ext.define 'Purple.controller.Main',
         if response.success
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          util.ctl('Subscriptions').updateSubscriptionLocalStorageData response
           util.ctl('Subscriptions').subscriptionUsage = response.user.subscription_usage
           availabilities = response.availabilities
           totalNumOfTimeOptions = availabilities.reduce (a, b) ->
