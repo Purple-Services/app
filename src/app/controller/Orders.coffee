@@ -280,6 +280,12 @@ Ext.define 'Purple.controller.Orders',
     if not list?
       return
     list.removeAll yes, yes
+    if orders.length is 0 and not util.ctl('Account').isCourier()
+      list.add
+        xtype: 'component'
+        flex: 0
+        html: """No orders here yet. Use the <span style="font-weight: 900; color: #423774;">Request Gas</span> button to make your first order."""
+        cls: "loose-text"
     for o in orders
       if util.ctl('Account').isCourier()
         v = o['vehicle']
