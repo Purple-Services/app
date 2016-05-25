@@ -143,6 +143,10 @@ Ext.define 'Purple.controller.Main',
 
     @androidHighAccuracyNotificationActive = false
 
+    if window.queuedDeepLinkUrl?
+      util.handleDeepLinkUrl window.queuedDeepLinkUrl
+      window.queuedDeepLinkUrl = null
+
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
       cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
@@ -195,7 +199,7 @@ Ext.define 'Purple.controller.Main',
         setTimeout (=> 
           if not @pushNotificationEnabled
             navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
-          ), 1500 
+          ), 1500
       window.plugins?.pushNotification?.register(
         (Ext.bind @registerDeviceForPushNotifications, this),
         ((error) -> alert "error: " + error),

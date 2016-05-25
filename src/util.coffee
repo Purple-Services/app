@@ -107,3 +107,10 @@ window.util =
       callback?()
     else
       navigator.notification.alert message, callback, title
+
+  handleDeepLinkUrl: (url) ->
+    if util.ctl('Account').isUserLoggedIn()
+      switch url
+        when 'purpleapp://membership'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
