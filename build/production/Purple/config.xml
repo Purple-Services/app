@@ -160,18 +160,21 @@
     </array>
   </gap:config-file>
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <gap:plugin name="cordova-plugin-googleplus" version="4.0.8" source="npm">
+  <!-- <gap:plugin name="cordova-plugin-googleplus" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
-  </gap:plugin>
+  </gap:plugin> -->
+  <plugin spec="https://github.com/Purple-Services/cordova-plugin-googleplus" source="git">
+    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
+  </plugin>
   <!-- END CUSTOMER APP ONLY -->
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
   <!-- iOS only -->
   <gap:plugin name="com.phonegap.plugins.facebookconnect">
-      <param name="APP_ID" value="1588773851335820" />
-      <param name="APP_NAME" value="Purple" />
-    </gap:plugin>
+    <param name="APP_ID" value="1588773851335820" />
+    <param name="APP_NAME" value="Purple" />
+  </gap:plugin>
   <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   <!-- End of iOS only -->
   
