@@ -115,13 +115,15 @@ window.util =
         when 'purpleapp://map'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 0, no, no
         when 'purpleapp://membership'
-          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
-          util.ctl('Subscriptions').subscriptionsFieldTap()
+          if not util.ctl('Subscriptions').getSubscriptions?()
+            util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+            util.ctl('Subscriptions').subscriptionsFieldTap()
         when 'purpleapp://account'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
         when 'purpleapp://editaccount'
-          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
-          util.ctl('Account').showEditAccountForm()
+          if not util.ctl('Account').getEditAccountForm?()
+            util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+            util.ctl('Account').showEditAccountForm()
         when 'purpleapp://orders'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
         when 'purpleapp://vehicles'
