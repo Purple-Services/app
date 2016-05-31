@@ -108,22 +108,21 @@ window.util =
     else
       navigator.notification.alert message, callback, title
 
-  # account, orders, vehicles, get free gas, help/faqs, feedbck, membership, edit account, enter coupon code
   handleDeepLinkUrl: (url) ->
+    while util.ctl('Menu').backButtonStack.length
+      util.ctl('Menu').popOffBackButton()
     if util.ctl('Account').isUserLoggedIn()
       switch url
         when 'purpleapp://map'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 0, no, no
         when 'purpleapp://membership'
-          if not util.ctl('Subscriptions').getSubscriptions?()
-            util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
-            util.ctl('Subscriptions').subscriptionsFieldTap()
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
         when 'purpleapp://account'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
         when 'purpleapp://editaccount'
-          if not util.ctl('Account').getEditAccountForm?()
-            util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
-            util.ctl('Account').showEditAccountForm()
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Account').showEditAccountForm()
         when 'purpleapp://orders'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
         when 'purpleapp://vehicles'
