@@ -358,23 +358,24 @@ Ext.define 'Purple.controller.Orders',
           @loadOrdersList yes, (Ext.bind @refreshOrder, this)
 
   refreshOrder: ->
-    for o in @orders
-      if o['id'] is @getOrder().config.orderId
-        order = o
-        break
+    if @getOrder?()
+      for o in @orders
+        if o['id'] is @getOrder().config.orderId
+          order = o
+          break
 
-    if order['status'] is 'unassigned' 
-      @getOrderStatusDisplay().setValue 'Accepted'
-    else 
-      @getOrderStatusDisplay().setValue order['status']
+      if order['status'] is 'unassigned' 
+        @getOrderStatusDisplay().setValue 'Accepted'
+      else 
+        @getOrderStatusDisplay().setValue order['status']
 
-    @getOrder().removeCls @currentOrderClass
-    @getOrder().addCls "status-#{order['status']}"
-    
-    @currentOrderClass = "status-#{order['status']}"
+      @getOrder().removeCls @currentOrderClass
+      @getOrder().addCls "status-#{order['status']}"
+      
+      @currentOrderClass = "status-#{order['status']}"
 
-    if order['status'] is 'complete'
-      @getOrderRating().show()
+      if order['status'] is 'complete'
+        @getOrderRating().show()
 
   askToCancelOrder: (id) ->
     util.confirm(
