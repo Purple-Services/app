@@ -280,6 +280,34 @@ Ext.define 'Purple.controller.Orders',
     if not list?
       return
     list.removeAll yes, yes
+    if orders.length is 0 and not util.ctl('Account').isCourier()
+      list.add
+        xtype: 'component'
+        flex: 0
+        html: """No orders yet. Let's change that! Get gas now."""
+        cls: "loose-text"
+      list.add
+        xtype: 'container'
+        # cls: 'slideable'
+        flex: 0
+        height: 110
+        padding: '0 0 5 0'
+        layout:
+          type: 'vbox'
+          pack: 'center'
+          align: 'center'
+        items: [
+          {
+            xtype: 'button'
+            ui: 'action'
+            cls: 'button-pop'
+            text: 'Get Started'
+            flex: 0
+            disabled: no
+            handler: ->
+              util.ctl('Main').getMainContainer().getItems().getAt(0).select 0, no, no
+          }
+        ]
     for o in orders
       if util.ctl('Account').isCourier()
         v = o['vehicle']
