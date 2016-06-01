@@ -23,6 +23,7 @@ Ext.define 'Purple.view.GasStations',
     scrollable:
       direction: 'vertical'
       directionLock: yes
+
     items: [
       {
         xtype: 'spacer'
@@ -38,277 +39,58 @@ Ext.define 'Purple.view.GasStations',
           align: 'start'
         items: [
           {
-            xtype: 'component'
+            xtype: 'container'
+            ctype: 'findGasButtonContainer'
             flex: 0
-            cls: 'heading'
-            html: 'Gas Stations'
-          }
-          {
-            xtype: 'component'
-            flex: 0
-            cls: [
-              'horizontal-rule'
-              'purple-rule'
+            height: 110
+            width: '100%'
+            padding: '0 0 5 0'
+            layout:
+              type: 'vbox'
+              pack: 'center'
+              align: 'center'
+            items: [
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: 'button-pop'
+                text: 'Find Gas Station'
+                flex: 0
+                handler: ->
+                  @up().fireEvent 'getGasStation'
+              }
             ]
           }
           {
-            xtype: 'textfield'
+            xtype: 'container'
+            ctype: 'recommendedGasStation'
+            width: '100%'
             flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '7901 Sunset Blvd., Los Angeles, CA 90046'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
+            layout: 'vbox'
           }
           {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '6100 Franklin Ave., Los Angeles, CA 90028'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
+            xtype: 'container'
+            ctype: 'blacklistGasStationButtonContainer'
+            layout:
+              type: 'vbox'
+              pack: 'start'
+              align: 'start'
+            cls: 'blacklist-button'
+            hidden: yes
+            items: [
+              xtype: 'button'
+              ui: 'plain'
+              text: 'Report a problem with this gas station?'
+              handler: -> 
+                @up().fireEvent 'blacklistGasStation'
             ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '655 N Western Ave., Los Angeles, CA 90004'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '1255 Highland Ave., Los Angeles, CA 90038'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '8770 W Olympic Blvd., Los Angeles, CA 90035'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '9779 W Pico Blvd., Los Angeles, CA 90035'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '3479 Motor Ave., Los Angeles, CA 90034'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '12332 W Washington Blvd., Los Angeles, CA 90066'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'ARCO'
-            labelWidth: 62
-            value: '332 Pico Blvd., Santa Monica, CA 90405'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }         
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: '76'
-            labelWidth: 36
-            value: '9988 Wilshire Blvd., Beverly Hills, CA 90210'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: '76'
-            labelWidth: 36
-            value: '9081 W Pico Blvd., Los Angeles, CA 90035'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'Shell'
-            labelWidth: 57
-            value: '391 S Robertson Blvd., Beverly Hills, CA 90211'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: '76'
-            labelWidth: 36
-            value: '1460 S La Cienega Blvd., Los Angeles, CA 90035'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: '76'
-            labelWidth: 36
-            value: '7861 Melrose Ave., Los Angeles, CA 90046'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
-          }
-          {
-            xtype: 'textfield'
-            flex: 0
-            name: 'address_street'
-            label: 'Shell'
-            labelWidth: 57
-            value: '7861 Melrose Ave., Los Angeles, CA 90046'
-            disabled: yes
-            cls: [
-              'visibly-disabled'
-              'bottom-margin'
-            ]
-            listeners:
-              initialize: (field) ->
-                field.element.on 'tap', ->
-                  window.location.href = "comgooglemaps://?daddr=#{encodeURIComponent(field.getValue()).replace(/%20/g, "+").replace(/%2C/g, ",")}&directionsmode=driving"
           }
           {
             xtype: 'component'
+            ctype: 'gasStationTip'
             flex: 0
+            padding: '100 0 0 0'
+            hidden: yes
             html: """
               Tap on a gas station to open in Google Maps.
             """
@@ -320,4 +102,3 @@ Ext.define 'Purple.view.GasStations',
         flex: 1
       }
     ]
-
