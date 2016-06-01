@@ -284,8 +284,12 @@ Ext.define 'Purple.controller.Orders',
       list.add
         xtype: 'component'
         flex: 0
-        html: """No orders yet. Let's change that! Get gas now."""
+        html: """
+          No orders yet.
+          <br />Let's change that! Get gas now.
+        """
         cls: "loose-text"
+        style: "text-align: center;"
       list.add
         xtype: 'container'
         # cls: 'slideable'

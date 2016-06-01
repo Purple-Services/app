@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "DEV"
+VERSION = "LOCAL"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -14,7 +14,7 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.4.0"
+  VERSION_NUMBER: "1.11.4"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     # when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"

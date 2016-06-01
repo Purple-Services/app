@@ -181,7 +181,9 @@ input {
 }
 
 /* no fb or google login for courier app */
-.courier-app .icon-login-button {
+.courier-app .icon-login-button,
+/* no subscription field on the Account page */
+.courier-app #accountSubscriptionsField {
     display: none !important;
 }
 
