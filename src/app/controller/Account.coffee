@@ -424,9 +424,6 @@ Ext.define 'Purple.controller.Account',
 
     Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
 
-    facebookConnectPlugin.logout((->), (->))
-    window.plugins.googleplus.logout((->))
-
     ga_storage._trackEvent 'main', 'Logged Out'
     
   isUserLoggedIn: ->
