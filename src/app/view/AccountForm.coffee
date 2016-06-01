@@ -122,6 +122,19 @@ Ext.define 'Purple.view.AccountForm',
           }
           {
             xtype: 'textfield'
+            id: 'accountSubscriptionsField'
+            flex: 0
+            name: 'subscriptions'
+            label: 'Membership'
+            labelWidth: 130
+            cls: [
+              'click-to-edit'
+              'bottom-margin'
+            ]
+            disabled: yes
+          }
+          {
+            xtype: 'textfield'
             id: 'accountPaymentMethodField'
             flex: 0
             name: 'payment_method'

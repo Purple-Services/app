@@ -28,8 +28,8 @@ Ext.application
     'Vehicles'
     'Orders'
     'PaymentMethods'
+    'Subscriptions'
     'GasTanks'
-    'GasStations'
   ]
   views: [
     'MainContainer'

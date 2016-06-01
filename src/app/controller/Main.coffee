@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Main',
       requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
       requestForm: 'requestform'
+      requestFormTirePressureCheck: '[ctype=requestFormTirePressureCheck]'
       requestConfirmationForm: 'requestconfirmationform'
       feedback: 'feedback'
       feedbackTextField: '[ctype=feedbackTextField]'
@@ -47,19 +48,25 @@ Ext.define 'Purple.controller.Main',
       map:
         dragstart: 'dragStart'
         boundchange: 'boundChanged'
+        idle: 'idle'
         centerchange: 'adjustDeliveryLocByLatLng'
         maprender: 'initGeocoder'
       requestAddressField:
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
         showLogin: 'showLogin'
+        initialize: 'initRequestAddressField'
+        keyup: 'keyupRequestAddressField'
+        focus: 'focusRequestAddressField'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
-        initRequestGasForm: 'initRequestGasForm'
+        initRequestGasForm: 'requestGasButtonPressed'
       requestForm:
         backToMap: 'backToMapFromRequestForm'
         sendRequest: 'sendRequest'
+      requestFormTirePressureCheck:
+        requestFormTirePressureCheckTap: 'requestFormTirePressureCheckTap'
       requestConfirmationForm:
         backToRequestForm: 'backToRequestForm'
         confirmOrder: 'confirmOrder'
@@ -79,6 +86,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
+
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -89,14 +97,18 @@ Ext.define 'Purple.controller.Main',
   launch: ->
     @callParent arguments
 
+    localStorage['lastCacheVersionNumber'] = util.VERSION_NUMBER
+
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    
+    if not localStorage['courierOnDuty']?
+      localStorage['courierOnDuty'] = 'no'
+
     clearTimeout window.courierReloadTimer
-    
     # END COURIER APP ONLY
 
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    if util.ctl('Account').isCourier()
+      @initCourierPing()
 
     # CUSTOMER APP ONLY
     # if VERSION is "PROD"
@@ -146,6 +158,7 @@ Ext.define 'Purple.controller.Main',
       # so it only happens when there is a change in user's settings
       @setUpPushNotifications()
       util.ctl('Orders').refreshOrdersAndOrdersList()
+    @updateLatlng()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -161,12 +174,19 @@ Ext.define 'Purple.controller.Main',
         navigator.splashscreen?.show()
         window.location.reload()
       else
-        navigator.notification.confirm 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload']
-        
-  connectionStatusConfirmation: (index) ->
-    if index is 2
-      navigator.splashscreen.show()
-      window.location.reload()
+        util.confirm(
+          'Connection Problem',
+          """
+            Please try restarting the application.
+            If the problem persists, contact support@purpledelivery.com.
+          """,
+          (->
+            navigator.splashscreen.show()
+            window.location.reload()),
+          null,
+          'Reload',
+          'Ignore'
+        )
 
   setUpPushNotifications: (alertIfDisabled) ->
     if Ext.os.name is "iOS"
@@ -240,7 +260,9 @@ Ext.define 'Purple.controller.Main',
             if locationMode isnt 'high_accuracy' and @androidHighAccuracyNotificationActive is false
               @androidHighAccuracyNotificationActive = true
               cordova.plugins.locationAccuracy.request(
-                (=> @androidHighAccuracyNotificationActive = false), 
+                (=>
+                  @androidHighAccuracyNotificationActive = false
+                  window.location.reload()), 
                 (=> 
                   @androidHighAccuracyNotificationActive = false
                   if not util.ctl('Account').isCourier()
@@ -263,12 +285,12 @@ Ext.define 'Purple.controller.Main',
         ((position) =>
           @positionAccuracy = position.coords.accuracy
           @geolocationAllowed = true
-          @updateLatlngBusy = no
           @lat = position.coords.latitude
           @lng = position.coords.longitude
           if not @mapInitiallyCenteredYet and @mapInited
             @mapInitiallyCenteredYet = true
             @recenterAtUserLoc()
+          @updateLatlngBusy = no
         ),
         (=>
           # console.log "GPS failure callback called"
@@ -283,22 +305,23 @@ Ext.define 'Purple.controller.Main',
       )
   
   centerUsingIpAddress: ->
-    Ext.Ajax.request
-      url: "https://freegeoip.net/json/"
-      headers:
-        'Content-Type': 'application/json'
-      timeout: 30000
-      method: 'GET'
-      scope: this
-      success: (response_obj) ->
-        response = Ext.JSON.decode response_obj.responseText
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng response.latitude, response.longitude
-          )
-      failure: (response_obj) ->
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng 34.0507177, -118.43757779999999
-          )
+    # This works but cannot be used for commercial purposes unless we pay for it. Currently exploring other options.
+    # Ext.Ajax.request
+    #   url: "http://ip-api.com/json"
+    #   headers:
+    #     'Content-Type': 'application/json'
+    #   timeout: 5000
+    #   method: 'GET'
+    #   scope: this
+    #   success: (response_obj) ->
+    #     response = Ext.JSON.decode response_obj.responseText
+    #     @getMap().getMap().setCenter(
+    #       new google.maps.LatLng response.lat, response.lon
+    #       )
+    #   failure: (response_obj) ->
+    @getMap().getMap().setCenter(
+      new google.maps.LatLng 34.0507177, -118.43757779999999
+    )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
@@ -311,10 +334,17 @@ Ext.define 'Purple.controller.Main',
       navigator.notification.alert "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
 
   dragStart: ->
+    @lastDragStart = new Date().getTime() / 1000
     @getRequestGasButton().setDisabled yes
+    @getCenterMapButton().hide()
 
   boundChanged: ->
     @getRequestGasButton().setDisabled yes
+
+  idle: ->
+    currentTime = new Date().getTime() / 1000
+    if currentTime - @lastDragStart > 0.3
+      @getCenterMapButton().show()
 
   adjustDeliveryLocByLatLng: ->
     center = @getMap().getMap().getCenter()
@@ -356,13 +386,22 @@ Ext.define 'Purple.controller.Main',
           success: (response_obj) ->
             @getRequestGasButton().setDisabled no
             response = Ext.JSON.decode response_obj.responseText
+            
             if response.success
               prices = response.gas_prices
+              Ext.get('gas-price-unavailable').setStyle {display: 'none'}
+              Ext.get('gas-price-display').setStyle {display: 'block'}
               Ext.get('gas-price-display-87').setText(
                 "$#{util.centsToDollars prices["87"]}"
               )
               Ext.get('gas-price-display-91').setText(
                 "$#{util.centsToDollars prices["91"]}"
+              )
+            else
+              Ext.get('gas-price-display').setStyle {display: 'none'}
+              Ext.get('gas-price-unavailable').setStyle {display: 'block'}
+              Ext.get('gas-price-unavailable').setText(
+                response.message
               )
             @busyGettingGasPrice = no
           failure: (response_obj) ->
@@ -376,8 +415,16 @@ Ext.define 'Purple.controller.Main',
     else
       latlng = new google.maps.LatLng lat, lng
       @geocoder?.geocode {'latLng': latlng}, (results, status) =>
-        if status is google.maps.GeocoderStatus.OK and not @getMap().isHidden()
-          @updateMapWithAddressComponents(results)
+        if @geocodeTimeout?
+          clearTimeout @geocodeTimeout
+          @geocodeTimeout = null
+        if status is google.maps.GeocoderStatus.OK
+          if not @getMap().isHidden()
+            @updateMapWithAddressComponents(results)
+        else
+          @geocodeTimeout = setTimeout (=>
+            @updateDeliveryLocAddressByLatLng lat, lng
+            ), 1000
 
   mapMode: ->
     if @getMap().isHidden()
@@ -391,15 +438,31 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
-    if @geolocationAllowed?
-      if not @geolocationAllowed
-        if showAlertIfUnavailable
-          navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
-      else
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng @lat, @lng
-        )
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->    
+    if centerMapButtonPressed
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      navigator.geolocation?.getCurrentPosition(
+        ((position) =>
+          @lat = position.coords.latitude
+          @lng = position.coords.longitude
+          @getMap().getMap().setCenter(
+            new google.maps.LatLng @lat, @lng
+          )
+          Ext.Viewport.setMasked false
+        ),
+        (=>
+          Ext.Viewport.setMasked false
+          if showAlertIfUnavailable
+            navigator.notification.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
+        ),
+        {maximumAge: 0, enableHighAccuracy: true}
+      )
+    else
+      @getMap().getMap().setCenter(
+        new google.maps.LatLng @lat, @lng
+      )
 
   addressInputMode: ->
     if not @getMap().isHidden()
@@ -518,8 +581,8 @@ Ext.define 'Purple.controller.Main',
       util.ctl('Main').getAutocompleteList().getStore().setData suggestions
 
   updateDeliveryLocAddressByLocArray: (loc) ->
-    @getRequestAddressField().setValue loc['locationName']
     @mapMode()
+    @getRequestAddressField().setValue loc['locationName']
     util.ctl('Menu').clearBackButtonStack()
     # set latlng to zero just in case they press request gas before this func is
     # done. we don't want an old latlng to be in there that doesn't match address
@@ -535,9 +598,9 @@ Ext.define 'Purple.controller.Main',
               @deliveryAddressZipCode = c['short_name']
         @deliveryLocLat = latlng.lat()
         @deliveryLocLng = latlng.lng()
-        @getMap().getMap().setCenter latlng
         @bypassUpdateDeliveryLocAddressByLatLng = true
-        @updateMapWithAddressComponents(place)
+        @getMap().getMap().setCenter latlng
+        @updateMapWithAddressComponents([place])
         @getMap().getMap().setZoom 17
       # else
       #   console.log 'placesService error' + status
@@ -649,13 +712,32 @@ Ext.define 'Purple.controller.Main',
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
-  isEmpty: (obj) ->
-    for key of obj
-      if obj.hasOwnProperty key
-        return false
+  initRequestAddressField: (textField) ->
+    textField.element.on 'tap', =>
+      if util.ctl('Account').isUserLoggedIn()
+        textField.setValue ''
+        @addressInputMode()
+      else
+        @showLogin()
     true
 
-  initRequestGasForm: ->
+  keyupRequestAddressField: (textField, event) ->
+    textField.lastQuery ?= ''
+    query = textField.getValue()
+    if query isnt textField.lastQuery and query isnt ''
+      textField.lastQuery = query
+      if textField.genSuggTimeout?
+        clearTimeout textField.genSuggTimeout
+      textField.genSuggTimeout = setTimeout(
+        @generateSuggestions(),
+        500
+      )
+    true
+
+  focusRequestAddressField: ->
+    @getRequestAddressField().setValue ''
+
+  requestGasButtonPressed: ->
     deliveryLocName = @getRequestAddressField().getValue()
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     analytics?.track 'Request Gas Button Pressed',
@@ -668,58 +750,84 @@ Ext.define 'Purple.controller.Main',
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @showLogin()
+    else if (
+      not localStorage['purpleSubscriptionId']? or
+      localStorage['purpleSubscriptionId'] is '0'
+    ) and (
+      not localStorage['purpleAdShownTimesSubscription']? or
+      parseInt(localStorage['purpleAdShownTimesSubscription']) < 2
+    )
+      localStorage['purpleAdShownTimesSubscription'] ?= 0
+      localStorage['purpleAdShownTimesSubscription'] = (
+        parseInt(localStorage['purpleAdShownTimesSubscription']) + 1
+      )
+      util.ctl('Subscriptions').showAd(
+        (=> # pass-thru callback
+          @initRequestGasForm deliveryLocName
+        )
+        (=> # active callback
+          @getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
+        )
+      )
     else
-      # send to request gas form, but first get availbility from disptach system
-      Ext.Viewport.setMasked
-        xtype: 'loadmask'
-        message: ''
-      Ext.Ajax.request
-        # use the gitignored availabilities.json file for testing
-        # url: "availabilities.json"
-        url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @deliveryLocLat
-          lng: @deliveryLocLng
-          zip_code: @deliveryAddressZipCode
-        headers:
-          'Content-Type': 'application/json'
-        timeout: 30000
-        method: 'POST'
-        scope: this
-        success: (response_obj) ->
-          Ext.Viewport.setMasked false
-          response = Ext.JSON.decode response_obj.responseText
-          if response.success
-            localStorage['purpleUserReferralCode'] = response.user.referral_code
-            localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
-            availabilities = response.availabilities
-            # and, are there any time options available
-            totalNumOfTimeOptions = availabilities.reduce (a, b) ->
-              Object.keys(a.times).length + Object.keys(b.times).length
-            if @isEmpty(availabilities[0].gallon_choices) and @isEmpty(availabilities[1].gallon_choices) or totalNumOfTimeOptions is 0
-              navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
-            else
-              util.ctl('Menu').pushOntoBackButton =>
-                @backToMapFromRequestForm()
-              @getRequestGasTabContainer().setActiveItem(
-                Ext.create 'Purple.view.RequestForm',
-                  availabilities: availabilities
-              )
-              @getRequestForm().setValues(
-                lat: @deliveryLocLat
-                lng: @deliveryLocLng
-                address_street: deliveryLocName
-                address_zip: @deliveryAddressZipCode
-              )
-              analytics?.page 'Order Form'
+      @initRequestGasForm deliveryLocName
+      
+  initRequestGasForm: (deliveryLocName) ->
+    # send to request gas form
+    # but first get availbility from disptach system
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      # you can use the gitignored availabilities.json file for testing:
+      #   url: "availabilities.json"
+      url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
+      params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @deliveryLocLat
+        lng: @deliveryLocLng
+        zip_code: @deliveryAddressZipCode
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          localStorage['purpleUserReferralCode'] = response.user.referral_code
+          localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          util.ctl('Subscriptions').updateSubscriptionLocalStorageData response
+          util.ctl('Subscriptions').subscriptionUsage = response.user.subscription_usage
+          availabilities = response.availabilities
+          totalNumOfTimeOptions = availabilities.reduce (a, b) ->
+            Object.keys(a.times).length + Object.keys(b.times).length
+          if util.isEmpty(availabilities[0].gallon_choices) and
+          util.isEmpty(availabilities[1].gallon_choices) or
+          totalNumOfTimeOptions is 0
+            navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
           else
-            navigator.notification.alert response.message, (->), "Error"
-        failure: (response_obj) ->
-          Ext.Viewport.setMasked false
-          console.log response_obj
+            util.ctl('Menu').pushOntoBackButton =>
+              @backToMapFromRequestForm()
+            @getRequestGasTabContainer().setActiveItem(
+              Ext.create 'Purple.view.RequestForm',
+                availabilities: availabilities
+            )
+            @getRequestForm().setValues
+              lat: @deliveryLocLat
+              lng: @deliveryLocLng
+              address_street: deliveryLocName
+              address_zip: @deliveryAddressZipCode
+            analytics?.page 'Order Form'
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        console.log response_obj
 
   backToMapFromRequestForm: ->
     @getRequestGasTabContainer().remove(
@@ -733,6 +841,24 @@ Ext.define 'Purple.controller.Main',
       @getRequestConfirmationForm(),
       yes
     )
+
+  # if localStorage['purpleSubscriptionId']? and
+  # util.ctl("Subscriptions").subscriptions[localStorage['purpleSubscriptionId']].num_free_tire_pressure_check > 0
+  requestFormTirePressureCheckTap: ->
+    if @getRequestFormTirePressureCheck().getDisabled()
+      util.alert(
+        (if localStorage['purpleSubscriptionId']? and
+        localStorage['purpleSubscriptionId'] is '2'
+          """
+            You have already used your tire pressure fill-up(s) for this plan period.
+          """
+        else
+          """
+            Tire pressure fill-ups are only available for members of the
+            "Express" plan.
+          """),
+        "Oh no!"
+      )
 
   sendRequest: -> # takes you to the confirmation page
     @getRequestGasTabContainer().setActiveItem(
@@ -782,6 +908,11 @@ Ext.define 'Purple.controller.Main',
         break
 
     @getRequestConfirmationForm().setValues vals
+
+    if not vals['tire_pressure_check']
+      Ext.ComponentQuery.query('#tirePressureCheckField')[0].hide()
+      # Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
+    
     if vals['special_instructions'] is ''
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
@@ -851,15 +982,15 @@ Ext.define 'Purple.controller.Main',
       @getMainContainer().getItems().getAt(0).select 2, no, no
       pmCtl = util.ctl('PaymentMethods')
       if not pmCtl.getPaymentMethods()?
-        pmCtl.accountPaymentMethodFieldTap yes
+        pmCtl.paymentMethodFieldTap yes
         
       pmCtl.showEditPaymentMethodForm 'new', yes
       util.ctl('Menu').pushOntoBackButton ->
-        pmCtl.backToAccount()
+        pmCtl.backToPreviousPage()
         util.ctl('Menu').selectOption 0
       
       pmCtl.getEditPaymentMethodForm().config.saveChangesCallback = ->
-        pmCtl.backToAccount()
+        pmCtl.backToPreviousPage()
         util.ctl('Menu').selectOption 0
     else
       vals = @getRequestConfirmationForm().getValues()
@@ -983,36 +1114,47 @@ Ext.define 'Purple.controller.Main',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
-
+      
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
+    @gpsIntervalRef ?= setInterval (Ext.bind @updateLatlng, this), 5000
     @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
+    if @gpsIntervalRef?
+      clearInterval @gpsIntervalRef
+      @gpsIntervalRef = null
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null
 
-  courierPing: ->
+  courierPing: (setOnDuty, successCallback, failureCallback) ->
     @errorCount ?= 0
     @courierPingBusy ?= no
-    if not @courierPingBusy
+    if @courierPingBusy and setOnDuty?
+      setTimeout (=>
+        @courierPing setOnDuty, successCallback, failureCallback
+        ), 11000
+    else
       @courierPingBusy = yes
+      params =
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @lat
+        lng: @lng
+        gallons:
+          87: localStorage['purpleCourierGallons87']
+          91: localStorage['purpleCourierGallons91']
+        position_accuracy: @positionAccuracy
+      if setOnDuty?
+        params.set_on_duty = setOnDuty
       Ext.Ajax.request
         url: "#{util.WEB_SERVICE_BASE_URL}courier/ping"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @lat
-          lng: @lng
-          gallons:
-            87: localStorage['purpleCourierGallons87']
-            91: localStorage['purpleCourierGallons91']
-          position_accuracy: @positionAccuracy
+        params: Ext.JSON.encode params
         headers:
           'Content-Type': 'application/json'
-        timeout: 30000
+        timeout: 10000
         method: 'POST'
         scope: this
         success: (response_obj) ->
@@ -1022,11 +1164,25 @@ Ext.define 'Purple.controller.Main',
             if @disconnectedMessage?
               clearTimeout @disconnectedMessage
             Ext.get(document.getElementsByTagName('body')[0]).removeCls 'disconnected'
-            @disconnectedMessage = setTimeout (->Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'), (2 * 60 * 1000)
+            @disconnectedMessage = setTimeout (->
+              if localStorage['courierOnDuty'] is 'yes'
+                Ext.get(document.getElementsByTagName('body')[0]).addCls 'disconnected'
+              ), (2 * 60 * 1000)
+            if (response.on_duty and localStorage['courierOnDuty'] is 'no') or (not response.on_duty and localStorage['courierOnDuty'] is 'yes')
+              localStorage['courierOnDuty'] = if response.on_duty then 'yes' else 'no'
+            util.ctl('Menu').updateOnDutyToggle()
+            successCallback?()
           else
             @errorCount++
             if @errorCount > 10
               @errorCount = 0
               navigator.notification.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+            failureCallback?()
+            navigator.notification.alert response.message, (->), (response.message_title ? "Error")
         failure: (response_obj) ->
+          @errorCount++
+          if @errorCount > 10
+            @errorCount = 0
+            navigator.notification.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
           @courierPingBusy = no
+          failureCallback?()

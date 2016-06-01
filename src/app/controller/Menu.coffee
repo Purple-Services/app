@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Menu',
       loginForm: 'loginform'
       mapForm: 'mapform'
       map: '#gmap'
+      onDutyToggle: '[ctype=onDutyToggle]'
     control:
       logoButton:
         logoButtonTap: 'logoButtonTap'
@@ -27,8 +28,13 @@ Ext.define 'Purple.controller.Menu',
       topToolbar:
         freeGasButtonTap: 'freeGasButtonTap'
         menuButtonTap: 'menuButtonTap'
+      onDutyToggle:
+        initialize: 'initOnDutyToggle'
+        change: 'onDutyToggled'
 
   backButtonStack: []
+  toggleFields: []
+  bypassOnDutyToggledEvent: false
 
   launch: ->
     @callParent arguments
@@ -123,21 +129,59 @@ Ext.define 'Purple.controller.Menu',
     for i in indicies
       @getMainContainer().getAt(0).getAt(2).getAt(i).hide()
 
+  initOnDutyToggle: (field) ->
+    @toggleFields.push field
+    if localStorage['courierOnDuty'] is 'yes'
+      @manuallySetToggleValue true
+
+  manuallySetToggleValue: (value) ->
+    @bypassOnDutyToggledEvent = true
+    for field in @toggleFields
+      field.setValue value
+    @bypassOnDutyToggledEvent = false
+
+  # Be advised this is being called for every toolbar instance's toggle element that gets inited on app launch
+  updateOnDutyToggle: ->
+    if localStorage['courierOnDuty'] is 'yes'
+      util.ctl('Main').initCourierPing()
+      @manuallySetToggleValue true
+    else
+      util.ctl('Main').killCourierPing()
+      @manuallySetToggleValue false
+
+  onDutyToggled: (field, newValue, oldValue) ->
+    if not @bypassOnDutyToggledEvent
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      if newValue is 0
+        @callCourierPing no
+      else
+        @callCourierPing yes
+
+  callCourierPing: (setOnDuty) ->
+    util.ctl('Main').courierPing(setOnDuty, (=> Ext.Viewport.setMasked false),
+      (=>
+        @updateOnDutyToggle()
+        Ext.Viewport.setMasked false
+      )
+    )
+
   adjustForAppLoginState: ->
     if util.ctl('Account').isUserLoggedIn()
       @hideTitles [1]
       if util.ctl('Account').isCourier()
         @hideTitles [0, 4, 7, 8]
-        @showTitles [2, 3, 9]
+        @showTitles [2, 3]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
-        util.ctl('Main').initCourierPing()
         Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
+        util.ctl('Main').initCourierPing()
       else
-        @hideTitles [8, 9]
+        @hideTitles [8]
         @showTitles [2, 3, 4, 7]
         Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
       util.ctl('Account').populateAccountForm()
     else
-      @hideTitles [2, 3, 4, 7, 8, 9]
+      @hideTitles [2, 3, 4, 7, 8]
       @showTitles [1]

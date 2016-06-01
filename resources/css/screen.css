@@ -155,6 +155,7 @@ input {
     background-position: center !important;
     background-color: transparent !important;
 }
+
 .menuButton.x-button-pressing,
 .freeGasButton.x-button-pressing,
 #centerMapButton.x-button-pressing {
@@ -182,12 +183,27 @@ input {
 }
 
 /* no fb or google login for courier app */
-.courier-app .icon-login-button {
+.courier-app .icon-login-button,
+/* no subscription field on the Account page */
+.courier-app #accountSubscriptionsField {
     display: none !important;
 }
 
 
+.courier-app .view-order .visibly-disabled.x-item-disabled.tire-pressure-field span, 
+.courier-app .visibly-disabled.x-item-disabled.tire-pressure-field .x-input-checkbox:checked + .x-field-mask::after {
+    color: red !important;
+    -webkit-text-fill-color: red !important;
+}
 
+.x-container.onDutyToggle {
+    display: none !important;
+}
+
+.courier-app .onDutyToggle {
+    display: block !important;
+    width: 100px !important;
+}
 
 
 .x-field {
@@ -263,6 +279,10 @@ input {
 .x-field.bottom-margin {
     margin-bottom: 10px;
 }
+/* not .x-field.top-margin because needs to work on labels */
+.top-margin {
+    margin-top: 10px;
+}
 .x-field.click-to-edit .x-input-el {
     padding-right: 20px;
 }
@@ -280,6 +300,18 @@ input {
     background-repeat: no-repeat;
     margin-top: -6px;
     -webkit-mask-image: none;
+    transition: all 0.2s linear;
+    -webkit-transform-origin: center;
+}
+.x-field.click-to-edit.point-down .x-component-outer:after {
+    -webkit-transform: rotate(90deg);
+    margin-top: 0px;
+    margin-right: 7px;
+}
+.x-field.click-to-edit.point-up .x-component-outer:after {
+    -webkit-transform: rotate(-90deg);
+    margin-top: -8px;
+    margin-right: 7px;
 }
 
 
@@ -351,12 +383,6 @@ input {
     font-family: 'Museo Sans Rounded' !important;
     text-transform: uppercase;
 }
-.button-pop.x-button-pressing {
-    box-shadow: none;
-    position: relative;
-    top: 1px;
-    left: 1px;
-}
 
 .smaller-button-pop .button-pop {
     box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.15);
@@ -365,6 +391,17 @@ input {
 .smaller-button-pop .button-pop .x-button-label {
     line-height: 32px;
     font-size: 18px;
+}
+.subscriptions .smaller-button-pop .button-pop .x-button-label {
+    line-height: 30px;
+    font-size: 17px;
+}
+
+.button-pop.x-button-pressing {
+    box-shadow: none;
+    position: relative;
+    top: 1px;
+    left: 1px;
 }
 
 .button-pop-dark {
@@ -389,6 +426,8 @@ input {
 .login-logo {
     width: 100%;
     padding-bottom: 30px;
+    position: relative;
+    top: -25px;
 }
 
 
@@ -466,6 +505,23 @@ input {
     text-transform: uppercase;
     font-size: 18px;
     padding-top: 5px;
+}
+.x-msgbox-dark .x-msgbox-text {
+    text-shadow: none;
+    color: #423974;
+    font-weight: 300;
+    font-size: 16px;
+}
+.x-msgbox-dark .x-msgbox-text .fake-title {
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 30px;
+    display: block;
+    margin-bottom: -8px;
+}
+.subscription-ad {
+    padding-bottom: 20px;
 }
 .x-msgbox .x-field {
     background: #EDEDED;
@@ -574,6 +630,13 @@ input {
 
 
 
+.auto-renew-toggle .x-toggle {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+}
+
+
 
 .x-spinner .x-input-el, .x-field-select .x-input-el {
     -webkit-text-fill-color: #0073C4;
@@ -584,6 +647,11 @@ input {
 .visibly-disabled.x-item-disabled .x-input-el {
     color: #999 !important;
     -webkit-text-fill-color: #999 !important;
+}
+
+.visibly-disabled.x-item-disabled.x-field-checkbox .x-input-checkbox:checked + .x-field-mask::after {
+    color: #555 !important;
+    -webkit-text-fill-color: #555 !important;
 }
 
 .view-order .visibly-disabled.x-item-disabled .x-form-label span,
@@ -784,6 +852,18 @@ input {
     pointer-events: none;
 }
 
+#googleLinkBlocker {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 40px;
+    left: 0px;
+    margin-left: 0px;
+    margin-top: -35px;
+    z-index: 1001;
+    background: transparent;
+}
+
 #googleMapLinkBlocker {
     content: '';
     position: absolute;
@@ -800,10 +880,10 @@ input {
     content: '';
     position: absolute;
     width: 70px;
-    height: 80px;
+    height: 50px;
     left: 0px;
     margin-left: 5px;
-    margin-top: -76px;
+    margin-top: -68px;
     z-index: 1001;
     background-image: url('../images/center-map-icon.png');
     background-repeat: no-repeat;
@@ -816,6 +896,8 @@ input {
     position: absolute;
     right: 0px;
     top: 5px;
+    width: 93px;
+    height: 51px;
     margin-right: 5px;
     padding: 4px 2px 2px 5px;
     z-index: 1001;
@@ -837,6 +919,9 @@ input {
     position: absolute;
     right: 4px;
     color: #F18653;
+}
+#gasPriceMapDisplay #gas-price-unavailable {
+    opacity: 0.8;
 }
 
 
@@ -1112,7 +1197,7 @@ input {
     font-weight: normal;
     font-family: Hind;
     text-transform: none;
-    line-height: 24px;
+    line-height: 27px;
     display: block;
     font-size: 17px;
 }

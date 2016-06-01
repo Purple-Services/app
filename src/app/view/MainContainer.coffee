@@ -9,6 +9,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Orders'
     'Purple.view.Vehicles'
     'Purple.view.PaymentMethods'
+    'Purple.view.Subscriptions'
     'Purple.view.Help'
     'Purple.view.Feedback'
     'Purple.view.Invite'
@@ -288,24 +289,6 @@ Ext.define 'Purple.view.MainContainer',
           }
           {
             xtype: 'gastanks'
-          }
-        ]
-      }
-      {
-        title: """
-          <img src="resources/images/gas-tank.png" style="height: 22px; padding-right: 4px; position: relative; top: 1px;" />
-          Find Gas
-        """
-        items: [
-          {
-            xtype: "toptoolbar"
-            cls: [
-              'slideable'
-              'bordered'
-            ]
-          }
-          {
-            xtype: 'gasstations'
           }
         ]
       }

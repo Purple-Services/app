@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Orders',
       orderSpecialInstructions: '[ctype=orderSpecialInstructions]'
       orderAddressStreet: '[ctype=orderAddressStreet]'
       orderAddressZipcode: '[ctype=orderAddressZipcode]'
+      orderTirePressureCheck: '[ctype=orderTirePressureCheck]'
       orderTimePlaced: '[ctype=orderTimePlaced]'
       orderTimeDeadline: '[ctype=orderTimeDeadline]'
       orderDisplayTime: '[ctype=orderDisplayTime]'
@@ -139,12 +140,17 @@ Ext.define 'Purple.controller.Orders',
     order['total_price_display'] = util.centsToDollars order['total_price']
 
     @getOrder().setValues order
+
+    if order['tire_pressure_check']
+      @getOrderTirePressureCheck().show()
+    
     if order['special_instructions'] is ''
       @getOrderSpecialInstructionsLabel().hide()
       @getOrderSpecialInstructions().hide()
       @getOrderAddressStreet().removeCls 'bottom-margin'
     else 
       @getOrderSpecialInstructions().setHtml(order['special_instructions'])
+      
     if util.ctl('Account').isCourier()
       @getOrderTimePlaced().hide()
       @getOrderDisplayTime().hide()
@@ -258,6 +264,7 @@ Ext.define 'Purple.controller.Orders',
           response = Ext.JSON.decode response_obj.responseText
           console.log response
   
+  # only call this after orders have been loaded
   hasActiveOrder: ->
     for o in @orders
       if o.status is 'unassigned' or
@@ -273,6 +280,38 @@ Ext.define 'Purple.controller.Orders',
     if not list?
       return
     list.removeAll yes, yes
+    if orders.length is 0 and not util.ctl('Account').isCourier()
+      list.add
+        xtype: 'component'
+        flex: 0
+        html: """
+          No orders yet.
+          <br />Let's change that! Get gas now.
+        """
+        cls: "loose-text"
+        style: "text-align: center;"
+      list.add
+        xtype: 'container'
+        # cls: 'slideable'
+        flex: 0
+        height: 110
+        padding: '0 0 5 0'
+        layout:
+          type: 'vbox'
+          pack: 'center'
+          align: 'center'
+        items: [
+          {
+            xtype: 'button'
+            ui: 'action'
+            cls: 'button-pop'
+            text: 'Get Started'
+            flex: 0
+            disabled: no
+            handler: ->
+              util.ctl('Main').getMainContainer().getItems().getAt(0).select 0, no, no
+          }
+        ]
     for o in orders
       if util.ctl('Account').isCourier()
         v = o['vehicle']
@@ -344,40 +383,42 @@ Ext.define 'Purple.controller.Orders',
   refreshOrdersAndOrdersList: ->
     currentTime = new Date().getTime() / 1000
     if currentTime - @lastLoadOrdersList > 30 or not @lastLoadOrdersList?
-      if @hasActiveOrder() and @getMainContainer().getActiveItem().data.index is 3 
+      if @orders? and @hasActiveOrder() and @getMainContainer().getActiveItem().data.index is 3 
         if @orderListPageActive
           @loadOrdersList yes
         else #order page is active
           @loadOrdersList yes, (Ext.bind @refreshOrder, this)
 
   refreshOrder: ->
-    for o in @orders
-      if o['id'] is @getOrder().config.orderId
-        order = o
-        break
+    if @getOrder?()
+      for o in @orders
+        if o['id'] is @getOrder().config.orderId
+          order = o
+          break
 
-    if order['status'] is 'unassigned' 
-      @getOrderStatusDisplay().setValue 'Accepted'
-    else 
-      @getOrderStatusDisplay().setValue order['status']
+      if order['status'] is 'unassigned' 
+        @getOrderStatusDisplay().setValue 'Accepted'
+      else 
+        @getOrderStatusDisplay().setValue order['status']
 
-    @getOrder().removeCls @currentOrderClass
-    @getOrder().addCls "status-#{order['status']}"
-    
-    @currentOrderClass = "status-#{order['status']}"
+      @getOrder().removeCls @currentOrderClass
+      @getOrder().addCls "status-#{order['status']}"
+      
+      @currentOrderClass = "status-#{order['status']}"
 
-    if order['status'] is 'complete'
-      @getOrderRating().show()
+      if order['status'] is 'complete'
+        @getOrderRating().show()
 
   askToCancelOrder: (id) ->
-    navigator.notification.confirm(
-      "",
-      ((index) => switch index
-        when 1 then @cancelOrder id
-        else return
-      ),
-      "Are you sure you want to cancel this order?",
-      ["Yes", "No"]
+    util.confirm(
+      '',
+      """
+        Are you sure you want to cancel this order?
+      """,
+      (=> @cancelOrder id),
+      null,
+      'Yes',
+      'No'
     )
 
   cancelOrder: (id) ->
@@ -455,20 +496,19 @@ Ext.define 'Purple.controller.Orders',
     values = @getOrder().getValues()
     currentStatus = values['status']
     nextStatus = util.NEXT_STATUS_MAP[currentStatus]
-    navigator.notification.confirm(
-      "",
-      ((index) => switch index
-        when 1 then @nextStatus()
-        else return
-      ),
+    util.confirm(
+      '',
       (switch nextStatus
         when "assigned", "accepted"
           "Are you sure you want to accept this order? (cannot be undone)"
         else "Are you sure you want to mark this order as #{nextStatus}? (cannot be undone)"
       ),
-      ["Yes", "No"]
+      (Ext.bind @nextStatus, this)
+      null,
+      'Yes',
+      'No'
     )
-
+    
   nextStatus: ->
     values = @getOrder().getValues()
     currentStatus = values['status']

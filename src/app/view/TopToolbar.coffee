@@ -6,7 +6,7 @@ Ext.define 'Purple.view.TopToolbar',
     ui: 'top-toolbar'
     height: 60
     title: """
-      <img src="resources/images/logo.png" style="height: 44px; padding-top: 10px;" />
+      <img src="resources/images/logo.png" style="height: 43px; padding-top: 8px;" />
     """
     items: [
       {
@@ -24,5 +24,11 @@ Ext.define 'Purple.view.TopToolbar',
         cls: 'freeGasButton'
         ui: 'plain'
         handler: -> @up().fireEvent 'freeGasButtonTap'
+      }
+      {
+        xtype: 'togglefield'
+        ctype: 'onDutyToggle'
+        cls: 'onDutyToggle'
+        ui: 'plain'
       }
     ]

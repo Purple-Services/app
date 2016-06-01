@@ -23,7 +23,6 @@ Ext.define 'Purple.view.GasStations',
     scrollable:
       direction: 'vertical'
       directionLock: yes
-
     items: [
       {
         xtype: 'spacer'
@@ -39,26 +38,17 @@ Ext.define 'Purple.view.GasStations',
           align: 'start'
         items: [
           {
-            xtype: 'container'
-            ctype: 'findGasButtonContainer'
+            xtype: 'component'
             flex: 0
-            height: 110
-            width: '100%'
-            padding: '0 0 5 0'
-            layout:
-              type: 'vbox'
-              pack: 'center'
-              align: 'center'
-            items: [
-              {
-                xtype: 'button'
-                ui: 'action'
-                cls: 'button-pop'
-                text: 'Find Gas Station'
-                flex: 0
-                handler: ->
-                  @up().fireEvent 'getGasStation'
-              }
+            cls: 'heading'
+            html: 'Gas Stations'
+          }
+          {
+            xtype: 'component'
+            flex: 0
+            cls: [
+              'horizontal-rule'
+              'purple-rule'
             ]
           }
           {

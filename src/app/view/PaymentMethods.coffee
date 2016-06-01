@@ -88,5 +88,3 @@ Ext.define 'Purple.view.PaymentMethods',
         flex: 1
       }
     ]
-
- 
