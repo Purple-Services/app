@@ -57,6 +57,7 @@ Ext.define 'Purple.view.Subscriptions',
             xtype: 'container'
             id: 'subscriptionChoicesContainer'
             flex: 0
+            width: '100%'
             layout:
               type: 'vbox'
               pack: 'start'
