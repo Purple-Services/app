@@ -143,6 +143,8 @@ Ext.define 'Purple.controller.Main',
 
     @androidHighAccuracyNotificationActive = false
 
+    GappTrack.track("882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false)
+
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
       cordova.plugins.diagnostic?.getLocationAuthorizationStatus(

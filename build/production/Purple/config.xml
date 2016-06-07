@@ -148,6 +148,7 @@
   <!-- </gap:plugin> -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
+  <gap:plugin name="cordova-plugin-google-conversion" source="npm" />
   <plugin spec="https://github.com/jeduan/cordova-plugin-facebook4#aff9a08a86cc6c6a18019f7adc2896ddf97c11cd" source="git">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
