@@ -20,6 +20,9 @@ Ext.define 'Purple.controller.PaymentMethods',
       paymentMethodConfirmationField: '#paymentMethodConfirmationField'
       editPaymentMethodFormMonth: '[ctype=editPaymentMethodFormMonth]'
       editPaymentMethodFormYear: '[ctype=editPaymentMethodFormYear]'
+      editPaymentMethodFormCardNumber: '[ctype=editPaymentMethodFormCardNumber]'
+      editPaymentMethodFormCVC: '[ctype=editPaymentMethodFormCVC]'
+      editPaymentMethodFormBillingZip: '[ctype=editPaymentMethodFormBillingZip]'
     control:
       paymentMethods:
         editPaymentMethod: 'showEditPaymentMethodForm'
@@ -37,6 +40,12 @@ Ext.define 'Purple.controller.PaymentMethods',
         change: 'makeChanged'
       accountPaymentMethodField:
         initialize: 'initAccountPaymentMethodField'
+      editPaymentMethodFormCardNumber:
+        initialize: 'initEditPaymentMethodFormCardNumber'
+      editPaymentMethodFormCVC:
+        initialize: 'initEditPaymentMethodFormCVC'
+      editPaymentMethodFormBillingZip:
+        initialize: 'initEditPaymentMethodFormBillingZip'
 
   # will be null until they log in
   paymentMethods: null
@@ -407,13 +416,24 @@ Ext.define 'Purple.controller.PaymentMethods',
         util.ctl('Menu').pushOntoBackButton =>
           @backToPreviousPage()
 
-  initEditPaymentMethodFormMonth: ->
+  initEditPaymentMethodFormMonth: (field) ->
     month = (new Date().getMonth() + 1).toString()
     @getEditPaymentMethodFormMonth().setValue month
+    field.element.on 'tap', => @getEditPaymentMethodFormMonth().focus()
 
-  initEditPaymentMethodFormYear: ->
+  initEditPaymentMethodFormYear: (field) ->
     year = (new Date().getFullYear()).toString()
     @getEditPaymentMethodFormYear().setValue year
+    field.element.on 'tap', => @getEditPaymentMethodFormYear().focus()
+
+  initEditPaymentMethodFormCardNumber: (field) ->
+    field.element.on 'tap', => @getEditPaymentMethodFormCardNumber().focus()
+
+  initEditPaymentMethodFormCVC: (field) ->
+    field.element.on 'tap', => @getEditPaymentMethodFormCVC().focus()
+
+  initEditPaymentMethodFormBillingZip: (field) ->
+    field.element.on 'tap', => @getEditPaymentMethodFormBillingZip().focus()
 
   accountPaymentMethodFieldTap: (suppressBackButtonBehavior = no) ->
     @getAccountTabContainer().setActiveItem(

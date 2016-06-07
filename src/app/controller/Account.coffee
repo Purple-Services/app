@@ -38,6 +38,11 @@ Ext.define 'Purple.controller.Account',
       accountPaymentMethodField: '#accountPaymentMethodField'
       accountHorizontalRuleAbovePaymentMethod: '[ctype=accountHorizontalRuleAbovePaymentMethod]'
 
+      # EditAccountForm elements
+      editAccountName: '[ctype=editAccountName]'
+      editAccountPhoneNumber: '[ctype=editAccountPhoneNumber]'
+      editAccountEmail: '[ctype=editAccountEmail]'
+
       accountTabContainer: '#accountTabContainer'
       editAccountForm: 'editaccountform'
       
@@ -62,6 +67,12 @@ Ext.define 'Purple.controller.Account',
         saveChanges: 'saveChanges'
       accountForm:
         logoutButtonTap: 'logout'
+      editAccountName:
+        initialize: 'initEditAccountName'
+      editAccountPhoneNumber:
+        initialize: 'initEditAccountPhoneNumber'
+      editAccountEmail:
+        initialize: 'initEditAccountEmail'
 
   launch: ->
     @callParent arguments
@@ -518,6 +529,15 @@ Ext.define 'Purple.controller.Account',
 
   initAccountEmailField: (field) ->
     field.element.on 'tap', Ext.bind @showEditAccountForm, this
+
+  initEditAccountName: (field) ->
+    field.element.on 'tap', => @getEditAccountName().focus()
+
+  initEditAccountPhoneNumber: (field) ->
+    field.element.on 'tap', => @getEditAccountPhoneNumber().focus()
+
+  initEditAccountEmail: (field) ->
+    field.element.on 'tap', => @getEditAccountEmail().focus()
 
   showEditAccountForm: ->
     @getAccountTabContainer().setActiveItem(

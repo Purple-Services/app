@@ -51,6 +51,22 @@ Ext.define 'Purple.controller.Vehicles',
         change: 'requestFormVehicleSelectChange'
       requestFormSpecialInstructions:
         focus: 'focusRequestFormSpecialInstructions'
+      editVehicleFormYear:
+        initialize: 'initEditVehicleFormYear'
+      editVehicleFormMake:
+        initialize: 'initEditVehicleFormMake'
+      editVehicleFormModel:
+        initialize: 'initEditVehicleFormModel'
+      editVehicleFormColor:
+        initialize: 'initEditVehicleFormColor'
+      editVehicleFormGasType:
+        initialize: 'initEditVehicleFormGasType'
+      editVehicleFormLicensePlate:
+        initialize: 'initEditVehicleFormLicensePlate'
+      requestFormGallonsSelect:
+        initialize: 'initRequestFormGallonsSelect'
+      requestFormTimeSelect:
+        initialize: 'initRequestFormTimeSelect'
 
   # will be null until they log in
   vehicles: null
@@ -410,7 +426,8 @@ Ext.define 'Purple.controller.Vehicles',
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
-  initRequestFormVehicleSelect: ->
+  initRequestFormVehicleSelect: (field) ->
+    field.element.on 'tap', => @getRequestFormVehicleSelect().focus()
     if @vehicles?
       opts = @vehicles.map (v) ->
         {
@@ -583,3 +600,27 @@ Ext.define 'Purple.controller.Vehicles',
     """
     @getEditVehicleFormPhoto().setValue dataUrl
     analytics?.track 'Took Vehicle Photo'
+
+  initEditVehicleFormYear: (field) ->
+    field.element.on 'tap', => @getEditVehicleFormYear().focus()
+
+  initEditVehicleFormMake: (field) ->
+    field.element.on 'tap', => @getEditVehicleFormMake().focus()
+
+  initEditVehicleFormModel: (field) ->
+    field.element.on 'tap', => @getEditVehicleFormModel().focus()
+
+  initEditVehicleFormColor: (field) ->
+    field.element.on 'tap', => @getEditVehicleFormColor().focus()
+
+  initEditVehicleFormGasType: (field) ->
+    field.element.on 'tap', => @getEditVehicleFormGasType().focus()
+
+  initEditVehicleFormLicensePlate: (field) ->
+    field.element.on 'tap', => @getEditVehicleFormLicensePlate().focus()
+
+  initRequestFormGallonsSelect: (field) ->
+    field.element.on 'tap', => @getRequestFormGallonsSelect().focus()
+
+  initRequestFormTimeSelect: (field) ->
+    field.element.on 'tap', => @getRequestFormTimeSelect().focus()
