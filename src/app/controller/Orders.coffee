@@ -263,17 +263,16 @@ Ext.define 'Purple.controller.Orders',
             navigator.notification.alert "Slow or no internet connection.", (->), "Error"
           response = Ext.JSON.decode response_obj.responseText
           console.log response
+
+  isActiveOrder: (o) ->
+    -1 isnt util.ACTIVE_STATUSES.indexOf o.status
+
+  getActiveOrders: ->
+    @orders.filter @isActiveOrder
   
   # only call this after orders have been loaded
   hasActiveOrder: ->
-    for o in @orders
-      if o.status is 'unassigned' or
-      o.status is 'assigned' or
-      o.status is 'accepted' or
-      o.status is 'enroute' or
-      o.status is 'servicing'
-        return true
-    false
+    @getActiveOrders().length > 0
 
   renderOrdersList: (orders) ->
     list =  @getOrdersList()

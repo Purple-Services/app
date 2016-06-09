@@ -54,7 +54,7 @@ Ext.define 'Purple.view.GasStations',
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Find Gas Station'
+                text: 'Find a Gas Station'
                 flex: 0
                 handler: ->
                   @up().fireEvent 'getGasStation'
@@ -62,9 +62,21 @@ Ext.define 'Purple.view.GasStations',
             ]
           }
           {
+            xtype: 'component'
+            ctype: 'gasStationTip'
+            flex: 0
+            padding: '0 0 0 0'
+            style: "font-size: 88%; color: black;"
+            hidden: yes
+            html: """
+              Tap to get directions in Google Maps.
+            """
+          }
+          {
             xtype: 'container'
             ctype: 'recommendedGasStation'
             width: '100%'
+            padding: '5 0 0 0'
             flex: 0
             layout: 'vbox'
           }
@@ -77,23 +89,14 @@ Ext.define 'Purple.view.GasStations',
               align: 'start'
             cls: 'blacklist-button'
             hidden: yes
+            stationId: null
             items: [
               xtype: 'button'
               ui: 'plain'
-              text: 'Report a problem with this gas station?'
+              text: 'Does this station have a problem?'
               handler: -> 
                 @up().fireEvent 'blacklistGasStation'
             ]
-          }
-          {
-            xtype: 'component'
-            ctype: 'gasStationTip'
-            flex: 0
-            padding: '100 0 0 0'
-            hidden: yes
-            html: """
-              Tap on a gas station to open in Google Maps.
-            """
           }
         ]
       }
