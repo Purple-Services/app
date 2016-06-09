@@ -128,7 +128,7 @@ Ext.define 'Purple.controller.GasStations',
         'addCancelButtonWithLabel': 'Cancel'
       },
       ((index) =>
-        if index is 0 and index isnt blacklistReasons.length + 1
+        if index isnt 0 and index isnt blacklistReasons.length + 1
           # not the cancel button
           @blacklistGasStationOnServer stationId, blacklistReasons[index - 1]
       )
