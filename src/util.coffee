@@ -115,3 +115,6 @@ window.util =
       callback?()
     else
       navigator.notification.alert message, callback, title
+
+  googleMapsDeepLink: (url) ->
+    (if Ext.os.is.iOS then "comgooglemaps://" else "http://maps.google.com/maps") + url

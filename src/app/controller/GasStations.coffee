@@ -89,7 +89,7 @@ Ext.define 'Purple.controller.GasStations',
                 listeners:
                   initialize: (field) ->
                     field.element.on 'tap', ->
-                      window.location.href = "comgooglemaps://?daddr=#{response.lat + "," + response.lng}&directionsmode=driving"
+                      window.location.href = util.googleMapsDeepLink "?daddr=#{response.lat + "," + response.lng}&directionsmode=driving"
               @getBlacklistGasStationButtonContainer().config.stationId = response.id
               @getBlacklistGasStationButtonContainer().show()
               @getGasStationTip().show()
