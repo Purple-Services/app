@@ -105,6 +105,7 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserIsCourier'] = response.user.is_courier
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          util.ctl('Subscriptions').updateSubscriptionRelatedData response
           localStorage['purpleToken'] = response.token
           # they don't have any vehicles or orders yet.
           util.ctl('Vehicles').vehicles = []
@@ -160,6 +161,7 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserIsCourier'] = response.user.is_courier
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          util.ctl('Subscriptions').updateSubscriptionRelatedData response
           localStorage['purpleUserHasPushNotificationsSetUp'] = response.user.has_push_notifications_set_up
           localStorage['purpleToken'] = response.token
           localStorage['purpleUserHomeLocationName'] = response.saved_locations.home.displayText
@@ -406,6 +408,11 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleUserReferralGallons']
     delete localStorage['purpleReferralReferredValue']
     delete localStorage['purpleReferralReferrerGallons']
+    delete localStorage['purpleSubscriptionId']
+    delete localStorage['purpleSubscriptionExpirationTime']
+    delete localStorage['purpleSubscriptionAutoRenew']
+    delete localStorage['purpleSubscriptionPeriodStartTime']
+    delete localStorage['purpleSubscriptionName']
     delete localStorage['specialInstructions']
     delete localStorage['courierOnDuty']
 
