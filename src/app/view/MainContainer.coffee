@@ -292,6 +292,24 @@ Ext.define 'Purple.view.MainContainer',
           }
         ]
       }
+      {
+        title: """
+          <img src="resources/images/gas-tank.png" style="height: 22px; padding-right: 4px; position: relative; top: 1px;" />
+          Find Gas
+        """
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'gasstations'
+          }
+        ]
+      }
     ]
 
     listeners:

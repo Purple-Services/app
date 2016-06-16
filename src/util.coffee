@@ -14,11 +14,11 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.4.0"
+  VERSION_NUMBER: "1.11.4"
   
   WEB_SERVICE_BASE_URL: switch VERSION
-    # when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    when "LOCAL" then "http://192.168.0.24:3000/"
+    when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
+    # when "LOCAL" then "http://192.168.0.24:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
 
@@ -66,6 +66,14 @@ window.util =
     "assigned"
     "accepted"
     "enroute"
+  ]
+
+  ACTIVE_STATUSES: [
+    "unassigned"
+    "assigned"
+    "accepted"
+    "enroute"
+    "servicing"
   ]
 
   # returns the controller (just a convenience function)
@@ -133,3 +141,6 @@ window.util =
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 6, no, no
         when 'purpleapp://invite'
           util.ctl('Main').getMainContainer().getItems().getAt(0).select 7, no, no
+          
+  googleMapsDeepLink: (url) ->
+    (if Ext.os.is.iOS then "comgooglemaps://" else "http://maps.google.com/maps") + url

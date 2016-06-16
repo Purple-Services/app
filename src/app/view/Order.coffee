@@ -250,19 +250,6 @@ Ext.define 'Purple.view.Order',
             ]
           }
           {
-            xtype: 'checkboxfield'
-            ctype: 'orderTirePressureCheck'
-            flex: 0
-            name: 'tire_pressure_check'
-            label: 'Tire Fill-up?'
-            labelWidth: 150
-            disabled: yes
-            hidden: yes
-            cls: [
-              'visibly-disabled'
-            ]
-          }
-          {
             xtype: 'textfield'
             ctype: 'orderAddressZipcode'
             flex: 0
@@ -272,6 +259,20 @@ Ext.define 'Purple.view.Order',
             disabled: yes
             hidden: yes
             cls: [
+              'visibly-disabled'
+            ]
+          }
+          {
+            xtype: 'checkboxfield'
+            ctype: 'orderTirePressureCheck'
+            flex: 0
+            name: 'tire_pressure_check'
+            label: 'Tire Fill-up?'
+            labelWidth: 150
+            disabled: yes
+            hidden: yes
+            cls: [
+              'tire-pressure-field'
               'visibly-disabled'
             ]
           }

@@ -11,6 +11,7 @@ Ext.application
     'Ext.MessageBox'
     'Override.form.Panel'
     'Override.field.Select'
+    'Override.field.Field'
     'Override.ux.Map'
     'Ux.field.SelectOtherField'
     'Ux.field.PhoneField'
@@ -30,6 +31,7 @@ Ext.application
     'PaymentMethods'
     'Subscriptions'
     'GasTanks'
+    'GasStations'
   ]
   views: [
     'MainContainer'
