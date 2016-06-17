@@ -116,5 +116,31 @@ window.util =
     else
       navigator.notification.alert message, callback, title
 
+  handleDeepLinkUrl: (url) ->
+    while util.ctl('Menu').backButtonStack.length
+      util.ctl('Menu').popOffBackButton()
+    if util.ctl('Account').isUserLoggedIn()
+      switch url
+        when 'purpleapp://map'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 0, no, no
+        when 'purpleapp://membership'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
+        when 'purpleapp://account'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+        when 'purpleapp://editaccount'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Account').showEditAccountForm()
+        when 'purpleapp://orders'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
+        when 'purpleapp://vehicles'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 4, no, no
+        when 'purpleapp://help'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 5, no, no
+        when 'purpleapp://feedback'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 6, no, no
+        when 'purpleapp://invite'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 7, no, no
+          
   googleMapsDeepLink: (url) ->
     (if Ext.os.is.iOS then "comgooglemaps://" else "http://maps.google.com/maps") + url

@@ -36,6 +36,13 @@
              }
          }
          
+         function handleOpenURL (url) {
+            if (typeof window.util === "undefined") {
+                window.queuedDeepLinkUrl = url;
+            } else {
+                util.handleDeepLinkUrl(url);
+            }
+         }
          // iOS
          function onNotificationAPN (event) {
              if (event.alert) {

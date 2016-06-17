@@ -14,12 +14,12 @@
   -->
 
   <!-- iOS -->
-  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
+  <preference name="phonegap-version" value="cli-5.2.0" />
   <!-- Android -->
-  <preference name="phonegap-version" value="cli-6.0.0" />
+  <!-- <preference name="phonegap-version" value="cli-6.0.0" /> -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <name>Purple</name> -->
+  <name>Purple</name>
   <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
@@ -164,6 +164,16 @@
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
   <gap:plugin name="cordova-plugin-actionsheet" version="2.2.2" source="npm" />
+
+  <gap:plugin name="cordova-plugin-customurlscheme" source="npm">
+    <param name="URL_SCHEME" value="purpleapp" />
+  </gap:plugin>
+
+  <feature name="Custom URL scheme">
+    <param name="id" value="cordova-plugin-customurlscheme" />
+    <param name="url" value="https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git" />
+    <variable name="URL_SCHEME" value="purpleapp" />
+  </feature>
 
   <feature name="http://api.phonegap.com/1.0/network" />
   <feature name="http://api.phonegap.com/1.0/camera" />
