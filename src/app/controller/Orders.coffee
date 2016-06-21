@@ -451,6 +451,25 @@ Ext.define 'Purple.controller.Orders',
   orderRatingChange: (field, value) ->
     @getTextRating().show()
     @getSendRatingButtonContainer().show()
+    if value is 5 and localStorage['sentUserToAppStore'] isnt 'yes'
+      util.confirm(
+        "Please take a moment to rate us in the app store!",
+        "Message",
+        @sendToAppStore,
+        (=>
+          if localStorage['sentUserToAppStore'] is 'attempted'
+            localStorage['sentUserToAppStore'] = 'yes'
+          else
+            localStorage['sentUserToAppStore'] = 'attempted'
+        )
+      )
+
+  sendToAppStore: ->
+    localStorage['sentUserToAppStore'] = 'yes'
+    if Ext.os.is.iOS
+      cordova.plugins.market.open "id970824802"
+    else
+      cordova.plugins.market.open "com.purple.app"
 
   sendRating: ->
     values = @getOrder().getValues()
