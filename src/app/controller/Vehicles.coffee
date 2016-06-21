@@ -25,8 +25,9 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormVehicleSelect: '[ctype=requestFormVehicleSelect]'
       requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]'
       requestFormTimeSelect: '[ctype=requestFormTimeSelect]'
-      sendRequestButton: '[ctype=sendRequestButton]'
+      requestFormTirePressureCheck: '[ctype=requestFormTirePressureCheck]'
       requestFormSpecialInstructions: '[ctype=requestFormSpecialInstructions]'
+      sendRequestButton: '[ctype=sendRequestButton]'
     control:
       vehicles:
         editVehicle: 'showEditVehicleForm'
@@ -366,13 +367,14 @@ Ext.define 'Purple.controller.Vehicles',
         console.log response
 
   askToDeleteVehicle: (id) ->
-    util.confirmDialog "",
-      ((index) => switch index
-        when 1 then @deleteVehicle id
-        else return
-      ),
+    util.confirm(
+      '',
       "Are you sure you want to delete this vehicle?",
-      ["Delete Vehicle", "Cancel"]
+      (=> @deleteVehicle id),
+      null,
+      'Delete Vehicle',
+      'Cancel'
+    )
 
   deleteVehicle: (vehicleId) ->
     Ext.Viewport.setMasked
@@ -487,8 +489,8 @@ Ext.define 'Purple.controller.Vehicles',
             break
             
         # do we have any gas available in that octane?
-        if util.ctl('Main').isEmpty availability.gallon_choices
-          util.alertDialog "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
+        if util.isEmpty availability.gallon_choices
+          util.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", "Unavailable", (->)
           @getRequestFormGallonsSelect().setDisabled yes
           @getRequestFormTimeSelect().setDisabled yes
           @getSendRequestButton().setDisabled yes
@@ -501,6 +503,9 @@ Ext.define 'Purple.controller.Vehicles',
             text: "#{g}"
             value: "#{g}"
         @getRequestFormGallonsSelect().setOptions gallonsOpts
+        @getRequestFormGallonsSelect().setValue(
+          availability.gallon_choices[availability.default_gallon_choice]
+        )
         @getRequestFormGallonsSelect().setDisabled no
 
         # populate the time options
@@ -515,17 +520,32 @@ Ext.define 'Purple.controller.Vehicles',
         @getRequestFormTimeSelect().setDisabled no
         
         @getSendRequestButton().setDisabled no
+
+        subUsage = util.ctl('Subscriptions').subscriptionUsage
+        if subUsage? and
+        subUsage.num_free_tire_pressure_check? and
+        subUsage.num_free_tire_pressure_check_used? and
+        ( # has some tire checks left in this sub period?
+          (
+            subUsage.num_free_tire_pressure_check -
+            subUsage.num_free_tire_pressure_check_used
+          ) > 0
+        )
+          @getRequestFormTirePressureCheck().setDisabled no
       ), (if ready then 5 else 500)
   
   focusRequestFormSpecialInstructions: ->
     if localStorage['specialInstructions'] and not @specialInstructionsAutoFillPrompted
       @specialInstructionsAutoFillPrompted = true
-      util.confirmDialog 'Would you like to automatically fill with your previous instructions?', (Ext.bind @specialInstructionsAutoFill, this), 'Auto Fill'
-
-  specialInstructionsAutoFill: (index) ->
-    @getRequestFormSpecialInstructions().blur()
-    if index is 1
-      @getRequestFormSpecialInstructions().setValue localStorage['specialInstructions']
+      util.confirm(
+        'Auto Fill',
+        "Would you like to automatically fill with your previous instructions?",
+        (=>
+          @getRequestFormSpecialInstructions().blur()
+          @getRequestFormSpecialInstructions().setValue(
+            localStorage['specialInstructions']
+          ))
+      )
 
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this

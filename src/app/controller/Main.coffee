@@ -15,6 +15,7 @@ Ext.define 'Purple.controller.Main',
       requestGasButton: '#requestGasButton'
       autocompleteList: '#autocompleteList'
       requestForm: 'requestform'
+      requestFormTirePressureCheck: '[ctype=requestFormTirePressureCheck]'
       requestConfirmationForm: 'requestconfirmationform'
       feedback: 'feedback'
       feedbackTextField: '[ctype=feedbackTextField]'
@@ -54,13 +55,18 @@ Ext.define 'Purple.controller.Main',
         generateSuggestions: 'generateSuggestions'
         addressInputMode: 'addressInputMode'
         showLogin: 'showLogin'
+        initialize: 'initRequestAddressField'
+        keyup: 'keyupRequestAddressField'
+        focus: 'focusRequestAddressField'
       autocompleteList:
         handleAutoCompleteListTap: 'handleAutoCompleteListTap'
       requestGasButtonContainer:
-        initRequestGasForm: 'initRequestGasForm'
+        initRequestGasForm: 'requestGasButtonPressed'
       requestForm:
         backToMap: 'backToMapFromRequestForm'
         sendRequest: 'sendRequest'
+      requestFormTirePressureCheck:
+        requestFormTirePressureCheckTap: 'requestFormTirePressureCheckTap'
       requestConfirmationForm:
         backToRequestForm: 'backToRequestForm'
         confirmOrder: 'confirmOrder'
@@ -80,7 +86,7 @@ Ext.define 'Purple.controller.Main',
         initialize: 'initRemoveHomeAddress'
       removeWorkAddress:
         initialize: 'initRemoveWorkAddress'
-        
+
   # whether or not the inital map centering has occurred yet
   mapInitiallyCenteredYet: no
   mapInited: no
@@ -99,10 +105,10 @@ Ext.define 'Purple.controller.Main',
       localStorage['courierOnDuty'] = 'no'
 
     clearTimeout window.courierReloadTimer
-    
     # END COURIER APP ONLY
 
-    @gpsIntervalRef = setInterval (Ext.bind @updateLatlng, this), 5000
+    if util.ctl('Account').isCourier()
+      @initCourierPing()
 
     # CUSTOMER APP ONLY
     # if VERSION is "PROD"
@@ -137,6 +143,10 @@ Ext.define 'Purple.controller.Main',
 
     @androidHighAccuracyNotificationActive = false
 
+    if window.queuedDeepLinkUrl?
+      util.handleDeepLinkUrl window.queuedDeepLinkUrl
+      window.queuedDeepLinkUrl = null
+
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
       cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
@@ -152,6 +162,7 @@ Ext.define 'Purple.controller.Main',
       # so it only happens when there is a change in user's settings
       @setUpPushNotifications()
       util.ctl('Orders').refreshOrdersAndOrdersList()
+    @updateLatlng()
 
   checkGoogleMaps: ->
     if not google?.maps?
@@ -167,12 +178,19 @@ Ext.define 'Purple.controller.Main',
         navigator.splashscreen?.show()
         window.location.reload()
       else
-        util.confirmDialog 'Please try restarting the application. If the problem persists, contact support@purpledelivery.com.', @connectionStatusConfirmation, 'Connection Problem', ['OK', 'Reload'], 
-        
-  connectionStatusConfirmation: (index) ->
-    if index is 2
-      navigator.splashscreen.show()
-      window.location.reload()
+        util.confirm(
+          'Connection Problem',
+          """
+            Please try restarting the application.
+            If the problem persists, contact support@purpledelivery.com.
+          """,
+          (->
+            navigator.splashscreen.show()
+            window.location.reload()),
+          null,
+          'Reload',
+          'Ignore'
+        )
 
   setUpPushNotifications: (alertIfDisabled) ->
     if Ext.os.name is "iOS"
@@ -180,8 +198,8 @@ Ext.define 'Purple.controller.Main',
         @pushNotificationEnabled = false
         setTimeout (=> 
           if not @pushNotificationEnabled
-            util.alertDialog 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
-          ), 1500 
+            navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
+          ), 1500
       window.plugins?.pushNotification?.register(
         (Ext.bind @registerDeviceForPushNotifications, this),
         ((error) -> alert "error: " + error),
@@ -310,7 +328,7 @@ Ext.define 'Purple.controller.Main',
     #   failure: (response_obj) ->
     @getMap().getMap().setCenter(
       new google.maps.LatLng 34.0507177, -118.43757779999999
-      )
+    )
 
   initGeocoder: ->
     # this is called on maprender, so let's make sure we have user loc centered
@@ -375,13 +393,22 @@ Ext.define 'Purple.controller.Main',
           success: (response_obj) ->
             @getRequestGasButton().setDisabled no
             response = Ext.JSON.decode response_obj.responseText
+            
             if response.success
               prices = response.gas_prices
+              Ext.get('gas-price-unavailable').setStyle {display: 'none'}
+              Ext.get('gas-price-display').setStyle {display: 'block'}
               Ext.get('gas-price-display-87').setText(
                 "$#{util.centsToDollars prices["87"]}"
               )
               Ext.get('gas-price-display-91').setText(
                 "$#{util.centsToDollars prices["91"]}"
+              )
+            else
+              Ext.get('gas-price-display').setStyle {display: 'none'}
+              Ext.get('gas-price-unavailable').setStyle {display: 'block'}
+              Ext.get('gas-price-unavailable').setText(
+                response.message
               )
             @busyGettingGasPrice = no
           failure: (response_obj) ->
@@ -418,15 +445,31 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false) ->
-    if @geolocationAllowed?
-      if not @geolocationAllowed
-        if showAlertIfUnavailable
-          util.alertDialog "To use the current location button, please allow geolocation for Purple in your phone's settings.", (->), "Current Location Unavailable"
-      else
-        @getMap().getMap().setCenter(
-          new google.maps.LatLng @lat, @lng
-        )
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->    
+    if centerMapButtonPressed
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      navigator.geolocation?.getCurrentPosition(
+        ((position) =>
+          @lat = position.coords.latitude
+          @lng = position.coords.longitude
+          @getMap().getMap().setCenter(
+            new google.maps.LatLng @lat, @lng
+          )
+          Ext.Viewport.setMasked false
+        ),
+        (=>
+          Ext.Viewport.setMasked false
+          if showAlertIfUnavailable
+            util.alert "To use the current location button, please allow geolocation for Purple in your phone's settings.", "Current Location Unavailable", (->) 
+        ),
+        {maximumAge: 0, enableHighAccuracy: true}
+      )
+    else
+      @getMap().getMap().setCenter(
+        new google.maps.LatLng @lat, @lng
+      )
 
   addressInputMode: ->
     if not @getMap().isHidden()
@@ -676,13 +719,32 @@ Ext.define 'Purple.controller.Main',
   showLogin: ->
     @getMainContainer().getItems().getAt(0).select 1, no, no
 
-  isEmpty: (obj) ->
-    for key of obj
-      if obj.hasOwnProperty key
-        return false
+  initRequestAddressField: (textField) ->
+    textField.element.on 'tap', =>
+      if util.ctl('Account').isUserLoggedIn()
+        textField.setValue ''
+        @addressInputMode()
+      else
+        @showLogin()
     true
 
-  initRequestGasForm: ->
+  keyupRequestAddressField: (textField, event) ->
+    textField.lastQuery ?= ''
+    query = textField.getValue()
+    if query isnt textField.lastQuery and query isnt ''
+      textField.lastQuery = query
+      if textField.genSuggTimeout?
+        clearTimeout textField.genSuggTimeout
+      textField.genSuggTimeout = setTimeout(
+        @generateSuggestions(),
+        500
+      )
+    true
+
+  focusRequestAddressField: ->
+    @getRequestAddressField().setValue ''
+
+  requestGasButtonPressed: ->
     deliveryLocName = @getRequestAddressField().getValue()
     ga_storage._trackEvent 'ui', 'Request Gas Button Pressed'
     analytics?.track 'Request Gas Button Pressed',
@@ -695,58 +757,84 @@ Ext.define 'Purple.controller.Main',
     if not (util.ctl('Account').isUserLoggedIn() and util.ctl('Account').isCompleteAccount())
       # select the Login view
       @showLogin()
+    else if (
+      not localStorage['purpleSubscriptionId']? or
+      localStorage['purpleSubscriptionId'] is '0'
+    ) and (
+      not localStorage['purpleAdShownTimesSubscription']? or
+      parseInt(localStorage['purpleAdShownTimesSubscription']) < 2
+    )
+      localStorage['purpleAdShownTimesSubscription'] ?= 0
+      localStorage['purpleAdShownTimesSubscription'] = (
+        parseInt(localStorage['purpleAdShownTimesSubscription']) + 1
+      )
+      util.ctl('Subscriptions').showAd(
+        (=> # pass-thru callback
+          @initRequestGasForm deliveryLocName
+        )
+        (=> # active callback
+          @getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
+        )
+      )
     else
-      # send to request gas form, but first get availbility from disptach system
-      Ext.Viewport.setMasked
-        xtype: 'loadmask'
-        message: ''
-      Ext.Ajax.request
-        # use the gitignored availabilities.json file for testing
-        # url: "availabilities.json"
-        url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
-        params: Ext.JSON.encode
-          version: util.VERSION_NUMBER
-          user_id: localStorage['purpleUserId']
-          token: localStorage['purpleToken']
-          lat: @deliveryLocLat
-          lng: @deliveryLocLng
-          zip_code: @deliveryAddressZipCode
-        headers:
-          'Content-Type': 'application/json'
-        timeout: 30000
-        method: 'POST'
-        scope: this
-        success: (response_obj) ->
-          Ext.Viewport.setMasked false
-          response = Ext.JSON.decode response_obj.responseText
-          if response.success
-            localStorage['purpleUserReferralCode'] = response.user.referral_code
-            localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
-            availabilities = response.availabilities
-            # and, are there any time options available
-            totalNumOfTimeOptions = availabilities.reduce (a, b) ->
-              Object.keys(a.times).length + Object.keys(b.times).length
-            if @isEmpty(availabilities[0].gallon_choices) and @isEmpty(availabilities[1].gallon_choices) or totalNumOfTimeOptions is 0
-              util.alertDialog response["unavailable-reason"], (->), "Unavailable"
-            else
-              util.ctl('Menu').pushOntoBackButton =>
-                @backToMapFromRequestForm()
-              @getRequestGasTabContainer().setActiveItem(
-                Ext.create 'Purple.view.RequestForm',
-                  availabilities: availabilities
-              )
-              @getRequestForm().setValues(
-                lat: @deliveryLocLat
-                lng: @deliveryLocLng
-                address_street: deliveryLocName
-                address_zip: @deliveryAddressZipCode
-              )
-              analytics?.page 'Order Form'
+      @initRequestGasForm deliveryLocName
+      
+  initRequestGasForm: (deliveryLocName) ->
+    # send to request gas form
+    # but first get availbility from disptach system
+    Ext.Viewport.setMasked
+      xtype: 'loadmask'
+      message: ''
+    Ext.Ajax.request
+      # you can use the gitignored availabilities.json file for testing:
+      #   url: "availabilities.json"
+      url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
+      params: Ext.JSON.encode
+        version: util.VERSION_NUMBER
+        user_id: localStorage['purpleUserId']
+        token: localStorage['purpleToken']
+        lat: @deliveryLocLat
+        lng: @deliveryLocLng
+        zip_code: @deliveryAddressZipCode
+      headers:
+        'Content-Type': 'application/json'
+      timeout: 30000
+      method: 'POST'
+      scope: this
+      success: (response_obj) ->
+        Ext.Viewport.setMasked false
+        response = Ext.JSON.decode response_obj.responseText
+        if response.success
+          localStorage['purpleUserReferralCode'] = response.user.referral_code
+          localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
+          util.ctl('Subscriptions').updateSubscriptionLocalStorageData response
+          util.ctl('Subscriptions').subscriptionUsage = response.user.subscription_usage
+          availabilities = response.availabilities
+          totalNumOfTimeOptions = availabilities.reduce (a, b) ->
+            Object.keys(a.times).length + Object.keys(b.times).length
+          if util.isEmpty(availabilities[0].gallon_choices) and
+          util.isEmpty(availabilities[1].gallon_choices) or
+          totalNumOfTimeOptions is 0
+            navigator.notification.alert response["unavailable-reason"], (->), "Unavailable"
           else
-            util.alertDialog response.message, (->), "Error"
-        failure: (response_obj) ->
-          Ext.Viewport.setMasked false
-          console.log response_obj
+            util.ctl('Menu').pushOntoBackButton =>
+              @backToMapFromRequestForm()
+            @getRequestGasTabContainer().setActiveItem(
+              Ext.create 'Purple.view.RequestForm',
+                availabilities: availabilities
+            )
+            @getRequestForm().setValues
+              lat: @deliveryLocLat
+              lng: @deliveryLocLng
+              address_street: deliveryLocName
+              address_zip: @deliveryAddressZipCode
+            analytics?.page 'Order Form'
+        else
+          navigator.notification.alert response.message, (->), "Error"
+      failure: (response_obj) ->
+        Ext.Viewport.setMasked false
+        console.log response_obj
 
   backToMapFromRequestForm: ->
     @getRequestGasTabContainer().remove(
@@ -760,6 +848,24 @@ Ext.define 'Purple.controller.Main',
       @getRequestConfirmationForm(),
       yes
     )
+
+  # if localStorage['purpleSubscriptionId']? and
+  # util.ctl("Subscriptions").subscriptions[localStorage['purpleSubscriptionId']].num_free_tire_pressure_check > 0
+  requestFormTirePressureCheckTap: ->
+    if @getRequestFormTirePressureCheck().getDisabled()
+      util.alert(
+        (if localStorage['purpleSubscriptionId']? and
+        localStorage['purpleSubscriptionId'] is '2'
+          """
+            You have already used your tire pressure fill-up(s) for this plan period.
+          """
+        else
+          """
+            Tire pressure fill-ups are only available for members of the
+            "Express" plan.
+          """),
+        "Oh no!"
+      )
 
   sendRequest: -> # takes you to the confirmation page
     @getRequestGasTabContainer().setActiveItem(
@@ -809,6 +915,11 @@ Ext.define 'Purple.controller.Main',
         break
 
     @getRequestConfirmationForm().setValues vals
+
+    if not vals['tire_pressure_check']
+      Ext.ComponentQuery.query('#tirePressureCheckField')[0].hide()
+      # Ext.ComponentQuery.query('#addressStreetConfirmation')[0].removeCls 'bottom-margin'
+    
     if vals['special_instructions'] is ''
       Ext.ComponentQuery.query('#specialInstructionsConfirmationLabel')[0].hide()
       Ext.ComponentQuery.query('#specialInstructionsConfirmation')[0].hide()
@@ -1011,12 +1122,16 @@ Ext.define 'Purple.controller.Main',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         console.log response
-
+      
   initCourierPing: ->
     window.plugin?.backgroundMode.enable()
+    @gpsIntervalRef ?= setInterval (Ext.bind @updateLatlng, this), 5000
     @courierPingIntervalRef ?= setInterval (Ext.bind @courierPing, this), 10000
 
   killCourierPing: ->
+    if @gpsIntervalRef?
+      clearInterval @gpsIntervalRef
+      @gpsIntervalRef = null
     if @courierPingIntervalRef?
       clearInterval @courierPingIntervalRef
       @courierPingIntervalRef = null

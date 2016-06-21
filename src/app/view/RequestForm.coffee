@@ -102,6 +102,23 @@ Ext.define 'Purple.view.RequestForm',
             options: [
             ]
           }
+          {
+            xtype: 'checkboxfield'
+            ctype: 'requestFormTirePressureCheck'
+            flex: 0
+            name: 'tire_pressure_check'
+            label: 'Tire Fill-up?'
+            labelWidth: 150
+            cls: [
+              'bottom-margin'
+              'visibly-disabled'
+            ]
+            disabled: yes
+            listeners:
+              initialize: (field) ->
+                field.element.on 'tap', =>
+                  @fireEvent 'requestFormTirePressureCheckTap'
+          }
           # {
           #   xtype: 'component'
           #   flex: 0

@@ -189,13 +189,14 @@ Ext.define 'Purple.controller.PaymentMethods',
                 ["Delete Card", "Make Default", "Cancel"]
 
   askToDeleteCard: (id) ->
-    util.confirmDialog "",
-      ((index) => switch index
-        when 1 then @deleteCard id
-        else return
-      ),
+    util.confirm(
+      '',
       "Are you sure you want to delete this card?",
-      ["Delete Card", "Cancel"]
+      (=> @deleteCard id),
+      null,
+      'Delete Card',
+      'Cancel'
+    )
     
   deleteCard: (id) ->
     Ext.Viewport.setMasked

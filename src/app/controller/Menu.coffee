@@ -172,16 +172,16 @@ Ext.define 'Purple.controller.Menu',
       @hideTitles [1]
       if util.ctl('Account').isCourier()
         @hideTitles [0, 4, 7, 8]
-        @showTitles [2, 3]
+        @showTitles [2, 3, 9]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
         util.ctl('Main').initCourierPing()
       else
-        @hideTitles [8]
+        @hideTitles [8, 9]
         @showTitles [2, 3, 4, 7]
         Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
       util.ctl('Account').populateAccountForm()
     else
-      @hideTitles [2, 3, 4, 7, 8]
+      @hideTitles [2, 3, 4, 7, 8, 9]
       @showTitles [1]

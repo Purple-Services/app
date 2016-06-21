@@ -14,11 +14,11 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.11.3"
+  VERSION_NUMBER: "1.11.4"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    #when "LOCAL" then "http://192.168.0.23:3000/"
+    # when "LOCAL" then "http://192.168.0.24:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
 
@@ -68,6 +68,14 @@ window.util =
     "enroute"
   ]
 
+  ACTIVE_STATUSES: [
+    "unassigned"
+    "assigned"
+    "accepted"
+    "enroute"
+    "servicing"
+  ]
+
   # returns the controller (just a convenience function)
   ctl: (controllerName) ->
     Purple.app.getController controllerName
@@ -81,21 +89,58 @@ window.util =
     # ceil, here, matches how prices are handled on app-service
     (Math.ceil(x) / 100).toFixed 2
 
-  confirmDialog: (message, indexFunction, title, buttons) ->
-    if not Ext.os.is.Android and not Ext.os.is.iOS
-      if confirm title + '\n' + message
-        indexFunction 1
-      else
-        indexFunction 2
-    else
-      navigator.notification.confirm message, indexFunction, title, buttons
+  isEmpty: (obj) ->
+    for key of obj
+      if obj.hasOwnProperty key
+        return false
+    true
 
-  alertDialog: (message, callback, title) ->
-    if not Ext.os.is.Android and not Ext.os.is.iOS
-      alert title + '\n' + message
-      callback()
-    else
-      if(title)
-        navigator.notification.alert message, callback, title
+  confirm: (message, title, yesCallback, noCallback, yesButtonText = "Yes", noButtonText = "No") ->
+    if not (Ext.os.is.Android or Ext.os.is.iOS)
+      if confirm "#{title}\n#{message}"
+        yesCallback?()
       else
-        navigator.notification.alert message, callback
+        noCallback?()
+    else
+      navigator.notification.confirm(
+        message,
+        ((index) -> if index is 2 then yesCallback?() else noCallback?()),
+        title,
+        [noButtonText, yesButtonText]
+      )
+
+  alert: (message, title, callback) ->
+    if not (Ext.os.is.Android or Ext.os.is.iOS)
+      alert "#{title}\n#{message}"
+      callback?()
+    else
+      navigator.notification.alert message, callback, title
+
+  handleDeepLinkUrl: (url) ->
+    while util.ctl('Menu').backButtonStack.length
+      util.ctl('Menu').popOffBackButton()
+    if util.ctl('Account').isUserLoggedIn()
+      switch url
+        when 'purpleapp://map'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 0, no, no
+        when 'purpleapp://membership'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Subscriptions').subscriptionsFieldTap()
+        when 'purpleapp://account'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+        when 'purpleapp://editaccount'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 2, no, no
+          util.ctl('Account').showEditAccountForm()
+        when 'purpleapp://orders'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
+        when 'purpleapp://vehicles'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 4, no, no
+        when 'purpleapp://help'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 5, no, no
+        when 'purpleapp://feedback'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 6, no, no
+        when 'purpleapp://invite'
+          util.ctl('Main').getMainContainer().getItems().getAt(0).select 7, no, no
+          
+  googleMapsDeepLink: (url) ->
+    (if Ext.os.is.iOS then "comgooglemaps://" else "http://maps.google.com/maps") + url

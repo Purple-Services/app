@@ -26,7 +26,7 @@
 
         <script>
          // if version outdated, clear all sencha localStorage caches
-         if (localStorage['lastCacheVersionNumber'] !== "1.11.3") {
+         if (localStorage['lastCacheVersionNumber'] !== "1.11.4") {
              for (key in localStorage) {
                  // all of them start with a guid
                  if (key.length > 37 &&
@@ -36,6 +36,13 @@
              }
          }
          
+         function handleOpenURL (url) {
+            if (typeof window.util === "undefined") {
+                window.queuedDeepLinkUrl = url;
+            } else {
+                util.handleDeepLinkUrl(url);
+            }
+         }
          // iOS
          function onNotificationAPN (event) {
              if (event.alert) {
@@ -60,12 +67,12 @@
              }
 
              // update/reload orders list view
-             util.ctl('Orders').loadOrdersList(true);
+             util.ctl('Orders').loadOrdersList(true, util.ctl('Orders').refreshOrder);
              // if on a specific order page, just go back to the orders list
              // because it gets complicated to update the particular order page
-             if (util.ctl('Orders').getOrder() !== null) {
-                 util.ctl('Orders').backToOrders();
-             }
+             // if (util.ctl('Orders').getOrder() !== null) {
+             //     util.ctl('Orders').backToOrders();
+             // }
          }
 
          // Android
@@ -101,12 +108,12 @@
                              "Notification"
                          );
                          // update/reload orders list view
-                         util.ctl('Orders').loadOrdersList(true);
+                         util.ctl('Orders').loadOrdersList(true, util.ctl('Orders').refreshOrder);
                          // if on a specific order page, just go back to the orders list
                          // because it gets complicated to update the particular order page
-                         if (util.ctl('Orders').getOrder() !== null) {
-                             util.ctl('Orders').backToOrders();
-                         }
+                         // if (util.ctl('Orders').getOrder() !== null) {
+                         //     util.ctl('Orders').backToOrders();
+                         // }
                      }
                      
                      break;
