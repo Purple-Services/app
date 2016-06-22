@@ -67,7 +67,7 @@ Be sure to use Sencha Cmd v5.1.3.61 (not the latest version).
 	2. Navigate to the test folder test
 	3. Download node.js
 	4. Run npm install to install required packages
-	5. Run scripts with: wdio wdio.config
+	5. Run scripts with: wdio --suite all
 
 ### Compiling Test Scripts
 	1. Test scripts are located under src/test

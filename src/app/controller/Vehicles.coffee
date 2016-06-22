@@ -288,7 +288,7 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value
             localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
           else
-            util.alertDialog response.message, (->), "Error"
+            util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -360,7 +360,7 @@ Ext.define 'Purple.controller.Vehicles',
           else
             util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -404,7 +404,7 @@ Ext.define 'Purple.controller.Vehicles',
           @renderVehiclesList @vehicles
           util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -455,7 +455,7 @@ Ext.define 'Purple.controller.Vehicles',
               value: 'new'
             @getRequestFormVehicleSelect().setOptions opts
           else
-            util.alertDialog response.message, (->), "Error"
+            util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText

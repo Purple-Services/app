@@ -152,7 +152,7 @@ Ext.define 'Purple.controller.Main',
       cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
         ((status) =>
           if status isnt "authorized_always" and @locationNotification < 3
-            util.alertDialog "Please make sure that the app's Location settings on your device is set to 'Always'.", (->), 'Warning'
+            util.alert "Please make sure that the app's Location settings on your device is set to 'Always'.", 'Warning', (->)
             @locationNotification++
         ), 
         (=> console.log "Error getting location authorization status")
@@ -216,7 +216,7 @@ Ext.define 'Purple.controller.Main',
         @pushNotificationEnabled = false
         setTimeout (=> 
           if not @pushNotificationEnabled
-            util.alertDialog 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
+            util.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', "Reminder", (->)
           ), 1500 
       window.plugins?.pushNotification?.register(
         ((result) => @pushNotificationEnabled = true),
@@ -255,7 +255,7 @@ Ext.define 'Purple.controller.Main',
         if response.success
           localStorage['purpleUserHasPushNotificationsSetUp'] = "true"
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         console.log response_obj
 
@@ -274,7 +274,7 @@ Ext.define 'Purple.controller.Main',
                   @androidHighAccuracyNotificationActive = false
                   if not util.ctl('Account').isCourier()
                     @centerUsingIpAddress()
-                    util.alertDialog "Certain features of the application may not work properly. Please restart the application and enable high accuracy to use all the features.", (->), "Location Settings"
+                    util.alert "Certain features of the application may not work properly. Please restart the application and enable high accuracy to use all the features.", "Location Settings", (->)
                   ), 
                 cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
               )
@@ -338,7 +338,7 @@ Ext.define 'Purple.controller.Main',
       @placesService = new google.maps.places.PlacesService @getMap().getMap()
       @mapInited = true
     else
-      util.alertDialog "Internet connection problem. Please try closing the app and restarting it.", (->), "Connection Error"
+      util.alert "Internet connection problem. Please try closing the app and restarting it.", "Connection Error", (->)
 
   dragStart: ->
     @lastDragStart = new Date().getTime() / 1000
@@ -710,7 +710,7 @@ Ext.define 'Purple.controller.Main',
           localStorage['purpleUserWorkPlaceId'] = response.saved_locations.work.googlePlaceId
           callback?()
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -763,6 +763,8 @@ Ext.define 'Purple.controller.Main',
     ) and (
       not localStorage['purpleAdShownTimesSubscription']? or
       parseInt(localStorage['purpleAdShownTimesSubscription']) < 2
+    ) and (
+      Ext.os.is.Android or Ext.os.is.iOS
     )
       localStorage['purpleAdShownTimesSubscription'] ?= 0
       localStorage['purpleAdShownTimesSubscription'] = (
@@ -977,7 +979,7 @@ Ext.define 'Purple.controller.Main',
           )
           @getTotalPriceField().setValue "" + util.centsToDollars(totalPrice)
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -1045,8 +1047,7 @@ Ext.define 'Purple.controller.Main',
               yes
             )
             util.ctl('Menu').clearBackButtonStack()
-            util.alertDialog response.message, (->), (response.message_title ? "Success")
-            # util.alertDialog response.message, (->), (response.message_title ? "Success")
+            util.alert response.message, (response.message_title ? "Success"), (->)
             # set up push notifications if they arent set up
             # NOTE: This will matter less and less, now that we set up push
             # notifications when a user creates their account. But it's nice to
@@ -1054,7 +1055,7 @@ Ext.define 'Purple.controller.Main',
             # don't logout and login (which would also cause a setup)
             @setUpPushNotifications true
           else
-            util.alertDialog response.message, (->), (response.message_title ? "Error")
+            util.alert response.message, (response.message_title ? "Error"), (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -1085,7 +1086,7 @@ Ext.define 'Purple.controller.Main',
           @getFeedbackTextField().setValue ''
           util.flashComponent @getFeedbackThankYouMessage()
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -1117,7 +1118,7 @@ Ext.define 'Purple.controller.Main',
           @getInviteTextField().setValue ''
           util.flashComponent @getInviteThankYouMessage()
         else
-          util.alertDialog response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -1184,13 +1185,13 @@ Ext.define 'Purple.controller.Main',
             @errorCount++
             if @errorCount > 10
               @errorCount = 0
-              util.alertDialog "Unable to ping dispatch center. Web service problem, please notify Chris.", (->), "Error"
+              util.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", "Error", (->)
             failureCallback?()
-            util.alertDialog response.message, (->), (response.message_title ? "Error")
+            util.alert response.message, (response.message_title ? "Error"), (->)
         failure: (response_obj) ->
           @errorCount++
           if @errorCount > 10
             @errorCount = 0
-            util.alertDialog "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", (->), "Error"
+            util.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", "Error", (->)
           @courierPingBusy = no
           failureCallback?()

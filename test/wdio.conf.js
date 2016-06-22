@@ -12,6 +12,26 @@ exports.config = {
     specs: [
         './test/specs/**/*.js'
     ],
+    suites: {
+        Accounts: [
+            './test/specs/Accounts.js',
+        ],
+        DeleteOrder: [
+            './test/specs/DeleteOrder.js',
+        ],
+        MakeOrder: [
+            './test/specs/MakeOrder.js',
+        ],
+        Vehicle: [
+            './test/specs/Vehicle.js',
+        ],
+        all: [
+            './test/specs/DeleteOrder.js',
+            './test/specs/Accounts.js',
+            './test/specs/Vehicle.js',
+            './test/specs/MakeOrder.js',
+        ]
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -32,6 +52,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
+    maxInstances: 3,
     capabilities: [{
         browserName: 'chrome',
         chromeOptions: {
