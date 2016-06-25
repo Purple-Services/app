@@ -846,24 +846,6 @@ Ext.define 'Purple.controller.Main',
       yes
     )
 
-  # if localStorage['purpleSubscriptionId']? and
-  # util.ctl("Subscriptions").subscriptions[localStorage['purpleSubscriptionId']].num_free_tire_pressure_check > 0
-  requestFormTirePressureCheckTap: ->
-    if @getRequestFormTirePressureCheck().getDisabled()
-      util.alert(
-        (if localStorage['purpleSubscriptionId']? and
-        localStorage['purpleSubscriptionId'] is '2'
-          """
-            You have already used your tire pressure fill-up(s) for this plan period.
-          """
-        else
-          """
-            Tire pressure fill-ups are only available for members of the
-            "Express" plan.
-          """),
-        "Oh no!"
-      )
-
   sendRequest: -> # takes you to the confirmation page
     @getRequestGasTabContainer().setActiveItem(
       Ext.create 'Purple.view.RequestConfirmationForm'
