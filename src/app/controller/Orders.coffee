@@ -223,6 +223,27 @@ Ext.define 'Purple.controller.Orders',
       yes
     )
 
+  updateLastOrderCompleted: ->
+    for order in @orders
+      if order.status is 'complete'
+        if localStorage['lastOrderCompleted']? and not @userBusy()
+          if localStorage['lastOrderCompleted'] isnt order.id
+            if @getOrder()? then util.ctl('Menu').popOffBackButton()
+            localStorage['lastOrderCompleted'] = order.id
+            @sendToCompletedOrder()
+        localStorage['lastOrderCompleted'] = order.id
+        return
+
+  userBusy: ->
+    if not util.ctl('Vehicles').getEditVehicleForm()? and not util.ctl('Main').getRequestForm()? and not util.ctl('Main').getRequestConfirmationForm()? and not util.ctl('Account').getEditAccountForm()? and not util.ctl('PaymentMethods').getEditPaymentMethodForm()?
+      return false
+    true
+
+  sendToCompletedOrder: ->
+    util.ctl('Menu').clearBackButtonStack()
+    util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
+    @viewOrder localStorage['lastOrderCompleted']
+
   loadOrdersList: (forceUpdate = no, callback = null) ->
     if @orders? and not forceUpdate
       @renderOrdersList @orders
@@ -252,6 +273,7 @@ Ext.define 'Purple.controller.Orders',
             @renderOrdersList @orders
             callback?()
             @lastLoadOrdersList = new Date().getTime() / 1000
+            @updateLastOrderCompleted()
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
