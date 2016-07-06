@@ -490,8 +490,8 @@ Ext.define 'Purple.controller.Orders',
           @renderOrdersList @orders
           if values['number_rating'] is 5 and localStorage['sentUserToAppStore'] isnt 'yes'
             util.confirm(
-              "Do you have 15 seconds to help Purple by rating our app?",
-              "Thanks for your order review",
+              "Do you have a few seconds to help us by rating the Purple app?",
+              "Thanks!",
               @sendToAppStore,
               (=>
                 if localStorage['sentUserToAppStore'] is 'attempted'
