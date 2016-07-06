@@ -452,6 +452,13 @@ Ext.define 'Purple.controller.Orders',
     @getTextRating().show()
     @getSendRatingButtonContainer().show()
 
+  sendToAppStore: ->
+    localStorage['sentUserToAppStore'] = 'yes'
+    if Ext.os.is.iOS
+      cordova.plugins.market.open "id970824802"
+    else
+      cordova.plugins.market.open "com.purple.app"
+
   sendRating: ->
     values = @getOrder().getValues()
     id = @getOrder().config.orderId
@@ -481,6 +488,18 @@ Ext.define 'Purple.controller.Orders',
           @backToOrders()
           util.ctl('Menu').popOffBackButtonWithoutAction()
           @renderOrdersList @orders
+          if values['number_rating'] is 5 and localStorage['sentUserToAppStore'] isnt 'yes'
+            util.confirm(
+              "Please take a moment to rate us in the app store!",
+              "Message",
+              @sendToAppStore,
+              (=>
+                if localStorage['sentUserToAppStore'] is 'attempted'
+                  localStorage['sentUserToAppStore'] = 'yes'
+                else
+                  localStorage['sentUserToAppStore'] = 'attempted'
+              )
+            )
         else
           navigator.notification.alert response.message, (->), "Error"
       failure: (response_obj) ->
