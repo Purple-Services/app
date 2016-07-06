@@ -223,21 +223,19 @@ Ext.define 'Purple.controller.Orders',
       yes
     )
 
+  isUserBusy: ->
+    util.ctl('Vehicles').getEditVehicleForm()? or util.ctl('Main').getRequestForm()? or util.ctl('Main').getRequestConfirmationForm()? or util.ctl('Account').getEditAccountForm()? or util.ctl('PaymentMethods').getEditPaymentMethodForm()?
+  
   updateLastOrderCompleted: ->
     for order in @orders
       if order.status is 'complete'
-        if localStorage['lastOrderCompleted']? and not @userBusy()
+        if localStorage['lastOrderCompleted']? and not @isUserBusy()
           if localStorage['lastOrderCompleted'] isnt order.id
             if @getOrder()? then util.ctl('Menu').popOffBackButton()
             localStorage['lastOrderCompleted'] = order.id
             @sendToCompletedOrder()
         localStorage['lastOrderCompleted'] = order.id
         return
-
-  userBusy: ->
-    if not util.ctl('Vehicles').getEditVehicleForm()? and not util.ctl('Main').getRequestForm()? and not util.ctl('Main').getRequestConfirmationForm()? and not util.ctl('Account').getEditAccountForm()? and not util.ctl('PaymentMethods').getEditPaymentMethodForm()?
-      return false
-    true
 
   sendToCompletedOrder: ->
     util.ctl('Menu').clearBackButtonStack()
