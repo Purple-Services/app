@@ -224,7 +224,11 @@ Ext.define 'Purple.controller.Orders',
     )
 
   isUserBusy: ->
-    util.ctl('Vehicles').getEditVehicleForm()? or util.ctl('Main').getRequestForm()? or util.ctl('Main').getRequestConfirmationForm()? or util.ctl('Account').getEditAccountForm()? or util.ctl('PaymentMethods').getEditPaymentMethodForm()?
+    util.ctl('Vehicles').getEditVehicleForm()? or
+    util.ctl('Main').getRequestForm()? or
+    util.ctl('Main').getRequestConfirmationForm()? or
+    util.ctl('Account').getEditAccountForm()? or
+    util.ctl('PaymentMethods').getEditPaymentMethodForm()?
   
   updateLastOrderCompleted: ->
     for order in @orders
