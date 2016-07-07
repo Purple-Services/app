@@ -112,6 +112,7 @@ Ext.define 'Purple.controller.Main',
 
     # CUSTOMER APP ONLY
     # if VERSION is "PROD"
+    #   GappTrack.track("882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false)
     #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
     #   ga_storage?._setAccount 'UA-61762011-1'
     #   ga_storage?._setDomain 'none'

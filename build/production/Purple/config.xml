@@ -142,6 +142,7 @@
   </platform>
 
   <!-- BEGIN CUSTOMER APP ONLY -->
+  <gap:plugin name="cordova-plugin-google-conversion" source="npm" />
   <plugin spec="https://github.com/Telerik-Verified-Plugins/Facebook" source="git">
     <param name="APP_ID" value="1588773851335820" />
     <param name="APP_NAME" value="Purple" />
