@@ -220,13 +220,6 @@ Ext.define 'Purple.view.EditVehicleForm',
               'uppercase-input'
             ]
             clearIcon: no
-            listeners:
-              focus: (comp, e, eopts) ->
-                if Ext.os.name is 'Android'
-                  ost = comp.element.dom.offsetTop
-                  setTimeout (=> 
-                    @getParent().getParent().getScrollable().getScroller().scrollTo 0, ost
-                    ), 500 
           }
           {
             xtype: 'hiddenfield'
