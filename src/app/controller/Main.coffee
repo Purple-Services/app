@@ -358,6 +358,7 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
   updateMapWithAddressComponents: (address) ->
+    @deliveryAddressZipCode = null
     if address[0]?['address_components']?
       addressComponents = address[0]['address_components']
       streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
@@ -410,7 +411,8 @@ Ext.define 'Purple.controller.Main',
             @busyGettingGasPrice = no
           failure: (response_obj) ->
             @busyGettingGasPrice = no
-            console.log response_obj
+            if not @deliveryAddressZipCode
+              @adjustDeliveryLocByLatLng()
 
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     if @bypassUpdateDeliveryLocAddressByLatLng? and @bypassUpdateDeliveryLocAddressByLatLng
