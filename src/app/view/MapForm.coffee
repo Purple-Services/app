@@ -75,22 +75,25 @@ Ext.define 'Purple.view.MapForm',
         id: 'centerMapButton'
         flex: 0
         ui: 'plain'
-        handler: -> @up().fireEvent 'recenterAtUserLoc', true
+        handler: -> @up().fireEvent 'recenterAtUserLoc', true, true
       }
       {
         xtype: 'component'
         id: 'gasPriceMapDisplay'
         flex: 0
         html: """
-          <span class="gas-price-title">Current Price</span>
-          <br />
-          <span class="gas-price-octane">87 Reg.</span>
-          <span class="gas-price-price" id="gas-price-display-87"></span>
-          <br />
-          <span class="gas-price-octane">91 Pre.</span>
-          <span class="gas-price-price" id="gas-price-display-91"></span>
+          <span id="gas-price-unavailable" style="display: none">
+          </span>
+          <span id="gas-price-display">
+            <span class="gas-price-title">Current Price</span>
+            <br />
+            <span class="gas-price-octane">87 Reg.</span>
+            <span class="gas-price-price" id="gas-price-display-87"></span>
+            <br />
+            <span class="gas-price-octane">91 Pre.</span>
+            <span class="gas-price-price" id="gas-price-display-91"></span>
+          </span>
         """
-        #   navigator.notification.alert "Our gas price is based on the average price in the area.", (->), "Info"
       }
       {
         xtype: 'component'
@@ -107,27 +110,6 @@ Ext.define 'Purple.view.MapForm',
         clearIcon: no
         value: 'Updating location...'
         disabled: yes
-        listeners:
-          initialize: (textField) ->
-            textField.element.on 'tap', =>
-              if util.ctl('Account').isUserLoggedIn()
-                textField.setValue ''
-                @fireEvent 'addressInputMode'
-              else
-                @fireEvent('showLogin')
-            true
-          keyup: (textField, event) ->
-            textField.lastQuery ?= ''
-            query = textField.getValue()
-            if query isnt textField.lastQuery and query isnt ''
-              textField.lastQuery = query
-              if textField.genSuggTimeout?
-                clearTimeout textField.genSuggTimeout
-              textField.genSuggTimeout = setTimeout(
-                @fireEvent('generateSuggestions'),
-                500
-              )
-            true
       }
       {
         xtype: 'container'

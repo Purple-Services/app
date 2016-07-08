@@ -9,6 +9,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Orders'
     'Purple.view.Vehicles'
     'Purple.view.PaymentMethods'
+    'Purple.view.Subscriptions'
     'Purple.view.Help'
     'Purple.view.Feedback'
     'Purple.view.Invite'
@@ -292,7 +293,10 @@ Ext.define 'Purple.view.MainContainer',
         ]
       }
       {
-        title: "Gas Stations"
+        title: """
+          <img src="resources/images/gas-tank.png" style="height: 22px; padding-right: 4px; position: relative; top: 1px;" />
+          Find Gas
+        """
         items: [
           {
             xtype: "toptoolbar"
