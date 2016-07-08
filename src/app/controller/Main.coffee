@@ -112,6 +112,7 @@ Ext.define 'Purple.controller.Main',
 
     # CUSTOMER APP ONLY
     # if VERSION is "PROD"
+    #   GappTrack.track("882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false)
     #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
     #   ga_storage?._setAccount 'UA-61762011-1'
     #   ga_storage?._setDomain 'none'
@@ -358,6 +359,7 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
   updateMapWithAddressComponents: (address) ->
+    @deliveryAddressZipCode = null
     if address[0]?['address_components']?
       addressComponents = address[0]['address_components']
       streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
@@ -410,7 +412,8 @@ Ext.define 'Purple.controller.Main',
             @busyGettingGasPrice = no
           failure: (response_obj) ->
             @busyGettingGasPrice = no
-            console.log response_obj
+            if not @deliveryAddressZipCode
+              @adjustDeliveryLocByLatLng()
 
   updateDeliveryLocAddressByLatLng: (lat, lng) ->
     if @bypassUpdateDeliveryLocAddressByLatLng? and @bypassUpdateDeliveryLocAddressByLatLng

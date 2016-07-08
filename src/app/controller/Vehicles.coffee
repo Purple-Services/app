@@ -44,6 +44,8 @@ Ext.define 'Purple.controller.Vehicles',
         change: 'modelChanged'
       editVehicleFormColor:
         change: 'colorChanged'
+      editVehicleFormLicensePlate:
+        focus: 'focusEditVehicleFormLicensePlate'
       editVehicleFormTakePhotoButton:
         takePhoto: 'addImage'
       requestFormVehicleSelect:
@@ -54,6 +56,7 @@ Ext.define 'Purple.controller.Vehicles',
 
   # will be null until they log in
   vehicles: null
+  scrollToField: true
 
   # all possible vehicle options
   vehicleList: window.vehicleList
@@ -534,6 +537,15 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['specialInstructions']
           ))
       )
+
+  focusEditVehicleFormLicensePlate: (comp, e, eopts) ->
+    if Ext.os.name is 'Android' and @scrollToField
+      @scrollToField = false
+      ost = comp.element.dom.offsetTop - 25
+      setTimeout (=>
+        @getEditVehicleForm().getScrollable().getScroller().scrollTo 0, ost
+        @scrollToField = true
+        ), 500
 
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this
