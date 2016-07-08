@@ -135,7 +135,7 @@ Ext.define 'Purple.view.Order',
             name: 'number_rating'
             hidden: yes
             label: 'Rating'
-            labelWidth: 75
+            labelWidth: 80
             cls: [
               'highlighted'
               'order-status'
