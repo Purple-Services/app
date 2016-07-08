@@ -101,31 +101,33 @@ Ext.define 'Purple.controller.Main',
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    if not localStorage['courierOnDuty']?
-      localStorage['courierOnDuty'] = 'no'
 
-    clearTimeout window.courierReloadTimer
+    # if not localStorage['courierOnDuty']?
+    #   localStorage['courierOnDuty'] = 'no'
+
+    # clearTimeout window.courierReloadTimer
+
     # END COURIER APP ONLY
 
     if util.ctl('Account').isCourier()
       @initCourierPing()
 
     # CUSTOMER APP ONLY
-    # if VERSION is "PROD"
-    #   GappTrack.track("882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false)
-    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    #   ga_storage?._setAccount 'UA-61762011-1'
-    #   ga_storage?._setDomain 'none'
-    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    if VERSION is "PROD"
+      GappTrack.track "882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    # analytics?.load util.SEGMENT_WRITE_KEY
-    # if util.ctl('Account').isUserLoggedIn()
-    #   analytics?.identify localStorage['purpleUserId']
-    #   # segment says you 'have' to call analytics.page() at some point
-    #   # it doesn't seem to actually matter though
-    # analytics?.track 'App Launch',
-    #   platform: Ext.os.name
-    # analytics?.page 'Map'
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
     # END OF CUSTOMER APP ONLY
     
     navigator.splashscreen?.hide()
@@ -782,13 +784,11 @@ Ext.define 'Purple.controller.Main',
       
   initRequestGasForm: (deliveryLocName) ->
     # send to request gas form
-    # but first get availbility from disptach system
+    # but first get availbility from disptach system on app service
     Ext.Viewport.setMasked
       xtype: 'loadmask'
       message: ''
     Ext.Ajax.request
-      # you can use the gitignored availabilities.json file for testing:
-      #   url: "availabilities.json"
       url: "#{util.WEB_SERVICE_BASE_URL}dispatch/availability"
       params: Ext.JSON.encode
         version: util.VERSION_NUMBER
@@ -866,7 +866,12 @@ Ext.define 'Purple.controller.Main',
     vals['gas_type'] = "" + availability.octane # should already be string though
     vals['gas_type_display'] = "Unleaded #{vals['gas_type']} Octane"
     gasPrice = availability.price_per_gallon
-    serviceFee = availability.times[vals['time']]['service_fee']
+    
+    serviceFee = (
+      availability.times[vals['time']]['service_fee'] +
+      (parseInt(vals['tire_pressure_check_price']) * vals['tire_pressure_check'])
+    )
+    
     vals['gas_price'] = "" + util.centsToDollars(
       gasPrice
     )

@@ -26,6 +26,7 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]'
       requestFormTimeSelect: '[ctype=requestFormTimeSelect]'
       requestFormTirePressureCheck: '[ctype=requestFormTirePressureCheck]'
+      requestFormTirePressureCheckPrice: '[ctype=requestFormTirePressureCheckPrice]'
       requestFormSpecialInstructions: '[ctype=requestFormSpecialInstructions]'
       sendRequestButton: '[ctype=sendRequestButton]'
     control:
@@ -521,6 +522,11 @@ Ext.define 'Purple.controller.Vehicles',
         timeOpts.sort (a, b) -> a['order'] - b['order']
         @getRequestFormTimeSelect().setOptions timeOpts
         @getRequestFormTimeSelect().setDisabled no
+
+        @getRequestFormTirePressureCheck().setLabel(
+          "Tire Fill-up? ($#{util.centsToDollarsShort availability.tire_pressure_check_price})"
+        )
+        @getRequestFormTirePressureCheckPrice().setValue availability.tire_pressure_check_price
         
         @getSendRequestButton().setDisabled no
       ), (if ready then 5 else 500)

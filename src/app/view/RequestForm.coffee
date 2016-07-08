@@ -107,11 +107,16 @@ Ext.define 'Purple.view.RequestForm',
             ctype: 'requestFormTirePressureCheck'
             flex: 0
             name: 'tire_pressure_check'
-            label: 'Tire Fill-up? ($7)'
-            labelWidth: 165
+            label: 'Tire Fill-up?' # also change in requestFormVehicleSelectChange func
+            labelWidth: 200
             cls: [
               'bottom-margin'
             ]
+          }
+          {
+            xtype: 'hiddenfield'
+            ctype: 'requestFormTirePressureCheckPrice'
+            name: 'tire_pressure_check_price'
           }
           # {
           #   xtype: 'component'
