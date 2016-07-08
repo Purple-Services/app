@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "com.purple.app"
-        versionCode = "1140"
-        version     = "1.11.4">
+        id = "6NAJA3N74X.com.purple.app"
+        versionCode = "1141"
+        version     = "1.4.1">
   
   <!--
       For iOS use:
@@ -118,12 +118,8 @@
   <preference name="StatusBarStyle" value="lightcontent" />
   
   <gap:plugin name="cordova-plugin-device" version="1.1.2" source="npm" />
-  <!-- <gap:plugin name="org.apache.cordova.geolocation" version="0.3.12" /> -->
   <gap:plugin name="cordova-plugin-geolocation" version="2.2.0" source="npm" />
-  <!-- Don't need this anymore -->
-  <!-- <gap:plugin name="org.apache.cordova.camera" version="0.3.6" /> -->
   <gap:plugin name="cordova-plugin-dialogs" version="1.2.1" source="npm" />
-  <!-- <gap:plugin name="org.apache.cordova.dialogs" version="0.3.0" /> -->
   <gap:plugin name="cordova-plugin-inappbrowser" version="1.0.1" source="npm" />
   
   <gap:plugin name="cordova-plugin-splashscreen" version="3.2.2" source="npm" />
