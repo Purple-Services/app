@@ -223,6 +223,32 @@ Ext.define 'Purple.controller.Orders',
       yes
     )
 
+  isUserBusy: ->
+    util.ctl('Vehicles').getEditVehicleForm()? or
+    util.ctl('Main').getRequestForm()? or
+    util.ctl('Main').getRequestConfirmationForm()? or
+    util.ctl('Account').getEditAccountForm()? or
+    util.ctl('PaymentMethods').getEditPaymentMethodForm()? or
+    @getOrder()?
+  
+  updateLastOrderCompleted: ->
+    for order in @orders
+      if order.status is 'complete'
+        if localStorage['lastOrderCompleted']? and not @isUserBusy()
+          if localStorage['lastOrderCompleted'] isnt order.id and localStorage['orderListLength'] is @orders.length.toString()
+            if @getOrder()? then util.ctl('Menu').popOffBackButton()
+            localStorage['lastOrderCompleted'] = order.id
+            localStorage['orderListLength'] = @orders.length
+            @sendToCompletedOrder()
+        localStorage['lastOrderCompleted'] = order.id
+        localStorage['orderListLength'] = @orders.length
+        break
+
+  sendToCompletedOrder: ->
+    util.ctl('Menu').clearBackButtonStack()
+    util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
+    @viewOrder localStorage['lastOrderCompleted']
+
   loadOrdersList: (forceUpdate = no, callback = null) ->
     if @orders? and not forceUpdate
       @renderOrdersList @orders
@@ -252,6 +278,7 @@ Ext.define 'Purple.controller.Orders',
             @renderOrdersList @orders
             callback?()
             @lastLoadOrdersList = new Date().getTime() / 1000
+            @updateLastOrderCompleted()
           else
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
@@ -490,8 +517,8 @@ Ext.define 'Purple.controller.Orders',
           @renderOrdersList @orders
           if values['number_rating'] is 5 and localStorage['sentUserToAppStore'] isnt 'yes'
             util.confirm(
-              "Please take a moment to rate us in the app store!",
-              "Message",
+              "Do you have a few seconds to help us by rating the Purple app?",
+              "Thanks!",
               @sendToAppStore,
               (=>
                 if localStorage['sentUserToAppStore'] is 'attempted'
