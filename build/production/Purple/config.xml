@@ -152,7 +152,7 @@
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
 
   <!-- iOS only -->
-  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
   <!-- End of iOS only -->
   
   <!-- Android only -->

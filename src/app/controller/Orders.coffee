@@ -236,7 +236,6 @@ Ext.define 'Purple.controller.Orders',
       if order.status is 'complete'
         if localStorage['lastOrderCompleted']? and not @isUserBusy()
           if localStorage['lastOrderCompleted'] isnt order.id and localStorage['orderListLength'] is @orders.length.toString()
-            if @getOrder()? then util.ctl('Menu').popOffBackButton()
             localStorage['lastOrderCompleted'] = order.id
             localStorage['orderListLength'] = @orders.length
             @sendToCompletedOrder()
@@ -245,7 +244,8 @@ Ext.define 'Purple.controller.Orders',
         break
 
   sendToCompletedOrder: ->
-    util.ctl('Menu').clearBackButtonStack()
+    while util.ctl('Menu').backButtonStack.length
+      util.ctl('Menu').popOffBackButton()
     util.ctl('Main').getMainContainer().getItems().getAt(0).select 3, no, no
     @viewOrder localStorage['lastOrderCompleted']
 
