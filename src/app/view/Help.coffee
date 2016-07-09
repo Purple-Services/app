@@ -45,7 +45,7 @@ Ext.define 'Purple.view.Help',
           "Deliveries can be scheduled within 1 or 3 hours."
           "Your app will keep you up to date on the progress of your service. Make sure your notifications are turned on so you don't miss these updates!"
           "You can choose between unleaded 87 octane or unleaded 91 octane fuel."
-          "Choose between a 10 gallon or 15 gallon delivery."
+          "Choose between a 7 1/2, 10, or 15 gallons per delivery."
           "Your credit card information is very secure. The transaction is encrypted with SSL. Credit card numbers are not stored in our database."
           "No. Purple service providers are required to comply with all Department of Transportation, Environmental Protection Agency, and local municipalities safety and quality control measures. All of our service providers take pride in providing quality service, and protecting your vehicle. Service providers are fully insured."
           "We accept orders from 7:30am to 10:30pm (PST) in most areas."
