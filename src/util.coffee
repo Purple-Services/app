@@ -14,7 +14,7 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.11.4"
+  VERSION_NUMBER: "1.4.1"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
@@ -88,6 +88,14 @@ window.util =
   centsToDollars: (x) ->
     # ceil, here, matches how prices are handled on app-service
     (Math.ceil(x) / 100).toFixed 2
+
+  # like centsToDollars but gives $7, $7.25 instead of $7.00, $7.25
+  centsToDollarsShort: (x) ->
+    dollars = (Math.ceil(x) / 100)
+    if Math.ceil(x) % 100 is 0
+      (Math.ceil(x) / 100).toFixed 0
+    else
+      (Math.ceil(x) / 100).toFixed 2
 
   isEmpty: (obj) ->
     for key of obj

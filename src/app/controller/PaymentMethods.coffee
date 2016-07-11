@@ -20,6 +20,7 @@ Ext.define 'Purple.controller.PaymentMethods',
       paymentMethodConfirmationField: '#paymentMethodConfirmationField'
       editPaymentMethodFormMonth: '[ctype=editPaymentMethodFormMonth]'
       editPaymentMethodFormYear: '[ctype=editPaymentMethodFormYear]'
+      editPaymentMethodFormBillingZip: '[ctype=editPaymentMethodFormBillingZip]'
     control:
       paymentMethods:
         editPaymentMethod: 'showEditPaymentMethodForm'
@@ -37,9 +38,12 @@ Ext.define 'Purple.controller.PaymentMethods',
         change: 'makeChanged'
       accountPaymentMethodField:
         initialize: 'initAccountPaymentMethodField'
+      editPaymentMethodFormBillingZip:
+        focus: 'focusEditPaymentMethodFormBillingZip'
 
   # will be null until they log in
   paymentMethods: null
+  scrollToField: true
 
   launch: ->
     @callParent arguments
@@ -420,3 +424,12 @@ Ext.define 'Purple.controller.PaymentMethods',
     if not suppressBackButtonBehavior
       util.ctl('Menu').pushOntoBackButton =>
         @backToAccount()
+
+  focusEditPaymentMethodFormBillingZip: (comp, e, eopts) ->
+    if Ext.os.name is 'Android' and @scrollToField
+      @scrollToField = false
+      ost = comp.element.dom.offsetTop - 25
+      setTimeout (=>
+        @getEditPaymentMethodForm().getScrollable().getScroller().scrollTo 0, ost
+        @scrollToField = true
+        ), 500

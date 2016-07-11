@@ -26,6 +26,7 @@ Ext.define 'Purple.controller.Vehicles',
       requestFormGallonsSelect: '[ctype=requestFormGallonsSelect]'
       requestFormTimeSelect: '[ctype=requestFormTimeSelect]'
       requestFormTirePressureCheck: '[ctype=requestFormTirePressureCheck]'
+      requestFormTirePressureCheckPrice: '[ctype=requestFormTirePressureCheckPrice]'
       requestFormSpecialInstructions: '[ctype=requestFormSpecialInstructions]'
       sendRequestButton: '[ctype=sendRequestButton]'
     control:
@@ -44,6 +45,8 @@ Ext.define 'Purple.controller.Vehicles',
         change: 'modelChanged'
       editVehicleFormColor:
         change: 'colorChanged'
+      editVehicleFormLicensePlate:
+        focus: 'focusEditVehicleFormLicensePlate'
       editVehicleFormTakePhotoButton:
         takePhoto: 'addImage'
       requestFormVehicleSelect:
@@ -54,6 +57,7 @@ Ext.define 'Purple.controller.Vehicles',
 
   # will be null until they log in
   vehicles: null
+  scrollToField: true
 
   # all possible vehicle options
   vehicleList: window.vehicleList
@@ -518,20 +522,13 @@ Ext.define 'Purple.controller.Vehicles',
         timeOpts.sort (a, b) -> a['order'] - b['order']
         @getRequestFormTimeSelect().setOptions timeOpts
         @getRequestFormTimeSelect().setDisabled no
+
+        @getRequestFormTirePressureCheck().setLabel(
+          "Tire Fill-up? ($#{util.centsToDollarsShort availability.tire_pressure_check_price})"
+        )
+        @getRequestFormTirePressureCheckPrice().setValue availability.tire_pressure_check_price
         
         @getSendRequestButton().setDisabled no
-
-        subUsage = util.ctl('Subscriptions').subscriptionUsage
-        if subUsage? and
-        subUsage.num_free_tire_pressure_check? and
-        subUsage.num_free_tire_pressure_check_used? and
-        ( # has some tire checks left in this sub period?
-          (
-            subUsage.num_free_tire_pressure_check -
-            subUsage.num_free_tire_pressure_check_used
-          ) > 0
-        )
-          @getRequestFormTirePressureCheck().setDisabled no
       ), (if ready then 5 else 500)
   
   focusRequestFormSpecialInstructions: ->
@@ -546,6 +543,15 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['specialInstructions']
           ))
       )
+
+  focusEditVehicleFormLicensePlate: (comp, e, eopts) ->
+    if Ext.os.name is 'Android' and @scrollToField
+      @scrollToField = false
+      ost = comp.element.dom.offsetTop - 25
+      setTimeout (=>
+        @getEditVehicleForm().getScrollable().getScroller().scrollTo 0, ost
+        @scrollToField = true
+        ), 500
 
   addImage: ->
     addImageStep2 = Ext.bind @addImageStep2, this
