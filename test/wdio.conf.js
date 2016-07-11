@@ -25,11 +25,15 @@ exports.config = {
         Vehicle: [
             './test/specs/Vehicle.js',
         ],
+        Locations: [
+            './test/specs/Locations.js'
+        ],
         all: [
             './test/specs/DeleteOrder.js',
             './test/specs/Accounts.js',
             './test/specs/Vehicle.js',
-            './test/specs/MakeOrder.js',
+            './test/specs/Locations.js',
+            './test/specs/MakeOrder.js'
         ]
     },
     // Patterns to exclude.

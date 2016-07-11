@@ -103,7 +103,7 @@ window.util =
         return false
     true
 
-  confirm: (title, message, yesCallback, noCallback, yesButtonText = "Yes", noButtonText = "No") ->
+  confirm: (message, title, yesCallback, noCallback, yesButtonText = "Yes", noButtonText = "No") ->
     if not (Ext.os.is.Android or Ext.os.is.iOS)
       if confirm "#{title}\n#{message}"
         yesCallback?()
