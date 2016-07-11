@@ -156,7 +156,7 @@ Ext.define 'Purple.controller.PaymentMethods',
             localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
             @renderPaymentMethodsList @paymentMethods
           else
-            navigator.notification.alert response.message, (->), "Error"
+            util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -183,8 +183,7 @@ Ext.define 'Purple.controller.PaymentMethods',
           initialize: (field) =>
             field.element.on 'tap', =>
               pmid = field.getId().substring 5
-              navigator.notification.confirm(
-                "",
+              util.confirmDialog "",
                 ((index) => switch index
                   when 1 then @askToDeleteCard pmid
                   when 2 then @makeDefault pmid
@@ -192,7 +191,6 @@ Ext.define 'Purple.controller.PaymentMethods',
                 ),
                 field.getLabel(),
                 ["Delete Card", "Make Default", "Cancel"]
-              )
 
   askToDeleteCard: (id) ->
     util.confirm(
@@ -239,7 +237,7 @@ Ext.define 'Purple.controller.PaymentMethods',
           util.ctl('Orders').orders = response.orders
           @renderPaymentMethodsList @paymentMethods
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -280,7 +278,7 @@ Ext.define 'Purple.controller.PaymentMethods',
           util.ctl('Menu').popOffBackButtonWithoutAction()
           @backToPreviousPage()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -298,7 +296,7 @@ Ext.define 'Purple.controller.PaymentMethods',
 
     for f, field of card
       if field is ""
-        navigator.notification.alert "All fields are required.", (->), "Error"
+        util.alert "All fields are required.", "Error", (->)
         return
 
     Stripe.setPublishableKey util.STRIPE_PUBLISHABLE_KEY
@@ -311,7 +309,7 @@ Ext.define 'Purple.controller.PaymentMethods',
     Stripe.card.createToken card, (status, response) =>
       if response.error
         Ext.Viewport.setMasked false
-        navigator.notification.alert response.error.message, (->), "Error"
+        util.alert response.error.message, "Error", (->)
       else
         stripe_token = response.id    
         Ext.Ajax.request
@@ -351,7 +349,7 @@ Ext.define 'Purple.controller.PaymentMethods',
                 util.ctl('Menu').popOffBackButtonWithoutAction()
                 @backToPreviousPage()
             else
-              navigator.notification.alert response.message, (->), "Error"
+              util.alert response.message, "Error", (->)
           failure: (response_obj) ->
             Ext.Viewport.setMasked false
             response = Ext.JSON.decode response_obj.responseText

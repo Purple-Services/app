@@ -117,6 +117,15 @@ window.util =
         [noButtonText, yesButtonText]
       )
 
+  confirmDialog: (message, indexFunction, title, buttons) ->
+    if not Ext.os.is.Android and not Ext.os.is.iOS
+      if confirm title + '\n' + message
+        indexFunction 1
+      else
+        indexFunction 2
+    else
+      navigator.notification.confirm message, indexFunction, title, buttons
+
   alert: (message, title, callback) ->
     if not (Ext.os.is.Android or Ext.os.is.iOS)
       alert "#{title}\n#{message}"

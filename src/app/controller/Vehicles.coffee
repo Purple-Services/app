@@ -292,7 +292,7 @@ Ext.define 'Purple.controller.Vehicles',
             localStorage['purpleReferralReferredValue'] = response.system.referral_referred_value
             localStorage['purpleReferralReferrerGallons'] = response.system.referral_referrer_gallons
           else
-            navigator.notification.alert response.message, (->), "Error"
+            util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -364,7 +364,7 @@ Ext.define 'Purple.controller.Vehicles',
           else
             util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -408,7 +408,7 @@ Ext.define 'Purple.controller.Vehicles',
           @renderVehiclesList @vehicles
           util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -459,7 +459,7 @@ Ext.define 'Purple.controller.Vehicles',
               value: 'new'
             @getRequestFormVehicleSelect().setOptions opts
           else
-            navigator.notification.alert response.message, (->), "Error"
+            util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           response = Ext.JSON.decode response_obj.responseText
@@ -494,7 +494,7 @@ Ext.define 'Purple.controller.Vehicles',
             
         # do we have any gas available in that octane?
         if util.isEmpty availability.gallon_choices
-          navigator.notification.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", (->), "Unavailable"
+          util.alert "Sorry, we are unable to deliver #{availability.octane} Octane to your location at this time.", "Unavailable", (->)
           @getRequestFormGallonsSelect().setDisabled yes
           @getRequestFormTimeSelect().setDisabled yes
           @getSendRequestButton().setDisabled yes

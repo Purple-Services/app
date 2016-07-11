@@ -280,11 +280,11 @@ Ext.define 'Purple.controller.Orders',
             @lastLoadOrdersList = new Date().getTime() / 1000
             @updateLastOrderCompleted()
           else
-            navigator.notification.alert response.message, (->), "Error"
+            util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
           if util.ctl('Account').isCourier()
-            navigator.notification.alert "Slow or no internet connection.", (->), "Error"
+            util.alert "Slow or no internet connection.", "Error", (->)
           response = Ext.JSON.decode response_obj.responseText
           console.log response
 
@@ -469,11 +469,11 @@ Ext.define 'Purple.controller.Orders',
           util.ctl('Menu').popOffBackButtonWithoutAction()
           @renderOrdersList @orders
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         console.log response_obj
-        navigator.notification.alert "Connection error. Please try again.", (->), "Error"
+        util.alert "Connection error. Please try again.", "Error", (->)
 
   orderRatingChange: (field, value) ->
     @getTextRating().show()
@@ -528,11 +528,11 @@ Ext.define 'Purple.controller.Orders',
               )
             )
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         console.log response_obj
-        navigator.notification.alert "Connection error. Please try again.", (->), "Error"
+        util.alert "Connection error. Please try again.", "Error", (->)
 
   askToNextStatus: ->
     values = @getOrder().getValues()
@@ -580,8 +580,8 @@ Ext.define 'Purple.controller.Orders',
           util.ctl('Menu').popOffBackButtonWithoutAction()
           @renderOrdersList @orders
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         console.log response_obj
-        navigator.notification.alert "Connection error. Please go back to Orders page and pull down to refresh. Do not press this button again until you have the updated status on the Orders page.", (->), "Error"
+        util.alert "Connection error. Please go back to Orders page and pull down to refresh. Do not press this button again until you have the updated status on the Orders page.", "Error", (->)

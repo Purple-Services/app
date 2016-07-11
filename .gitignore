@@ -31,3 +31,5 @@
 /npm-debug.log
 /util.js
 /availabilities.json
+/test/node_modules
+/test/errorShots

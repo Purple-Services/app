@@ -117,7 +117,7 @@ Ext.define 'Purple.controller.Account',
           util.ctl('PaymentMethods').refreshPaymentMethodField()
           @accountSetup()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -198,7 +198,7 @@ Ext.define 'Purple.controller.Account',
               util.ctl('Main').setUpPushNotifications()
             @showLoginForm() # to prepare for next logout, if it comes
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -317,7 +317,7 @@ Ext.define 'Purple.controller.Account',
           @showLoginForm() # to prepare for next logout, if it comes
           ga_storage._trackEvent 'main', 'Account Created'
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -478,10 +478,10 @@ Ext.define 'Purple.controller.Account',
         if response.success
           @getLoginForm().reset()
           @showLoginForm()
-          navigator.notification.alert response.message, (->), "Success!"
+          util.alert response.message, "Success!", (->)
           ga_storage._trackEvent 'main', 'Password Reset Initiated'
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
@@ -566,7 +566,7 @@ Ext.define 'Purple.controller.Account',
           )
           util.ctl('Menu').popOffBackButtonWithoutAction()
         else
-          navigator.notification.alert response.message, (->), "Error"
+          util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
