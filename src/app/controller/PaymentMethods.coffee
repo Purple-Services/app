@@ -183,14 +183,42 @@ Ext.define 'Purple.controller.PaymentMethods',
           initialize: (field) =>
             field.element.on 'tap', =>
               pmid = field.getId().substring 5
-              util.confirmDialog "",
-                ((index) => switch index
-                  when 1 then @askToDeleteCard pmid
-                  when 2 then @makeDefault pmid
-                  else return
-                ),
-                field.getLabel(),
-                ["Delete Card", "Make Default", "Cancel"]
+
+              if not (Ext.os.is.Android or Ext.os.is.iOS)
+                util.confirmDialog "",
+                  ((index) => switch index
+                    when 1 then @askToDeleteCard pmid
+                    when 2 then @makeDefault pmid
+                    else return
+                  ),
+                  field.getLabel(),
+                  ["Delete Card", "Make Default", "Cancel"]
+              else
+                window.plugins.actionsheet.show(
+                  {
+                    'title': field.getLabel()
+                    'buttonLabels': ["Delete Card", "Make Default"]
+                    'androidEnableCancelButton': true
+                    'addCancelButtonWithLabel': 'Cancel'
+                  },
+                  ((index) =>
+                    if index is 0
+                      @askToDeleteCard pmid
+                    if index is 1
+                      @makeDefault pmid
+                    else
+                      return
+                    # if index is 0 or index is options.length + 1 # Cancel
+                    #   return
+                    # else if index is options.length # Near Me
+                    #   @getGasStationsFromServer()
+                    # else
+                    #   destOrder = enrouteOrLessOrders[index - 1]
+                    #   @getGasStationsFromServer destOrder.lat, destOrder.lng
+                    return
+                  )
+                )
+
 
   askToDeleteCard: (id) ->
     util.confirm(
