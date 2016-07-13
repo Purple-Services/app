@@ -3,7 +3,7 @@
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "com.purple.app"
         versionCode = "1141"
-        version     = "1.4.1">
+        version     = "1.11.4">
   
   <!--
       For iOS use:
