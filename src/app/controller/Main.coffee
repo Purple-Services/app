@@ -102,8 +102,8 @@ Ext.define 'Purple.controller.Main',
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
 
-    if not localStorage['courierOnDuty']?
-      localStorage['courierOnDuty'] = 'no'
+
+    if not localStorage['courierOnDuty']? then localStorage['courierOnDuty'] = 'no'
 
     clearTimeout window.courierReloadTimer
 
@@ -450,7 +450,7 @@ Ext.define 'Purple.controller.Main',
       @getRequestAddressField().setValue("Updating Location...")
       analytics?.page 'Map'
 
-  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->    
+  recenterAtUserLoc: (showAlertIfUnavailable = false, centerMapButtonPressed = false) ->
     if centerMapButtonPressed
       Ext.Viewport.setMasked
         xtype: 'loadmask'
