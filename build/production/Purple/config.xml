@@ -29,6 +29,7 @@
     <string>(required for Courier mode)</string>
   </gap:config-file>
   <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
+  <gap:plugin name="phonegap-plugin-barcodescanner" source="npm" />
   <!-- END COURIER APP ONLY -->
   
   <description>

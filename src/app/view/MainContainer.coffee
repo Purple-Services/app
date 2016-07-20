@@ -15,6 +15,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.Invite'
     'Purple.view.GasTanks'
     'Purple.view.GasStations'
+    'Purple.view.Fleet'
   ]
   xtype: 'maincontainer'
   config:
@@ -307,6 +308,23 @@ Ext.define 'Purple.view.MainContainer',
           }
           {
             xtype: 'gasstations'
+          }
+        ]
+      }
+      {
+        title: """
+          Fleet Deliveries
+        """
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'fleet'
           }
         ]
       }
