@@ -13,22 +13,46 @@
       id = "com.purple.app"
   -->
 
-  <!-- iOS -->
+  <!-- iOS only -->
   <preference name="phonegap-version" value="cli-5.2.0" />
-  <!-- Android -->
+  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
+  <!-- End of iOS only -->
+
+  <!-- Android only -->
   <!-- <preference name="phonegap-version" value="cli-6.0.0" /> -->
+  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
+  <!-- End of Android Only -->
 
   <!-- BEGIN CUSTOMER APP ONLY -->
-  <!-- <name>Purple</name> -->
+  <name>Purple</name>
+
+  <gap:plugin name="cordova-plugin-google-conversion" source="npm" />
+  <plugin spec="https://github.com/Telerik-Verified-Plugins/Facebook" source="git">
+    <param name="APP_ID" value="1588773851335820" />
+    <param name="APP_NAME" value="Purple" />
+  </plugin>
+  <gap:plugin name="cordova-plugin-market" version="1.1.3" source="npm" />
+
+  <!-- iOS only -->
+  <gap:plugin name="cordova-plugin-googleplus" source="npm">
+    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" />
+  </gap:plugin>
+  <!-- END iOS only -->
+  
+  <!-- Android only -->
+  <!-- <plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus" source="git"> -->
+  <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
+  <!-- </plugin> -->
+  <!-- END Android only -->
   <!-- END CUSTOMER APP ONLY -->
 
   <!-- BEGIN COURIER APP ONLY -->
-  <name>Purple Courier</name>
+<!--   <name>Purple Courier</name>
   <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
   <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
     <string>(required for Courier mode)</string>
   </gap:config-file>
-  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
+  <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" /> -->
   <!-- END COURIER APP ONLY -->
   
   <description>
@@ -136,42 +160,8 @@
     <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
   </platform>
-
-  
-  <!-- BEGIN CUSTOMER APP ONLY -->
-  
-  <!-- <gap:plugin name="cordova-plugin-google-conversion" source="npm" /> -->
-  <!-- <plugin spec="https://github.com/Telerik-Verified-Plugins/Facebook" source="git"> -->
-  <!--   <param name="APP_ID" value="1588773851335820" /> -->
-  <!--   <param name="APP_NAME" value="Purple" /> -->
-  <!-- </plugin> -->
-  
-  <!-- iOS only -->
-  <!-- <gap:plugin name="cordova-plugin-googleplus" source="npm"> -->
-  <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
-  <!-- </gap:plugin> -->
-  <!-- END iOS only -->
-  
-  <!-- Android only -->
-  <!-- <plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus" source="git"> -->
-  <!--   <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.727391770434-at8c78sr3f227q53jkp73s9u7mfmarrs" /> -->
-  <!-- </plugin> -->
-  <!-- END Android only -->
-  
-  <!-- <gap:plugin name="cordova-plugin-market" version="1.1.3" source="npm" /> -->
-  
-  <!-- END CUSTOMER APP ONLY -->
-
   
   <gap:plugin name="cordova-plugin-listpicker" version="2.2.1" source="npm" />
-
-  <!-- iOS only -->
-  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
-  <!-- End of iOS only -->
-  
-  <!-- Android only -->
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
-  <!-- End of Android Only -->
 
   <gap:plugin name="cordova-plugin-x-socialsharing" version="5.0.4" source="npm" />
 
