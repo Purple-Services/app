@@ -77,8 +77,12 @@ Ext.define 'Purple.controller.Menu',
     @unlockMenu()
 
   logoButtonTap: ->
-    @getMainContainer().getItems().getAt(0).select 0
-    @close()
+    if util.ctl('Account').isCourier()
+      @getMainContainer().getItems().getAt(0).select 3
+      @close()
+    else
+      @getMainContainer().getItems().getAt(0).select 0
+      @close()
 
   menuButtonTap: ->
     if @backButtonStack.length isnt 0
