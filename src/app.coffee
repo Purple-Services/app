@@ -32,6 +32,7 @@ Ext.application
     'Subscriptions'
     'GasTanks'
     'GasStations'
+    'Fleet'
   ]
   views: [
     'MainContainer'

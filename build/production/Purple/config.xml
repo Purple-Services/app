@@ -2,8 +2,8 @@
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id = "6NAJA3N74X.com.purple.app"
-        versionCode = "1141"
-        version     = "1.11.4">
+        versionCode = "1145"
+        version     = "1.11.5">
   
   <!--
       For iOS use:
@@ -53,6 +53,7 @@
     <string>(required for Courier mode)</string>
   </gap:config-file>
   <gap:plugin name="cordova.plugins.diagnostic.api-22" source="npm" />
+  <gap:plugin name="phonegap-plugin-barcodescanner" source="npm" />
   <!-- END COURIER APP ONLY -->
   
   <description>

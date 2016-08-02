@@ -45,7 +45,7 @@ Ext.define 'Purple.controller.GasStations',
   getGasStationsFromServer: (destLat = null, destLng = null) ->
     Ext.Viewport.setMasked
       xtype: 'loadmask'
-      message: ''
+      message: 'This can take a while...'
     navigator.geolocation?.getCurrentPosition(
       ((position) =>
         util.ctl('Main').positionAccuracy = position.coords.accuracy
@@ -65,7 +65,7 @@ Ext.define 'Purple.controller.GasStations',
             position_accuracy: util.ctl('Main').positionAccuracy
           headers:
             'Content-Type': 'application/json'
-          timeout: 30000
+          timeout: 40000
           method: 'POST'
           scope: this
           success: (response_obj) ->
