@@ -7,6 +7,7 @@ Ext.define 'Purple.controller.Fleet',
       scanVinBarcodeButtonContainer: '[ctype=scanVinBarcodeButtonContainer]'
       fleetAccountSelectField: '[ctype=fleetAccountSelectField]'
       fleetVinField: '[ctype=fleetVinField]'
+      fleetLicensePlateField: '[ctype=fleetLicensePlateField]'
       fleetGallonsField: '[ctype=fleetGallonsField]'
     control:
       fleet:
@@ -40,7 +41,6 @@ Ext.define 'Purple.controller.Fleet',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          console.log response
           @initFleetAccountSelectField response.accounts, response.default_account_id
         else
           util.alert response.message, "Error", (->)
@@ -64,34 +64,52 @@ Ext.define 'Purple.controller.Fleet',
       xtype: 'loadmask'
       message: ''
     values = @getFleet().getValues()
+    formData =
+      user_id: localStorage['purpleUserId']
+      account_id: values['account_id']
+      vin: values['vin']
+      license_plate: values['license_plate']
+      gallons: values['gallons']
+      gas_type: values['gas_type']
+      is_top_tier: values['is_top_tier']
+    params = JSON.parse JSON.stringify(formData) # copy
+    params.version = util.VERSION_NUMBER
+    params.token = localStorage['purpleToken']
+    params.os = Ext.os.name
     Ext.Ajax.request
       url: "#{util.WEB_SERVICE_BASE_URL}fleet/add-delivery"
-      params: Ext.JSON.encode
-        version: util.VERSION_NUMBER
-        user_id: localStorage['purpleUserId']
-        token: localStorage['purpleToken']
-        os: Ext.os.name # just an additional info
-        account_id: values['account_id']
-        vin: values['vin']
-        license_plate: values['license_plate']
-        gallons: values['gallons']
-        gas_type: values['gas_type']
-        is_top_tier: values['is_top_tier']
+      params: Ext.JSON.encode params
       headers:
         'Content-Type': 'application/json'
-      timeout: 30000
+      timeout: 7000
       method: 'POST'
       scope: this
       success: (response_obj) ->
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          @getFleet().reset()
+          @getFleetVinField().reset()
+          @getFleetLicensePlateField().reset()
+          @getFleetGallonsField().reset()
           util.alert "Fleet Delivery Added!", "Success", (->)
         else
           util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
+        util.confirm(
+          "Send delivery details as a text message?",
+          "Unable to Connect",
+          (=>
+            plugins?.socialsharing?.shareViaSMS(
+              encodeURIComponent(JSON.stringify(formData)),
+              "3239243338",
+              (=>
+                @getFleetVinField().reset()
+                @getFleetLicensePlateField().reset()
+                @getFleetGallonsField().reset()),
+              (->)
+            ))
+        )
         response = Ext.JSON.decode response_obj.responseText
         console.log response
     
