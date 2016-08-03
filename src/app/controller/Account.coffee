@@ -381,6 +381,9 @@ Ext.define 'Purple.controller.Account',
         if available then @getGoogleLoginButton().show()
     else
       @getGoogleLoginButton().show()
+    if not facebookConnectPlugin?
+      @getAlternativeLoginOptionsText().hide()
+      @getAlternativeLoginOptions().hide()
 
   showForgotPasswordForm: ->
     @getPasswordField().hide()
