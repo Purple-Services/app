@@ -194,6 +194,33 @@ Ext.define 'Purple.view.Fleet',
               }
             ]
           }
+          {
+            xtype: 'container'
+            ctype: 'sendSavedDeliveriesButtonContainer'
+            flex: 0
+            height: 70
+            width: '100%'
+            padding: '0 0 5 0'
+            layout:
+              type: 'vbox'
+              pack: 'center'
+              align: 'center'
+            cls: 'smaller-button-pop'
+            items: [
+              {
+                xtype: 'button'
+                ui: 'action'
+                cls: [
+                  'button-pop'
+                  'button-pop-dark'
+                ]
+                text: 'Send Saved Deliveries'
+                flex: 0
+                handler: ->
+                  @up().fireEvent 'sendSavedDeliveries'
+              }
+            ]
+          }
         ]
       }
       {
