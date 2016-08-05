@@ -159,6 +159,7 @@ Ext.define 'Purple.controller.Account',
           localStorage['purpleUserPhoneNumber'] = response.user.phone_number
           localStorage['purpleUserEmail'] = response.user.email
           localStorage['purpleUserIsCourier'] = response.user.is_courier
+          localStorage['purpleUserAccountManagerId'] = response.user.account_manager_id
           localStorage['purpleUserReferralCode'] = response.user.referral_code
           localStorage['purpleUserReferralGallons'] = "" + response.user.referral_gallons
           util.ctl('Subscriptions').updateSubscriptionRelatedData response
@@ -401,6 +402,7 @@ Ext.define 'Purple.controller.Account',
     delete localStorage['purpleDefaultPaymentMethodDisplayText']
     delete localStorage['purpleToken']
     delete localStorage['purpleUserIsCourier']
+    delete localStorage['purpleUserAccountManagerId']
     delete localStorage['purpleCourierGallons87']
     delete localStorage['purpleCourierGallons91']
     delete localStorage['purpleUserHasPushNotificationsSetUp']
@@ -451,6 +453,9 @@ Ext.define 'Purple.controller.Account',
   isCourier: ->
     # note that 'true' is in quotes intentionally
     localStorage['purpleUserIsCourier']? and localStorage['purpleUserIsCourier'] is 'true'
+
+  isManagedAccount: ->
+    localStorage['purpleUserAccountManagerId']? and ("" + localStorage['purpleUserAccountManagerId']) isnt ""
 
   hasPushNotificationsSetup: ->
     localStorage['purpleUserHasPushNotificationsSetUp']? and localStorage['purpleUserHasPushNotificationsSetUp'] is 'true'

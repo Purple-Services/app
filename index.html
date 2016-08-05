@@ -12,6 +12,7 @@
         <!-- COURIER APP ONLY -->
         <script type="text/javascript">
 
+         /*
          function askUserToReload () {
              var windowReload = confirm("Your internet connection is unstable. Reload?");
              if (windowReload === true) {
@@ -20,13 +21,14 @@
          }
 
          var courierReloadTimer = setTimeout(function(){askUserToReload()}, 12000);
+         */
          
         </script>
         <!-- END OF COURIER APP ONLY -->
 
         <script>
          // if version outdated, clear all sencha localStorage caches
-         if (localStorage['lastCacheVersionNumber'] !== "1.11.5") {
+         if (localStorage['lastCacheVersionNumber'] !== "1.5.0") {
              for (key in localStorage) {
                  // all of them start with a guid
                  if (key.length > 37 &&

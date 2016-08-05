@@ -21,7 +21,10 @@ Ext.define 'Purple.view.TopToolbar',
       }
       {
         xtype: 'button'
-        cls: 'freeGasButton'
+        cls: [
+          'freeGasButton'
+          'hide-from-managed-accounts'
+        ]
         ui: 'plain'
         handler: -> @up().fireEvent 'freeGasButtonTap'
       }

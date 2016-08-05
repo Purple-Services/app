@@ -118,7 +118,10 @@ Ext.define 'Purple.view.AccountForm',
             xtype: 'component'
             ctype: 'accountHorizontalRuleAbovePaymentMethod'
             flex: 0
-            cls: 'horizontal-rule'
+            cls: [
+              'horizontal-rule'
+              'hide-from-managed-accounts'
+            ]
           }
           {
             xtype: 'textfield'
@@ -130,6 +133,7 @@ Ext.define 'Purple.view.AccountForm',
             cls: [
               'click-to-edit'
               'bottom-margin'
+              'hide-from-managed-accounts'
             ]
             disabled: yes
           }
@@ -142,6 +146,7 @@ Ext.define 'Purple.view.AccountForm',
             labelWidth: 105
             cls: [
               'click-to-edit'
+              'hide-from-managed-accounts'
             ]
             disabled: yes
           }
