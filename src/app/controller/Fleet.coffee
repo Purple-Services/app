@@ -4,6 +4,7 @@ Ext.define 'Purple.controller.Fleet',
     refs:
       fleet: 'fleet'
       addFleetOrderButtonContainer: '[ctype=addFleetOrderButtonContainer]'
+      sendSavedDeliveriesButtonContainer: '[ctype=sendSavedDeliveriesButtonContainer]'
       scanVinBarcodeButtonContainer: '[ctype=scanVinBarcodeButtonContainer]'
       fleetAccountSelectField: '[ctype=fleetAccountSelectField]'
       fleetVinField: '[ctype=fleetVinField]'
@@ -14,6 +15,8 @@ Ext.define 'Purple.controller.Fleet',
         initialize: 'getAccounts'
       addFleetOrderButtonContainer:
         addFleetOrder: 'addFleetOrder'
+      sendSavedDeliveriesButtonContainer:  
+        sendSavedDeliveries: 'sendSavedDeliveries'
       scanVinBarcodeButtonContainer:
         scanBarcode: 'scanBarcode'
 
@@ -96,22 +99,68 @@ Ext.define 'Purple.controller.Fleet',
           util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
+        # util.confirm(
+        #   "Send delivery details as a text message?",
+        #   "Unable to Connect",
+        #   (=>
+        #     plugins?.socialsharing?.shareViaSMS(
+        #       encodeURIComponent(JSON.stringify(formData)),
+        #       "3239243338",
+        #       (=>
+        #         @getFleetVinField().reset()
+        #         @getFleetLicensePlateField().reset()
+        #         @getFleetGallonsField().reset()),
+        #       (->)
+        #     ))
+        # )
         util.confirm(
-          "Send delivery details as a text message?",
+          "Save delivery details for later?",
           "Unable to Connect",
           (=>
-            plugins?.socialsharing?.shareViaSMS(
-              encodeURIComponent(JSON.stringify(formData)),
-              "3239243338",
-              (=>
-                @getFleetVinField().reset()
-                @getFleetLicensePlateField().reset()
-                @getFleetGallonsField().reset()),
-              (->)
-            ))
-        )
+            localStorage['purpleSavedFleetDeliveries'] ?= "[]"
+            savedDeliveries = JSON.parse localStorage['purpleSavedFleetDeliveries']
+            savedDeliveries.push formData
+            localStorage['purpleSavedFleetDeliveries'] = JSON.stringify savedDeliveries
+            @getFleetVinField().reset()
+            @getFleetLicensePlateField().reset()
+            @getFleetGallonsField().reset()))
         response = Ext.JSON.decode response_obj.responseText
         console.log response
+
+  sendSavedDeliveries: ->
+    localStorage['purpleSavedFleetDeliveries'] ?= "[]"
+    savedDeliveries = JSON.parse localStorage['purpleSavedFleetDeliveries']
+    if savedDeliveries.length
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}fleet/add-deliveries"
+        params: Ext.JSON.encode
+          version: util.VERSION_NUMBER
+          user_id: localStorage['purpleUserId']
+          token: localStorage['purpleToken']
+          os: Ext.os.name
+          deliveries: savedDeliveries
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 30000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            util.alert "#{savedDeliveries.length} fleet deliveries added!", "Success", (->)
+            localStorage['purpleSavedFleetDeliveries'] = "[]"
+          else
+            util.alert response.message, "Error", (->)
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          console.log response
+    else
+      util.alert "No saved deliveries.", "Error", (->)
     
   scanBarcode: ->
     Ext.Viewport.setMasked
