@@ -178,8 +178,12 @@ input {
     margin-top: -2px !important;
 }
 
-.courier-app .freeGasButton, 
+.courier-app .freeGasButton,
 .hide-free-gas-button .freeGasButton {
+    display: none !important;
+}
+
+.managed-account .hide-from-managed-accounts {
     display: none !important;
 }
 

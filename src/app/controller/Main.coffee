@@ -770,7 +770,7 @@ Ext.define 'Purple.controller.Main',
       parseInt(localStorage['purpleAdShownTimesSubscription']) < 2
     ) and (
       Ext.os.is.Android or Ext.os.is.iOS
-    )
+    ) and not util.ctl('Account').isManagedAccount()
       localStorage['purpleAdShownTimesSubscription'] ?= 0
       localStorage['purpleAdShownTimesSubscription'] = (
         parseInt(localStorage['purpleAdShownTimesSubscription']) + 1
@@ -976,7 +976,8 @@ Ext.define 'Purple.controller.Main',
         console.log response
 
   confirmOrder: ->
-    if not util.ctl('Account').hasDefaultPaymentMethod()
+    if not util.ctl('Account').hasDefaultPaymentMethod() and
+    not util.ctl('Account').isManagedAccount()
       # select the Account view
       @getMainContainer().getItems().getAt(0).select 2, no, no
       pmCtl = util.ctl('PaymentMethods')

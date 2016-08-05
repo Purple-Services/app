@@ -172,22 +172,29 @@ Ext.define 'Purple.controller.Menu',
     )
 
   adjustForAppLoginState: ->
+    bodyTag = Ext.get(document.getElementsByTagName('body')[0])
+    bodyTag.removeCls 'courier-app'
+    bodyTag.removeCls 'managed-account'
     if util.ctl('Account').isUserLoggedIn()
-      @hideTitles [1]
+      @hideTitles [1] # Login page
       if util.ctl('Account').isCourier()
+        bodyTag.addCls 'courier-app'
         @hideTitles [0, 4, 7, 8]
         @showTitles [2, 3, 9, 10]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
-        Ext.get(document.getElementsByTagName('body')[0]).addCls 'courier-app'
         util.ctl('Main').initCourierPing()
-        if not localStorage['courierOnDuty']? then localStorage['courierOnDuty'] = 'no'
-      else
-        @hideTitles [8, 9, 10]
-        @showTitles [0, 2, 3, 4, 7]
-        Ext.get(document.getElementsByTagName('body')[0]).removeCls 'courier-app'
+        localStorage['courierOnDuty'] ?= 'no'
+      else # not a courier
         util.ctl('Main').killCourierPing()
+        if util.ctl('Account').isManagedAccount()
+          bodyTag.addCls 'managed-account'
+          @hideTitles [4, 7, 8, 9, 10]
+          @showTitles [0, 2, 3]
+        else # a normal user
+          @hideTitles [8, 9, 10]
+          @showTitles [0, 2, 3, 4, 7]
       util.ctl('Account').populateAccountForm()
     else
       @hideTitles [2, 3, 4, 7, 8, 9, 10]
-      @showTitles [1]
+      @showTitles [1] # Login page

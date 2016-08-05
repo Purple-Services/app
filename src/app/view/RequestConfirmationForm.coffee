@@ -188,6 +188,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
               'click-to-edit'
               'bottom-margin'
               'visibly-disabled'
+              'hide-from-managed-accounts'
             ]
             disabled: yes
             listeners:
@@ -209,6 +210,7 @@ Ext.define 'Purple.view.RequestConfirmationForm',
               'click-to-edit'
               'bottom-margin'
               'visibly-disabled'
+              'hide-from-managed-accounts'
             ]
             listeners:
               initialize: (field) ->
