@@ -96,7 +96,7 @@ Ext.define 'Purple.controller.Orders',
 
     order['time_order_placed'] = Ext.util.Format.date(
       new Date(order['target_time_start'] * 1000),
-      "g:i a"
+      "n/j/Y, g:i a"
     )
 
     order['time_deadline'] = Ext.util.Format.date(
