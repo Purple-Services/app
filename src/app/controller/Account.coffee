@@ -139,6 +139,7 @@ Ext.define 'Purple.controller.Account',
       url: "#{util.WEB_SERVICE_BASE_URL}user/login"
       params: Ext.JSON.encode
         version: util.VERSION_NUMBER
+        os: Ext.os.name
         type: type
         platform_id: platformId
         auth_key: authKey
@@ -260,11 +261,16 @@ Ext.define 'Purple.controller.Account',
       else # Android
         {
           'scopes': 'profile email'
+          'webClientId': '727391770434-33032g56t6p38uh9sj9dqtst53eipaka.apps.googleusercontent.com'
           'offline': true
         }),
       (Ext.bind @googleLoginSuccess, this),
       (->
         Ext.Viewport.setMasked false
+        analytics?.track 'Google Login Error',
+          platform: Ext.os.name
+          errorId: arguments[0]
+        util.alert "Something went wrong. Please use Facebook Login or register a Purple Account. Or, email us at support@purpleapp.com.", "Error", (->)
         console.log 'error', arguments)
     )
 
@@ -277,8 +283,7 @@ Ext.define 'Purple.controller.Account',
       (if Ext.os.name is "iOS"
         result['accessToken']
       else # Android
-        result['oauthToken']),
-      result['email'] # revelant to old Android version only. iOS will get email scope server-side and also newer Android
+        result['idToken'])
     )
 
   accountSetup: ->
