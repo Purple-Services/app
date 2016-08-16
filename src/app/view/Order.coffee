@@ -338,6 +338,20 @@ Ext.define 'Purple.view.Order',
             ]
           }
           {
+            xtype: 'checkboxfield'
+            ctype: 'orderIsntTopTier'
+            flex: 0
+            name: 'isnt_top_tier'
+            label: 'Non-Top-Tier Gas OK'
+            labelWidth: 212
+            disabled: yes
+            hidden: yes
+            cls: [
+              'isnt-top-tier-field'
+              'visibly-disabled'
+            ]
+          }
+          {
             xtype: 'moneyfield'
             ctype: 'orderServiceFee'
             flex: 0

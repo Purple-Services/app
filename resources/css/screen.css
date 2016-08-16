@@ -200,6 +200,12 @@ input {
     -webkit-text-fill-color: red !important;
 }
 
+.courier-app .view-order .visibly-disabled.x-item-disabled.isnt-top-tier-field span, 
+.courier-app .visibly-disabled.x-item-disabled.isnt-top-tier-field .x-input-checkbox:checked + .x-field-mask::after {
+    color: #229A00 !important;
+    -webkit-text-fill-color: #229A00 !important;
+}
+
 .x-container.onDutyToggle {
     display: none !important;
 }

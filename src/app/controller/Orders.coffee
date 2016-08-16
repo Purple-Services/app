@@ -16,6 +16,7 @@ Ext.define 'Purple.controller.Orders',
       orderAddressStreet: '[ctype=orderAddressStreet]'
       orderAddressZipcode: '[ctype=orderAddressZipcode]'
       orderTirePressureCheck: '[ctype=orderTirePressureCheck]'
+      orderIsntTopTier: '[ctype=orderIsntTopTier]'
       orderTimePlaced: '[ctype=orderTimePlaced]'
       orderTimeDeadline: '[ctype=orderTimeDeadline]'
       orderDisplayTime: '[ctype=orderDisplayTime]'
@@ -139,6 +140,8 @@ Ext.define 'Purple.controller.Orders',
     order['service_fee_display'] = util.centsToDollars order['service_fee']
     order['total_price_display'] = util.centsToDollars order['total_price']
 
+    order['isnt_top_tier'] = not order['is_top_tier']
+
     @getOrder().setValues order
 
     if order['tire_pressure_check']
@@ -171,6 +174,10 @@ Ext.define 'Purple.controller.Orders',
       @getOrderCustomerName().show()
       @getOrderCustomerPhone().show()
       @getOrderGasType().show()
+      
+      if order['isnt_top_tier']
+        @getOrderIsntTopTier().show()
+      
       @getOrderAddressZipcode().show()
 
       switch order['status']
