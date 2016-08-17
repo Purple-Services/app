@@ -24,7 +24,7 @@
   <!-- End of Android Only -->
 
 
-  <!-- BEGIN CUSTOMER APP ONLY -->
+  <!-- === BEGIN CUSTOMER APP ONLY === -->
   <!-- <name>Purple</name> -->
   <!-- <gap:plugin name="cordova-plugin-google-conversion" source="npm" /> -->
   <!-- <plugin spec="https://github.com/Telerik-Verified-Plugins/Facebook" source="git"> -->

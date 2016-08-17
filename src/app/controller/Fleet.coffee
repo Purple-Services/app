@@ -44,22 +44,31 @@ Ext.define 'Purple.controller.Fleet',
         Ext.Viewport.setMasked false
         response = Ext.JSON.decode response_obj.responseText
         if response.success
-          @initFleetAccountSelectField response.accounts, response.default_account_id
+          localStorage['purpleFleetAccounts'] = JSON.stringify response.accounts
+          localStorage['purpleDefaultFleetAccount'] = response.default_account_id
+          @initFleetAccountSelectField()
         else
+          @initFleetAccountSelectField()
           util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
+        @initFleetAccountSelectField()
         response = Ext.JSON.decode response_obj.responseText
         console.log response
 
-  initFleetAccountSelectField: (accounts, defaultAccountId) ->
+  initFleetAccountSelectField: ->
+    localStorage['purpleFleetAccounts'] ?= "[]"
+    localStorage['purpleDefaultFleetAccount'] ?= ""
+    accounts = JSON.parse localStorage['purpleFleetAccounts']
     opts = []
     for b,a of accounts
       opts.push
         text: "#{a.name}"
         value: "#{a.id}"
     @getFleetAccountSelectField().setOptions opts
-    @getFleetAccountSelectField().setValue defaultAccountId
+    @getFleetAccountSelectField().setValue(
+      localStorage['purpleDefaultFleetAccount']
+    )
     @getFleetAccountSelectField().setDisabled no
     
   addFleetOrder: ->
@@ -143,6 +152,7 @@ Ext.define 'Purple.controller.Fleet',
             util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
+          util.alert "Saved deliveries not sent. Still saved for when you have a connection.", "Unable to Connect", (->)
           response = Ext.JSON.decode response_obj.responseText
           console.log response
     else
