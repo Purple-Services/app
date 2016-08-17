@@ -99,20 +99,6 @@ Ext.define 'Purple.controller.Fleet',
           util.alert response.message, "Error", (->)
       failure: (response_obj) ->
         Ext.Viewport.setMasked false
-        # util.confirm(
-        #   "Send delivery details as a text message?",
-        #   "Unable to Connect",
-        #   (=>
-        #     plugins?.socialsharing?.shareViaSMS(
-        #       encodeURIComponent(JSON.stringify(formData)),
-        #       "3239243338",
-        #       (=>
-        #         @getFleetVinField().reset()
-        #         @getFleetLicensePlateField().reset()
-        #         @getFleetGallonsField().reset()),
-        #       (->)
-        #     ))
-        # )
         util.confirm(
           "Save delivery details for later?",
           "Unable to Connect",

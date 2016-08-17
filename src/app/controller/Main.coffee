@@ -1125,7 +1125,6 @@ Ext.define 'Purple.controller.Main',
       @courierPingIntervalRef = null
 
   courierPing: (setOnDuty, successCallback, failureCallback) ->
-    @errorCount ?= 0
     @courierPingBusy ?= no
     if @courierPingBusy and setOnDuty?
       setTimeout (=>
@@ -1169,16 +1168,8 @@ Ext.define 'Purple.controller.Main',
             util.ctl('Menu').updateOnDutyToggle()
             successCallback?()
           else
-            @errorCount++
-            if @errorCount > 10
-              @errorCount = 0
-              util.alert "Unable to ping dispatch center. Web service problem, please notify Chris.", "Error", (->)
             failureCallback?()
             util.alert response.message, (response.message_title ? "Error"), (->)
         failure: (response_obj) ->
-          @errorCount++
-          if @errorCount > 10
-            @errorCount = 0
-            util.alert "Error #5. Unable to ping dispatch center. Please notify Purple support about this error.", "Error", (->)
           @courierPingBusy = no
           failureCallback?()

@@ -290,8 +290,6 @@ Ext.define 'Purple.controller.Orders',
             util.alert response.message, "Error", (->)
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
-          if util.ctl('Account').isCourier()
-            util.alert "Slow or no internet connection.", "Error", (->)
           response = Ext.JSON.decode response_obj.responseText
           console.log response
 

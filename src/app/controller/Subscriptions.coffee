@@ -116,8 +116,6 @@ Ext.define 'Purple.controller.Subscriptions',
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
-          if util.ctl('Account').isCourier()
-            navigator.notification.alert "Slow or no internet connection.", (->), "Error"
           response = Ext.JSON.decode response_obj.responseText
           console.log response
 
@@ -393,7 +391,5 @@ Ext.define 'Purple.controller.Subscriptions',
             navigator.notification.alert response.message, (->), "Error"
         failure: (response_obj) ->
           Ext.Viewport.setMasked false
-          if util.ctl('Account').isCourier()
-            navigator.notification.alert "Slow or no internet connection.", (->), "Error"
           response = Ext.JSON.decode response_obj.responseText
           console.log response
