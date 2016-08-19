@@ -101,8 +101,8 @@ Ext.define 'Purple.controller.Main',
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    if not localStorage['courierOnDuty']? then localStorage['courierOnDuty'] = 'no'
-    clearTimeout window.courierReloadTimer
+    # if not localStorage['courierOnDuty']? then localStorage['courierOnDuty'] = 'no'
+    # clearTimeout window.courierReloadTimer
     # END COURIER APP ONLY
 
     if util.ctl('Account').isCourier()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
+        id = "com.purplecourier.app"
         versionCode = "11520"
         version     = "1.11.6">
   
@@ -11,16 +11,18 @@
       
       Android cannot start with number, so just use:
       id = "com.purple.app"
+      *** Android Courier use: "com.purplecourier.app"
+      otherwise it will be overwritten by the google play version
   -->
 
   <!-- iOS only -->
-  <preference name="phonegap-version" value="cli-5.2.0" />
-  <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" />
+  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
+  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
   <!-- End of iOS only -->
 
   <!-- Android only -->
-  <!-- <preference name="phonegap-version" value="cli-6.3.0" /> -->
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
+  <preference name="phonegap-version" value="cli-6.3.0" />
+  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
   <!-- End of Android Only -->
 
 
