@@ -10,12 +10,12 @@ describe('webdriver.io page', function() {
   it('should have the right title', function() {
     var title;
     console.log('should have the right title');
-    browser.url('file:///Users/Patrick/Desktop/app/index-debug.html');
+    browser.url('file:///Users/celwell/purple/app/index-debug.html');
     title = browser.getTitle();
     assert.equal(title, 'Purple');
   });
   it('should login', function() {
-    console.log('should login');
+    console.log('should login line#16');
     Utils.getMenu('div=Login');
     console.log('choose login');
     browser.setValue('.x-input-email', 'patrick@purpleapp.com');

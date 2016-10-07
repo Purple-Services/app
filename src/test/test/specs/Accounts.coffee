@@ -7,13 +7,13 @@ describe 'webdriver.io page', ->
   it 'should have the right title', ->
     console.log 'should have the right title'
     #change URL to file location
-    browser.url 'file:///Users/Patrick/Desktop/app/index-debug.html' 
+    browser.url 'file:///Users/celwell/purple/app/index-debug.html'
     title = browser.getTitle()
     assert.equal title, 'Purple'
     return
 
   it 'should login', ->
-    console.log 'should login'
+    console.log 'should login line#16'
     Utils.getMenu 'div=Login'
     console.log 'choose login'
     browser.setValue '.x-input-email', 'patrick@purpleapp.com'

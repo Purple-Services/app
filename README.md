@@ -7,6 +7,8 @@ Purple Mobile App
 
     coffee -o . -cwb src
 
+Or, with jitter: `jitter src . -b`
+
 To build the app for upload to PhoneGap Build service, you can use:
 
     sencha app build
@@ -63,12 +65,12 @@ Be sure to use Sencha Cmd v5.1.3.61 (not the latest version).
 ## Testing
 
 ### Running the Test Scripts
-	1. Run selenium with: java -jar <selenium jar>
-	2. Navigate to the test folder test
-	3. Download node.js
-	4. Run npm install to install required packages
-	5. Run scripts with: wdio --suite all
+	1. Run selenium with: `java -jar selenium-server-standalone-2.53.0.jar`
+	2. In new terminal tab, navigate to the `test`
+	3. Download node.js, if necessary.
+	4. Run `npm install` to install required packages
+	5. Run scripts with: `node_modules/.bin/wdio --suite all`
 
 ### Compiling Test Scripts
 	1. Test scripts are located under src/test
-	2. Scripts compiled using coffeescript: coffee -o . -cwb src
+	2. Scripts compiled using coffeescript: `coffee -o . -cwb src`

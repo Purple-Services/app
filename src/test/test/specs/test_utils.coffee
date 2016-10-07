@@ -50,7 +50,7 @@ Utils.waitForAlert = (click) ->
       continue;
   console.log browser.alertText()
   browser.pause 250
-  if click == true
+  if click is true
     browser.alertAccept()
     console.log 'alert accepted'
   else
@@ -59,7 +59,7 @@ Utils.waitForAlert = (click) ->
   browser.pause 500
 
 Utils.login = (name) ->
-  browser.url 'file:///Users/Patrick/Desktop/app/index-debug.html' 
+  browser.url 'file:///Users/celwell/purple/app/index-debug.html' 
   console.log 'should login for test ' + name
   Utils.getMenu 'div=Login'
   console.log 'choose login'

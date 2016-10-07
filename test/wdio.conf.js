@@ -16,6 +16,9 @@ exports.config = {
         Accounts: [
             './test/specs/Accounts.js',
         ],
+        GasPrice: [
+            './test/specs/GasPrice.js',
+        ],
         DeleteOrder: [
             './test/specs/DeleteOrder.js',
         ],
@@ -56,7 +59,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 3,
+    maxInstances: 1, // 3,
     capabilities: [{
         browserName: 'chrome',
         chromeOptions: {

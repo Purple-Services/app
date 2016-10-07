@@ -6,7 +6,7 @@ sinon = require('sinon')
 describe 'webdriver.io page', ->
 
   it 'should make an order', ->
-    this.timeout(30000)
+    this.timeout(60000)
     Utils.login("MakeOrder")
 
     browser.pause 250
@@ -19,23 +19,32 @@ describe 'webdriver.io page', ->
     console.log 'request gas button'
     Utils.waitUntil 'visible', '#sendRequestButtonContainer'
     Utils.waitUntil 'enabled', '#sendRequestButtonContainer'
-    clock = sinon.useFakeTimers(new Date(2016, 3, 29).getTime())
-    console.log new Date()
-    browser.click '#sendRequestButtonContainer'
-    clock.restore()
-    console.log new Date()
+    browser.click 'div=Time'
+    browser.click 'span=within 3 hours ($3.99)'
+    # clock = sinon.useFakeTimers(new Date(2016, 3, 29).getTime())
+    # console.log new Date()
+    console.log "about to click send request button"
+    browser.pause 500
+    browser.elementIdClick(browser.elements('#sendRequestButtonContainer .x-button').value[0].ELEMENT)
+    browser.pause 500
+    # clock.restore()
+    # console.log new Date()
+    console.log 'wait until confirm button visible'
     Utils.waitUntil 'visible', '#confirmOrderButtonContainer'
-    clock = sinon.useFakeTimers(new Date(2016, 3, 29).getTime())
-    console.log new Date()
+    browser.pause 500
+    # clock = sinon.useFakeTimers(new Date(2016, 3, 29).getTime())
+    # console.log new Date()
     console.log 'review order button'
-    browser.click '#confirmOrderButtonContainer'
-    clock.restore()
-    console.log new Date()
-    console.log 'confirm order'
-    clock.restore()
-    console.log new Date()
-    Utils.waitForAlert(true)
+    browser.pause 1000
+    browser.elementIdClick(browser.elements('#confirmOrderButtonContainer .x-button').value[0].ELEMENT)
+    browser.pause 500
+    # clock.restore()
+    # console.log new Date()
+    # clock.restore()
+    # console.log new Date()
+    console.log 'after clicking confirm...'
+    # Utils.waitForAlert(true)
+    browser.pause 8000
+    console.log 'hello'
+    console.log browser.alertText()
     console.log 'clicked alert'
-    return
-
-  return
