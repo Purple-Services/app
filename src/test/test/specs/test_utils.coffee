@@ -1,5 +1,8 @@
 Utils = ->
 
+Utils.clientUrl = 'file:///Users/celwell/purple/app/index-debug.html'
+# Utils.clientUrl = 'file:///home/travis/build/Purple-Services/app/index-debug.html'
+
 Utils.getMenu = (divName) ->
   browser.pause 500
   menus = browser.elements '.menuButton'
@@ -59,8 +62,7 @@ Utils.waitForAlert = (click) ->
   browser.pause 500
 
 Utils.login = (name) ->
-  #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
-  browser.url 'file:///home/travis/build/Purple-Services/app/index-debug.html'
+  browser.url Utils.clientUrl
   console.log 'should login for test ' + name
   Utils.getMenu 'div=Login'
   console.log 'choose login'

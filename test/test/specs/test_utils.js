@@ -2,6 +2,8 @@ var Utils;
 
 Utils = function() {};
 
+Utils.clientUrl = 'file:///Users/celwell/purple/app/index-debug.html';
+
 Utils.getMenu = function(divName) {
   var menus, returnMenu;
   browser.pause(500);
@@ -76,7 +78,7 @@ Utils.waitForAlert = function(click) {
 };
 
 Utils.login = function(name) {
-  browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
+  browser.url(Utils.clientUrl);
   console.log('should login for test ' + name);
   Utils.getMenu('div=Login');
   console.log('choose login');

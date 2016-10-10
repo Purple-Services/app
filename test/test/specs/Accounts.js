@@ -10,7 +10,7 @@ describe('webdriver.io page', function() {
   it('should have the right title', function() {
     var title;
     console.log('should have the right title');
-    browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
+    browser.url(Utils.clientUrl);
     title = browser.getTitle();
     assert.equal(title, 'Purple');
   });
