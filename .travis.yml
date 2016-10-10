@@ -3,6 +3,8 @@ before_install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - npm install -g coffee-script
   - coffee -o . -cb src
+  - ls
+  - pwd
   - npm install wdio-mocha-framework
   - wget http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip -d /home/travis/virtualenv/python2.7.9/
