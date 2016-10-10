@@ -14,7 +14,7 @@ describe('webdriver.io page', function() {
       longitude: -118.499335,
       altitude: 200
     });
-    browser.url('file:////home/travis/build/Purple-Services/app/index-debug.html');
+    browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
     assert.equal(browser.getText('#gas-price-display-87'), "$3.05");
@@ -24,7 +24,7 @@ describe('webdriver.io page', function() {
       longitude: -118.673906,
       altitude: 200
     });
-    browser.url('file:////home/travis/build/Purple-Services/app/index-debug.html');
+    browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
     assert.equal(browser.getText('#gas-price-unavailable'), "Location Outside Service Area");
@@ -33,7 +33,7 @@ describe('webdriver.io page', function() {
       longitude: -117.278696,
       altitude: 200
     });
-    browser.url('file:////home/travis/build/Purple-Services/app/index-debug.html');
+    browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
     assert.equal(browser.getText('#gas-price-display-87'), "$2.99");
@@ -43,7 +43,7 @@ describe('webdriver.io page', function() {
       longitude: -117.238433,
       altitude: 200
     });
-    browser.url('file:////home/travis/build/Purple-Services/app/index-debug.html');
+    browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
     assert.equal(browser.getText('#gas-price-display-87'), "$2.93");

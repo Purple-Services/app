@@ -76,7 +76,7 @@ Utils.waitForAlert = function(click) {
 };
 
 Utils.login = function(name) {
-  browser.url('file:////home/travis/build/Purple-Services/app/index-debug.html');
+  browser.url('file:///home/travis/build/Purple-Services/app/index-debug.html');
   console.log('should login for test ' + name);
   Utils.getMenu('div=Login');
   console.log('choose login');

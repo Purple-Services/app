@@ -8,12 +8,12 @@ describe 'webdriver.io page', ->
   it 'check gas price at different locations', ->
     this.timeout(30000)
 
-    browser.setGeoLocation
+    browser.setGeoLocation # 90403
       latitude: 34.027897
       longitude: -118.499335
       altitude: 200
     #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
-    browser.url 'file:////home/travis/build/Purple-Services/app/index-debug.html'
+    browser.url 'file:///home/travis/build/Purple-Services/app/index-debug.html'
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
     assert.equal browser.getText('#gas-price-display-87'), "$3.05"
@@ -24,7 +24,7 @@ describe 'webdriver.io page', ->
       longitude: -118.673906
       altitude: 200
     #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
-    browser.url 'file:////home/travis/build/Purple-Services/app/index-debug.html'
+    browser.url 'file:///home/travis/build/Purple-Services/app/index-debug.html'
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
     assert.equal browser.getText('#gas-price-unavailable'), "Location Outside Service Area"
@@ -34,7 +34,7 @@ describe 'webdriver.io page', ->
       longitude: -117.278696
       altitude: 200
     #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
-    browser.url 'file:////home/travis/build/Purple-Services/app/index-debug.html'
+    browser.url 'file:///home/travis/build/Purple-Services/app/index-debug.html'
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
     assert.equal browser.getText('#gas-price-display-87'), "$2.99"
@@ -45,7 +45,7 @@ describe 'webdriver.io page', ->
       longitude: -117.238433
       altitude: 200
     #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
-    browser.url 'file:////home/travis/build/Purple-Services/app/index-debug.html'
+    browser.url 'file:///home/travis/build/Purple-Services/app/index-debug.html'
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
     assert.equal browser.getText('#gas-price-display-87'), "$2.93"
