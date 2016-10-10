@@ -59,7 +59,8 @@ Utils.waitForAlert = (click) ->
   browser.pause 500
 
 Utils.login = (name) ->
-  browser.url 'file:///Users/celwell/purple/app/index-debug.html' 
+  #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
+  browser.url 'file:////home/travis/build/Purple-Services/app/index-debug.html'
   console.log 'should login for test ' + name
   Utils.getMenu 'div=Login'
   console.log 'choose login'

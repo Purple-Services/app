@@ -7,7 +7,8 @@ describe 'webdriver.io page', ->
   it 'should have the right title', ->
     console.log 'should have the right title'
     #change URL to file location
-    browser.url 'file:///Users/celwell/purple/app/index-debug.html'
+    #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
+    browser.url 'file:////home/travis/build/Purple-Services/app/index-debug.html'
     title = browser.getTitle()
     assert.equal title, 'Purple'
     return
