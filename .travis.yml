@@ -21,12 +21,16 @@ before_install:
   - lein with-profile app-integration-test ring server &
   - ls
   - (cd ../app; java -jar selenium-server-standalone-2.53.0.jar &)
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 script:
-  - lsn
+  - ls
   - (cd ../app/test; ls; node -v; npm -v; npm install; node_modules/.bin/wdio --suite GasPrice)
-  
-# env:
-#   global:
-#     - CXX=g++-4.8
-#     - NODE_ENV=development
+
+env:
+  - TRAVIS_NODE_VERSION="0.12"
+  - TRAVIS_NODE_VERSION="4"
+# global:
+#   - CXX=g++-4.8
+#   - NODE_ENV=development
+
   
