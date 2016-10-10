@@ -22,8 +22,8 @@ before_install:
   - ls
   - (cd ../app; java -jar selenium-server-standalone-2.53.0.jar &)
 script:
-  - ls
-  - (cd ../app/test; ls; npm install; node_modules/.bin/wdio --suite GasPrice)
+  - lsn
+  - (cd ../app/test; ls; node -v; npm -v; npm install; node_modules/.bin/wdio --suite GasPrice)
   
 # env:
 #   global:
