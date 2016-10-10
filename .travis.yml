@@ -18,11 +18,11 @@ before_install:
   - mysql -e "create database if not exists ebdb;" -uroot
   - mysql -e "create database if not exists ebdb_test;" -uroot
   - lein exec -p scripts/setupdb.clj root_password=
-  - nohup lein with-profile app-integration-test ring server &
+  - nohup lein with-profile app-integration-test ring server
   - cd ../
   - cd app
   - ls
-  - nohup java -jar selenium-server-standalone-2.53.0.jar &
+  - nohup java -jar selenium-server-standalone-2.53.0.jar
 script:
   - cd test
   - npm install
