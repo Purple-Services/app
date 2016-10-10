@@ -1,4 +1,4 @@
-language: clojure # node_js
+language: clojure
 sudo: required  
 dist: trusty
 addons:
@@ -22,14 +22,6 @@ before_install:
   - sudo apt-get install -y libappindicator1 fonts-liberation
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
-
-
-  # - wget http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip
-  # - unzip chromedriver_linux64.zip -d /home/travis/build/
-  # - export CHROME_BIN=chromium-browser
-  # - "export DISPLAY=:99.0"
-  # - "sh -e /etc/init.d/xvfb start"
-  # - sleep 3
   
   - npm install chromedriver
   - cd ../
@@ -55,6 +47,7 @@ script:
 
 env:
   - TRAVIS_NODE_VERSION="0.12"
+  
 # global:
 #   - CXX=g++-4.8
 #   - NODE_ENV=development

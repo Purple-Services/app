@@ -63,8 +63,9 @@ exports.config = {
     capabilities: [{
         browserName: 'chrome',
         chromeOptions: {
-            args: ['disable-web-security',
-                   'no-sandbox']
+            args: ['disable-web-security' // ,
+                   // 'no-sandbox'
+                  ]
         }
     }],
     //
