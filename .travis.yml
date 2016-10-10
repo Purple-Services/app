@@ -20,12 +20,10 @@ before_install:
   - lein exec -p scripts/setupdb.clj root_password=
   - lein with-profile app-integration-test ring server &
   - ls
-  - (cd ../; cd app; java -jar selenium-server-standalone-2.53.0.jar &)
+  - (cd ../app; java -jar selenium-server-standalone-2.53.0.jar &)
 script:
   - ls
-  # - cd test
-  # - npm install
-  # - node_modules/.bin/wdio --suite GasPrice
+  - (cd ../app/test; ls; npm install; node_modules/.bin/wdio --suite GasPrice)
   
 # env:
 #   global:
