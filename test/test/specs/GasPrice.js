@@ -14,9 +14,6 @@ describe('webdriver.io page', function() {
       longitude: -118.499335,
       altitude: 200
     });
-    console.log("14 14 14 14");
-    browser.url("http://localhost:3000/ok");
-    console.log(browser.getText('body'));
     console.log("L15");
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');

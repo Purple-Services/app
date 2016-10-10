@@ -393,6 +393,9 @@ Ext.define 'Purple.controller.Main',
           success: (response_obj) ->
             @getRequestGasButton().setDisabled no
             response = Ext.JSON.decode response_obj.responseText
+
+            Ext.get('gas-price-display').setText response_obj.responseText
+            return
             
             if response.success
               prices = response.gas_prices
