@@ -13,8 +13,8 @@ describe 'webdriver.io page', ->
       longitude: -118.499335
       altitude: 200
     console.log "14 14 14 14"
-    browser.url "http://localhost:3000/"
-    console.log browser.getText('#wt_section_home')
+    browser.url "http://localhost:3000/ok"
+    console.log browser.getText('body')
     console.log "L15"
     browser.url Utils.clientUrl
     Utils.waitUntil 'visible', '#requestGasButton'
