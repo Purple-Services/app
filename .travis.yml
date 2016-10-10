@@ -18,12 +18,9 @@ before_install:
   - mysql -e "create database if not exists ebdb;" -uroot
   - mysql -e "create database if not exists ebdb_test;" -uroot
   - lein exec -p scripts/setupdb.clj root_password=
-  - (lein with-profile app-integration-test ring server &)
+  - lein with-profile app-integration-test ring server &
   - ls
-  - cd ../
-  - cd app
-  - ls -la
-  - (java -jar selenium-server-standalone-2.53.0.jar &)
+  - (cd ../; cd app; java -jar selenium-server-standalone-2.53.0.jar &)
 script:
   - ls
   # - cd test
