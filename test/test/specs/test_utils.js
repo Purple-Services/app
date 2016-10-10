@@ -2,7 +2,7 @@ var Utils;
 
 Utils = function() {};
 
-Utils.clientUrl = 'file:///Users/celwell/purple/app/index-debug.html';
+Utils.clientUrl = 'file:///home/travis/build/Purple-Services/app/index-debug.html';
 
 Utils.getMenu = function(divName) {
   var menus, returnMenu;
