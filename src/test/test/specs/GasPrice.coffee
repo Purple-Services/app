@@ -12,10 +12,12 @@ describe 'webdriver.io page', ->
       latitude: 34.027897
       longitude: -118.499335
       altitude: 200
+    console.log "L15"
     #browser.url 'file:///Users/celwell/purple/app/index-debug.html'
     browser.url 'file:///home/travis/build/Purple-Services/app/index-debug.html'
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
+    console.log browser.getText('#gas-price-display')
     assert.equal browser.getText('#gas-price-display-87'), "$3.05"
     assert.equal browser.getText('#gas-price-display-91'), "$3.29"
 
