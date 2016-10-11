@@ -14,7 +14,7 @@ before_install:
   - ls
   - pwd
   - npm install wdio-mocha-framework
-  - sudo npm install http-server -g
+  - npm install http-server -g
 
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0 
