@@ -360,6 +360,7 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
   updateMapWithAddressComponents: (address) ->
+    Ext.get('gas-price-display').setText "preliminary reset"
     @deliveryAddressZipCode = null
     if address[0]?['address_components']?
       addressComponents = address[0]['address_components']
