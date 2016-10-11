@@ -146,8 +146,6 @@ Ext.define 'Purple.controller.Main',
       util.handleDeepLinkUrl window.queuedDeepLinkUrl
       window.queuedDeepLinkUrl = null
 
-    Ext.get('ext-element-3').setStyle {display: 'none'}
-
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
       cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
@@ -417,6 +415,9 @@ Ext.define 'Purple.controller.Main',
               )
             @busyGettingGasPrice = no
           failure: (response_obj) ->
+            Ext.get('gas-price-display').setText "It failed."
+            return
+            
             @busyGettingGasPrice = no
             if not @deliveryAddressZipCode
               @adjustDeliveryLocByLatLng()
