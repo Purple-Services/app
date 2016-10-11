@@ -384,6 +384,25 @@ Ext.define 'Purple.controller.Main',
       if not @busyGettingGasPrice
         @busyGettingGasPrice = yes
         Ext.get('gas-price-display').setText "SPOT #1"
+
+        Ext.Ajax.request
+          url: "#{util.WEB_SERVICE_BASE_URL}ok"
+          headers:
+            'Content-Type': 'application/json'
+          timeout: 30000
+          method: 'GET'
+          scope: this
+          success: (response_obj) ->
+            Ext.get('gas-price-display').setText "SPOT #77777777"
+            @getRequestGasButton().setDisabled no
+            response = Ext.JSON.decode response_obj.responseText
+
+            Ext.get('gas-price-display').setText response_obj.responseText
+            return
+          failure: (response_obj) ->
+            Ext.get('gas-price-display').setText "It failed #555555."
+            return
+        
         Ext.Ajax.request
           url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
           params: Ext.JSON.encode
