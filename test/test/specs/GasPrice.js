@@ -18,6 +18,7 @@ describe('webdriver.io page', function() {
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
+    browser.pause(3000);
     console.log(browser.getText('#gas-price-display'));
     assert.equal(browser.getText('#gas-price-display-87'), "$3.05");
     assert.equal(browser.getText('#gas-price-display-91'), "$3.29");
