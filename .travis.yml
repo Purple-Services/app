@@ -52,4 +52,11 @@ env:
 #   - CXX=g++-4.8
 #   - NODE_ENV=development
 
+notifications:
+  slack:
+    rooms:
+      - purpledelivery:LSIV4jgY6MoQMOWpAr6nnpo7#dev
+    on_success: always
+    on_failure: always
+  email: false
   
