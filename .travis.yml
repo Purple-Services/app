@@ -45,7 +45,7 @@ before_install:
   - (cd ../app; java -jar selenium-server-standalone-2.53.0.jar &)
   - (cd ../app; http-server -o --cors &)
 script:
-  - lein with-profile app-integration-test ring server &
+  - lein with-profile app-integration-test ring server
   # - (cd ../app/test; ls; node -v; npm -v; npm install; node_modules/.bin/wdio --suite GasPrice)
 env:
   - TRAVIS_NODE_VERSION="0.12"
