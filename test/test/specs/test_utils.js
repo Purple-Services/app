@@ -2,7 +2,7 @@ var Utils;
 
 Utils = function() {};
 
-Utils.clientUrl = 'file:///home/travis/build/Purple-Services/app/index-debug.html';
+Utils.clientUrl = 'http://127.0.0.1:8080/index-debug.html';
 
 Utils.getMenu = function(divName) {
   var menus, returnMenu;
