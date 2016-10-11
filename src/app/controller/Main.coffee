@@ -146,6 +146,8 @@ Ext.define 'Purple.controller.Main',
       util.handleDeepLinkUrl window.queuedDeepLinkUrl
       window.queuedDeepLinkUrl = null
 
+    Ext.get('ext-element-3').setStyle {display: 'none'}
+
   onResume: ->
     if util.ctl('Account').isCourier() and Ext.os.name is "iOS"
       cordova.plugins.diagnostic?.getLocationAuthorizationStatus(
