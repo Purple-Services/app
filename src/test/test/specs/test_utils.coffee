@@ -1,7 +1,7 @@
 Utils = ->
 
-# Utils.clientUrl = 'file:///Users/celwell/purple/app/index-debug.html'
-Utils.clientUrl = 'file:///home/travis/build/Purple-Services/app/index-debug.html'
+Utils.clientUrl = 'file:///Users/celwell/purple/app/index-debug.html'
+# Utils.clientUrl = 'file:///home/travis/build/Purple-Services/app/index-debug.html'
 
 Utils.getMenu = (divName) ->
   browser.pause 500
