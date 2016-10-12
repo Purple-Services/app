@@ -360,10 +360,8 @@ Ext.define 'Purple.controller.Main',
     @updateDeliveryLocAddressByLatLng @deliveryLocLat, @deliveryLocLng
 
   updateMapWithAddressComponents: (address) ->
-    Ext.get('gas-price-display').setText "preliminary reset" + "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
     @deliveryAddressZipCode = null
     if address[0]?['address_components']?
-      Ext.get('gas-price-display').setText "SPOT #8"
       addressComponents = address[0]['address_components']
       streetAddress = "#{addressComponents[0]['short_name']} #{addressComponents[1]['short_name']}"
       @getRequestAddressField().setValue streetAddress
@@ -379,30 +377,9 @@ Ext.define 'Purple.controller.Main',
                 street_address: streetAddress
                 zip_code: @deliveryAddressZipCode
               localStorage['first_launch_loc_sent'] = 'yes'
-      Ext.get('gas-price-display').setText "SPOT #9"
       @busyGettingGasPrice ?= no
       if not @busyGettingGasPrice
         @busyGettingGasPrice = yes
-        Ext.get('gas-price-display').setText "SPOT #1"
-
-        Ext.Ajax.request
-          url: "#{util.WEB_SERVICE_BASE_URL}ok"
-          headers:
-            'Content-Type': 'application/json'
-          timeout: 30000
-          method: 'GET'
-          scope: this
-          success: (response_obj) ->
-            Ext.get('gas-price-display').setText "SPOT #77777777"
-            @getRequestGasButton().setDisabled no
-            response = Ext.JSON.decode response_obj.responseText
-
-            Ext.get('gas-price-display').setText response_obj.responseText
-            return
-          failure: (response_obj) ->
-            Ext.get('gas-price-display').setText "It failed #555555."
-            return
-        
         Ext.Ajax.request
           url: "#{util.WEB_SERVICE_BASE_URL}dispatch/gas-prices"
           params: Ext.JSON.encode
@@ -414,13 +391,8 @@ Ext.define 'Purple.controller.Main',
           method: 'POST'
           scope: this
           success: (response_obj) ->
-            Ext.get('gas-price-display').setText "SPOT #2"
             @getRequestGasButton().setDisabled no
             response = Ext.JSON.decode response_obj.responseText
-
-            Ext.get('gas-price-display').setText response_obj.responseText
-            return
-            
             if response.success
               prices = response.gas_prices
               Ext.get('gas-price-unavailable').setStyle {display: 'none'}
@@ -439,9 +411,6 @@ Ext.define 'Purple.controller.Main',
               )
             @busyGettingGasPrice = no
           failure: (response_obj) ->
-            Ext.get('gas-price-display').setText "It failed."
-            return
-            
             @busyGettingGasPrice = no
             if not @deliveryAddressZipCode
               @adjustDeliveryLocByLatLng()

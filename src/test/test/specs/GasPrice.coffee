@@ -5,24 +5,18 @@ sinon = require('sinon')
 
 describe 'webdriver.io page', ->
 
-  it 'check gas price at different locations', ->
-    this.timeout(30000)
-
-    browser.setGeoLocation # 90403
+  it 'Gas Price at 90403', ->
+    browser.setGeoLocation
       latitude: 34.027897
       longitude: -118.499335
       altitude: 200
-    # browser.url "http://localhost:3000/ok"
-    # console.log browser.getText('body')
-    console.log "L15"
     browser.url Utils.clientUrl
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
-    browser.pause 3000
-    console.log browser.getText('#gas-price-display')
     assert.equal browser.getText('#gas-price-display-87'), "$3.05"
     assert.equal browser.getText('#gas-price-display-91'), "$3.29"
 
+  it 'Gas Price at 93063', ->
     browser.setGeoLocation
       latitude: 34.286097
       longitude: -118.673906
@@ -32,6 +26,7 @@ describe 'webdriver.io page', ->
     Utils.waitUntil 'enabled', '#requestGasButton'
     assert.equal browser.getText('#gas-price-unavailable'), "Location Outside Service Area"
 
+  it 'Gas Price at 92007', ->
     browser.setGeoLocation
       latitude: 33.022104
       longitude: -117.278696
@@ -42,6 +37,7 @@ describe 'webdriver.io page', ->
     assert.equal browser.getText('#gas-price-display-87'), "$2.99"
     assert.equal browser.getText('#gas-price-display-91'), "$3.19"
 
+  it 'Gas Price at 92109', ->
     browser.setGeoLocation
       latitude: 32.799097
       longitude: -117.238433

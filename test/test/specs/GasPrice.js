@@ -7,21 +7,19 @@ assert = require('assert');
 sinon = require('sinon');
 
 describe('webdriver.io page', function() {
-  return it('check gas price at different locations', function() {
-    this.timeout(30000);
+  it('Gas Price at 90403', function() {
     browser.setGeoLocation({
       latitude: 34.027897,
       longitude: -118.499335,
       altitude: 200
     });
-    console.log("L15");
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
-    browser.pause(3000);
-    console.log(browser.getText('#gas-price-display'));
     assert.equal(browser.getText('#gas-price-display-87'), "$3.05");
-    assert.equal(browser.getText('#gas-price-display-91'), "$3.29");
+    return assert.equal(browser.getText('#gas-price-display-91'), "$3.29");
+  });
+  it('Gas Price at 93063', function() {
     browser.setGeoLocation({
       latitude: 34.286097,
       longitude: -118.673906,
@@ -30,7 +28,9 @@ describe('webdriver.io page', function() {
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
-    assert.equal(browser.getText('#gas-price-unavailable'), "Location Outside Service Area");
+    return assert.equal(browser.getText('#gas-price-unavailable'), "Location Outside Service Area");
+  });
+  it('Gas Price at 92007', function() {
     browser.setGeoLocation({
       latitude: 33.022104,
       longitude: -117.278696,
@@ -40,7 +40,9 @@ describe('webdriver.io page', function() {
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
     assert.equal(browser.getText('#gas-price-display-87'), "$2.99");
-    assert.equal(browser.getText('#gas-price-display-91'), "$3.19");
+    return assert.equal(browser.getText('#gas-price-display-91'), "$3.19");
+  });
+  return it('Gas Price at 92109', function() {
     browser.setGeoLocation({
       latitude: 32.799097,
       longitude: -117.238433,
