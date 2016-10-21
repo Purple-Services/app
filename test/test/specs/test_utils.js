@@ -53,6 +53,7 @@ Utils.waitUntil = function(func, selector, timeout) {
 
 Utils.waitForAlert = function(click) {
   var err, error, i;
+  console.log('inside waitForAlert');
   i = 0;
   while (i < 25) {
     try {
@@ -61,6 +62,7 @@ Utils.waitForAlert = function(click) {
     } catch (error) {
       err = error;
       i++;
+      console.log(i);
       browser.pause(500);
       continue;
     }

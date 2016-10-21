@@ -13,8 +13,8 @@ describe 'webdriver.io page', ->
     browser.url Utils.clientUrl
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
-    assert.equal browser.getText('#gas-price-display-87'), "$3.05"
-    assert.equal browser.getText('#gas-price-display-91'), "$3.29"
+    assert.equal browser.getText('#gas-price-display-87'), "$3.14"
+    assert.equal browser.getText('#gas-price-display-91'), "$3.39"
 
   it 'Gas Price at 93063', ->
     browser.setGeoLocation
@@ -34,8 +34,8 @@ describe 'webdriver.io page', ->
     browser.url Utils.clientUrl
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
-    assert.equal browser.getText('#gas-price-display-87'), "$2.99"
-    assert.equal browser.getText('#gas-price-display-91'), "$3.19"
+    assert.equal browser.getText('#gas-price-display-87'), "$3.00"
+    assert.equal browser.getText('#gas-price-display-91'), "$3.16"
 
   it 'Gas Price at 92109', ->
     browser.setGeoLocation
@@ -45,6 +45,6 @@ describe 'webdriver.io page', ->
     browser.url Utils.clientUrl
     Utils.waitUntil 'visible', '#requestGasButton'
     Utils.waitUntil 'enabled', '#requestGasButton'
-    assert.equal browser.getText('#gas-price-display-87'), "$2.93"
-    assert.equal browser.getText('#gas-price-display-91'), "$3.15"
+    assert.equal browser.getText('#gas-price-display-87'), "$3.00"
+    assert.equal browser.getText('#gas-price-display-91'), "$3.16"
 

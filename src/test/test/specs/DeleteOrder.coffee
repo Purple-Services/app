@@ -13,10 +13,8 @@ describe 'webdriver.io page', ->
     Utils.getMenu 'div=Orders'
     Utils.getList '.order-list-item'
     console.log 'order clicked'
+    browser.pause 3000
     browser.click 'span=Cancel Order'
     Utils.waitForAlert(true)
     console.log 'deleted'
     Utils.waitUntil 'visible', 'div=Orders'
-    return
-
-  return

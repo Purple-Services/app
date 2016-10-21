@@ -16,8 +16,8 @@ describe('webdriver.io page', function() {
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
-    assert.equal(browser.getText('#gas-price-display-87'), "$3.05");
-    return assert.equal(browser.getText('#gas-price-display-91'), "$3.29");
+    assert.equal(browser.getText('#gas-price-display-87'), "$3.14");
+    return assert.equal(browser.getText('#gas-price-display-91'), "$3.39");
   });
   it('Gas Price at 93063', function() {
     browser.setGeoLocation({
@@ -39,8 +39,8 @@ describe('webdriver.io page', function() {
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
-    assert.equal(browser.getText('#gas-price-display-87'), "$2.99");
-    return assert.equal(browser.getText('#gas-price-display-91'), "$3.19");
+    assert.equal(browser.getText('#gas-price-display-87'), "$3.00");
+    return assert.equal(browser.getText('#gas-price-display-91'), "$3.16");
   });
   return it('Gas Price at 92109', function() {
     browser.setGeoLocation({
@@ -51,7 +51,7 @@ describe('webdriver.io page', function() {
     browser.url(Utils.clientUrl);
     Utils.waitUntil('visible', '#requestGasButton');
     Utils.waitUntil('enabled', '#requestGasButton');
-    assert.equal(browser.getText('#gas-price-display-87'), "$2.93");
-    return assert.equal(browser.getText('#gas-price-display-91'), "$3.15");
+    assert.equal(browser.getText('#gas-price-display-87'), "$3.00");
+    return assert.equal(browser.getText('#gas-price-display-91'), "$3.16");
   });
 });

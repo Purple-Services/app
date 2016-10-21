@@ -43,15 +43,17 @@ Utils.waitUntil = (func, selector, timeout) ->
   return
 
 Utils.waitForAlert = (click) ->
+  console.log 'inside waitForAlert'
   i = 0
   while i < 25
     try
-        browser.alertText()
-        break;
+      browser.alertText()
+      break
     catch err
-      i++;
+      i++
+      console.log i
       browser.pause 500
-      continue;
+      continue
   console.log browser.alertText()
   browser.pause 250
   if click is true
