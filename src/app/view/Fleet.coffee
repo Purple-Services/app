@@ -154,8 +154,20 @@ Ext.define 'Purple.view.Fleet',
                 value: '87'
               }
               {
+                text: '89'
+                value: '89'
+              }
+              {
                 text: '91'
                 value: '91'
+              }
+              {
+                text: 'Regular Diesel'
+                value: 'Regular Diesel'
+              }
+              {
+                text: 'Dyed Diesel'
+                value: 'Dyed Diesel'
               }
             ]
           }
