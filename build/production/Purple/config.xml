@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "com.purplecourier.app"
+        id = "6NAJA3N74X.com.purple.app"
         versionCode = "11520"
-        version     = "1.11.6">
+        version     = "1.11.7">
   
   <!--
       For iOS use:
@@ -16,13 +16,15 @@
   -->
 
   <!-- iOS only -->
-  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
+  <preference name="phonegap-version" value="cli-5.2.0" />
   <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
+  <plugin spec="https://github.com/phonegap-build/PushPlugin" source="git">
+  </plugin>
   <!-- End of iOS only -->
 
   <!-- Android only -->
-  <preference name="phonegap-version" value="cli-6.3.0" />
-  <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" />
+  <!-- <preference name="phonegap-version" value="cli-6.3.0" /> -->
+  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
   <!-- End of Android Only -->
 
 
@@ -46,7 +48,8 @@
 
   <!-- BEGIN COURIER APP ONLY -->
   <name>Purple Courier</name>
-  <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
+  <!-- <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" /> -->
+  <gap:plugin name="cordova-plugin-background-mode" source="npm" />
   <gap:config-file platform="ios" parent="NSLocationAlwaysUsageDescription" overwrite="true">
     <string>(required for Courier mode)</string>
   </gap:config-file>
@@ -135,9 +138,10 @@
     <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
   </platform>
 
-  <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+  <!-- <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" /> -->
+  <gap:plugin name="cordova-plugin-statusbar" source="npm" />
   <preference name="StatusBarOverlaysWebView" value="false" />
-  <preference name="StatusBarBackgroundColor" value="#000" />
+  <preference name="StatusBarBackgroundColor" value="#000000" />
   <preference name="StatusBarStyle" value="lightcontent" />
   
   <gap:plugin name="cordova-plugin-device" version="1.1.2" source="npm" />
