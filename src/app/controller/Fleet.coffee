@@ -72,55 +72,58 @@ Ext.define 'Purple.controller.Fleet',
     @getFleetAccountSelectField().setDisabled no
     
   addFleetOrder: ->
-    Ext.Viewport.setMasked
-      xtype: 'loadmask'
-      message: ''
     values = @getFleet().getValues()
-    formData =
-      user_id: localStorage['purpleUserId']
-      account_id: values['account_id']
-      vin: values['vin']
-      license_plate: values['license_plate']
-      gallons: values['gallons']
-      gas_type: values['gas_type']
-      is_top_tier: values['is_top_tier']
-    params = JSON.parse JSON.stringify(formData) # copy
-    params.version = util.VERSION_NUMBER
-    params.token = localStorage['purpleToken']
-    params.os = Ext.os.name
-    Ext.Ajax.request
-      url: "#{util.WEB_SERVICE_BASE_URL}fleet/add-delivery"
-      params: Ext.JSON.encode params
-      headers:
-        'Content-Type': 'application/json'
-      timeout: 7000
-      method: 'POST'
-      scope: this
-      success: (response_obj) ->
-        Ext.Viewport.setMasked false
-        response = Ext.JSON.decode response_obj.responseText
-        if response.success
-          @getFleetVinField().reset()
-          @getFleetLicensePlateField().reset()
-          @getFleetGallonsField().reset()
-          util.alert "Fleet Delivery Added!", "Success", (->)
-        else
-          util.alert response.message, "Error", (->)
-      failure: (response_obj) ->
-        Ext.Viewport.setMasked false
-        util.confirm(
-          "Save delivery details for later?",
-          "Unable to Connect",
-          (=>
-            localStorage['purpleSavedFleetDeliveries'] ?= "[]"
-            savedDeliveries = JSON.parse localStorage['purpleSavedFleetDeliveries']
-            savedDeliveries.push formData
-            localStorage['purpleSavedFleetDeliveries'] = JSON.stringify savedDeliveries
+    if values['gallons'] is "" or values['gallons'] is 0
+      util.alert "'Gallons' cannot be blank.", "Error", (->)
+    else
+      Ext.Viewport.setMasked
+        xtype: 'loadmask'
+        message: ''
+      formData =
+        user_id: localStorage['purpleUserId']
+        account_id: values['account_id']
+        vin: values['vin']
+        license_plate: values['license_plate']
+        gallons: values['gallons']
+        gas_type: values['gas_type']
+        is_top_tier: values['is_top_tier']
+      params = JSON.parse JSON.stringify(formData) # copy
+      params.version = util.VERSION_NUMBER
+      params.token = localStorage['purpleToken']
+      params.os = Ext.os.name
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}fleet/add-delivery"
+        params: Ext.JSON.encode params
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 7000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
             @getFleetVinField().reset()
             @getFleetLicensePlateField().reset()
-            @getFleetGallonsField().reset()))
-        response = Ext.JSON.decode response_obj.responseText
-        console.log response
+            @getFleetGallonsField().reset()
+            util.alert "Fleet Delivery Added!", "Success", (->)
+          else
+            util.alert response.message, "Error", (->)
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          util.confirm(
+            "Save delivery details for later?",
+            "Unable to Connect",
+            (=>
+              localStorage['purpleSavedFleetDeliveries'] ?= "[]"
+              savedDeliveries = JSON.parse localStorage['purpleSavedFleetDeliveries']
+              savedDeliveries.push formData
+              localStorage['purpleSavedFleetDeliveries'] = JSON.stringify savedDeliveries
+              @getFleetVinField().reset()
+              @getFleetLicensePlateField().reset()
+              @getFleetGallonsField().reset()))
+          response = Ext.JSON.decode response_obj.responseText
+          console.log response
 
   sendSavedDeliveries: ->
     localStorage['purpleSavedFleetDeliveries'] ?= "[]"
