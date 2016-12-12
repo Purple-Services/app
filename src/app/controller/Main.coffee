@@ -209,6 +209,18 @@ Ext.define 'Purple.controller.Main',
           "ecb": "onNotificationAPN"
         }
       )
+      
+      # push = PushNotification.init()
+      # push.on 'registration', (data) =>
+      #   alert Ext.JSON.encode(data)
+      #   @registerDeviceForPushNotifications data.registrationId
+        
+      # push.on 'notification', (data) =>
+      #   alert Ext.JSON.encode(data)
+        
+      # push.on 'error', (e) =>
+      #   alert Ext.JSON.encode(e)
+        
     else if Ext.os.name is "Android"
       # must be Android
       if alertIfDisabled
