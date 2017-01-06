@@ -1,7 +1,7 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "PROD"
+VERSION = "LOCAL"
 
-if VERSION is "LOCAL" # or VERSION is "DEV"
+if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
     alert "#{message} #{lineNumber}"
     return false
@@ -14,7 +14,7 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.11.7"
+  VERSION_NUMBER: "1.5.1"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     # when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
@@ -40,7 +40,7 @@ window.util =
   #   when "DEV" then 'a9e732d5be'
   #   when "PROD" then '4426d49b93'
 
-  GCM_SENDER_ID: "254423398507"  
+  GCM_SENDER_ID: "727391770434" # was 254423398507
 
   STATUSES: [
     "unassigned"
@@ -90,7 +90,7 @@ window.util =
     # ceil, here, matches how prices are handled on app-service
     (Math.ceil(x) / 100).toFixed 2
 
-  # like centsToDollars but gives $7, $7.25 instead of $7.00, $7.25
+  # like centsToDollars but gives 7, 7.25 instead of 7.00, 7.25
   centsToDollarsShort: (x) ->
     dollars = (Math.ceil(x) / 100)
     if Math.ceil(x) % 100 is 0

@@ -101,29 +101,29 @@ Ext.define 'Purple.controller.Main',
 
     # COURIER APP ONLY
     # Remember to comment/uncomment the setTimeout script in index.html
-    if not localStorage['courierOnDuty']? then localStorage['courierOnDuty'] = 'no'
-    clearTimeout window.courierReloadTimer
+    # if not localStorage['courierOnDuty']? then localStorage['courierOnDuty'] = 'no'
+    # clearTimeout window.courierReloadTimer
     # END COURIER APP ONLY
 
     if util.ctl('Account').isCourier()
       @initCourierPing()
 
     # CUSTOMER APP ONLY
-    # if VERSION is "PROD"
-    #   GappTrack.track "882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false
-    #   ga_storage?._enableSSL() # doesn't seem to actually use SSL?
-    #   ga_storage?._setAccount 'UA-61762011-1'
-    #   ga_storage?._setDomain 'none'
-    #   ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
+    if VERSION is "PROD"
+      GappTrack.track "882234091", "CVvTCNCIkGcQ66XXpAM", "4.00", false
+      ga_storage?._enableSSL() # doesn't seem to actually use SSL?
+      ga_storage?._setAccount 'UA-61762011-1'
+      ga_storage?._setDomain 'none'
+      ga_storage?._trackEvent 'main', 'App Launch', "Platform: #{Ext.os.name}"
 
-    # analytics?.load util.SEGMENT_WRITE_KEY
-    # if util.ctl('Account').isUserLoggedIn()
-    #   analytics?.identify localStorage['purpleUserId']
-    #   # segment says you 'have' to call analytics.page() at some point
-    #   # it doesn't seem to actually matter though
-    # analytics?.track 'App Launch',
-    #   platform: Ext.os.name
-    # analytics?.page 'Map'
+    analytics?.load util.SEGMENT_WRITE_KEY
+    if util.ctl('Account').isUserLoggedIn()
+      analytics?.identify localStorage['purpleUserId']
+      # segment says you 'have' to call analytics.page() at some point
+      # it doesn't seem to actually matter though
+    analytics?.track 'App Launch',
+      platform: Ext.os.name
+    analytics?.page 'Map'
     # END OF CUSTOMER APP ONLY
     
     navigator.splashscreen?.hide()
@@ -192,51 +192,39 @@ Ext.define 'Purple.controller.Main',
         )
 
   setUpPushNotifications: (alertIfDisabled) ->
-    if Ext.os.name is "iOS"
+    if Ext.os.name is "iOS" or Ext.os.name is "Android"
       if alertIfDisabled
         @pushNotificationEnabled = false
         setTimeout (=> 
           if not @pushNotificationEnabled
             navigator.notification.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', (->), "Reminder"
           ), 1500
-      window.plugins?.pushNotification?.register(
-        (Ext.bind @registerDeviceForPushNotifications, this),
-        ((error) -> alert "error: " + error),
-        {
-          "badge": "true"
-          "sound": "true"
-          "alert": "true"
-          "ecb": "onNotificationAPN"
-        }
-      )
       
-      # push = PushNotification.init()
-      # push.on 'registration', (data) =>
-      #   alert Ext.JSON.encode(data)
-      #   @registerDeviceForPushNotifications data.registrationId
+      pushPlugin = PushNotification.init
+        ios:
+          alert: true
+          badge: true
+          sound: true
+        android:
+          senderID: util.GCM_SENDER_ID
+          
+      pushPlugin.on 'registration', (data) =>
+        @registerDeviceForPushNotifications(
+          data.registrationId,
+          (if Ext.os.name is "iOS" then "apns" else "gcm")
+        )
         
-      # push.on 'notification', (data) =>
-      #   alert Ext.JSON.encode(data)
+      pushPlugin.on 'notification', (data) =>
+        util.alert data.message, "Notification", (->)
+        util.ctl('Orders').loadOrdersList(
+          true,
+          util.ctl('Orders').refreshOrder
+        )
         
-      # push.on 'error', (e) =>
-      #   alert Ext.JSON.encode(e)
-        
-    else if Ext.os.name is "Android"
-      # must be Android
-      if alertIfDisabled
-        @pushNotificationEnabled = false
-        setTimeout (=> 
-          if not @pushNotificationEnabled
-            util.alert 'Your push notifications are turned off. If you want to receive order updates, you can turn them on in your phone settings.', "Reminder", (->)
-          ), 1500 
-      window.plugins?.pushNotification?.register(
-        ((result) => @pushNotificationEnabled = true),
-        ((error) -> alert "error: " + error),
-        {
-          "senderID": util.GCM_SENDER_ID
-          "ecb": "onNotification"
-        }
-      )
+      pushPlugin.on 'error', (e) =>
+        if VERSION is "LOCAL" or VERSION is "DEV"
+          alert e.message
+    
     else #chrome/testing
       @pushNotificationEnabled = true
 

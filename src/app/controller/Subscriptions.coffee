@@ -125,6 +125,9 @@ Ext.define 'Purple.controller.Subscriptions',
   hasAutoRenewOn: ->
     localStorage['purpleSubscriptionAutoRenew']? and localStorage['purpleSubscriptionAutoRenew'] is "true"
 
+  displayDiscount: (discount) ->
+    "$" + util.centsToDollarsShort(Math.abs(discount))
+
   renderSubscriptions: (subscriptions) ->
     subChoicesContainer = @getSubscriptionChoicesContainer()
     if not subChoicesContainer?
@@ -199,17 +202,23 @@ Ext.define 'Purple.controller.Subscriptions',
           style: "text-align: center;"
           html: """
             <ul style="list-style: bullet;">
-              <li #{if sub.num_free_one_hour then '' else 'style="display: none;"'}>
+              <li #{if sub.num_free_one_hour then 'style="font-weight: bold;"' else 'style="display: none;"'}>
                 #{sub.num_free_one_hour} one-hour deliveries per month
               </li>
-              <li #{if sub.num_free_three_hour then '' else 'style="display: none;"'}>
+              <li #{if sub.discount_one_hour then 'style="margin-bottom: 10px;"' else 'style="display: none;"'}>
+                #{@displayDiscount(sub.discount_one_hour)} discount on #{if sub.num_free_one_hour then 'additional ' else ''}one-hour orders
+              </li>
+              <li #{if sub.num_free_three_hour then 'style="font-weight: bold;"' else 'style="display: none;"'}>
                 #{sub.num_free_three_hour} three-hour deliveries per month
               </li>
-              <li #{if sub.discount_one_hour then '' else 'style="display: none;"'}>
-                $4 for additional orders
+              <li #{if sub.discount_three_hour then 'style="margin-bottom: 10px;"' else 'style="display: none;"'}>
+                #{@displayDiscount(sub.discount_three_hour)} discount on #{if sub.num_free_three_hour then 'additional ' else ''}three-hour orders
               </li>
-              <li #{if sub.discount_three_hour then '' else 'style="display: none;"'}>
-                $2.50 for additional orders
+              <li #{if sub.num_free_five_hour then 'style="font-weight: bold;"' else 'style="display: none;"'}>
+                #{sub.num_free_five_hour} five-hour deliveries per month
+              </li>
+              <li #{if sub.discount_five_hour then 'style="margin-bottom: 10px;"' else 'style="display: none;"'}>
+                #{@displayDiscount(sub.discount_five_hour)} discount on #{if sub.num_free_five_hour then 'additional ' else ''}five-hour orders
               </li>
               <li #{if sub.num_free_tire_pressure_check then '' else 'style="display: none;"'}>
                 #{sub.num_free_tire_pressure_check} tire pressure fill-up per month

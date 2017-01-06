@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
+        id = "com.purple.app"
         versionCode = "11520"
         version     = "1.11.7">
   
@@ -15,27 +15,12 @@
       otherwise it will be overwritten by the google play version
   -->
 
-  <!-- iOS only -->
-  <!-- <preference name="phonegap-version" value="cli-5.2.0" /> -->
-  <preference name="phonegap-version" value="cli-6.3.0" />
-  <!-- <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.5.0" /> -->
-  
-  <!-- <plugin spec="https://github.com/phonegap-build/PushPlugin" source="git"> -->
-  <!-- </plugin> -->
-  
-  <!-- <preference name="android-build-tool" value="gradle" /> -->
-  <plugin name="phonegap-plugin-push" source="npm">
-    <param name="SENDER_ID" value="727391770434" />
+  <engine name="cordova" version=">=6.4.0"/>
+  <engine name="cordova-ios" version="~4.3.0"/>
+
+  <plugin name="phonegap-plugin-push" source="npm" spec="https://github.com/frederikbosch/phonegap-plugin-push#fix-aps-environment">
+    <param name="SENDER_ID" value="727391770434"/> <!-- pgb -->
   </plugin>
-  
-  
-  <!-- End of iOS only -->
-
-  <!-- Android only -->
-  <!-- <preference name="phonegap-version" value="cli-6.3.0" /> -->
-  <!-- <gap:plugin name="cordova-plugin-pushplugin" version="2.6.1" source="npm" /> -->
-  <!-- End of Android Only -->
-
 
   <!-- === BEGIN CUSTOMER APP ONLY === -->
   <!-- <name>Purple</name> -->
@@ -144,10 +129,9 @@
   <!-- iOS only
        Using WKWebView for iOS 8 memory leak issue -->
   <platform name="ios">
-    <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" />
+    <!-- <gap:plugin name="cordova-plugin-wkwebview-engine" source="npm" /> -->
   </platform>
 
-  <!-- <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" /> -->
   <gap:plugin name="cordova-plugin-statusbar" source="npm" />
   <preference name="StatusBarOverlaysWebView" value="false" />
   <preference name="StatusBarBackgroundColor" value="#000000" />
@@ -165,11 +149,11 @@
   <preference name="FadeSplashScreenDuration" value="1800" />
   <preference name="ShowSplashScreenSpinner" value="false" />
 
+  
   <platform name="android">
     <gap:plugin name="cordova-plugin-request-location-accuracy" version="1.0.1" source="npm" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="android-build-tool" value="gradle" />
-    <!-- this plugin makes access origin config *actually* work in Android -->
     <gap:plugin name="cordova-plugin-whitelist" version="1.2.0" source="npm" />
   </platform>
   
@@ -181,7 +165,6 @@
 
   <gap:plugin name="cordova-plugin-customurlscheme" source="npm">
     <param name="URL_SCHEME" value="purpleapp" />
-
   </gap:plugin>
 
   <feature name="Custom URL scheme">
@@ -189,6 +172,7 @@
     <param name="url" value="https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git" />
     <variable name="URL_SCHEME" value="purpleapp" />
   </feature>
+  
 
   <feature name="http://api.phonegap.com/1.0/network" />
   <feature name="http://api.phonegap.com/1.0/camera" />
