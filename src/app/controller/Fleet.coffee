@@ -25,7 +25,7 @@ Ext.define 'Purple.controller.Fleet',
       scanVinBarcodeButtonContainer:
         scanBarcode: 'scanBarcode'
       fleetAccountSelectField:
-        fleetAccountSelectFieldChange: 'loadDeliveriesList'
+        fleetAccountSelectFieldChange: 'fleetAccountSelectFieldChange'
 
   launch: ->
 
@@ -47,7 +47,7 @@ Ext.define 'Purple.controller.Fleet',
         lng: util.ctl('Main').lng
       headers:
         'Content-Type': 'application/json'
-      timeout: 30000
+      timeout: 15000
       method: 'POST'
       scope: this
       success: (response_obj) ->
@@ -78,11 +78,17 @@ Ext.define 'Purple.controller.Fleet',
       localStorage['purpleDefaultFleetAccount']
     )
     @getFleetAccountSelectField().setDisabled no
+
+  fleetAccountSelectFieldChange: ->
+    if not @editingId?
+      @loadDeliveriesList()
     
   addFleetOrder: ->
     values = @getFleet().getValues()
-    if values['gallons'] is "" or values['gallons'] is 0
-      util.alert "'Gallons' cannot be blank.", "Error", (->)
+    if values['gallons'] is "" or values['gallons'] <= 0
+      util.alert "'Gallons' must be a number greater than 0.", "Error", (->)
+    else if values['vin'] is "" and values['license_plate'] is ""
+      util.alert "You must enter either a VIN or License Plate / Stock #.", "Error", (->)
     else
       Ext.Viewport.setMasked
         xtype: 'loadmask'
@@ -109,7 +115,7 @@ Ext.define 'Purple.controller.Fleet',
           params: Ext.JSON.encode params
           headers:
             'Content-Type': 'application/json'
-          timeout: 25000
+          timeout: 15000
           method: 'POST'
           scope: this
           success: (response_obj) ->
@@ -161,7 +167,7 @@ Ext.define 'Purple.controller.Fleet',
           deliveries: savedDeliveries
         headers:
           'Content-Type': 'application/json'
-        timeout: 25000
+        timeout: 15000
         method: 'POST'
         scope: this
         success: (response_obj) ->
@@ -223,7 +229,7 @@ Ext.define 'Purple.controller.Fleet',
         fleet_location_id: @getFleetAccountSelectField().getValue()
       headers:
         'Content-Type': 'application/json'
-      timeout: 30000
+      timeout: 7000
       method: 'POST'
       scope: this
       success: (response_obj) ->
@@ -337,11 +343,11 @@ Ext.define 'Purple.controller.Fleet',
                 oid = field.getId().split('_')[1]
                 field.addCls 'order-edit-mode'
                 setTimeout (=>
+                  delivery = @getDeliveryObject oid
                   util.confirmDialog "",
                     ((index) => switch index
                       when 1
-                        # @editFleetDelivery oid, (oid.substring(0, 5) is "local")
-                        @deleteFleetDelivery oid, (oid.substring(0, 5) is "local")
+                        @askDeleteFleetDelivery oid, (oid.substring(0, 5) is "local")
                         field.removeCls 'order-edit-mode'
                       when 2
                         @editFleetDelivery oid, (oid.substring(0, 5) is "local")
@@ -349,9 +355,17 @@ Ext.define 'Purple.controller.Fleet',
                       else
                         field.removeCls 'order-edit-mode'
                     ),
-                    "Are you sure you want to delete this delivery?",
-                    ["Delete (Permanently)",
-                    "Edit Delivery Details",
+                    Ext.util.Format.date(
+                      new Date(
+                        if delivery.timestamp_recorded?
+                          delivery.timestamp_recorded * 1000
+                        else
+                          delivery.timestamp_created
+                      ),
+                      "n/j g:i a"
+                    ),
+                    ["Delete Delivery",
+                    "Edit Delivery",
                     "Cancel"]
                   ), 100 # wait for UI to update
 
@@ -399,6 +413,9 @@ Ext.define 'Purple.controller.Fleet',
 
   saveFleetDelivery: (formData, id) ->
     delivery = @getDeliveryObject id
+    # keep old id and timestamp_recorded
+    formData.id = id
+    formData.timestamp_recorded = delivery.timestamp_recorded
     if delivery.savedLocally
       console.log "update fleet delivery detials locally"
       savedDeliveries = JSON.parse localStorage['purpleSavedFleetDeliveries']
@@ -407,23 +424,53 @@ Ext.define 'Purple.controller.Fleet',
         (x) -> (x.id isnt id)
       )
       formData.savedLocally = true
-      # keep old id and timestamp_recorded
-      formData.id = id
-      formData.timestamp_recorded = delivery.timestamp_recorded
       sdwtor.push formData
       localStorage['purpleSavedFleetDeliveries'] = JSON.stringify sdwtor
       @exitEditMode()
-      @renderDeliveriesList()
+      @renderDeliveriesList() # consider doing a loadOrderslist here instead, if online
       Ext.Viewport.setMasked false
+      util.alert "Fleet Delivery changes saved!", "Success", (->)
     else
       console.log "update fleet delivery detials remotely"
-      @exitEditMode()
-      Ext.Viewport.setMasked false
+      params = JSON.parse JSON.stringify(formData) # copy
+      params.version = util.VERSION_NUMBER
+      params.token = localStorage['purpleToken']
+      params.os = Ext.os.name
+      Ext.Ajax.request
+        url: "#{util.WEB_SERVICE_BASE_URL}fleet/edit-delivery"
+        params: Ext.JSON.encode params
+        headers:
+          'Content-Type': 'application/json'
+        timeout: 15000
+        method: 'POST'
+        scope: this
+        success: (response_obj) ->
+          Ext.Viewport.setMasked false
+          response = Ext.JSON.decode response_obj.responseText
+          if response.success
+            @exitEditMode()
+            util.alert "Fleet Delivery changes saved!", "Success", (->)
+            @renderDeliveriesList response.deliveries
+          else
+            util.alert response.message, "Error", (->)
+        failure: (response_obj) ->
+          Ext.Viewport.setMasked false
+          util.alert "No internet connection.", "Unable to Connect", (->)
 
   cancelEditFleetOrder: ->
     @exitEditMode()
 
-  deleteFleetDelivery: (id, isLocal) ->
+  askDeleteFleetDelivery: (id, isLocal) ->
+    util.confirm(
+      "Are you sure you want to delete this delivery permanently?",
+      'Confirm',
+      (=> @doDeleteFleetDelivery id, isLocal),
+      null,
+      'Yes',
+      'No'
+    )
+
+  doDeleteFleetDelivery: (id, isLocal) ->
     if isLocal
       allSavedDeliveries = JSON.parse localStorage['purpleSavedFleetDeliveries']
       savedDeliveries = allSavedDeliveries.filter(

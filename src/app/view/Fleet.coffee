@@ -91,7 +91,7 @@ Ext.define 'Purple.view.Fleet',
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Scan Barcode'
+                text: 'Scan VIN Barcode'
                 flex: 0
                 handler: ->
                   @up().fireEvent 'scanBarcode'
@@ -115,7 +115,7 @@ Ext.define 'Purple.view.Fleet',
             xtype: 'textfield'
             ctype: 'fleetLicensePlateField'
             name: 'license_plate'
-            label: 'License Plate'
+            label: 'Plate/Stock'
             labelWidth: 140
             placeHolder: '(if no vin)'
             flex: 0
