@@ -23,7 +23,7 @@ Ext.define 'Purple.view.Fleet',
     scrollable:
       direction: 'vertical'
       directionLock: yes
-
+              
     items: [
       {
         xtype: 'spacer'
@@ -43,7 +43,7 @@ Ext.define 'Purple.view.Fleet',
             flex: 0
             ctype: 'addFleetOrderFormHeading'
             cls: 'heading'
-            html: 'Add Fleet Delivery'
+            html: 'Fleet Deliveries'
           }
           {
             xtype: 'component'
@@ -58,18 +58,22 @@ Ext.define 'Purple.view.Fleet',
             ctype: 'fleetAccountSelectField'
             flex: 0
             name: 'account_id'
-            label: 'Account'
-            labelWidth: 100
+            label: ' '
+            labelWidth: 0
             listPicker:
-              title: 'Select a Fleet Account'
+              title: 'Choose Fleet Location'
             cls: [
               'click-to-edit'
               'bottom-margin'
               'visibly-disabled'
+              'no-label'
             ]
             disabled: yes
             options: [
             ]
+            listeners:
+              change: (field, newValue, oldValue) ->
+                @fireEvent 'fleetAccountSelectFieldChange'
           }
           {
             xtype: 'container'
@@ -148,7 +152,7 @@ Ext.define 'Purple.view.Fleet',
               'click-to-edit'
               'bottom-margin'
             ]
-            options: [
+            options: [ # if changing options, also update dashboard-cljs:fleet.cljs:179
               {
                 text: '87'
                 value: '87'
@@ -199,7 +203,7 @@ Ext.define 'Purple.view.Fleet',
                 xtype: 'button'
                 ui: 'action'
                 cls: 'button-pop'
-                text: 'Submit Delivery'
+                text: 'Add Delivery'
                 flex: 0
                 handler: ->
                   @up().fireEvent 'addFleetOrder'
@@ -208,11 +212,12 @@ Ext.define 'Purple.view.Fleet',
           }
           {
             xtype: 'container'
-            ctype: 'sendSavedDeliveriesButtonContainer'
+            ctype: 'cancelEditFleetOrderButtonContainer'
             flex: 0
             height: 70
             width: '100%'
             padding: '0 0 5 0'
+            hidden: true
             layout:
               type: 'vbox'
               pack: 'center'
@@ -222,16 +227,21 @@ Ext.define 'Purple.view.Fleet',
               {
                 xtype: 'button'
                 ui: 'action'
-                cls: [
-                  'button-pop'
-                  'button-pop-dark'
-                ]
-                text: 'Send Saved Deliveries'
+                cls: 'button-pop'
+                text: 'Cancel'
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'sendSavedDeliveries'
+                  @up().fireEvent 'cancelEditFleetOrder'
               }
             ]
+          }
+          {
+            xtype: 'container'
+            ctype: 'deliveriesList'
+            cls: 'deliveries-list'
+            width: '100%'
+            flex: 0
+            layout: 'vbox'
           }
         ]
       }

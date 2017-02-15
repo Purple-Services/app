@@ -425,6 +425,9 @@ input {
 .button-pop-twitter {
     background-color: #54A9EB !important;
 }
+.button-pop-orange {
+    background-color: #F18653 !important;
+}
 
 .login-form .button-pop {
     background: #F18653 !important;
@@ -652,6 +655,10 @@ input {
 
 .x-spinner .x-input-el, .x-field-select .x-input-el {
     -webkit-text-fill-color: #0073C4;
+}
+
+.no-label.x-field-select .x-input-el {
+    text-align: left;
 }
 
 
@@ -1080,12 +1087,18 @@ input {
     line-height: 21px;
     font-weight: 900;
 }
-.order-list-item .x-form-label span .subtext {
+
+.order-list-item .x-form-label span .subtext,
+.deliveries-list .order-list-item .x-form-label span {
     font-size: 17px;
     line-height: 21px;
     font-weight: 400;
     font-family: 'Hind';
     text-transform: none;
+}
+
+.order-list-item.order-edit-mode .x-form-label {
+    border-color: #423774;
 }
 
 .order-list-item .x-form-label span .status-square {
