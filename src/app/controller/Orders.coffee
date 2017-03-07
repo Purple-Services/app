@@ -200,7 +200,7 @@ Ext.define 'Purple.controller.Orders',
       @getOrderAddressStreet().addCls 'click-to-edit'
       @getOrderAddressStreet().element.on 'tap', =>
         # google maps
-        window.location.href = util.googleMapsDeepLink "?daddr=#{order.lat},#{order.lng}&directionsmode=driving"
+        window.open util.googleMapsDeepLink("?daddr=#{order.lat},#{order.lng}&directionsmode=driving"), "_system"
         # standard maps
         #window.location.href = "maps://?q=#{order.lat},#{order.lng}"
 
