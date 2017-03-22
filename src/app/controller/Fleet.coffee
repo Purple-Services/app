@@ -325,7 +325,7 @@ Ext.define 'Purple.controller.Fleet',
                     o.timestamp_created
                 ),
                 "n/j g:i a"
-              )} - #{o.license_plate} #{o.model ? ""}
+              )} - #{o.license_plate} - $#{util.centsToDollars o.total_price}
             </span>
             <br /><span class="subtext">
               #{o.gallons} gal #{if o.vin then "- " + o.vin else ""}
