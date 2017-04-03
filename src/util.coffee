@@ -1,5 +1,5 @@
 # "LOCAL", "PROD", "DEV"
-VERSION = "PROD"
+VERSION = "LOCAL"
 
 if VERSION is "LOCAL" or VERSION is "DEV"
   window.onerror = (message, url, lineNumber) ->
@@ -14,11 +14,11 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.11.8"
+  VERSION_NUMBER: "1.11.9"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"
-    # when "LOCAL" then "http://192.168.0.4:3000/"
+    # when "LOCAL" then "http://192.168.1.225:3000/"
     # when "LOCAL" then "http://localhost:3000/"
     when "DEV" then "http://purple-dev-env.elasticbeanstalk.com/"
     when "PROD" then "https://purpledelivery.com/"
@@ -40,7 +40,7 @@ window.util =
   #   when "DEV" then 'a9e732d5be'
   #   when "PROD" then '4426d49b93'
 
-  GCM_SENDER_ID: "727391770434" # was 254423398507
+  GCM_SENDER_ID: "254423398507" # was 254423398507
 
   STATUSES: [
     "unassigned"
@@ -162,3 +162,15 @@ window.util =
           
   googleMapsDeepLink: (url) ->
     (if Ext.os.is.iOS then "comgooglemaps://" else "http://maps.google.com/maps") + url
+
+  withinRadius: (lat, lng, radius) ->
+    # for LA
+    latDegLenInMeters = 110923.30777170813
+    lngDegLenInMeters = 92328.2051277882
+    x1 = lat # fleet location lat
+    y1 = lng # fleet location lng
+    x2 = util.ctl('Main').lat # our lat
+    y2 = util.ctl('Main').lng # our lng
+    diffX = (x2 - x1) * latDegLenInMeters
+    diffY = (y2 - y1) * lngDegLenInMeters
+    radius * radius > (diffX * diffX) + (diffY * diffY)

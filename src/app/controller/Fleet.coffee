@@ -68,6 +68,7 @@ Ext.define 'Purple.controller.Fleet',
     localStorage['purpleFleetAccounts'] ?= "[]"
     localStorage['purpleDefaultFleetAccount'] ?= ""
     accounts = JSON.parse localStorage['purpleFleetAccounts']
+    @currShowingFleetLocations = accounts
     opts = []
     for b,a of accounts
       opts.push
@@ -82,10 +83,33 @@ Ext.define 'Purple.controller.Fleet',
   fleetAccountSelectFieldChange: ->
     if not @editingId?
       @loadDeliveriesList()
+
+  getFleetLocationObjectById: (fleetLocationId) ->
+    @currShowingFleetLocations.filter(
+      (x) -> (x.id is fleetLocationId)
+    )[0]
     
-  addFleetOrder: ->
+  addFleetOrder: (bypassLocationCheck = false) ->
     values = @getFleet().getValues()
-    if values['gallons'] is "" or values['gallons'] <= 0
+    fleetLocationId = @getFleetAccountSelectField().getValue()
+    fleetLocationObject = @getFleetLocationObjectById fleetLocationId
+    if not bypassLocationCheck and
+    fleetLocationObject.lat and
+    util.ctl('Main').lat and
+    not util.withinRadius(
+      fleetLocationObject.lat,
+      fleetLocationObject.lng,
+      1500
+    )
+      util.confirm(
+        "You aren't near #{fleetLocationObject.name}. Are you sure this is the right location?",
+        "Confirm",
+        (=> @addFleetOrder true),
+        (->)
+      )
+      # refresh gps location to make sure this doesn't get too annoying
+      util.ctl('Main').updateLatlng()
+    else if values['gallons'] is "" or values['gallons'] <= 0
       util.alert "'Gallons' must be a number greater than 0.", "Error", (->)
     else if values['vin'] is "" and values['license_plate'] is ""
       util.alert "You must enter either a VIN or License Plate / Stock #.", "Error", (->)
@@ -96,7 +120,7 @@ Ext.define 'Purple.controller.Fleet',
       formData =
         id: "local" + Math.floor(Math.random() * 999999999)
         user_id: localStorage['purpleUserId']
-        account_id: @getFleetAccountSelectField().getValue()
+        account_id: fleetLocationId
         vin: values['vin']
         license_plate: values['license_plate'].toUpperCase()
         gallons: values['gallons']
@@ -335,9 +359,6 @@ Ext.define 'Purple.controller.Fleet',
           cls: cls
           disabled: yes
           listeners:
-            painted: ((o)=>((field) =>
-              # todo -this method will cause a slight flicker for cancelled orders
-              field.addCls "status-#{o.status}"))(o)
             initialize: (field) =>
               field.element.on 'tap', =>
                 oid = field.getId().split('_')[1]

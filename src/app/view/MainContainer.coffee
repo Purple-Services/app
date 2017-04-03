@@ -16,6 +16,7 @@ Ext.define 'Purple.view.MainContainer',
     'Purple.view.GasTanks'
     'Purple.view.GasStations'
     'Purple.view.Fleet'
+    'Purple.view.GasPurchases'
   ]
   xtype: 'maincontainer'
   config:
@@ -325,6 +326,23 @@ Ext.define 'Purple.view.MainContainer',
           }
           {
             xtype: 'fleet'
+          }
+        ]
+      }
+      {
+        title: """
+          Gas Purchases
+        """
+        items: [
+          {
+            xtype: "toptoolbar"
+            cls: [
+              'slideable'
+              'bordered'
+            ]
+          }
+          {
+            xtype: 'gaspurchases'
           }
         ]
       }

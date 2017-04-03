@@ -180,7 +180,7 @@ Ext.define 'Purple.controller.Menu',
       if util.ctl('Account').isCourier()
         bodyTag.addCls 'courier-app'
         @hideTitles [0, 4, 7, 8]
-        @showTitles [2, 3, 9, 10]
+        @showTitles [2, 3, 9, 10, 11]
         localStorage['purpleCourierGallons87'] ?= 0
         localStorage['purpleCourierGallons91'] ?= 0
         util.ctl('Main').initCourierPing()
@@ -189,12 +189,12 @@ Ext.define 'Purple.controller.Menu',
         util.ctl('Main').killCourierPing()
         if util.ctl('Account').isManagedAccount()
           bodyTag.addCls 'managed-account'
-          @hideTitles [4, 7, 8, 9, 10]
+          @hideTitles [4, 7, 8, 9, 10, 11]
           @showTitles [0, 2, 3]
         else # a normal user
-          @hideTitles [8, 9, 10]
+          @hideTitles [8, 9, 10, 11]
           @showTitles [0, 2, 3, 4, 7]
       util.ctl('Account').populateAccountForm()
     else
-      @hideTitles [2, 3, 4, 7, 8, 9, 10]
+      @hideTitles [2, 3, 4, 7, 8, 9, 10, 11]
       @showTitles [1] # Login page

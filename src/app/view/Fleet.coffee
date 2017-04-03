@@ -206,7 +206,7 @@ Ext.define 'Purple.view.Fleet',
                 text: 'Add Delivery'
                 flex: 0
                 handler: ->
-                  @up().fireEvent 'addFleetOrder'
+                  @up().fireEvent 'addFleetOrder', false
               }
             ]
           }

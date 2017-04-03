@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id = "6NAJA3N74X.com.purple.app"
-        versionCode = "11520"
-        version     = "1.11.8">
+        id = "com.purplecourier.app"
+        versionCode = "11530"
+        version     = "1.11.9">
   
   <!--
       For iOS use:
@@ -18,8 +18,12 @@
   <engine name="cordova" version=">=6.4.0"/>
   <engine name="cordova-ios" version="~4.3.0"/>
 
-  <plugin name="phonegap-plugin-push" source="npm" spec="https://github.com/frederikbosch/phonegap-plugin-push#fix-aps-environment">
-    <param name="SENDER_ID" value="727391770434"/> <!-- pgb -->
+  <!-- <plugin name="phonegap-plugin-push" source="npm" spec="https://github.com/frederikbosch/phonegap-plugin-push#fix-aps-environment"> -->
+  <!--   <param name="SENDER_ID" value="727391770434"/> -->
+  <!-- </plugin> -->
+
+  <plugin name="phonegap-plugin-push" source="npm" version="1.10.0">
+    <param name="SENDER_ID" value="254423398507"/>
   </plugin>
 
   <!-- === BEGIN CUSTOMER APP ONLY === -->
