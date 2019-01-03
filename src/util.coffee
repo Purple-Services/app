@@ -14,7 +14,7 @@ else
 
 window.util =
   # ! ALWAYS UPDATE lastCacheVersionNumber conditional in index.html
-  VERSION_NUMBER: "1.11.9"
+  VERSION_NUMBER: "1.11.10"
   
   WEB_SERVICE_BASE_URL: switch VERSION
     when "LOCAL" then "http://Christophers-MacBook-Pro.local:3000/"

@@ -150,7 +150,9 @@ Ext.define 'Purple.controller.Menu',
       util.ctl('Main').initCourierPing()
       @manuallySetToggleValue true
     else
-      util.ctl('Main').killCourierPing()
+      # this is commented out because we decided we want to still get pings
+      # from couriers who are off-duty yet connected: e.g., fleet couriers
+      # util.ctl('Main').killCourierPing()
       @manuallySetToggleValue false
 
   onDutyToggled: (field, newValue, oldValue) ->
